@@ -13,6 +13,7 @@ TEXT_11 EQU $2a
 
 POKEDEX_TEXT EQU $2b
 MOVE_NAMES   EQU $2c
+NEW_TEXT     EQU $30
 
 INCLUDE "macros.asm"
 
@@ -3208,4 +3209,23 @@ INCLUDE "text/pokedex.asm"
 SECTION "Move Names", ROMX, BANK[MOVE_NAMES]
 
 INCLUDE "text/move_names.asm"
+
+SECTION "New Text", ROMX, BANK[NEW_TEXT]
+
+_EnteringArenaText::
+    text "And now entering"
+    line "the arena..."
+    done
+
+_GotHere::
+	text "Got here"
+	done
+
+_WonChampionshipText::
+	text "You won!"	
+	prompt
+
+_LostChampionshipText::
+	text "You lost!"
+	prompt
 

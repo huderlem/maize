@@ -46,3 +46,4 @@ LORELEI       EQU $2C
 CHANNELER     EQU $2D
 AGATHA        EQU $2E
 LANCE         EQU $2F
+SHADOW        EQU $30

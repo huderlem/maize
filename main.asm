@@ -8474,6 +8474,7 @@ EvilTrainerList:: ; 3439 (0:3439)
 	db $c8+SCIENTIST
 	db $c8+GIOVANNI
 	db $c8+ROCKET
+	db $c8+SHADOW
 	db $FF
 
 Func_3442:: ; 3442 (0:3442)
@@ -15181,6 +15182,9 @@ AskForMonNickname: ; 64eb (1:64eb)
 	ld a, [$cf91]
 	ld [$d11e], a
 	call GetMonName
+	ld a, [W_CURMAP]
+	cp REDS_HOUSE_2F
+	jr z, .popHL
 	ld hl, DoYouWantToNicknameText ; $6557
 	call PrintText
 	FuncCoord 14, 7 ; $c43a
@@ -15213,6 +15217,8 @@ AskForMonNickname: ; 64eb (1:64eb)
 	ld a, [$cf4b]
 	cp $50
 	ret nz
+.popHL
+	pop hl
 .asm_654c
 	ld d, h
 	ld e, l
@@ -32071,6 +32077,7 @@ UnnamedText_13a53: ; 13a53 (4:7a53)
 	db "@"
 
 Func_13a58: ; 13a58 (4:7a58)
+; TODO: document this function
 	ld hl, W_GRASSRATE ; $d887
 	ld a, [W_ISLINKBATTLE] ; $d12b
 	and a
@@ -42664,6 +42671,7 @@ TrainerNamePointers: ; 27e64 (9:7e64)
 	dw W_TRAINERNAME
 	dw W_TRAINERNAME
 	dw W_TRAINERNAME
+	dw W_TRAINERNAME
 
 YoungsterName: ; 27ec2 (9:7ec2)
 	db "YOUNGSTER@"
@@ -51291,6 +51299,7 @@ TrainerClassMoveChoiceModifications: ; 3989b (e:589b)
 	db 1,0    ; CHANNELER
 	db 1,0    ; AGATHA
 	db 1,3,0  ; LANCE
+	db 1,3,0  ; SHADOW
 
 TrainerPicAndMoneyPointers: ; 39914 (e:5914)
 ; trainer pic pointers and base money.
@@ -51436,6 +51445,9 @@ TrainerPicAndMoneyPointers: ; 39914 (e:5914)
 	dw LancePic
 	db 0,$99,0
 
+	dw ShadowPic
+	db 0,0,0
+
 TrainerNames: ; 399ff (e:59ff)
 	db "YOUNGSTER@"
 	db "BUG CATCHER@"
@@ -51484,6 +51496,7 @@ TrainerNames: ; 399ff (e:59ff)
 	db "CHANNELER@"
 	db "AGATHA@"
 	db "LANCE@"
+	db "???@"
 
 Func_39b87: ; 39b87 (e:5b87)
 	ld hl, $d0dc
@@ -51976,7 +51989,7 @@ TrainerDataPointers: ; 39d3b (e:5d3b)
 	dw CooltrainerMData,CooltrainerFData,BrunoData,BrockData,MistyData
 	dw LtSurgeData,ErikaData,KogaData,BlaineData,SabrinaData
 	dw GentlemanData,Green2Data,Green3Data,LoreleiData,ChannelerData
-	dw AgathaData,LanceData
+	dw AgathaData,LanceData,ShadowData
 
 ; if first byte != FF, then
 	; first byte is level (of all pokemon on this team)
@@ -52558,6 +52571,9 @@ AgathaData: ; 3a516 (e:6516)
 	db $FF,56,GENGAR,56,GOLBAT,55,HAUNTER,58,ARBOK,60,GENGAR,0
 LanceData: ; 3a522 (e:6522)
 	db $FF,58,GYARADOS,56,DRAGONAIR,56,DRAGONAIR,60,AERODACTYL,62,DRAGONITE,0
+ShadowData:
+	db $FF, 2, RATTATA, 0
+	db $FF,100,GENGAR,100,DRAGONITE,100,ALAKAZAM,0
 
 TrainerAI: ; 3a52e (e:652e)
 ;XXX called at 34964, 3c342, 3c398
@@ -52643,6 +52659,7 @@ TrainerAIPointers: ; 3a55c (e:655c)
 	dbw 3,GenericAI
 	dbw 2,AgathaAI ; agatha
 	dbw 1,LanceAI ; lance
+	dbw 3,GenericAI
 
 JugglerAI: ; 3a5e9 (e:65e9)
 	cp $40
@@ -63109,16 +63126,22 @@ TerminatorText_3f04a: ; 3f04a (f:704a)
 	db "@"
 
 Func_3f04b: ; 3f04b (f:704b)
+; TODO: document this function
 	ld a, [$d033]
 	ld e, a
 	ld a, [$d034]
 	ld d, a
 	ld a, [W_ISLINKBATTLE] ; $d12b
 	and a
-	ld a, $13
-	jr z, .asm_3f05d
+	jr z, .notLinkBattle
 	ld a, $4
-.asm_3f05d
+.notLinkBattle
+	ld a, [W_CUROPPONENT]
+	cp SHADOW + $C8
+	ld a, Bank(ShadowPic)
+	jr z, .loadSprite
+	ld a, Bank(YoungsterPic)
+.loadSprite
 	call UncompressSpriteFromDE
 	ld de, $9000
 	ld a, $77
@@ -90289,20 +90312,109 @@ RedsHouse2FScript: ; 5c0b0 (17:40b0)
 RedsHouse2FScriptPointers: ; 5c0bc (17:40bc)
 	dw RedsHouse2FScript0
 	dw RedsHouse2FScript1
+	dw RedsHouse2FScript2
+	dw RedsHouse2FScript3
 
 RedsHouse2FScript0: ; 5c0c0 (17:40c0)
+	call GiveDreamBattleMons
 	xor a
 	ld [H_CURRENTPRESSEDBUTTONS],a
 	ld a,8
 	ld [$D528],a
-	ld a,1
-	ld [W_REDSHOUSE2CURSCRIPT],a
+	ld a, $1
+	ld [$ff00+$8c], a
+	call DisplayTextID
+	ld a, $ff
+	ld [wJoypadForbiddenButtonsMask], a
+	ld hl, $ccd3
+	ld de, EnterArenaMovement
+	call DecodeRLEList
+	dec a
+	ld [$cd38], a
+	call Func_3486
+	ld a, 1
+	ld [W_REDSHOUSE2CURSCRIPT], a
 	ret
 
+GiveDreamBattleMons:
+	ld a, 100 ; mon's level
+	ld [$d127], a
+	ld hl, DreamBattleMons
+.loop
+	ld a, [hli]
+	cp $ff
+	ret z
+	ld [$cf91], a
+	call AddPokemonToParty
+	jr .loop
+
+DreamBattleMons:
+	db CHARIZARD, CHANSEY, GYARADOS, $FF
+
+EnterArenaMovement:
+	db $80, 1
+	db $FF
+
 RedsHouse2FScript1: ; 5c0ce (17:40ce)
+	ld a, [$cd38]
+	and a
+	ret nz
+	ld a, $fc
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, $2
+	ld [$ff00+$8c], a
+	call DisplayTextID
+	xor a
+	ld [wJoypadForbiddenButtonsMask], a
+
+	ld hl, $d72d
+	set 6, [hl]
+	set 7, [hl]
+	ld hl, WonChampionshipText
+	ld de, LostChampionshipText
+	call PreBattleSaveRegisters
+	ld a, SHADOW + $C8
+	ld [$d059], a
+	ld a, $1
+	ld [W_TRAINERNO], a
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, 2
+	ld [W_REDSHOUSE2CURSCRIPT], a
+	ret
+
+WonChampionshipText:
+	TX_FAR _WonChampionshipText
+	db "@"
+
+LostChampionshipText:
+	TX_FAR _LostChampionshipText
+	db "@"
+
+RedsHouse2FScript2:
+	xor a
+	ld [wWhichPokemon], a
+	ld [$cf95], a
+	call RemovePokemon
+	call RemovePokemon
+	call RemovePokemon
+	ld a, 3
+	ld [W_REDSHOUSE2CURSCRIPT], a
+	ret	
+
+RedsHouse2FScript3:
 	ret
 
 RedsHouse2FTextPointers: ; 5c0cf (17:40cf)
+	dw EnteringArenaText
+	dw GotHere
+
+EnteringArenaText:
+	TX_FAR _EnteringArenaText
+	db "@"
+
+GotHere:
+	TX_FAR _GotHere
 	db "@"
 
 RedsHouse2FObject: ; 0x5c0d0 ?
@@ -115621,4 +115733,7 @@ TechnicalMachinePrices: ; 7bfa7 (1e:7fa7)
 	db $21, $12, $42, $25, $24
 	db $22, $52, $24, $34, $42
 
+SECTION "New Graphics", ROMX, BANK[$31]
 
+ShadowPic: ; 4fba2 (13:7ba2)
+	INCBIN "pic/trainer/shadow.pic"
