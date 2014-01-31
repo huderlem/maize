@@ -45318,8 +45318,8 @@ CharizardBaseStats: ; 3846a (e:446a)
 	db 100 ; base speed
 	db 85 ; base special
 
-	db DARK ; species type 1
-	db STEEL ; species type 2
+	db FIRE ; species type 1
+	db FLYING ; species type 2
 
 	db 45 ; catch rate
 	db 209 ; base exp yield
