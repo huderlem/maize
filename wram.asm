@@ -752,7 +752,10 @@ W_MONHLEARNSET:: ; d0cc
 ; bit field
 	ds 7
 
-	ds 4
+W_MONSPRITESBANK:: ; d0d3
+	ds 1
+
+	ds 3
 
 W_MONHPADDING:: ; d0d7
 
