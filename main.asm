@@ -42550,6 +42550,7 @@ TypeNamePointers: ; 27dae (9:7dae)
 	dw Type06Name
 	dw Type07Name
 	dw Type08Name
+	dw Type09Name
 	dw Type00Name
 	dw Type00Name
 	dw Type00Name
@@ -42559,8 +42560,7 @@ TypeNamePointers: ; 27dae (9:7dae)
 	dw Type00Name
 	dw Type00Name
 	dw Type00Name
-	dw Type00Name
-	dw Type00Name
+	dw Type13Name
 	dw Type14Name
 	dw Type15Name
 	dw Type16Name
@@ -42601,6 +42601,10 @@ Type08Name: ; 27e3d (9:7e3d)
 	db "GHOST@"
 Type1AName: ; 27e43 (9:7e43)
 	db "DRAGON@"
+Type09Name:
+	db "STEEL@"
+Type13Name:
+	db "DARK@"
 
 SaveTrainerName: ; 27e4a (9:7e4a)
 	ld hl,TrainerNamePointers
@@ -45314,8 +45318,8 @@ CharizardBaseStats: ; 3846a (e:446a)
 	db 100 ; base speed
 	db 85 ; base special
 
-	db FIRE ; species type 1
-	db FLYING ; species type 2
+	db DARK ; species type 1
+	db STEEL ; species type 2
 
 	db 45 ; catch rate
 	db 209 ; base exp yield
@@ -60356,7 +60360,7 @@ CalculateDamage: ; 3ddcf (f:5dcf)
 	ld d, a         ;*D = attack base, used later
 	ret z           ;return if attack is zero
 	ld a, [hl]      ;*test attacking type
-	cp a, $14       ;types >= $14 are all special
+	cp a, DARK       ;types >= $13 are all special
 	jr nc, .specialAttack
 .physicalAttack
 	ld hl, W_ENEMYMONDEFENSE    ;opponent defense
@@ -61589,6 +61593,34 @@ TypeEffects: ; 3e474 (f:6474)
 	db GRASS,DRAGON,05
 	db ICE,DRAGON,20
 	db DRAGON,DRAGON,20
+	db DARK,FIGHTING,05
+	db DARK,PSYCHIC,20
+	db DARK,GHOST,05
+	db DARK,DARK,05
+	db DARK,STEEL,05
+	db STEEL,FIRE,05
+	db STEEL,WATER,05
+	db STEEL,ELECTRIC,05
+	db STEEL,ICE,20
+	db STEEL,ROCK,20
+	db STEEL,STEEL,05
+	db NORMAL,STEEL,05
+	db FIRE,STEEL,20
+	db GRASS,STEEL,05
+	db ICE,STEEL,05
+	db FIGHTING,DARK,20
+	db FIGHTING,STEEL,20
+	db POISON,STEEL,0
+	db GROUND,STEEL,20
+	db FLYING,STEEL,05
+	db PSYCHIC,DARK,0
+	db PSYCHIC,STEEL,05
+	db BUG,DARK,20
+	db BUG,STEEL,05
+	db ROCK,STEEL,05
+	db GHOST,DARK,05
+	db GHOST,STEEL,05
+	db DRAGON,STEEL,05
 	db $FF
 
 ; some tests that need to pass for a move to hit
