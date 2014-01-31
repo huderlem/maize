@@ -3213,19 +3213,20 @@ INCLUDE "text/move_names.asm"
 SECTION "New Text", ROMX, BANK[NEW_TEXT]
 
 _EnteringArenaText::
-    text "And now entering"
-    line "the arena..."
+    text "........."
+
+    para "COME CATCH ME!"
     done
 
 _GotHere::
-	text "Got here"
+	text "HAHAHAHAHA!"
 	done
 
 _WonChampionshipText::
-	text "You won!"	
+	text "..."	
 	prompt
 
 _LostChampionshipText::
-	text "You lost!"
+	text "..."
 	prompt
 

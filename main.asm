@@ -15053,8 +15053,8 @@ DungeonWarpData: ; 63d8 (1:63d8)
 ;	db Tileset_id
 FirstMapSpec: ; 6420 (1:6420)
 	db REDS_HOUSE_2F
-	FLYWARP_DATA REDS_HOUSE_2F_WIDTH,6,3
-	db $04
+	FLYWARP_DATA REDS_HOUSE_2F_WIDTH,0,0
+	db $0C
 
 BattleCenterSpec1: ; 6428 (1:6428)
 	db BATTLE_CENTER
@@ -19674,7 +19674,7 @@ TilesetsHeadPtr: ; c7be (3:47be)
 	TSETHEAD Tset09_Block,Tset09_GFX,Tset09_Coll,$17,$32,$FF,$FF,0
 	TSETHEAD Tset09_Block,Tset09_GFX,Tset09_Coll,$17,$32,$FF,$FF,0
 	TSETHEAD Tset0B_Block,Tset0B_GFX,Tset0B_Coll,$FF,$FF,$FF,$FF,0
-	TSETHEAD Tset09_Block,Tset09_GFX,Tset09_Coll,$17,$32,$FF,$FF,0
+	TSETHEAD Tset0C_Block,Tset0C_GFX,Tset0C_Coll,$FF,$FF,$FF,$FF,0
 	TSETHEAD Tset0D_Block,Tset0D_GFX,Tset0D_Coll,$FF,$FF,$FF,$FF,1
 	TSETHEAD Tset0E_Block,Tset0E_GFX,Tset0E_Coll,$FF,$FF,$FF,$FF,1
 	TSETHEAD Tset0F_Block,Tset0F_GFX,Tset0F_Coll,$12,$FF,$FF,$FF,0
@@ -40676,7 +40676,7 @@ Route2HouseObject: ; 0x1df07 (size=32)
 	EVENT_DISP $4, $7, $3
 
 Route5Gate_h: ; 0x1df27 to 0x1df33 (12 bytes) (bank=7) (id=70)
-	db $0c ; tileset
+	db $09 ; tileset
 	db ROUTE_5_GATE_HEIGHT, ROUTE_5_GATE_WIDTH ; dimensions (y, x)
 	dw Route5GateBlocks, Route5GateTextPointers, Route5GateScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -40828,7 +40828,7 @@ Route5GateBlocks: ; 1e025 (7:6025)
 	INCBIN "maps/route5gate.blk"
 
 Route6Gate_h: ; 0x1e031 to 0x1e03d (12 bytes) (bank=7) (id=73)
-	db $0c ; tileset
+	db $09 ; tileset
 	db ROUTE_6_GATE_HEIGHT, ROUTE_6_GATE_WIDTH ; dimensions (y, x)
 	dw Route6GateBlocks, Route6GateTextPointers, Route6GateScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -40931,7 +40931,7 @@ Route6GateBlocks: ; 1e0e8 (7:60e8)
 	INCBIN "maps/route6gate.blk"
 
 Route7Gate_h: ; 0x1e0f4 to 0x1e100 (12 bytes) (bank=7) (id=76)
-	db $0c ; tileset
+	db $09 ; tileset
 	db ROUTE_7_GATE_HEIGHT, ROUTE_7_GATE_WIDTH ; dimensions (y, x)
 	dw Route7GateBlocks, Route7GateTextPointers, Route7GateScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -41037,7 +41037,7 @@ Route7GateBlocks: ; 1e1af (7:61af)
 	INCBIN "maps/route7gate.blk"
 
 Route8Gate_h: ; 0x1e1bb to 0x1e1c7 (12 bytes) (bank=7) (id=79)
-	db $0c ; tileset
+	db $09 ; tileset
 	db ROUTE_8_GATE_HEIGHT, ROUTE_8_GATE_WIDTH ; dimensions (y, x)
 	dw Route8GateBlocks, Route8GateTextPointers, Route8GateScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -41140,7 +41140,7 @@ Route8GateBlocks: ; 1e271 (7:6271)
 	INCBIN "maps/route8gate.blk"
 
 UndergroundPathEntranceRoute8_h: ; 0x1e27d to 0x1e289 (12 bytes) (bank=7) (id=80)
-	db $0c ; tileset
+	db $09 ; tileset
 	db PATH_ENTRANCE_ROUTE_8_HEIGHT, PATH_ENTRANCE_ROUTE_8_WIDTH ; dimensions (y, x)
 	dw UndergroundPathEntranceRoute8Blocks, UndergroundPathEntranceRoute8TextPointers, UndergroundPathEntranceRoute8Script ; blocks, texts, scripts
 	db $00 ; connections
@@ -41514,7 +41514,7 @@ Route16HouseObject: ; 0x1e657 (size=32)
 	EVENT_DISP $4, $7, $3
 
 Route22Gate_h: ; 0x1e677 to 0x1e683 (12 bytes) (bank=7) (id=193)
-	db $0c ; tileset
+	db $09 ; tileset
 	db ROUTE_22_GATE_HEIGHT, ROUTE_22_GATE_WIDTH ; dimensions (y, x)
 	dw Route22GateBlocks, Route22GateTextPointers, Route22GateScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -52572,7 +52572,7 @@ AgathaData: ; 3a516 (e:6516)
 LanceData: ; 3a522 (e:6522)
 	db $FF,58,GYARADOS,56,DRAGONAIR,56,DRAGONAIR,60,AERODACTYL,62,DRAGONITE,0
 ShadowData:
-	db $FF, 2, RATTATA, 0
+;	db $FF, 2, RATTATA, 0
 	db $FF,100,GENGAR,100,DRAGONITE,100,ALAKAZAM,0
 
 TrainerAI: ; 3a52e (e:652e)
@@ -71123,7 +71123,7 @@ SafariZoneCenterBlocks: ; 45c1e (11:5c1e)
 	INCBIN "maps/safarizonecenter.blk"
 
 SafariZoneRestHouse1_h: ; 0x45ce1 to 0x45ced (12 bytes) (bank=11) (id=221)
-	db $0c ; tileset
+	db $09 ; tileset
 	db SAFARI_ZONE_REST_HOUSE_1_HEIGHT, SAFARI_ZONE_REST_HOUSE_1_WIDTH ; dimensions (y, x)
 	dw SafariZoneRestHouse1Blocks, SafariZoneRestHouse1TextPointers, SafariZoneRestHouse1Script ; blocks, texts, scripts
 	db $00 ; connections
@@ -71162,7 +71162,7 @@ SafariZoneRestHouse1Object: ; 0x45cfe (size=32)
 	EVENT_DISP $4, $7, $3 ; SAFARI_ZONE_CENTER
 
 SafariZoneRestHouse2_h: ; 0x45d1e to 0x45d2a (12 bytes) (bank=11) (id=223)
-	db $0c ; tileset
+	db $09 ; tileset
 	db SAFARI_ZONE_REST_HOUSE_2_HEIGHT, SAFARI_ZONE_REST_HOUSE_2_WIDTH ; dimensions (y, x)
 	dw SafariZoneRestHouse2Blocks, SafariZoneRestHouse2TextPointers, SafariZoneRestHouse2Script ; blocks, texts, scripts
 	db $00 ; connections
@@ -71208,7 +71208,7 @@ SafariZoneRestHouse2Object: ; 0x45d43 (size=38)
 	EVENT_DISP $4, $7, $3 ; SAFARI_ZONE_WEST
 
 SafariZoneRestHouse3_h: ; 0x45d69 to 0x45d75 (12 bytes) (bank=11) (id=224)
-	db $0c ; tileset
+	db $09 ; tileset
 	db SAFARI_ZONE_REST_HOUSE_3_HEIGHT, SAFARI_ZONE_REST_HOUSE_3_WIDTH ; dimensions (y, x)
 	dw SafariZoneRestHouse3Blocks, SafariZoneRestHouse3TextPointers, SafariZoneRestHouse3Script ; blocks, texts, scripts
 	db $00 ; connections
@@ -71254,7 +71254,7 @@ SafariZoneRestHouse3Object: ; 0x45d8e (size=38)
 	EVENT_DISP $4, $7, $3 ; SAFARI_ZONE_EAST
 
 SafariZoneRestHouse4_h: ; 0x45db4 to 0x45dc0 (12 bytes) (bank=11) (id=225)
-	db $0c ; tileset
+	db $09 ; tileset
 	db SAFARI_ZONE_REST_HOUSE_4_HEIGHT, SAFARI_ZONE_REST_HOUSE_4_WIDTH ; dimensions (y, x)
 	dw SafariZoneRestHouse4Blocks, SafariZoneRestHouse4TextPointers, SafariZoneRestHouse4Script ; blocks, texts, scripts
 	db $00 ; connections
@@ -75746,7 +75746,7 @@ RockTunnelPokecenterObject: ; 0x493d4 (size=44)
 	EVENT_DISP $7, $7, $4
 
 Route11Gate_h: ; 0x49400 to 0x4940c (12 bytes) (id=84)
-	db $0c ; tileset
+	db $09 ; tileset
 	db ROUTE_11_GATE_1F_HEIGHT, ROUTE_11_GATE_1F_WIDTH ; dimensions (y, x)
 	dw Route11GateBlocks, Route11GateTextPointers, Route11GateScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -75785,7 +75785,7 @@ Route11GateObject: ; 0x49416 (size=50)
 	EVENT_DISP $4, $8, $6 ; ROUTE_11_GATE_2F
 
 Route11GateUpstairs_h: ; 0x49448 to 0x49454 (12 bytes) (id=86)
-	db $0c ; tileset
+	db $09 ; tileset
 	db ROUTE_11_GATE_2F_HEIGHT, ROUTE_11_GATE_2F_WIDTH ; dimensions (y, x)
 	dw Route11GateUpstairsBlocks, Route11GateUpstairsTextPointers, Route11GateUpstairsScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -75891,7 +75891,7 @@ Route11GateUpstairsObject: ; 0x494da (size=30)
 	EVENT_DISP $4, $7, $7 ; ROUTE_11_GATE_1F
 
 Route12Gate_h: ; 0x494f8 to 0x49504 (12 bytes) (id=87)
-	db $0c ; tileset
+	db $09 ; tileset
 	db ROUTE_12_GATE_HEIGHT, ROUTE_12_GATE_WIDTH ; dimensions (y, x)
 	dw Route12GateBlocks, Route12GateTextPointers, Route12GateScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -75933,7 +75933,7 @@ Route12GateBlocks: ; 49540 (12:5540)
 	INCBIN "maps/route12gate.blk"
 
 Route12GateUpstairs_h: ; 0x49554 to 0x49560 (12 bytes) (id=195)
-	db $0c ; tileset
+	db $09 ; tileset
 	db ROUTE_12_GATE_2F_HEIGHT, ROUTE_12_GATE_2F_WIDTH ; dimensions (y, x)
 	dw Route12GateUpstairsBlocks, Route12GateUpstairsTextPointers, Route12GateUpstairsScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -76036,7 +76036,7 @@ Route12GateUpstairsObject: ; 0x495de (size=24)
 	EVENT_DISP $4, $7, $7 ; ROUTE_12_GATE
 
 Route15Gate_h: ; 0x495f6 to 0x49602 (12 bytes) (id=184)
-	db $0c ; tileset
+	db $09 ; tileset
 	db ROUTE_15_GATE_1F_HEIGHT, ROUTE_15_GATE_1F_WIDTH ; dimensions (y, x)
 	dw Route15GateBlocks, Route15GateTextPointers, Route15GateScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -76075,7 +76075,7 @@ Route15GateObject: ; 0x4960c (size=50)
 	EVENT_DISP $4, $8, $6
 
 Route15GateUpstairs_h: ; 4963e (12:563e)
-	db $0c ; tileset
+	db $09 ; tileset
 	db ROUTE_15_GATE_2F_HEIGHT, ROUTE_15_GATE_2F_WIDTH ; dimensions (y, x)
 	dw Route15GateUpstairsBlocks, Route15GateUpstairsTextPointers, Route15GateUpstairsScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -76145,7 +76145,7 @@ Route15GateUpstairsObject: ; 4969d (12:569d)
 	EVENT_DISP $4, $7, $7 ; ROUTE_15_GATE_1F
 
 Route16GateMap_h: ; 0x496b2 to 0x496be (12 bytes) (id=186)
-	db $0c ; tileset
+	db $09 ; tileset
 	db ROUTE_16_GATE_1F_HEIGHT, ROUTE_16_GATE_1F_WIDTH ; dimensions (y, x)
 	dw Route16GateMapBlocks, Route16GateMapTextPointers, Route16GateMapScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -76308,7 +76308,7 @@ Route16GateMapBlocks: ; 497e3 (12:57e3)
 	INCBIN "maps/route16gatemap.blk"
 
 Route16GateUpstairs_h: ; 0x497ff to 0x4980b (12 bytes) (id=187)
-	db $0c ; tileset
+	db $09 ; tileset
 	db ROUTE_16_GATE_2F_HEIGHT, ROUTE_16_GATE_2F_WIDTH ; dimensions (y, x)
 	dw Route16GateUpstairsBlocks, Route16GateUpstairsTextPointers, Route16GateUpstairsScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -76379,7 +76379,7 @@ Route16GateUpstairsObject: ; 0x4984c (size=30)
 	EVENT_DISP $4, $7, $7 ; ROUTE_16_GATE_1F
 
 Route18Gate_h: ; 0x4986a to 0x49876 (12 bytes) (id=190)
-	db $0c ; tileset
+	db $09 ; tileset
 	db ROUTE_18_GATE_1F_HEIGHT, ROUTE_18_GATE_1F_WIDTH ; dimensions (y, x)
 	dw Route18GateBlocks, Route18GateTextPointers, Route18GateScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -76521,7 +76521,7 @@ Route18GateObject: ; 0x49937 (size=50)
 	EVENT_DISP $4, $8, $6 ; ROUTE_18_GATE_2F
 
 Route18GateUpstairs_h: ; 0x49969 to 0x49975 (12 bytes) (id=191)
-	db $0c ; tileset
+	db $09 ; tileset
 	db ROUTE_18_GATE_2F_HEIGHT, ROUTE_18_GATE_2F_WIDTH ; dimensions (y, x)
 	dw Route18GateUpstairsBlocks, Route18GateUpstairsTextPointers, Route18GateUpstairsScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -90297,7 +90297,7 @@ ViridianForestexitBlocks: ; 5c090 (17:4090)
 	INCBIN "maps/viridianforestexit.blk"
 
 RedsHouse2F_h: ; 5c0a4 (17:40a4)
-	db $04 ; tileset
+	db $0C ; tileset
 	db REDS_HOUSE_2F_HEIGHT, REDS_HOUSE_2F_WIDTH ; dimensions
 	dw RedsHouse2FBlocks, RedsHouse2FTextPointers, RedsHouse2FScript
 	db $00 ; no connections
@@ -90352,7 +90352,12 @@ DreamBattleMons:
 	db CHARIZARD, CHANSEY, GYARADOS, $FF
 
 EnterArenaMovement:
+	db $40, 1
+	db $20, 3
 	db $80, 1
+	db $10, 2
+	db $80, 2
+	db $10, 3
 	db $FF
 
 RedsHouse2FScript1: ; 5c0ce (17:40ce)
@@ -90366,7 +90371,6 @@ RedsHouse2FScript1: ; 5c0ce (17:40ce)
 	call DisplayTextID
 	xor a
 	ld [wJoypadForbiddenButtonsMask], a
-
 	ld hl, $d72d
 	set 6, [hl]
 	set 7, [hl]
@@ -90418,7 +90422,7 @@ GotHere:
 	db "@"
 
 RedsHouse2FObject: ; 0x5c0d0 ?
-	db $0A ; border tile
+	db $00 ; border tile
 
 	db 1 ; warps
 	db 1, 7, 2, REDS_HOUSE_1F
@@ -93153,7 +93157,7 @@ ViridianForestexitObject: ; 0x5d598 (size=48)
 	EVENT_DISP $5, $7, $5 ; VIRIDIAN_FOREST
 
 Route2Gate_h: ; 0x5d5c8 to 0x5d5d4 (12 bytes) (id=49)
-	db $0c ; tileset
+	db $09 ; tileset
 	db ROUTE_2_GATE_HEIGHT, ROUTE_2_GATE_WIDTH ; dimensions (y, x)
 	dw Route2GateBlocks, Route2GateTextPointers, Route2GateScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -93267,7 +93271,7 @@ ViridianForestEntranceObject: ; 0x5d66d (size=48)
 	EVENT_DISP $5, $7, $5
 
 UndergroundTunnelEntranceRoute5_h: ; 0x5d69d to 0x5d6a9 (12 bytes) (id=71)
-	db $0c ; tileset
+	db $09 ; tileset
 	db PATH_ENTRANCE_ROUTE_5_HEIGHT, PATH_ENTRANCE_ROUTE_5_WIDTH ; dimensions (y, x)
 	dw UndergroundTunnelEntranceRoute5Blocks, UndergroundTunnelEntranceRoute5TextPointers, UndergroundTunnelEntranceRoute5Script ; blocks, texts, scripts
 	db $00 ; connections
@@ -93312,7 +93316,7 @@ UndergroundTunnelEntranceRoute5Object: ; 0x5d6c1 (size=34)
 	EVENT_DISP $4, $4, $4 ; UNDERGROUND_PATH_NS
 
 UndergroundTunnelEntranceRoute6_h: ; 0x5d6e3 to 0x5d6ef (12 bytes) (id=74)
-	db $0c ; tileset
+	db $09 ; tileset
 	db PATH_ENTRANCE_ROUTE_6_HEIGHT, PATH_ENTRANCE_ROUTE_6_WIDTH ; dimensions (y, x)
 	dw UndergroundTunnelEntranceRoute6Blocks, UndergroundTunnelEntranceRoute6TextPointers, UndergroundTunnelEntranceRoute6Script ; blocks, texts, scripts
 	db $00 ; connections
@@ -93349,7 +93353,7 @@ UndergroundTunnelEntranceRoute6Object: ; 0x5d6fe (size=34)
 	EVENT_DISP $4, $4, $4 ; UNDERGROUND_PATH_NS
 
 UndergroundPathEntranceRoute7_h: ; 0x5d720 to 0x5d72c (12 bytes) (id=77)
-	db $0c ; tileset
+	db $09 ; tileset
 	db PATH_ENTRANCE_ROUTE_7_HEIGHT, PATH_ENTRANCE_ROUTE_7_WIDTH ; dimensions (y, x)
 	dw UndergroundTunnelEntranceRoute7Blocks, UndergroundPathEntranceRoute7TextPointers, UndergroundPathEntranceRoute7Script ; blocks, texts, scripts
 	db $00 ; connections
@@ -93386,7 +93390,7 @@ UndergroundPathEntranceRoute7Object: ; 0x5d73b (size=34)
 	EVENT_DISP $4, $4, $4 ; UNDERGROUND_PATH_WE
 
 UndergroundPathEntranceRoute7Copy_h: ; 5d75d (17:575d)
-	db $0c ; tileset
+	db $09 ; tileset
 	db PATH_ENTRANCE_ROUTE_7_HEIGHT, PATH_ENTRANCE_ROUTE_7_WIDTH ; dimensions (y, x)
 	dw UndergroundTunnelEntranceRoute7CopyBlocks, UndergroundPathEntranceRoute7CopyTextPointers, UndergroundPathEntranceRoute7CopyScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -105727,7 +105731,7 @@ FuchsiaHouse2Blocks: ; 751ad (1d:51ad)
 	INCBIN "maps/fuchsiahouse2.blk"
 
 SafariZoneEntrance_h: ; 0x751c1 to 0x751cd (12 bytes) (id=156)
-	db $0c ; tileset
+	db $09 ; tileset
 	db SAFARIZONEENTRANCE_HEIGHT, SAFARIZONEENTRANCE_WIDTH ; dimensions (y, x)
 	dw SafariZoneEntranceBlocks, SafariZoneEntranceTextPointers, SafariZoneEntranceScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -115737,3 +115741,12 @@ SECTION "New Graphics", ROMX, BANK[$31]
 
 ShadowPic: ; 4fba2 (13:7ba2)
 	INCBIN "pic/trainer/shadow.pic"
+
+Tset0C_GFX:
+	INCBIN "gfx/tilesets/0c.2bpp"
+Tset0C_Block:
+	INCBIN "gfx/blocksets/0c.bst"
+Tset0C_Coll:
+	INCBIN "gfx/tilesets/0c.tilecoll"
+
+
