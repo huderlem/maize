@@ -1508,3 +1508,139 @@ _VictreebelDexEntry::
 	next "from there"
 	dex
 
+_SkarmoryDexEntry::
+	text "This bird is made"
+	next "of metal, and it"
+	next "makes no sense."
+
+	page "That is why"
+	next "it's so"
+	next "awesome"
+	dex
+
+_MareepDexEntry::
+	text "Its wool is so"
+	next "thick that it can"
+	next "produce up to"
+
+	page "1.21 gigawatts of"
+	next "static"
+	next "electricity"
+	dex
+
+_FlaaffyDexEntry::
+	text "FLAAFFY is half"
+	next "dinosaur and half"
+	next "sheep."
+
+	page "It doesn't excel"
+	next "in the art of"
+	next "camouflage"
+	dex
+
+_AmpharosDexEntry::
+	text "The orb on its"
+	next "tail can light up"
+	next "any dark area,"
+
+	page "but it still"
+	next "needs HM05 to do"
+	next "so"
+	dex
+
+_DrilburDexEntry::
+	text "Apparently it can"
+	next "tunnel through"
+	next "the ground as"
+
+	page "fast as a car."
+	next "I'll believe it"
+	next "when I see it"
+	dex
+
+_ExcadrillDexEntry::
+	text "Its claws can dig"
+	next "through any"
+	next "substance."
+
+	page "That's right,"
+	next "anything"
+	dex
+
+_SteelixDexEntry::
+	text "It is unclear how"
+	next "it moves its body"
+	next "given the rigid"
+
+	page "structure of its"
+	next "metallic lobes"
+	dex
+
+_HoundourDexEntry::
+	text "Is that a skull"
+	next "on its head?"
+	next "It sure looks"
+
+	page "like it."
+	next "It eats CUBONE"
+	next "for dinner"
+	dex
+
+_HoundoomDexEntry::
+	text "The fire it spits"
+	next "is said to be"
+	next "so hot that it"
+
+	page "can burn you."
+	next "Yes."
+	next "That hot"
+	dex
+
+_GligarDexEntry::
+	text "This flying"
+	next "scorpion can jump"
+	next "higher than a"
+
+	page "monkey. That is"
+	next "pointless because"
+	next "it can fly"
+	dex
+
+_GliscorDexEntry::
+	text "It's what you get"
+	next "when you cross a"
+	next "scorpion and a"
+
+	page "vampire--but not"
+	next "the kind from"
+	next "Twilight"
+	dex
+
+_MurkrowDexEntry::
+	text "Despite the"
+	next "seemingly nice"
+	next "appearance, it"
+
+	page "will steal all of"
+	next "your shiny"
+	next "objects"
+	dex
+
+_HonchkrowDexEntry::
+	text "Even Captain"
+	next "Jack Sparrow"
+	next "would be proud"
+
+	page "to wear a hat"
+	next "like that"
+	dex
+
+_ScizorDexEntry::
+	text "It can't fly"
+	next "because it's body"
+	next "is made of steel,"
+	
+	page "but somehow,"
+	next "SKARMORY is able"
+	next "to fly"
+	dex

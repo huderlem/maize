@@ -165,7 +165,7 @@ MoveNames:: ; b0000 (2c:4000)
 	db "SUBSTITUTE@"
 	db "CRUNCH@"
 	db "DARK PULSE@"
-	db "FAINT ATTACK@"
+	db "FEINT ATTACK@"
 	db "NIGHT SLASH@"
 	db "DARK VOID@"
 	db "FLASH CANNON@"

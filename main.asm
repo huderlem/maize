@@ -3031,7 +3031,7 @@ LoadFrontSpriteByMonIndex:: ; 1389 (0:1389)
 	and a
 	pop hl
 	jr z, .invalidDexNumber  ; dex #0 invalid
-	cp $98
+	cp 166 ; num mons in dex + 1
 	jr c, .validDexNumber    ; dex >#151 invalid
 .invalidDexNumber
 	ld a, RHYDON ; $1
@@ -37476,8 +37476,8 @@ MonsterNames: ; 1c21e (7:421e)
 	db "BLASTOISE@"
 	db "PINSIR@@@@"
 	db "TANGELA@@@"
-	db "MISSINGNO."
-	db "MISSINGNO."
+	db "SKARMORY@@"
+	db "MAREEP@@@@"
 	db "GROWLITHE@"
 	db "ONIX@@@@@@"
 	db "FEAROW@@@@"
@@ -37495,26 +37495,26 @@ MonsterNames: ; 1c21e (7:421e)
 	db "PSYDUCK@@@"
 	db "DROWZEE@@@"
 	db "GOLEM@@@@@"
-	db "MISSINGNO."
+	db "FLAAFFY@@@"
 	db "MAGMAR@@@@"
-	db "MISSINGNO."
+	db "AMPHAROS@@"
 	db "ELECTABUZZ"
 	db "MAGNETON@@"
 	db "KOFFING@@@"
-	db "MISSINGNO."
+	db "DRILBUR@@@"
 	db "MANKEY@@@@"
 	db "SEEL@@@@@@"
 	db "DIGLETT@@@"
 	db "TAUROS@@@@"
-	db "MISSINGNO."
-	db "MISSINGNO."
-	db "MISSINGNO."
+	db "EXCADRILL@"
+	db "STEELIX@@@"
+	db "HOUNDOUR@@"
 	db "FARFETCH'D"
 	db "VENONAT@@@"
 	db "DRAGONITE@"
-	db "MISSINGNO."
-	db "MISSINGNO."
-	db "MISSINGNO."
+	db "HOUNDOOM@@"
+	db "GLIGAR@@@@"
+	db "GLISCOR@@@"
 	db "DODUO@@@@@"
 	db "POLIWAG@@@"
 	db "JYNX@@@@@@"
@@ -37524,9 +37524,9 @@ MonsterNames: ; 1c21e (7:421e)
 	db "DITTO@@@@@"
 	db "MEOWTH@@@@"
 	db "KRABBY@@@@"
-	db "MISSINGNO."
-	db "MISSINGNO."
-	db "MISSINGNO."
+	db "MURKROW@@@"
+	db "HONCHKROW@"
+	db "SCIZOR@@@@"
 	db "VULPIX@@@@"
 	db "NINETALES@"
 	db "PIKACHU@@@"
@@ -45109,7 +45109,7 @@ Moves: ; 38000 (e:4000)
 	db SUBSTITUTE  ,SUBSTITUTE_EFFECT         ,$00,NORMAL,  $FF,10
 	db BITE        ,SPECIAL_DOWN_SIDE_EFFECT  ,80,DARK,     $FF,15 ; CRUNCH
 	db PSYCHIC_M   ,FLINCH_SIDE_EFFECT2       ,80,DARK,     $FF,15 ; DARK_PULSE
-	db QUICK_ATTACK,SWIFT_EFFECT              ,60,DARK,     $FF,20 ; FAINT_ATTACK
+	db QUICK_ATTACK,SWIFT_EFFECT              ,60,DARK,     $FF,20 ; FEINT_ATTACK
 	db SLASH       ,NO_ADDITIONAL_EFFECT      ,70,DARK,     $FF,15 ; NIGHT_SLASH
 	db HYPNOSIS    ,SLEEP_EFFECT              ,0,DARK,      $CC,10 ; DARK_VOID
 	db FLASH       ,SPECIAL_DOWN_SIDE_EFFECT  ,80,STEEL,    $FF,10 ; FLASH_CANNON
@@ -50685,6 +50685,532 @@ MewtwoBaseStats: ; 3942a (e:542a)
 
 	db Bank(MewtwoPicFront)
 
+; 0x1C bytes of filler for mew's data...
+MewBaseStatesFiller:
+	db $00,$00,$00,$00,$00,$00,$00,$00
+	db $00,$00,$00,$00,$00,$00,$00,$00
+	db $00,$00,$00,$00,$00,$00,$00,$00
+	db $00,$00,$00,$00
+
+SkarmoryBaseStats:
+	db DEX_SKARMORY ; pokedex id
+	db $41 ; base hp
+	db $50 ; base attack
+	db $8C ; base defense
+	db $46 ; base speed
+	db $46 ; base special
+
+	db STEEL  ; species type 1
+	db FLYING ; species type 2
+
+	db $19 ; catch rate
+	db $A8 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw SkarmoryPicFront
+	dw SkarmoryPicBack
+
+	; attacks known at lvl 0
+	db LEER
+	db PECK
+	db 0
+	db 0
+
+	db 4 ; growth rate
+
+	; learnset
+	db %00101110
+	db %00000000
+	db %00001000
+	db %11000000
+	db %01000010
+	db %00000100
+	db %00001110
+
+	db Bank(SkarmoryPicFront)
+
+MareepBaseStats:
+	db DEX_MAREEP ; pokedex id
+	db 55 ; base hp
+	db 40 ; base attack
+	db 40 ; base defense
+	db 35 ; base speed
+	db 60 ; base special
+
+	db ELECTRIC  ; species type 1
+	db ELECTRIC ; species type 2
+
+	db 235 ; catch rate
+	db 59 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw MareepPicFront
+	dw MareepPicBack
+
+	; attacks known at lvl 0
+	db TACKLE
+	db GROWL
+	db 0
+	db 0
+
+	db 3 ; growth rate
+
+	; learnset
+	db %10100001
+	db %01000011  
+	db %10001000
+	db %11000001
+	db %01000011
+	db %00011000
+	db %01100010
+
+	db Bank(MareepPicFront)
+
+FlaaffyBaseStats:
+	db DEX_FLAAFFY ; pokedex id
+	db 70 ; base hp
+	db 55 ; base attack
+	db 55 ; base defense
+	db 45 ; base speed
+	db 75 ; base special
+
+	db ELECTRIC  ; species type 1
+	db ELECTRIC ; species type 2
+
+	db 120 ; catch rate
+	db 117 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw FlaaffyPicFront
+	dw FlaaffyPicBack
+
+	; attacks known at lvl 0
+	db TACKLE
+	db GROWL
+	db THUNDERSHOCK
+	db 0
+
+	db 3 ; growth rate
+
+	; learnset
+	db %10100001
+	db %01000011  
+	db %10001000
+	db %11000001
+	db %01000011
+	db %00011000
+	db %01100010
+
+	db Bank(FlaaffyPicFront)
+
+AmpharosBaseStats:
+	db DEX_AMPHAROS ; pokedex id
+	db 90 ; base hp
+	db 75 ; base attack
+	db 75 ; base defense
+	db 55 ; base speed
+	db 115 ; base special
+
+	db ELECTRIC  ; species type 1
+	db ELECTRIC ; species type 2
+
+	db 45 ; catch rate
+	db 194 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw AmpharosPicFront
+	dw AmpharosPicBack
+
+	; attacks known at lvl 0
+	db TACKLE
+	db GROWL
+	db THUNDERSHOCK
+	db THUNDER_WAVE
+
+	db 3 ; growth rate
+
+	; learnset
+	db %10100001
+	db %01000011  
+	db %10001000
+	db %11000001
+	db %01000011
+	db %00011000
+	db %01100010
+
+	db Bank(AmpharosPicFront)
+
+DrilburBaseStats:
+	db DEX_DRILBUR ; pokedex id
+	db 60 ; base hp
+	db 85 ; base attack
+	db 40 ; base defense
+	db 68 ; base speed
+	db 25 ; base special
+
+	db GROUND  ; species type 1
+	db GROUND ; species type 2
+
+	db 120 ; catch rate
+	db 66 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw DrilburPicFront
+	dw DrilburPicBack
+
+	; attacks known at lvl 0
+	db SCRATCH
+	db 0
+	db 0
+	db 0
+
+	db 3 ; growth rate
+
+	; learnset
+	db %01100100
+	db %01000000
+	db %00001001
+	db %11001110
+	db %10000000
+	db %10001000
+	db %00100110
+
+	db Bank(DrilburPicFront)
+
+ExcadrillBaseStats:
+	db DEX_EXCADRILL ; pokedex id
+	db 110 ; base hp
+	db 135 ; base attack
+	db 60 ; base defense
+	db 88 ; base speed
+	db 57 ; base special
+
+	db GROUND  ; species type 1
+	db STEEL   ; species type 2
+
+	db 60 ; catch rate
+	db 178 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw ExcadrillPicFront
+	dw ExcadrillPicBack
+
+	; attacks known at lvl 0
+	db SCRATCH
+	db 0
+	db 0
+	db 0
+
+	db 3 ; growth rate
+
+	; learnset
+	db %01100100
+	db %01000000
+	db %00001001
+	db %11001110
+	db %10000000
+	db %10001000
+	db %00100110
+
+	db Bank(ExcadrillPicFront)
+
+SteelixBaseStats:
+	db DEX_STEELIX ; pokedex id
+	db 75  ; base hp
+	db 85  ; base attack
+	db 200 ; base defense
+	db 30  ; base speed
+	db 60  ; base special
+
+	db STEEL    ; species type 1
+	db GROUND   ; species type 2
+
+	db 25 ; catch rate
+	db 196 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw SteelixPicFront
+	dw SteelixPicBack
+
+	; attacks known at lvl 0
+	db TACKLE
+	db SCREECH
+	db 0
+	db 0
+
+	db 0 ; growth rate
+
+	; learnset
+	db %10100000
+	db %01000010
+	db %00001000
+	db %11001010
+	db %00000010
+	db %10001000
+	db %00100110
+
+	db Bank(SteelixPicFront)
+
+HoundourBaseStats:
+	db DEX_HOUNDOUR ; pokedex id
+	db 45  ; base hp
+	db 60  ; base attack
+	db 30 ; base defense
+	db 65  ; base speed
+	db 70  ; base special
+
+	db DARK     ; species type 1
+	db FIRE     ; species type 2
+
+	db 120 ; catch rate
+	db 114 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw HoundourPicFront
+	dw HoundourPicBack
+
+	; attacks known at lvl 0
+	db LEER
+	db EMBER
+	db 0
+	db 0
+
+	db 2 ; growth rate
+
+	; learnset
+	db %10100000
+	db %00000000
+	db %00001010
+	db %11000000
+	db %01100000
+	db %00001000
+	db %00000010
+
+	db Bank(HoundourPicFront)
+
+HoundoomBaseStats:
+	db DEX_HOUNDOOM ; pokedex id
+	db 75   ; base hp
+	db 90   ; base attack
+	db 50   ; base defense
+	db 95   ; base speed
+	db 105  ; base special
+
+	db DARK     ; species type 1
+	db FIRE     ; species type 2
+
+	db 45 ; catch rate
+	db 204 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw HoundoomPicFront
+	dw HoundoomPicBack
+
+	; attacks known at lvl 0
+	db LEER
+	db EMBER
+	db 0
+	db 0
+
+	db 2 ; growth rate
+
+	; learnset
+	db %10100000
+	db %00000000
+	db %00001010
+	db %11000000
+	db %01100000
+	db %00001000
+	db %00000010
+
+	db Bank(HoundoomPicFront)
+
+GligarBaseStats:
+	db DEX_GLIGAR ; pokedex id
+	db 65   ; base hp
+	db 75   ; base attack
+	db 105  ; base defense
+	db 85   ; base speed
+	db 65   ; base special
+
+	db GROUND     ; species type 1
+	db FLYING     ; species type 2
+
+	db 60  ; catch rate
+	db 108 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw GligarPicFront
+	dw GligarPicBack
+
+	; attacks known at lvl 0
+	db POISON_STING
+	db 0
+	db 0
+	db 0
+
+	db 0 ; growth rate
+
+	; learnset
+	db %00100110
+	db %00000000
+	db %00001000
+	db %11001110
+	db %01000000
+	db %10001010
+	db %00100110
+
+	db Bank(GligarPicFront)
+
+GliscorBaseStats:
+	db DEX_GLISCOR ; pokedex id
+	db 75   ; base hp
+	db 95   ; base attack
+	db 125  ; base defense
+	db 95   ; base speed
+	db 65   ; base special
+
+	db GROUND     ; species type 1
+	db FLYING     ; species type 2
+
+	db 30  ; catch rate
+	db 192 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw GliscorPicFront
+	dw GliscorPicBack
+
+	; attacks known at lvl 0
+	db POISON_STING
+	db HARDEN
+	db SAND_ATTACK
+	db 0
+
+	db 0 ; growth rate
+
+	; learnset
+	db %00100110
+	db %00000000
+	db %00001000
+	db %11001110
+	db %01000000
+	db %10001010
+	db %00100110
+
+	db Bank(GliscorPicFront)
+
+MurkrowBaseStats:
+	db DEX_MURKROW ; pokedex id
+	db 60   ; base hp
+	db 85   ; base attack
+	db 42   ; base defense
+	db 91   ; base speed
+	db 80   ; base special
+
+	db DARK       ; species type 1
+	db FLYING     ; species type 2
+
+	db 30  ; catch rate
+	db 107 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw MurkrowPicFront
+	dw MurkrowPicBack
+
+	; attacks known at lvl 0
+	db PECK
+	db 0
+	db 0
+	db 0
+
+	db 0 ; growth rate
+
+	; learnset
+	db %00101010
+	db %00000000
+	db %00001000
+	db %11010000
+	db %01000000
+	db %00011110
+	db %00001010
+
+	db Bank(MurkrowPicFront)
+
+HonchkrowBaseStats:
+	db DEX_HONCHKROW ; pokedex id
+	db 100   ; base hp
+	db 125   ; base attack
+	db 52    ; base defense
+	db 71    ; base speed
+	db 95    ; base special
+
+	db DARK       ; species type 1
+	db FLYING     ; species type 2
+
+	db 30  ; catch rate
+	db 187 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw HonchkrowPicFront
+	dw HonchkrowPicBack
+
+	; attacks known at lvl 0
+	db PECK
+	db HAZE
+	db 0
+	db 0
+
+	db 0 ; growth rate
+
+	; learnset
+	db %00101010
+	db %00000000
+	db %00001000
+	db %11010000
+	db %01000000
+	db %00011110
+	db %00001010
+
+	db Bank(HonchkrowPicFront)
+
+ScizorBaseStats:
+	db DEX_SCIZOR ; pokedex id
+	db 70    ; base hp
+	db 130   ; base attack
+	db 100   ; base defense
+	db 65    ; base speed
+	db 70    ; base special
+
+	db BUG       ; species type 1
+	db STEEL     ; species type 2
+
+	db 25  ; catch rate
+	db 200 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw ScizorPicFront
+	dw ScizorPicBack
+
+	; attacks known at lvl 0
+	db QUICK_ATTACK
+	db LEER
+	db 0
+	db 0
+
+	db 0 ; growth rate
+
+	; learnset
+	db %00100110
+	db %01000010
+	db %00001010
+	db %11000000
+	db %01000000
+	db %00001000
+	db %00100110
+
+	db Bank(ScizorPicFront)
+
+
 CryData: ; 39446 (e:5446)
 	;$BaseCry, $Pitch, $Length
 	db $11, $00, $80; Rhydon
@@ -50717,8 +51243,8 @@ CryData: ; 39446 (e:5446)
 	db $13, $00, $80; Blastoise
 	db $14, $00, $80; Pinsir
 	db $12, $00, $80; Tangela
-	db $00, $00, $00; MissingNo.
-	db $00, $00, $00; MissingNo.
+	db $18, $A0, $C0; Skarmory
+	db $1F, $10, $80; Mareep
 	db $1F, $20, $40; Growlithe
 	db $17, $FF, $C0; Onix
 	db $18, $40, $A0; Fearow
@@ -50736,26 +51262,26 @@ CryData: ; 39446 (e:5446)
 	db $21, $20, $60; Psyduck
 	db $0D, $88, $20; Drowzee
 	db $12, $E0, $40; Golem
-	db $00, $00, $00; MissingNo.
+	db $1F, $08, $C0; Flaaffy
 	db $04, $FF, $30; Magmar
-	db $00, $00, $00; MissingNo.
+	db $1F, $00, $FF; Ampharos
 	db $06, $8F, $FF; Electabuzz
 	db $1C, $20, $C0; Magneton
 	db $12, $E6, $DD; Koffing
-	db $00, $00, $00; MissingNo.
+	db $0B, $70, $70; Drilbur
 	db $0A, $DD, $60; Mankey
 	db $0C, $88, $C0; Seel
 	db $0B, $AA, $01; Diglett
 	db $1D, $11, $40; Tauros
-	db $00, $00, $00; MissingNo.
-	db $00, $00, $00; MissingNo.
-	db $00, $00, $00; MissingNo.
+	db $0B, $30, $C0; Excadrill
+	db $17, $C0, $80; Steelix
+	db $1F, $80, $60; Houndour
 	db $10, $DD, $01; Farfetch'd
 	db $1A, $44, $40; Venonat
 	db $0F, $3C, $C0; Dragonite
-	db $00, $80, $10; MissingNo.
-	db $00, $00, $00; MissingNo.
-	db $1D, $E0, $80; MissingNo.
+	db $1F, $20, $C0; Houndoom
+	db $1D, $F0, $60; Gligar
+	db $1D, $60, $80; Gliscor
 	db $0B, $BB, $01; Doduo
 	db $0E, $FF, $FF; Poliwag
 	db $0D, $FF, $FF; Jynx
@@ -50765,9 +51291,9 @@ CryData: ; 39446 (e:5446)
 	db $0E, $FF, $FF; Ditto
 	db $19, $77, $10; Meowth
 	db $20, $20, $E0; Krabby
-	db $22, $FF, $40; MissingNo.
-	db $00, $00, $00; MissingNo.
-	db $0E, $E0, $60; MissingNo.
+	db $0B, $60, $40; Murkrow
+	db $18, $80, $C0; Honchkrow
+	db $16, $20, $20; Scizor
 	db $24, $4F, $10; Vulpix
 	db $24, $88, $60; Ninetales
 	db $0F, $EE, $01; Pikachu
@@ -52587,7 +53113,7 @@ LanceData: ; 3a522 (e:6522)
 	db $FF,58,GYARADOS,56,DRAGONAIR,56,DRAGONAIR,60,AERODACTYL,62,DRAGONITE,0
 ShadowData:
 ;	db $FF, 100, RATICATE, 100, SQUIRTLE, 0
-	db $FF,100,GENGAR,100,DRAGONITE,100,ALAKAZAM,0
+	db $FF,100,SKARMORY,100,DRAGONITE,100,ALAKAZAM,0
 
 TrainerAI: ; 3a52e (e:652e)
 ;XXX called at 34964, 3c342, 3c398
@@ -53824,8 +54350,8 @@ EvosMovesPointerTable: ; 3b05c (e:705c)
 	dw Mon009_EvosMoves
 	dw Mon127_EvosMoves
 	dw Mon114_EvosMoves
-	dw Mon152_EvosMoves	;MissingNo
-	dw Mon153_EvosMoves	;MissingNo
+	dw Mon152_EvosMoves	;Skarmory
+	dw Mon153_EvosMoves	;Mareep
 	dw Mon058_EvosMoves
 	dw Mon095_EvosMoves
 	dw Mon022_EvosMoves
@@ -53843,26 +54369,26 @@ EvosMovesPointerTable: ; 3b05c (e:705c)
 	dw Mon054_EvosMoves
 	dw Mon096_EvosMoves
 	dw Mon076_EvosMoves
-	dw Mon154_EvosMoves	;MissingNo
+	dw Mon154_EvosMoves	;Flaaffy
 	dw Mon126_EvosMoves
-	dw Mon155_EvosMoves	;MissingNo
+	dw Mon155_EvosMoves	;Ampharos
 	dw Mon125_EvosMoves
 	dw Mon082_EvosMoves
 	dw Mon109_EvosMoves
-	dw Mon156_EvosMoves	;MissingNo
+	dw Mon156_EvosMoves	;Drilbur
 	dw Mon056_EvosMoves
 	dw Mon086_EvosMoves
 	dw Mon050_EvosMoves
 	dw Mon128_EvosMoves
-	dw Mon157_EvosMoves	;MissingNo
-	dw Mon158_EvosMoves	;MissingNo
-	dw Mon159_EvosMoves	;MissingNo
+	dw Mon157_EvosMoves	;Excadrill
+	dw Mon158_EvosMoves	;Steelix
+	dw Mon159_EvosMoves	;Houndour
 	dw Mon083_EvosMoves
 	dw Mon048_EvosMoves
 	dw Mon149_EvosMoves
-	dw Mon160_EvosMoves	;MissingNo
-	dw Mon161_EvosMoves	;MissingNo
-	dw Mon162_EvosMoves	;MissingNo
+	dw Mon160_EvosMoves	;Houndoom
+	dw Mon161_EvosMoves	;Gligar
+	dw Mon162_EvosMoves	;Gliscor
 	dw Mon084_EvosMoves
 	dw Mon060_EvosMoves
 	dw Mon124_EvosMoves
@@ -53872,9 +54398,9 @@ EvosMovesPointerTable: ; 3b05c (e:705c)
 	dw Mon132_EvosMoves
 	dw Mon052_EvosMoves
 	dw Mon098_EvosMoves
-	dw Mon163_EvosMoves	;MissingNo
-	dw Mon164_EvosMoves	;MissingNo
-	dw Mon165_EvosMoves	;MissingNo
+	dw Mon163_EvosMoves	;Murkrow
+	dw Mon164_EvosMoves	;Honchkrow
+	dw Mon165_EvosMoves	;Scizor
 	dw Mon037_EvosMoves
 	dw Mon038_EvosMoves
 	dw Mon025_EvosMoves
@@ -54044,7 +54570,7 @@ Mon021_EvosMoves: ; 3b215 (e:7215)
 ;Learnset
 	db 9,LEER
 	db 15,FURY_ATTACK
-	db 18,FAINT_ATTACK
+	db 18,FEINT_ATTACK
 	db 20,STEEL_WING
 	db 22,MIRROR_MOVE
 	db 25,AERIAL_ACE
@@ -54356,17 +54882,31 @@ Mon114_EvosMoves: ; 3b362 (e:7362)
 	db 0
 
 Mon152_EvosMoves: ; 3b370 (e:7370)
-;MISSINGNO
+;SKARMORY
 ;Evolutions
 	db 0
 ;Learnset
+	db 12,SAND_ATTACK
+	db 19,SWIFT
+	db 23,AGILITY
+	db 27,FURY_ATTACK
+	db 32,STEEL_WING
+	db 39,NIGHT_SLASH
+	db 43,SLASH
 	db 0
 
 Mon153_EvosMoves: ; 3b372 (e:7372)
-;MISSINGNO
+;MAREEP
 ;Evolutions
+	db EV_LEVEL,15,FLAAFFY
 	db 0
 ;Learnset
+	db 10,THUNDERSHOCK
+	db 14,THUNDER_WAVE
+	db 20,TAKE_DOWN
+	db 25,CONFUSE_RAY
+	db 30,LIGHT_SCREEN
+	db 37,THUNDER
 	db 0
 Mon058_EvosMoves: ; 3b374 (e:7374)
 ;GROWLITHE
@@ -54583,17 +55123,23 @@ Mon076_EvosMoves: ; 3b459 (e:7459)
 	db 0
 
 Mon154_EvosMoves: ; 3b467 (e:7467)
-;MISSINGNO
+;FLAAFFY
 ;Evolutions
+	db EV_LEVEL,30,AMPHAROS
 	db 0
 ;Learnset
+	db 18,THUNDER_WAVE
+	db 24,TAKE_DOWN
+	db 29,CONFUSE_RAY
+	db 35,LIGHT_SCREEN
+	db 46,THUNDER
 	db 0
 Mon126_EvosMoves: ; 3b469 (e:7469)
 ;MAGMAR
 ;Evolutions
 	db 0
 ;Learnset
-	db 16,FAINT_ATTACK
+	db 16,FEINT_ATTACK
 	db 36,LEER
 	db 39,CONFUSE_RAY
 	db 43,FIRE_PUNCH
@@ -54603,10 +55149,13 @@ Mon126_EvosMoves: ; 3b469 (e:7469)
 	db 0
 
 Mon155_EvosMoves: ; 3b477 (e:7477)
-;MISSINGNO
+;AMPHAROS
 ;Evolutions
 	db 0
 ;Learnset
+	db 30,THUNDERPUNCH
+	db 40,LIGHT_SCREEN
+	db 50,THUNDER
 	db 0
 Mon125_EvosMoves: ; 3b479 (e:7479)
 ;ELECTABUZZ
@@ -54648,10 +55197,20 @@ Mon109_EvosMoves: ; 3b493 (e:7493)
 	db 0
 
 Mon156_EvosMoves: ; 3b4a2 (e:74a2)
-;MISSINGNO
+;DRILBUR
 ;Evolutions
+	db EV_LEVEL,31,EXCADRILL
 	db 0
 ;Learnset
+	db 8,SAND_ATTACK
+	db 12,FURY_SWIPES
+	db 15,METAL_CLAW
+	db 19,DIG
+	db 26,SLASH
+	db 29,ROCK_SLIDE
+	db 33,EARTHQUAKE
+	db 36,SWORDS_DANCE
+	db 47,FISSURE
 	db 0
 Mon056_EvosMoves: ; 3b4a4 (e:74a4)
 ;MANKEY
@@ -54705,24 +55264,50 @@ Mon128_EvosMoves: ; 3b4d1 (e:74d1)
 	db 0
 
 Mon157_EvosMoves: ; 3b4dd (e:74dd)
-;MISSINGNO
+;EXCADRILL
 ;Evolutions
 	db 0
 ;Learnset
+	db 12,FURY_SWIPES
+	db 19,DIG
+	db 26,SLASH
+	db 30,METAL_CLAW
+	db 31,HORN_DRILL
+	db 38,EARTHQUAKE
+	db 42,SWORDS_DANCE
+	db 57,FISSURE
 	db 0
 
 Mon158_EvosMoves: ; 3b4df (e:74df)
-;MISSINGNO
+;STEELIX
 ;Evolutions
 	db 0
 ;Learnset
+	db 10,BIND
+	db 14,ROCK_THROW
+	db 22,IRON_HEAD
+	db 23,HARDEN
+	db 27,RAGE
+	db 30,DRAGONBREATH
+	db 32,IRON_DEFENSE
+	db 36,IRON_TAIL
+	db 40,SLAM
+	db 49,CRUNCH
+	db 57,DOUBLE_EDGE
 	db 0
 
 Mon159_EvosMoves: ; 3b4e1 (e:74e1)
-;MISSINGNO
+;HOUNDOUR
 ;Evolutions
+	db EV_LEVEL,24,HOUNDOOM
 	db 0
 ;Learnset
+	db 7,ROAR
+	db 13,SMOG
+	db 20,BITE
+	db 27,FEINT_ATTACK
+	db 35,FLAMETHROWER
+	db 43,CRUNCH
 	db 0
 Mon083_EvosMoves: ; 3b4e3 (e:74e3)
 ;FARFETCH_D
@@ -54765,24 +55350,47 @@ Mon149_EvosMoves: ; 3b500 (e:7500)
 	db 0
 
 Mon160_EvosMoves: ; 3b50c (e:750c)
-;MISSINGNO
+;HOUNDOOM
 ;Evolutions
 	db 0
 ;Learnset
+	db 7,ROAR
+	db 13,SMOG
+	db 20,BITE
+	db 30,FEINT_ATTACK
+	db 41,FLAMETHROWER
+	db 52,CRUNCH
 	db 0
 
 Mon161_EvosMoves: ; 3b50e (e:750e)
-;MISSINGNO
+;GLIGAR
 ;Evolutions
 	db 0
 ;Learnset
+	db 6,SAND_ATTACK
+	db 13,HARDEN
+	db 20,QUICK_ATTACK
+	db 28,FEINT_ATTACK
+	db 32,SWORDS_DANCE
+	db 36,SLASH
+	db 42,X_SCISSOR
+	db 44,SCREECH
+	db 52,GUILLOTINE
 	db 0
 
 Mon162_EvosMoves: ; 3b510 (e:7510)
-;MISSINGNO
+;GLISCOR
 ;Evolutions
 	db 0
 ;Learnset
+	db 13,HARDEN
+	db 20,QUICK_ATTACK
+	db 28,FEINT_ATTACK
+	db 32,SWORDS_DANCE
+	db 36,SLASH
+	db 42,X_SCISSOR
+	db 44,SCREECH
+	db 52,GUILLOTINE
 	db 0
 Mon084_EvosMoves: ; 3b512 (e:7512)
 ;DODUO
@@ -54864,7 +55472,7 @@ Mon052_EvosMoves: ; 3b55c (e:755c)
 ;Learnset
 	db 12,BITE
 	db 17,PAY_DAY
-	db 22,FAINT_ATTACK
+	db 22,FEINT_ATTACK
 	db 24,SCREECH
 	db 33,FURY_SWIPES
 	db 37,NIGHT_SLASH
@@ -54885,24 +55493,42 @@ Mon098_EvosMoves: ; 3b56b (e:756b)
 	db 0
 
 Mon163_EvosMoves: ; 3b57a (e:757a)
-;MISSINGNO
+;MURKROW
 ;Evolutions
 	db 0
 ;Learnset
+	db 16,HAZE
+	db 26,NIGHT_SHADE
+	db 31,FEINT_ATTACK
+	db 34,WING_ATTACK
 	db 0
 
 Mon164_EvosMoves: ; 3b57c (e:757c)
-;MISSINGNO
+;HONCHKROW
 ;Evolutions
 	db 0
 ;Learnset
+	db 26,NIGHT_SHADE
+	db 31,FEINT_ATTACK
+	db 34,WING_ATTACK
+	db 39,NIGHT_SLASH
+	db 46,DARK_PULSE
 	db 0
 
 Mon165_EvosMoves: ; 3b57e (e:757e)
-;MISSINGNO
+;SCIZOR
 ;Evolutions
 	db 0
 ;Learnset
+	db 6,FOCUS_ENERGY
+	db 21,AGILITY
+	db 26,METAL_CLAW
+	db 34,SLASH
+	db 42,SWORDS_DANCE
+	db 43,IRON_DEFENSE
+	db 45,NIGHT_SLASH
+	db 48,DOUBLE_TEAM
+	db 53,IRON_HEAD
 	db 0
 Mon037_EvosMoves: ; 3b580 (e:7580)
 ;VULPIX
@@ -55554,7 +56180,7 @@ Mon053_EvosMoves: ; 3b7ed (e:77ed)
 ;Learnset
 	db 12,BITE
 	db 17,PAY_DAY
-	db 22,FAINT_ATTACK
+	db 22,FEINT_ATTACK
 	db 24,SCREECH
 	db 37,FURY_SWIPES
 	db 41,NIGHT_SLASH
@@ -65689,8 +66315,8 @@ PokedexEntryPointers: ; 4047e (10:447e)
 	dw BlastoiseDexEntry
 	dw PinsirDexEntry
 	dw TangelaDexEntry
-	dw MissingNoDexEntry
-	dw MissingNoDexEntry
+	dw SkarmoryDexEntry
+	dw MareepDexEntry
 	dw GrowlitheDexEntry
 	dw OnixDexEntry
 	dw FearowDexEntry
@@ -65708,26 +66334,26 @@ PokedexEntryPointers: ; 4047e (10:447e)
 	dw PsyduckDexEntry
 	dw DrowzeeDexEntry
 	dw GolemDexEntry
-	dw MissingNoDexEntry
+	dw FlaaffyDexEntry
 	dw MagmarDexEntry
-	dw MissingNoDexEntry
+	dw AmpharosDexEntry
 	dw ElectabuzzDexEntry
 	dw MagnetonDexEntry
 	dw KoffingDexEntry
-	dw MissingNoDexEntry
+	dw DrilburDexEntry
 	dw MankeyDexEntry
 	dw SeelDexEntry
 	dw DiglettDexEntry
 	dw TaurosDexEntry
-	dw MissingNoDexEntry
-	dw MissingNoDexEntry
-	dw MissingNoDexEntry
+	dw ExcadrillDexEntry
+	dw SteelixDexEntry
+	dw HoundourDexEntry
 	dw FarfetchdDexEntry
 	dw VenonatDexEntry
 	dw DragoniteDexEntry
-	dw MissingNoDexEntry
-	dw MissingNoDexEntry
-	dw MissingNoDexEntry
+	dw HoundoomDexEntry
+	dw GligarDexEntry
+	dw GliscorDexEntry
 	dw DoduoDexEntry
 	dw PoliwagDexEntry
 	dw JynxDexEntry
@@ -65737,9 +66363,9 @@ PokedexEntryPointers: ; 4047e (10:447e)
 	dw DittoDexEntry
 	dw MeowthDexEntry
 	dw KrabbyDexEntry
-	dw MissingNoDexEntry
-	dw MissingNoDexEntry
-	dw MissingNoDexEntry
+	dw MurkrowDexEntry
+	dw HonchkrowDexEntry
+	dw ScizorDexEntry
 	dw VulpixDexEntry
 	dw NinetalesDexEntry
 	dw PikachuDexEntry
@@ -66912,6 +67538,104 @@ VictreebelDexEntry: ; 40fd1 (10:4fd1)
 	TX_FAR _VictreebelDexEntry
 	db "@"
 
+SkarmoryDexEntry:
+	db "ARMORBIRD@"
+	db 5, 7
+	dw 70
+	TX_FAR _SkarmoryDexEntry
+	db "@"
+
+MareepDexEntry:
+	db "WOOL@"
+	db 2, 0
+	dw 172
+	TX_FAR _MareepDexEntry
+	db "@"
+
+FlaaffyDexEntry:
+	db "WOOL@"
+	db 2, 7
+	dw 293
+	TX_FAR _FlaaffyDexEntry
+	db "@"
+
+AmpharosDexEntry:
+	db "LIGHT@"
+	db 4, 7
+	dw 1356
+	TX_FAR _AmpharosDexEntry
+	db "@"
+
+DrilburDexEntry:
+	db "MOLE@"
+	db 1, 0
+	dw 187
+	TX_FAR _DrilburDexEntry
+	db "@"
+
+ExcadrillDexEntry:
+	db "SUBTERRENE@"
+	db 2, 4
+	dw 891
+	TX_FAR _ExcadrillDexEntry
+	db "@"
+
+SteelixDexEntry:
+	db "IRON SNAKE@"
+	db 30, 2
+	dw 8818
+	TX_FAR _SteelixDexEntry
+	db "@"
+
+HoundourDexEntry:
+	db "DARK@"
+	db 2, 0
+	dw 238
+	TX_FAR _HoundourDexEntry
+	db "@"
+
+HoundoomDexEntry:
+	db "DARK@"
+	db 4, 7
+	dw 772
+	TX_FAR _HoundoomDexEntry
+	db "@"
+
+GligarDexEntry:
+	db "FLYSCORPION@"
+	db 3, 7
+	dw 1492
+	TX_FAR _GligarDexEntry
+	db "@"
+
+GliscorDexEntry:
+	db "FANG SCORP@"
+	db 6, 7
+	dw 937
+	TX_FAR _GliscorDexEntry
+	db "@"
+
+MurkrowDexEntry:
+	db "DARKNESS@"
+	db 1, 8
+	dw 46
+	TX_FAR _MurkrowDexEntry
+	db "@"
+
+HonchkrowDexEntry:
+	db "BIG BOSS@"
+	db 2, 11
+	dw 602
+	TX_FAR _HonchkrowDexEntry
+	db "@"
+
+ScizorDexEntry:
+	db "PINCER@"
+	db 5, 11
+	dw 2601
+	TX_FAR _ScizorDexEntry
+	db "@"
+
 MissingNoDexEntry: ; 40fe5 (10:4fe5)
 	db "???@"
 	db 10 ; 1.0 m
@@ -66986,8 +67710,8 @@ PokedexOrder: ; 41024 (10:5024)
 	db DEX_BLASTOISE
 	db DEX_PINSIR
 	db DEX_TANGELA
-	db 0 ; MISSINGNO.
-	db 0 ; MISSINGNO.
+	db DEX_SKARMORY
+	db DEX_MAREEP
 	db DEX_GROWLITHE
 	db DEX_ONIX
 	db DEX_FEAROW
@@ -67005,26 +67729,26 @@ PokedexOrder: ; 41024 (10:5024)
 	db DEX_PSYDUCK
 	db DEX_DROWZEE
 	db DEX_GOLEM
-	db 0 ; MISSINGNO.
+	db DEX_FLAAFFY
 	db DEX_MAGMAR
-	db 0 ; MISSINGNO.
+	db DEX_AMPHAROS
 	db DEX_ELECTABUZZ
 	db DEX_MAGNETON
 	db DEX_KOFFING
-	db 0 ; MISSINGNO.
+	db DEX_DRILBUR
 	db DEX_MANKEY
 	db DEX_SEEL
 	db DEX_DIGLETT
 	db DEX_TAUROS
-	db 0 ; MISSINGNO.
-	db 0 ; MISSINGNO.
-	db 0 ; MISSINGNO.
+	db DEX_EXCADRILL
+	db DEX_STEELIX
+	db DEX_HOUNDOUR
 	db DEX_FARFETCH_D
 	db DEX_VENONAT
 	db DEX_DRAGONITE
-	db 0 ; MISSINGNO.
-	db 0 ; MISSINGNO.
-	db 0 ; MISSINGNO.
+	db DEX_HOUNDOOM
+	db DEX_GLIGAR
+	db DEX_GLISCOR
 	db DEX_DODUO
 	db DEX_POLIWAG
 	db DEX_JYNX
@@ -67034,9 +67758,9 @@ PokedexOrder: ; 41024 (10:5024)
 	db DEX_DITTO
 	db DEX_MEOWTH
 	db DEX_KRABBY
-	db 0 ; MISSINGNO.
-	db 0 ; MISSINGNO.
-	db 0 ; MISSINGNO.
+	db DEX_MURKROW
+	db DEX_HONCHKROW
+	db DEX_SCIZOR
 	db DEX_VULPIX
 	db DEX_NINETALES
 	db DEX_PIKACHU
@@ -90494,7 +91218,7 @@ GiveDreamBattleMons:
 	jr .loop
 
 DreamBattleMons:
-	db CHARIZARD, CHANSEY, GYARADOS, $FF
+	db SCIZOR, CHANSEY, GYARADOS, $FF
 
 EnterArenaMovement:
 	db $40, 1
@@ -101848,7 +102572,15 @@ MonOverworldData: ; 7190d (1c:590d)
 	dn SPRITE_BIRD_M, SPRITE_BIRD_M			;Zapdos/Moltres
 	dn SPRITE_SNAKE, SPRITE_SNAKE			;Dratini/Dragonair
 	dn SPRITE_SNAKE, SPRITE_MON				;Dragonite/Mewtwo
-	dn SPRITE_MON, 0						;Mew/Padding
+	dn SPRITE_MON, SPRITE_BIRD_M			;Mew/Skarmory
+	dn SPRITE_QUADRUPED, SPRITE_QUADRUPED   ;Mareep/Flaaffy
+	dn SPRITE_MON, SPRITE_MON               ;Ampharos/Drilbur
+	dn SPRITE_MON, SPRITE_SNAKE             ;Excadrill/Steelix
+	dn SPRITE_QUADRUPED, SPRITE_QUADRUPED   ;Houndour/Houndooom
+	dn SPRITE_MON, SPRITE_MON               ;Gligar/Gliscor
+	dn SPRITE_BIRD_M, SPRITE_BIRD_M         ;Murkrow/Honchkrow
+	dn SPRITE_MON, 0                        ;Scizor/
+	db 0
 
 MonOverworldSprites: ; 71959 (1c:5959)
 	INCBIN "gfx/mon_ow_sprites.2bpp"
@@ -103101,6 +103833,20 @@ MonsterPalettes: ; 725c8 (1c:65c8)
 	db PAL_BROWNMON  ; DRAGONITE
 	db PAL_MEWMON    ; MEWTWO
 	db PAL_MEWMON    ; MEW
+	db PAL_GREYMON   ; SKARMORY
+	db PAL_MEWMON    ; MAREEP
+	db PAL_MEWMON    ; FLAAFFY
+	db PAL_YELLOWMON ; AMPHAROS
+	db PAL_MEWMON    ; DRILBUR
+	db PAL_GREYMON   ; EXCADRILL
+	db PAL_GREYMON   ; STEELIX
+	db PAL_GREYMON   ; HOUNDOUR
+	db PAL_GREYMON   ; HOUNDOOM
+	db PAL_PURPLEMON ; GLIGAR
+	db PAL_GREYMON   ; GLISCOR
+	db PAL_GREYMON   ; MURKROW
+	db PAL_GREYMON   ; HONCHKROW
+	db PAL_GREYMON   ; SCIZOR
 
 ; palettes for overworlds, title screen, monsters
 SuperPalettes: ; 72660 (1c:6660)
@@ -115886,6 +116632,63 @@ SECTION "New Graphics", ROMX, BANK[$31]
 
 ShadowPic: ; 4fba2 (13:7ba2)
 	INCBIN "pic/trainer/shadow.pic"
+
+SkarmoryPicFront:
+	INCBIN "pic/bmon/skarmory.pic"
+SkarmoryPicBack:
+	INCBIN "pic/monback/skarmoryb.pic"
+MareepPicFront:
+	INCBIN "pic/bmon/mareep.pic"
+MareepPicBack:
+	INCBIN "pic/monback/mareepb.pic"
+FlaaffyPicFront:
+	INCBIN "pic/bmon/flaaffy.pic"
+FlaaffyPicBack:
+	INCBIN "pic/monback/flaaffyb.pic"
+AmpharosPicFront:
+	INCBIN "pic/bmon/ampharos.pic"
+AmpharosPicBack:
+	INCBIN "pic/monback/ampharosb.pic"
+DrilburPicFront:
+	INCBIN "pic/bmon/drilbur.pic"
+DrilburPicBack:
+	INCBIN "pic/monback/drilburb.pic"
+ExcadrillPicFront:
+	INCBIN "pic/bmon/excadrill.pic"
+ExcadrillPicBack:
+	INCBIN "pic/monback/excadrillb.pic"
+SteelixPicFront:
+	INCBIN "pic/bmon/steelix.pic"
+SteelixPicBack:
+	INCBIN "pic/monback/steelixb.pic"
+HoundourPicFront:
+	INCBIN "pic/bmon/houndour.pic"
+HoundourPicBack:
+	INCBIN "pic/monback/houndourb.pic"
+HoundoomPicFront:
+	INCBIN "pic/bmon/houndoom.pic"
+HoundoomPicBack:
+	INCBIN "pic/monback/houndoomb.pic"
+GligarPicFront:
+	INCBIN "pic/bmon/gligar.pic"
+GligarPicBack:
+	INCBIN "pic/monback/gligarb.pic"
+GliscorPicFront:
+	INCBIN "pic/bmon/gliscor.pic"
+GliscorPicBack:
+	INCBIN "pic/monback/gliscorb.pic"
+MurkrowPicFront:
+	INCBIN "pic/bmon/murkrow.pic"
+MurkrowPicBack:
+	INCBIN "pic/monback/murkrowb.pic"
+HonchkrowPicFront:
+	INCBIN "pic/bmon/honchkrow.pic"
+HonchkrowPicBack:
+	INCBIN "pic/monback/honchkrowb.pic"
+ScizorPicFront:
+	INCBIN "pic/bmon/scizor.pic"
+ScizorPicBack:
+	INCBIN "pic/monback/scizorb.pic"
 
 Tset0C_GFX:
 	INCBIN "gfx/tilesets/0c.2bpp"
