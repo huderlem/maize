@@ -10907,7 +10907,7 @@ ENDC
 	call LoadScreenTilesFromBuffer2
 	call EnableLCD
 IF _RED
-	ld a,CHARMANDER ; which Pokemon to show first on the title screen
+	ld a,AMPHAROS ; which Pokemon to show first on the title screen
 ENDC
 IF _BLUE
 	ld a,SQUIRTLE ; which Pokemon to show first on the title screen
@@ -11175,22 +11175,22 @@ CopyrightTextString: ; 4556 (1:4556)
 TitleMons: ; 4588 (1:4588)
 ; mons on the title screen are randomly chosen from here
 IF _RED
-	db CHARMANDER
-	db SQUIRTLE
-	db BULBASAUR
-	db WEEDLE
-	db NIDORAN_M
-	db SCYTHER
-	db PIKACHU
-	db CLEFAIRY
-	db RHYDON
-	db ABRA
-	db GASTLY
-	db DITTO
-	db PIDGEOTTO
-	db ONIX
+	db HOUNDOOM
+	db STARYU
+	db EXEGGCUTE
+	db STEELIX
+	db CUBONE
+	db DRILBUR
+	db MAREEP
+	db SKARMORY
+	db GLIGAR
+	db HAUNTER
+	db GOLEM
+	db SEADRA
 	db PONYTA
-	db MAGIKARP
+	db SANDSHREW
+	db EEVEE
+	db POLIWHIRL
 ENDC
 IF _GREEN
 	db BULBASAUR
@@ -11239,7 +11239,7 @@ PrintGameVersionOnTitleScreen: ; 4598 (1:4598)
 ; these point to special tiles specifically loaded for that purpose ad are no usual text
 VersionOnTitleScreenText: ; 45a1 (1:45a1)
 IF _RED
-	db $60,$61,$7F,$65,$66,$67,$68,$69,"@" ; "Red Version"
+	db $61,$62,$63,$64,$65,$66,$67,$68,"@" ; "::Maize::""
 ENDC
 IF _BLUE
 	db $61,$62,$63,$64,$65,$66,$67,$68,"@" ; "Blue Version"
