@@ -1,0 +1,8 @@
+Maize TODO list
+================
+1. Change types of gen 1 attacks (Karate Chop, Gust)
+2. Fix Focus Energy and Critical Hit Ratio
+3. Fix Psychic's resistance to Ghost
+4. Add Item Stone
+5. Update pokemon's evosMoves to use Item Stone, and make sure the new pokemon evolve as expected
+6.
