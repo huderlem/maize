@@ -61517,9 +61517,9 @@ CriticalHitTest: ; 3e023 (f:6023)
 .asm_3e032
 	ld [$d0b5], a
 	call GetMonHeader
-	ld a, [W_MONHBASESPEED]
+	ld a, 32 ; critical hit isn't based on base speed
 	ld b, a
-	srl b                        ; (effective (base speed/2))
+	srl b                        ; (effective (32/2))
 	ld a, [H_WHOSETURN] ; $FF00+$f3
 	and a
 	ld hl, W_PLAYERMOVEPOWER ; $cfd4
@@ -61535,14 +61535,14 @@ CriticalHitTest: ; 3e023 (f:6023)
 	ld c, [hl]                   ; read move id
 	ld a, [de]
 	bit 2, a                     ; test for focus energy
-	jr nz, .focusEnergyUsed      ; bug: using focus energy causes a shift to the right instead of left,
+	jr nz, .focusEnergyUsed      ; bug: FIXED! using focus energy causes a shift to the right instead of left,
 	                             ; resulting in 1/4 the usual crit chance
 	sla b                        ; (effective (base speed/2)*2)
 	jr nc, .noFocusEnergyUsed
 	ld b, $ff                    ; cap at 255/256
 	jr .noFocusEnergyUsed
 .focusEnergyUsed
-	srl b
+	sla b ; fixed focus energy
 .noFocusEnergyUsed
 	ld hl, HighCriticalMoves      ; table of high critical hit moves
 .Loop
