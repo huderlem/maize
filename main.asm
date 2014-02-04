@@ -91223,7 +91223,7 @@ GiveDreamBattleMons:
 	jr .loop
 
 DreamBattleMons:
-	db SCYTHER, ONIX, MURKROW, $FF
+	db CHARIZARD, STEELIX, HONCHKROW, $FF
 
 EnterArenaMovement:
 	db $40, 1

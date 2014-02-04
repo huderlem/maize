@@ -9,3 +9,5 @@ Maize TODO list
 7. Add custom tiles for tileset 0
 8. Make room for seen/owned pokemon flags by doing the pc thing
 9. Add Dusk Stone for murkrow
+10. Update Title screen mon list
+11. 
