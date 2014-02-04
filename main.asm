@@ -10887,9 +10887,6 @@ ENDC
 	dec b
 	jr nz, .asm_4361
 	call Func_44dd
-	ld hl, $c328
-	ld a, $74
-	ld [hl], a
 	FuncCoord 2, 17 ; $c4f6
 	ld hl, Coord
 	ld de, .titlescreenTilemap ; $437f
@@ -43651,19 +43648,8 @@ TitleBallYTable: ; 372a0 (d:72a0)
 	db 0, $71, $6f, $6e, $6d, $6c, $6d, $6e, $6f, $71, $74, 0
 
 Func_372ac: ; 372ac (d:72ac)
-; Animate the TitleBall if a starter just got scrolled out.
-	ld a, [wWhichTrade] ; $cd3d
-	cp CHARMANDER
-	jr z, .ok
-	cp SQUIRTLE
-	jr z, .ok
-	cp BULBASAUR
-	ret nz
-.ok
-	ld e, 1 ; animate titleball
-	ld bc, TitleScroll_WaitBall
-	ld d, 0
-	jp _TitleScroll
+; no bouncing pokeball on title screen
+	ret
 
 GetTitleBallY: ; 372c4 (d:72c4)
 ; Get position e from TitleBallYTable
