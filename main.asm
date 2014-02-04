@@ -11446,7 +11446,7 @@ ItemNames: ; 472b (1:472b)
 	db "DOME FOSSIL@"
 	db "HELIX FOSSIL@"
 	db "SECRET KEY@"
-	db "?????@"
+	db "ITEM STONE@"
 	db "BIKE VOUCHER@"
 	db "X ACCURACY@"
 	db "LEAF STONE@"
@@ -24382,7 +24382,7 @@ ItemUsePtrTable: ; d5e1 (3:55e1)
 	dw UnusableItem      ; DOME_FOSSIL
 	dw UnusableItem      ; HELIX_FOSSIL
 	dw UnusableItem      ; SECRET_KEY
-	dw UnusableItem
+	dw ItemUseEvoStone   ; ITEM_STONE
 	dw UnusableItem      ; BIKE_VOUCHER
 	dw ItemUseXAccuracy  ; X_ACCURACY
 	dw ItemUseEvoStone   ; LEAF_STONE
@@ -26942,7 +26942,7 @@ KeyItemBitfield: ; e799 (3:6799)
 	db %11110000
 	db %01001111
 	db %00000000
-	db %10011111
+	db %10010111
 	db %00000000
 	db %11000000
 	db %11110000
@@ -31177,6 +31177,7 @@ UsableItems_PartyMenu: ; 13434 (4:7434)
 	db CARBOS
 	db CALCIUM
 	db RARE_CANDY
+	db ITEM_STONE
 	db LEAF_STONE
 	db FULL_HEAL
 	db REVIVE
@@ -53112,7 +53113,7 @@ AgathaData: ; 3a516 (e:6516)
 LanceData: ; 3a522 (e:6522)
 	db $FF,58,GYARADOS,56,DRAGONAIR,56,DRAGONAIR,60,AERODACTYL,62,DRAGONITE,0
 ShadowData:
-;	db $FF, 100, RATICATE, 100, SQUIRTLE, 0
+;	db $FF, 10,RATTATA,0
 	db $FF,100,SKARMORY,100,DRAGONITE,100,ALAKAZAM,0
 
 TrainerAI: ; 3a52e (e:652e)
@@ -54816,6 +54817,7 @@ Mon092_EvosMoves: ; 3b31b (e:731b)
 Mon123_EvosMoves: ; 3b324 (e:7324)
 ;SCYTHER
 ;Evolutions
+	db EV_ITEM,ITEM_STONE,1,SCIZOR
 	db 0
 ;Learnset
 	db 17,LEER
@@ -54924,6 +54926,7 @@ Mon058_EvosMoves: ; 3b374 (e:7374)
 Mon095_EvosMoves: ; 3b384 (e:7384)
 ;ONIX
 ;Evolutions
+	db EV_ITEM,ITEM_STONE,1,STEELIX
 	db 0
 ;Learnset
 	db 15,BIND
@@ -55365,6 +55368,7 @@ Mon160_EvosMoves: ; 3b50c (e:750c)
 Mon161_EvosMoves: ; 3b50e (e:750e)
 ;GLIGAR
 ;Evolutions
+	db EV_ITEM,ITEM_STONE,1,GLISCOR
 	db 0
 ;Learnset
 	db 6,SAND_ATTACK
@@ -55495,6 +55499,7 @@ Mon098_EvosMoves: ; 3b56b (e:756b)
 Mon163_EvosMoves: ; 3b57a (e:757a)
 ;MURKROW
 ;Evolutions
+	db EV_ITEM,ITEM_STONE,1,HONCHKROW
 	db 0
 ;Learnset
 	db 16,HAZE
@@ -91218,7 +91223,7 @@ GiveDreamBattleMons:
 	jr .loop
 
 DreamBattleMons:
-	db SCIZOR, CHANSEY, GYARADOS, $FF
+	db SCYTHER, ONIX, MURKROW, $FF
 
 EnterArenaMovement:
 	db $40, 1
