@@ -1894,14 +1894,18 @@ _DoYouWantToNicknameText:: ; 0x8a605
 	done
 
 _UnnamedText_699f:: ; 8a62f (22:662f)
-	text "Right! So your"
-	line "name is ", $52, "!"
+	text "Well, ", $52, ","
+	line "I must ask you"
+	cont "about someone."
 	prompt
 
 _UnnamedText_69e7:: ; 8a64a (22:664a)
-	text "That's right! I"
-	line "remember now! His"
-	cont "name is ", $53, "!"
+	text "Huh..."
+	line "Weird name."
+
+	para "I supposed you"
+	line "should scurry"
+	cont "along home now."
 	prompt
 
 _SSAnne8AfterBattleText2:: ; 8a677 (22:6677)

@@ -14684,7 +14684,7 @@ OakSpeech: ; 6115 (1:6115)
 	call PrintText      ; prints text box
 	call GBFadeOut2
 	call ClearScreen
-	ld a,NIDORINO
+	ld a,HOUNDOUR
 	ld [$D0B5],a    ; pic displayed is stored at this location
 	ld [$CF91],a
 	call GetMonHeader      ; this is also related to the pic
@@ -15907,16 +15907,16 @@ Func_6a6c: ; 6a6c (1:6a6c)
 IF _RED
 DefaultNamesPlayer: ; 6aa8 (1:6aa8)
 	db   "NEW NAME"
-	next "RED"
-	next "ASH"
-	next "JACK"
+	next "YOUNG"
+	next "LINK"
+	next "KANYE"
 	db   "@"
 
 DefaultNamesRival: ; 6abe (1:6abe)
 	db   "NEW NAME"
-	next "BLUE"
-	next "GARY"
-	next "JOHN"
+	next "BRIAR"
+	next "GANON"
+	next "T-SWIFT"
 	db   "@"
 ENDC
 

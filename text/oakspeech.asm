@@ -1,56 +1,42 @@
 _OakSpeechText1::
-	text "Hello there!"
-	line "Welcome to the"
-	cont "world of #MON!"
-
-	para "My name is OAK!"
-	line "People call me"
-	cont "the #MON PROF!"
+	text "Sorry, but you'll"
+	line "have to wait a"
+	cont "few years until"
+	cont "you're older and"
+	cont "more responsible."
 	prompt
 
 _OakSpeechText2A::
-	text "This world is"
-	line "inhabited by"
-	cont "creatures called"
-	cont "#MON!@@"
+	text "It would be a"
+	line "mistake to allow"
+	cont "a child like you"
+	cont "to raise #MON"
+	cont "like this.@@"
 
 _OakSpeechText2B::
-	text $51,"For some people,"
-	line "#MON are"
-	cont "pets. Others use"
-	cont "them for fights."
-
-	para "Myself..."
-
-	para "I study #MON"
-	line "as a profession."
+	text $51, "I'm afraid that"
+	line "you have wasted"
+	cont "your time coming"
+	cont "to me today."
 	prompt
 
 _IntroducePlayerText::
-	text "First, what is"
-	line "your name?"
+	text "Who are you,"
+	line "anyway?"
 	prompt
 
 _IntroduceRivalText::
-	text "This is my grand-"
-	line "son. He's been"
-	cont "your rival since"
-	cont "you were a baby."
+	text "Another boy came"
+	line "in the other day"
+	cont "who was looking"
+	cont "for a #MON"
+	cont "just like you."
 
-	para "...Erm, what is"
-	line "his name again?"
+	para "Who is he?"
 	prompt
 
 _OakSpeechText3::
-	text $52,"!"
+	text "..."
 
-	para "Your very own"
-	line "#MON legend is"
-	cont "about to unfold!"
-
-	para "A world of dreams"
-	line "and adventures"
-	cont "with #MON"
-	cont "awaits! Let's go!"
+	para "4 years later..."
 	done
-
