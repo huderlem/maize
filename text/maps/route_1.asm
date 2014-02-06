@@ -48,3 +48,8 @@ _Route1Text3:: ; 8d720 (23:5720)
 	cont "VIRIDIAN CITY"
 	done
 
+_Route1Text4::
+	text "(That was a crazy"
+	line "dream...)"
+	done
+

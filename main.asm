@@ -10492,9 +10492,10 @@ Func_3eb5:: ; 3eb5 (0:3eb5)
 	ld a, [$cd3e]
 	ld [$2000], a
 	ld [H_LOADEDROMBANK], a
-	ld de, $3eda
+	ld de, .asm_3eda ; TODO: unhardcode this address in pokered
 	push de
 	jp [hl]
+.asm_3eda
 	xor a
 	jr .asm_3eec
 .asm_3edd
@@ -33581,34 +33582,33 @@ PalletTown_h: ; 182a1 (6:42a1)
 	db $00 ; tileset
 	db PALLET_TOWN_HEIGHT, PALLET_TOWN_WIDTH ; dimensions
 	dw PalletTownBlocks, PalletTownTextPointers, PalletTownScript
-	db NORTH | SOUTH ; connections
-	NORTH_MAP_CONNECTION ROUTE_1, ROUTE_1_WIDTH, ROUTE_1_HEIGHT, 0, 0, ROUTE_1_WIDTH, Route1Blocks
-	SOUTH_MAP_CONNECTION ROUTE_21, ROUTE_21_WIDTH, 0, 0, ROUTE_21_WIDTH, Route21Blocks, PALLET_TOWN_WIDTH, PALLET_TOWN_HEIGHT
+	db NORTH ; connections
+	NORTH_MAP_CONNECTION ROUTE_1, ROUTE_1_WIDTH, ROUTE_1_HEIGHT, -4, 0, ROUTE_1_WIDTH, Route1Blocks
 	dw PalletTownObject
 
 PalletTownObject: ; 0x182c3 (size=58)
-	db $b ; border tile
+	db $f ; border tile
 
 	db $3 ; warps
-	db $5, $5, $0, REDS_HOUSE_1F
-	db $5, $d, $0, BLUES_HOUSE
+	db $d, $3, $0, REDS_HOUSE_1F
+	db $7, $3, $0, BLUES_HOUSE
 	db $b, $c, $1, OAKS_LAB
 
 	db $4 ; signs
 	db $d, $d, $4 ; PalletTownText4
-	db $9, $7, $5 ; PalletTownText5
-	db $5, $3, $6 ; PalletTownText6
-	db $5, $b, $7 ; PalletTownText7
+	db $5, $d, $5 ; PalletTownText5
+	db $d, $1, $6 ; PalletTownText6
+	db $7, $1, $7 ; PalletTownText7
 
 	db $3 ; people
 	db SPRITE_OAK, $5 + 4, $8 + 4, $ff, $ff, $1 ; person
-	db SPRITE_GIRL, $8 + 4, $3 + 4, $fe, $0, $2 ; person
-	db SPRITE_FISHER2, $e + 4, $b + 4, $fe, $0, $3 ; person
+	db SPRITE_GAMBLER, $8 + 4, $7 + 4, $fe, $0, $2 ; person
+	db SPRITE_GIRL, $7 + 4, $11 + 4, $fe, $0, $3 ; person
 
 	; warp-to
-	EVENT_DISP $a, $5, $5 ; REDS_HOUSE_1F
-	EVENT_DISP $a, $5, $d ; BLUES_HOUSE
-	EVENT_DISP $a, $b, $c ; OAKS_LAB
+	EVENT_DISP PALLET_TOWN_WIDTH, $d, $3 ; REDS_HOUSE_1F
+	EVENT_DISP PALLET_TOWN_WIDTH, $7, $3 ; BLUES_HOUSE
+	EVENT_DISP PALLET_TOWN_WIDTH, $b, $c ; OAKS_LAB
 
 PalletTownBlocks: ; 182fd (6:42fd)
 	INCBIN "maps/pallettown.blk"
@@ -33983,6 +33983,11 @@ PalletTownScript0: ; 18e81 (6:4e81)
 	ld a,[W_YCOORD]
 	cp 1 ; is player near north exit?
 	ret nz
+	ld a,[W_XCOORD]
+	cp $c
+	ret nc
+	cp $a
+	ret c
 	xor a
 	ld [H_CURRENTPRESSEDBUTTONS],a
 	ld a,4
@@ -37389,15 +37394,14 @@ Route1_h: ; 0x1c0c3 to 0x1c0e5 (34 bytes) (bank=7) (id=12)
 	db $00 ; tileset
 	db ROUTE_1_HEIGHT, ROUTE_1_WIDTH ; dimensions (y, x)
 	dw Route1Blocks, Route1TextPointers, Route1Script ; blocks, texts, scripts
-	db NORTH | SOUTH ; connections
-	NORTH_MAP_CONNECTION VIRIDIAN_CITY, VIRIDIAN_CITY_WIDTH, VIRIDIAN_CITY_HEIGHT, -3, 2, VIRIDIAN_CITY_WIDTH - 4, ViridianCityBlocks
-	SOUTH_MAP_CONNECTION PALLET_TOWN, PALLET_TOWN_WIDTH, 0, 0, PALLET_TOWN_WIDTH, PalletTownBlocks, ROUTE_1_WIDTH, ROUTE_1_HEIGHT
+	db SOUTH ; connections
+	SOUTH_MAP_CONNECTION PALLET_TOWN, PALLET_TOWN_WIDTH, 4, 0, PALLET_TOWN_WIDTH, PalletTownBlocks, ROUTE_1_WIDTH, ROUTE_1_HEIGHT
 	dw Route1Object ; objects
 
 Route1Object: ; 0x1c0e5 (size=19)
-	db $b ; border tile
+	db $f ; border tile
 
-	db $0 ; warps
+	db 0 ; warps
 
 	db $1 ; signs
 	db $1b, $9, $3 ; Route1Text3
@@ -37406,8 +37410,8 @@ Route1Object: ; 0x1c0e5 (size=19)
 	db SPRITE_BUG_CATCHER, $18 + 4, $5 + 4, $fe, $1, $1 ; person
 	db SPRITE_BUG_CATCHER, $d + 4, $f + 4, $fe, $2, $2 ; person
 
-	; warp-to (unused)
-	EVENT_DISP $4, $7, $2
+	; warp-to
+	EVENT_DISP ROUTE_1_WIDTH, $12, $1a
 
 Route1Blocks: ; 1c0fc (7:40fc)
 	INCBIN "maps/route1.blk"
@@ -37800,12 +37804,31 @@ CinnabarIslandText7: ; 1caaa (7:4aaa)
 	db "@"
 
 Route1Script: ; 1caaf (7:4aaf)
-	jp EnableAutoTextBoxDrawing
+	call EnableAutoTextBoxDrawing
+	ld hl,Route1ScriptPointers
+	ld a,[W_ROUTE1CURSCRIPT]
+	jp CallFunctionInTable
+
+Route1ScriptPointers: ; 5c0bc (17:40bc)
+	dw Route1Script0
+	dw Route1Script1
+
+Route1Script0:
+	ld a, 4
+	ld [$ff00+$8c], a
+	call DisplayTextID
+	ld a, 1
+	ld [W_ROUTE1CURSCRIPT], a
+	ret
+
+Route1Script1:
+	ret
 
 Route1TextPointers: ; 1cab2 (7:4ab2)
 	dw Route1Text1
 	dw Route1Text2
 	dw Route1Text3
+	dw Route1Text4
 
 Route1Text1: ; 1cab8 (7:4ab8)
 	db $08 ; asm
@@ -37851,6 +37874,10 @@ Route1Text2: ; 1caf8 (7:4af8)
 
 Route1Text3: ; 1cafd (7:4afd)
 	TX_FAR _Route1Text3
+	db "@"
+
+Route1Text4:
+	TX_FAR _Route1Text4
 	db "@"
 
 OaksLab_h: ; 0x1cb02 to 0x1cb0e (12 bytes) (bank=7) (id=40)
@@ -41963,10 +41990,10 @@ asm_1e9b0: ; 1e9b0 (7:69b0)
 	jr nz, .asm_1e9c2
 	ld a, $d3
 	ld [H_DOWNARROWBLINKCNT2], a ; $FF00+$8c
-	call DisplayTextID
+	call DisplayTextID ; Time's up!
 	xor a
 	ld [$d528], a
-	ld a, $9c
+	ld a, SAFARIZONEENTRANCE
 	ld [H_DOWNARROWBLINKCNT1], a ; $FF00+$8b
 	ld a, $3
 	ld [$d42f], a
@@ -53099,7 +53126,7 @@ AgathaData: ; 3a516 (e:6516)
 LanceData: ; 3a522 (e:6522)
 	db $FF,58,GYARADOS,56,DRAGONAIR,56,DRAGONAIR,60,AERODACTYL,62,DRAGONITE,0
 ShadowData:
-;	db $FF, 10,RATTATA,0
+	db $FF, 10,RATTATA,0
 	db $FF,100,SKARMORY,100,DRAGONITE,100,ALAKAZAM,0
 
 TrainerAI: ; 3a52e (e:652e)
@@ -91267,7 +91294,11 @@ RedsHouse2FScript2:
 	ret	
 
 RedsHouse2FScript3:
-	ret
+	ld a, 0
+	ld [$d42f],a ; save target warp ID
+	ld a, ROUTE_1
+	ld [$ff8b],a ; save target map
+	jp WarpFound2
 
 RedsHouse2FTextPointers: ; 5c0cf (17:40cf)
 	dw EnteringArenaText

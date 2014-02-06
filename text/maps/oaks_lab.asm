@@ -1,7 +1,9 @@
 _OaksLabGaryText1:: ; 94d5b (25:4d5b)
-	text $53, ": Yo"
-	line $52, "! Gramps"
-	cont "isn't around!"
+	text $53, ": Oh, it's"
+	line "you, ", $52, "."
+
+	para "Go find PROF."
+	line "CEDAR, now!"
 	done
 
 _OaksLabText40:: ; 94d79 (25:4d79)
@@ -23,6 +25,9 @@ _OaksLabText39:: ; 94ddf (25:4ddf)
 	text "Those are #"
 	line "BALLs. They"
 	cont "contain #MON!"
+
+	para "But you already"
+	line "know that..."
 	done
 
 _OaksLabCharmanderText:: ; 94e06 (25:4e06)
@@ -172,13 +177,12 @@ _OaksLabText8:: ; 95268 (25:5268)
 	done
 
 _UnnamedText_1d340:: ; 9526b (25:526b)
-	text "PROF.OAK is the"
-	line "authority on"
-	cont "#MON!"
+	text "I'm an intern for"
+	line "PROF.CEDAR."
 
-	para "Many #MON"
-	line "trainers hold him"
-	cont "in high regard!"
+	para "He has taught me"
+	line "everything I"
+	cont "know!"
 	done
 
 _OaksLabRivalWaitingText:: ; 952bb (25:52bb)
@@ -355,7 +359,7 @@ _OaksLabText27:: ; 95741 (25:5741)
 
 _UnnamedText_1d405:: ; 957eb (25:57eb)
 	text "I study #MON as"
-	line "PROF.OAK's AIDE."
+	line "PROF.CEDAR's AIDE."
 	done
 
 _UnnamedText_441cc:: ; 9580c (25:580c)

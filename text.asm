@@ -654,25 +654,8 @@ _OakLabEmailText:: ; 88a60 (22:4a60)
 
 	para "..."
 
-	para "Calling all"
-	line "#MON trainers!"
-
-	para "The elite trainers"
-	line "of #MON LEAGUE"
-	cont "are ready to take"
-	cont "on all comers!"
-
-	para "Bring your best"
-	line "#MON and see"
-	cont "how you rate as a"
-	cont "trainer!"
-
-	para "#MON LEAGUE HQ"
-	line "INDIGO PLATEAU"
-
-	para "PS: PROF.OAK,"
-	line "please visit us!"
-	cont "..."
+	para "It came from"
+	line "TOPAZ PEAK HQ."
 	done
 
 _GameCornerCoinCaseText:: ; 88b5b (22:4b5b)

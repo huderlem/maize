@@ -8,8 +8,10 @@ Maize TODO list
 6. -Insert Young's sprite for the protagonist
 7. -Add custom tiles for tileset 0
 8. Make room for seen/owned pokemon flags by doing the pc thing
-9. Add Dusk Stone for murkrow
 10. -Update Title screen mon list and text stuff
-11. Update Battle HUD
-12. Update Text Box graphics
-13. Make intro script go past the dark room
+11. -Update Battle HUD
+12. -Update Text Box graphics
+13. -Make intro script go past the dark room
+14. Rebuild text/scripts in Maize Version!
+15. Import Town Map
+16. Update Oaks intro

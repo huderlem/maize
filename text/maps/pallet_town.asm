@@ -17,33 +17,26 @@ _OakWalksUpText::
 	done
 
 _PalletTownText2::
-	text "I'm raising"
-	line "#MON too!"
-
-	para "When they get"
-	line "strong, they can"
-	cont "protect me!"
+	text "Back in the glory"
+	line "days, I was quite"
+	cont "the trainer!"
 	done
 
 _PalletTownText3::
-	text "Technology is"
-	line "incredible!"
-
-	para "You can now store"
-	line "and recall items"
-	cont "and #MON as"
-	cont "data via PC!"
+	text "Don't forget to"
+	line "store unneeded"
+	cont "items in the PC!"
 	done
 
 _PalletTownText4::
-	text "OAK #MON"
+	text "CEDAR #MON"
 	line "RESEARCH LAB"
 	done
 
 _PalletTownText5::
-	text "PALLET TOWN"
-	line "Shades of your"
-	cont "journey await!"
+	text "LAPIS TOWN"
+	line "You've got a long"
+	cont "ways to go."
 	done
 
 _PalletTownText6::

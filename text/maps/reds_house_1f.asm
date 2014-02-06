@@ -1,12 +1,20 @@
 _MomWakeUpText::
-	text "MOM: Right."
-	line "All boys leave"
-	cont "home some day."
-	cont "It said so on TV."
+	text "MOM: Were you"
+	line "sleep walking"
+	cont "again?"
 
-	para "PROF.OAK, next"
-	line "door, is looking"
-	cont "for you."
+	para "I hope you didn't"
+	line "wander off into"
+	cont "the woods."
+
+	para "By the way,"
+	line "PROF. CEDAR"
+	cont "called for you"
+	cont "while you were"
+	cont "gone."
+
+	para "You should stop"
+	line "by his lab."
 	done
 
 _MomHealText1::
@@ -24,15 +32,21 @@ _MomHealText2::
 	done
 
 _StandByMeText::
-	text "There's a movie"
-	line "on TV. Four boys"
-	cont "are walking on"
-	cont "railroad tracks."
+	text "The local news is"
+	line "on."
 
-	para "I better go too."
+	para "Small earthquakes"
+	line "affected GARNET"
+	cont "CITY."
+
+	para "Bummer."
 	done
 
 _TVWrongSideText::
-	text "Oops, wrong side."
+	text "This side of the"
+	line "TV interests you."
+
+	para "Why does it"
+	line "interest you?"
 	done
 
