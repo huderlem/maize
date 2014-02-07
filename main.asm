@@ -15959,9 +15959,9 @@ Func_6ad6: ; 6ad6 (1:6ad6)
 	jp CopyData
 IF _RED
 DefaultNamesPlayerList: ; 6af2 (1:6af2)
-	db "NEW NAME@RED@ASH@JACK@"
+	db "NEW NAME@YOUNG@LINK@KANYE@"
 DefaultNamesRivalList: ; 6b08 (1:6b08)
-	db "NEW NAME@BLUE@GARY@JOHN@"
+	db "NEW NAME@BRIAR@GANON@T-SWIFT@"
 ENDC
 IF _BLUE
 DefaultNamesPlayerList: ; 6af2 (1:6af2)
@@ -38085,9 +38085,9 @@ OaksLabScript7: ; 1cc72 (7:4c72)
 
 OaksLabScript8: ; 1cc80 (7:4c80)
 	ld a, [W_PLAYERSTARTER]
-	cp CHARMANDER
+	cp GROWLITHE
 	jr z, .Charmander ; 0x1cc85 $6
-	cp SQUIRTLE
+	cp STARYU
 	jr z, .Squirtle ; 0x1cc89 $1d
 	jr .Bulbasaur ; 0x1cc8b $38
 .Charmander
@@ -38255,12 +38255,12 @@ OaksLabScript11: ; 1cdb9 (7:4db9)
 	ld a, SONY1 + $C8
 	ld [W_CUROPPONENT], a
 	ld a, [W_RIVALSTARTER]
-	cp SQUIRTLE
+	cp STARYU
 	jr nz, .NotSquirtle ; 0x1cdc9 $4
 	ld a, $1
 	jr .done ; 0x1cdcd $a
 .NotSquirtle
-	cp BULBASAUR
+	cp EXEGGCUTE
 	jr nz, .Charmander ; 0x1cdd1 $4
 	ld a, $2
 	jr .done ; 0x1cdd5 $2
@@ -38678,33 +38678,33 @@ OaksLabText41: ; 1d0fd (7:50fd)
 OaksLabText29: ; 1d102 (7:5102)
 OaksLabText2: ; 1d102 (7:5102)
 	db $8
-	ld a, $b1
+	ld a, STARYU
 	ld [$cd3d], a
 	ld a, $3
 	ld [$cd3e], a
-	ld a, $b0
+	ld a, GROWLITHE
 	ld b, $2
 	jr OaksLabScript_1d133 ; 0x1d111 $20
 
 OaksLabText30: ; 1d113 (7:5113)
 OaksLabText3: ; 1d113 (7:5113)
 	db $8
-	ld a, $99
+	ld a, EXEGGCUTE
 	ld [$cd3d], a
 	ld a, $4
 	ld [$cd3e], a
-	ld a, $b1
+	ld a, STARYU
 	ld b, $3
 	jr OaksLabScript_1d133 ; 0x1d122 $f
 
 OaksLabText31: ; 1d124 (7:5124)
 OaksLabText4: ; 1d124 (7:5124)
 	db $8
-	ld a, $b0
+	ld a, GROWLITHE
 	ld [$cd3d], a
 	ld a, $2
 	ld [$cd3e], a
-	ld a, $99
+	ld a, EXEGGCUTE
 	ld b, $4
 
 OaksLabScript_1d133: ; 1d133 (7:5133)
@@ -91326,12 +91326,18 @@ RedsHouse2FObject: ; 0x5c0d0 ?
 	EVENT_DISP REDS_HOUSE_2F_WIDTH, 1, 7
 
 Func_5c0dc: ; 5c0dc (17:40dc)
-	ld a, $4b
-	ld [wPokedexOwned], a ; $d2f7
+	ld hl, wPokedexOwned+7
+	set 1, [hl]
+	ld hl, wPokedexOwned+12
+	set 5, [hl]
+	ld hl, wPokedexOwned+14
+	set 7, [hl]
 	ld a, $3d
 	call Predef ; indirect jump to ShowPokedexData (402d1 (10:42d1))
 	xor a
-	ld [wPokedexOwned], a ; $d2f7
+	ld [wPokedexOwned+7], a ; $d2f7
+	ld [wPokedexOwned+7], a
+	ld [wPokedexOwned+7], a
 	ret
 
 MuseumF1_h: ; 0x5c0eb to 0x5c0f7 (12 bytes) (id=52)
@@ -103877,8 +103883,8 @@ SuperPalettes: ; 72660 (1c:6660)
 	RGB 20,26,31
 	RGB 3,2,2
 	RGB 31,29,31 ; PAL_PALLET
-	RGB 25,28,27
-	RGB 20,26,31
+	RGB 31,27,16
+	RGB 25,17,8
 	RGB 3,2,2
 	RGB 31,29,31 ; PAL_VIRIDIAN
 	RGB 17,26,3

@@ -7,12 +7,13 @@ _OaksLabGaryText1:: ; 94d5b (25:4d5b)
 	done
 
 _OaksLabText40:: ; 94d79 (25:4d79)
-	text $53, ": Heh, I"
-	line "don't need to be"
-	cont "greedy like you!"
+	text $53, ": Whatever,"
+	line "I'll be twice the"
+	cont "trainer you'll"
+	cont "ever be!"
 
-	para "Go ahead and"
-	line "choose, ", $52, "!"
+	para "Hurry up and pick"
+	line "already!"
 	done
 
 _OaksLabText41:: ; 94dbd (25:4dbd)
@@ -33,19 +34,19 @@ _OaksLabText39:: ; 94ddf (25:4ddf)
 _OaksLabCharmanderText:: ; 94e06 (25:4e06)
 	text "So! You want the"
 	line "fire #MON,"
-	cont "CHARMANDER?"
+	cont "GROWLITHE?"
 	done
 
 _OaksLabSquirtleText:: ; 94e2f (25:4e2f)
 	text "So! You want the"
 	line "water #MON,"
-	cont "SQUIRTLE?"
+	cont "STARYU?"
 	done
 
 _OaksLabBulbasaurText:: ; 94e57 (25:4e57)
 	text "So! You want the"
 	line "plant #MON,"
-	cont "BULBASAUR?"
+	cont "EXEGGCUTE?"
 	done
 
 _OaksLabMonEnergeticText:: ; 94e80 (25:4e80)
@@ -60,28 +61,27 @@ _OaksLabReceivedMonText:: ; 94ea0 (25:4ea0)
 	text "!@@"
 
 _OaksLabLastMonText:: ; 94eb6 (25:4eb6)
-	text "That's PROF.OAK's"
+	text "That's CEDAR's"
 	line "last #MON!"
 	done
 
 _UnnamedText_1d2f0:: ; 94ed2 (25:4ed2)
-	text "OAK: Now, ", $52, ","
-	line "which #MON do"
-	cont "you want?"
+	text "CEDAR: Don't be"
+	line "shy, ", $52, "!"
+
+	para "Take one!"
 	done
 
 _UnnamedText_1d2f5:: ; 94ef8 (25:4ef8)
-	text "OAK: If a wild"
-	line "#MON appears,"
-	cont "your #MON can"
-	cont "fight against it!"
+	text "CEDAR: Your"
+	line "#MON can"
+	cont "protect you now!"
 	done
 
 _UnnamedText_1d2fa:: ; 94f36 (25:4f36)
-	text "OAK: ", $52, ","
-	line "raise your young"
-	cont "#MON by making"
-	cont "it fight!"
+	text "CEDAR: Your"
+	line "#MON will grow"
+	cont "as you battle!"
 	done
 
 _OaksLabDeliverParcelText1:: ; 94f69 (25:4f69)
@@ -186,59 +186,66 @@ _UnnamedText_1d340:: ; 9526b (25:526b)
 	done
 
 _OaksLabRivalWaitingText:: ; 952bb (25:52bb)
-	text $53, ": Gramps!"
-	line "I'm fed up with"
-	cont "waiting!"
+	text $53, ": Finally!"
+	line "How could it take"
+	cont "you that long to"
+	cont "get here?"
 	done
 
 _OaksLabChooseMonText:: ; 952df (25:52df)
-	text "OAK: ", $53, "?"
-	line "Let me think..."
+	text "CEDAR: ", $53, ","
+	line "I told you to be"
+	cont "patient."
 
-	para "Oh, that's right,"
-	line "I told you to"
-	cont "come! Just wait!"
+	para "There is a reason"
+	line "I want you both"
+	cont "to receive your"
+	cont "#MON at the"
+	cont "same time!"
 
-	para "Here, ", $52, "!"
+	para "You are both old"
+	line "enough to have"
+	cont "your own, now."
 
-	para "There are 3"
-	line "#MON here!"
+	para "Go ahead, choose"
+	line "one, ", $52, "."
 
-	para "Haha!"
+	para "But, be sure to"
+	line "pick carefully."
 
-	para "They are inside"
-	line "the # BALLs."
-
-	para "When I was young,"
-	line "I was a serious"
-	cont "#MON trainer!"
-
-	para "In my old age, I"
-	line "have only 3 left,"
-	cont "but you can have"
-	cont "one! Choose!"
+	para "This will be your"
+	line "companion, after"
+	cont "all!"
 	done
 
 _OaksLabRivalInterjectionText:: ; 953dc (25:53dc)
-	text $53, ": Hey!"
-	line "Gramps! What"
-	cont "about me?"
+	text $53, ": What?!"
+	line "Why does he get"
+	cont "to pick first?"
+
+	para "I thought I was"
+	line "your favorite!"
 	done
 
 _OaksLabBePatientText:: ; 953fc (25:53fc)
-	text "OAK: Be patient!"
-	line $53, ", you can"
-	cont "have one too!"
+	text "CEDAR: ", $53, ","
+	line "you always play"
+	cont "with #MON!"
+
+	para "Give ", $52, " a"
+	line "chance, ok?"
 	done
 
 _OaksLabLeavingText:: ; 95427 (25:5427)
-	text "OAK: Hey! Don't go"
-	line "away yet!"
+	text "CEDAR: Where are"
+	line "you going?"
 	done
 
 _OaksLabRivalPickingMonText:: ; 95444 (25:5444)
 	text $53, ": I'll take"
 	line "this one, then!"
+
+	para "Muahaha!"
 	done
 
 _OaksLabRivalReceivedMonText:: ; 95461 (25:5461)
@@ -248,35 +255,35 @@ _OaksLabRivalReceivedMonText:: ; 95461 (25:5461)
 	text "!@@"
 
 _OaksLabRivalChallengeText:: ; 95477 (25:5477)
-	text $53, ": Wait"
-	line $52, "!"
-	cont "Let's check out"
-	cont "our #MON!"
+	text $53, ": Hey!"
+	line "Did you think"
+	cont "I would let you"
+	cont "walk away without"
+	cont "a fight?"
 
-	para "Come on, I'll take"
-	line "you on!"
+	para "I'm about to dish"
+	line "out your first"
+	cont "whipping!"
 	done
 
 _UnnamedText_1d3be:: ; 954b6 (25:54b6)
-	text "WHAT?"
-	line "Unbelievable!"
-	cont "I picked the"
-	cont "wrong #MON!"
+	text "I wasn't"
+	line "trying very"
+	cont "hard..."
 	prompt
 
 _UnnamedText_1d3c3:: ; 954e4 (25:54e4)
-	text $53, ": Yeah! Am"
-	line "I great or what?"
+	text $53, ": That"
+	line "was pathetic..."
 	prompt
 
 _OaksLabRivalToughenUpText:: ; 95502 (25:5502)
-	text $53, ": Okay!"
-	line "I'll make my"
-	cont "#MON fight to"
-	cont "toughen it up!"
+	text $53, ": Get"
+	line "out of my way!"
 
-	para $52, "! Gramps!"
-	line "Smell you later!"
+	para "I've got more"
+	line "important things"
+	cont "to do right now."
 	done
 
 _OaksLabText21:: ; 95551 (25:5551)

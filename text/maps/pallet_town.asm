@@ -1,19 +1,24 @@
 _OakAppearsText::
-	text "OAK: Hey! Wait!"
-	line "Don't go out!@@"
+	text "CEDAR: ", $52, "!"
+	line "I was looking for"
+	cont "you!@@"
 
 _OakWalksUpText::
-	text "OAK: It's unsafe!"
-	line "Wild #MON live"
-	cont "in tall grass!"
+	text "CEDAR: You didn't"
+	line "show up at the"
+	cont "lab earlier!"
 
-	para "You need your own"
-	line "#MON for your"
-	cont "protection."
-	cont "I know!"
+	para "Don't you remember"
+	line "what today is?"
 
-	para "Here, come with"
-	line "me!"
+	para "You're old enough"
+	line "to raise a team"
+	cont "of #MON!"
+
+	para "C'mon, let's go"
+	line "to the lab."
+
+	para "Follow me!"
 	done
 
 _PalletTownText2::
