@@ -241,7 +241,7 @@ BillsPCDeposit:
 	jp BillsPCMenu
 .asm_215bb
 	ld a, [W_NUMINBOX] ; $da80
-	cp $14
+	cp $13
 	jr nz, .asm_215cb
 	ld hl, BoxFullText ; $5802
 	call PrintText

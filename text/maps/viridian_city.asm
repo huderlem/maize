@@ -58,11 +58,14 @@ _UnnamedText_1917a:: ; a4560 (29:4560)
 	done
 
 _UnnamedText_19191:: ; a45b5 (29:45b5)
-	text "You can't go"
-	line "through here!"
+	text "Help!"
 
-	para "This is private"
-	line "property!"
+	para "I've fallen, and"
+	line "I can't get up!"
+
+	para "Please, I need"
+	line "medicine, so I"
+	cont "can stand up!"
 	done
 
 _UnnamedText_191ca:: ; a45ea (29:45ea)
@@ -179,3 +182,23 @@ _ViridianCityText14:: ; a4961 (29:4961)
 	line "are locked..."
 	done
 
+_GaveMedicineToManText::
+	text "Oooohhh, my"
+	line "medicine!"
+
+	para $52, " handed"
+	line "over MEDICINE."
+
+	para "I should be in"
+	line "good condition"
+	cont "again before too"
+	cont "long."
+	done
+
+_AlreadyGaveMedicineText::
+	text "Give me some air,"
+	line "sonny!"
+
+	para "Let the medicine"
+	line "do its work."
+	done

@@ -17,33 +17,48 @@ _ViridianPokeCenterText3:: ; 95be8 (25:5be8)
 	done
 
 _ViridianMartText1:: ; 95c36 (25:5c36)
-	text "Okay! Say hi to"
-	line "PROF.OAK for me!"
+	text "Is the old man"
+	line "back on his feet,"
+	cont "yet?"
 	done
 
 _ViridianMartText4:: ; 95c58 (25:5c58)
-	text "Hey! You came from"
-	line "PALLET TOWN?"
+	text "Hey, kid!"
+	line "Could you do me"
+	cont "favor?"
 	done
 
 ViridianMartParcelQuestText:: ; 95c79 (25:5c79)
-	text "You know PROF."
-	line "OAK, right?"
+	text "Someone told me"
+	line "old man Jenkins"
+	cont "fell over again,"
+	cont "and he can't get"
+	cont "up."
 
-	para "His order came in."
-	line "Will you take it"
-	cont "to him?"
+	para "This is a fairly"
+	line "regular thing,"
+	cont "and he just needs"
+	cont "his medicine."
+
+	para "Would you mind"
+	line "taking this to"
+	cont "him, please?"
 
 	para $52, " got"
-	line "OAK's PARCEL!@@"
+	line "MEDICINE!@@"
 
 _ViridianMartText2:: ; 95cd5 (25:5cd5)
-	text "This shop sells"
-	line "many ANTIDOTEs."
+	text "Some old guy"
+	line "in this town"
+	cont "keeps falling
+	cont "over."
 	done
 
 _ViridianMartText3:: ; 95cf6 (25:5cf6)
 	text "No! POTIONs are"
-	line "all sold out."
+	line "in stock."
+
+	para "They're my arch-"
+	line "nemesis."
 	done
 

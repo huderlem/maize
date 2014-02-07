@@ -11470,7 +11470,7 @@ ItemNames: ; 472b (1:472b)
 	db "X SPEED@"
 	db "X SPECIAL@"
 	db "COIN CASE@"
-	db "OAK's PARCEL@"
+	db "MEDICINE@"
 	db "ITEMFINDER@"
 	db "SILPH SCOPE@"
 	db "POKé FLUTE@"
@@ -18315,7 +18315,7 @@ Func_7c18: ; 7c18 (1:7c18)
 	set 6, [hl]
 	ld a, $3d
 	call Predef
-	ld hl, $d730
+	ld hl, wPokedexSeen
 	res 6, [hl]
 	call ReloadMapData
 	ld c, $a
@@ -24434,7 +24434,7 @@ ItemUseBall: ; d687 (3:5687)
 	cp a,6
 	jr nz,.UseBall
 	ld a,[W_NUMINBOX]	;is Box full?
-	cp a,20
+	cp a,19
 	jp z,BoxFullCannotThrowBall
 .UseBall	;$56a7
 ;ok, you can use a ball
@@ -28268,7 +28268,7 @@ _AddPokemonToParty: ; f2e5 (3:72e5)
 	push bc
 	call _HandleBitArray
 	pop bc
-	ld hl, wPokedexSeen ; $d30a
+	ld hl, wPokedexSeen
 	call _HandleBitArray
 	pop hl
 	push hl
@@ -28516,7 +28516,7 @@ Func_f51e: ; f51e (3:751e)
 	jr z, .asm_f575
 	ld hl, W_NUMINBOX ; $da80
 	ld a, [hl]
-	cp $14
+	cp $13
 	jr nz, .partyOrBoxNotFull
 	jr .boxFull
 .checkPartyMonSlots
@@ -33620,7 +33620,7 @@ ViridianCity_h: ; 0x18357 to 0x18384 (45 bytes) (bank=6) (id=1)
 	db NORTH | SOUTH | WEST ; connections
 	NORTH_MAP_CONNECTION ROUTE_2, ROUTE_2_WIDTH, ROUTE_2_HEIGHT, 5, 0, ROUTE_2_WIDTH, Route2Blocks
 	SOUTH_MAP_CONNECTION ROUTE_1, ROUTE_1_WIDTH, 5, 0, ROUTE_1_WIDTH, Route1Blocks, VIRIDIAN_CITY_WIDTH, VIRIDIAN_CITY_HEIGHT
-	WEST_MAP_CONNECTION ROUTE_22, ROUTE_22_WIDTH, 4, 0, ROUTE_22_HEIGHT, Route22Blocks, VIRIDIAN_CITY_WIDTH
+	WEST_MAP_CONNECTION ROUTE_1, ROUTE_1_WIDTH, 0, 0, 10, Route1Blocks, VIRIDIAN_CITY_WIDTH
 	dw ViridianCityObject ; objects
 
 ViridianCityObject: ; 0x18384 (size=104)
@@ -33628,7 +33628,7 @@ ViridianCityObject: ; 0x18384 (size=104)
 
 	db $5 ; warps
 	db $19, $17, $0, VIRIDIAN_POKECENTER
-	db $13, $1d, $0, VIRIDIAN_MART
+	db $19, $f, $0, VIRIDIAN_MART
 	db $f, $15, $0, VIRIDIAN_SCHOOL
 	db $9, $15, $0, VIRIDIAN_HOUSE
 	db $7, $20, $0, VIRIDIAN_GYM
@@ -33652,10 +33652,10 @@ ViridianCityObject: ; 0x18384 (size=104)
 
 	; warp-to
 	EVENT_DISP $14, $19, $17 ; VIRIDIAN_POKECENTER
-	EVENT_DISP $14, $13, $1d ; VIRIDIAN_MART
-	EVENT_DISP $14, $f, $15 ; VIRIDIAN_SCHOOL
-	EVENT_DISP $14, $9, $15 ; VIRIDIAN_HOUSE
-	EVENT_DISP $14, $7, $20 ; VIRIDIAN_GYM
+	EVENT_DISP $14, $19, $f  ; VIRIDIAN_MART
+	EVENT_DISP $14,  $f, $15 ; VIRIDIAN_SCHOOL
+	EVENT_DISP $14,  $9, $15 ; VIRIDIAN_HOUSE
+	EVENT_DISP $14,  $7, $20 ; VIRIDIAN_GYM
 
 ViridianCityBlocks: ; 183ec (6:43ec)
 	INCBIN "maps/viridiancity.blk"
@@ -34414,6 +34414,29 @@ UnnamedText_1917a: ; 1917a (6:517a)
 
 ViridianCityText5: ; 1917f (6:517f)
 	db $08 ; asm
+	; check if player has medicine
+	ld b, OAKS_PARCEL
+	call IsItemInBag
+	jr z, .noMedicine
+	ld hl, GaveMedicineToManText
+	call PrintText
+	ld a, OAKS_PARCEL
+	ldh [$db], a
+	ld hl, RemoveItemByID
+	ld b, BANK(RemoveItemByID)
+	call Bankswitch
+	; hijack a temporary flag
+	ld hl, W_PEWTERGYMCURSCRIPT
+	set 7, [hl]
+	jp TextScriptEnd
+.noMedicine:
+	ld hl, W_PEWTERGYMCURSCRIPT
+	bit 7, [hl]
+	jr z, .nothing
+	ld hl, AlreadyGaveMedicineText
+	call PrintText
+	jp TextScriptEnd
+.nothing:
 	ld hl, UnnamedText_19191
 	call PrintText
 	call ViridianCityScript_190cf
@@ -34449,6 +34472,14 @@ ViridianCityText6: ; 19196 (6:5196)
 	call PrintText
 .asm_3c73c ; 0x191c7
 	jp TextScriptEnd
+
+GaveMedicineToManText:
+	TX_FAR _GaveMedicineToManText
+	db "@"
+
+AlreadyGaveMedicineText:
+	TX_FAR _AlreadyGaveMedicineText
+	db "@"
 
 UnnamedText_191ca: ; 191ca (6:51ca)
 	TX_FAR _UnnamedText_191ca
@@ -37394,8 +37425,9 @@ Route1_h: ; 0x1c0c3 to 0x1c0e5 (34 bytes) (bank=7) (id=12)
 	db $00 ; tileset
 	db ROUTE_1_HEIGHT, ROUTE_1_WIDTH ; dimensions (y, x)
 	dw Route1Blocks, Route1TextPointers, Route1Script ; blocks, texts, scripts
-	db SOUTH ; connections
+	db SOUTH | EAST ; connections
 	SOUTH_MAP_CONNECTION PALLET_TOWN, PALLET_TOWN_WIDTH, 4, 0, PALLET_TOWN_WIDTH, PalletTownBlocks, ROUTE_1_WIDTH, ROUTE_1_HEIGHT
+	EAST_MAP_CONNECTION VIRIDIAN_CITY, VIRIDIAN_CITY_WIDTH, 0, 0, 15, ViridianCityBlocks, ROUTE_1_WIDTH
 	dw Route1Object ; objects
 
 Route1Object: ; 0x1c0e5 (size=19)
@@ -38895,8 +38927,8 @@ OaksLabText5: ; 1d248 (7:5248)
 	call PrintText
 	jr .asm_0f042 ; 0x1d2a7
 .asm_76269 ; 0x1d2a9
-	ld b, OAKS_PARCEL
-	call IsItemInBag
+	ld hl, W_PEWTERGYMCURSCRIPT
+	bit 7, [hl]
 	jr nz, .asm_a8fcf ; 0x1d2ae
 	ld hl, UnnamedText_1d2fa
 	call PrintText
@@ -38907,6 +38939,8 @@ OaksLabText5: ; 1d248 (7:5248)
 	call OaksLabScript_1d00a
 	ld a, $f
 	ld [W_OAKSLABCURSCRIPT], a
+	ld hl, W_PEWTERGYMCURSCRIPT
+	res 7, [hl]
 	jr .asm_0f042 ; 0x1d2c6
 .asm_333a2 ; 0x1d2c8
 	ld hl, OaksLabAroundWorldText
@@ -52895,9 +52929,9 @@ if _YELLOW
 	db $FF,9,SPEAROW,8,EEVEE,0
 	db $FF,18,SPEAROW,15,SANDSHREW,15,RATTATA,17,EEVEE,0
 else
-	db 5,SQUIRTLE,0
-	db 5,BULBASAUR,0
-	db 5,CHARMANDER,0
+	db 5,STARYU,0
+	db 5,EXEGGCUTE,0
+	db 5,GROWLITHE,0
 	db $FF,9,PIDGEY,8,SQUIRTLE,0
 	db $FF,9,PIDGEY,8,BULBASAUR,0
 	db $FF,9,PIDGEY,8,CHARMANDER,0
@@ -54061,7 +54095,7 @@ Func_3ad71: ; 3ad71 (e:6d71)
 	push bc
 	call Func_3b057
 	pop bc
-	ld hl, wPokedexSeen ; $d30a
+	ld hl, wPokedexSeen
 	call Func_3b057
 	pop de
 	pop hl
@@ -63279,7 +63313,7 @@ Func_3eb01: ; 3eb01 (f:6b01)
 	dec a
 	ld c, a
 	ld b, $1
-	ld hl, wPokedexSeen ; $d30a
+	ld hl, wPokedexSeen
 	ld a, $10
 	call Predef ; indirect jump to HandleBitArray (f666 (3:7666))
 	ld hl, W_ENEMYMONLEVEL ; $cff3
@@ -65840,7 +65874,7 @@ HandlePokedexListMenu: ; 40111 (10:4111)
 	ld hl,Coord
 	call DrawPokedexVerticalLine
 	ld hl,wPokedexSeen
-	ld b,19
+	ld b,30
 	call CountSetBits
 	ld de,$d11e
 	FuncCoord 16,3
@@ -65848,7 +65882,7 @@ HandlePokedexListMenu: ; 40111 (10:4111)
 	ld bc,$0103
 	call PrintNumber ; print number of seen pokemon
 	ld hl,wPokedexOwned
-	ld b,19
+	ld b,30
 	call CountSetBits
 	ld de,$d11e
 	FuncCoord 16,6
@@ -65872,8 +65906,8 @@ HandlePokedexListMenu: ; 40111 (10:4111)
 	ld de,PokedexMenuItemsText
 	call PlaceString
 ; find the highest pokedex number among the pokemon the player has seen
-	ld hl,wPokedexSeen + 18
-	ld b,153
+	ld hl,wPokedexSeen + 30
+	ld b,249
 .maxSeenPokemonLoop
 	ld a,[hld]
 	ld c,8
@@ -69292,12 +69326,12 @@ LavenderTownText9: ; 44164 (11:4164)
 
 DisplayDexRating: ; 44169 (11:4169)
 	ld hl, wPokedexSeen
-	ld b, $13
+	ld b, 30
 	call CountSetBits
 	ld a, [$D11E] ; result of CountSetBits (seen count)
 	ld [$FFDB], a
 	ld hl, wPokedexOwned
-	ld b, $13
+	ld b, 30
 	call CountSetBits
 	ld a, [$D11E] ; result of CountSetBits (own count)
 	ld [$FFDC], a
@@ -78526,7 +78560,7 @@ Func_4fda5: ; 4fda5 (13:7da5)
 	cp $6
 	jr c, .asm_4fe01
 	ld a, [W_NUMINBOX] ; $da80
-	cp $14
+	cp $13
 	jr nc, .asm_4fdf9
 	xor a
 	ld [W_ENEMYBATTSTATUS3], a ; $d069
@@ -91289,6 +91323,15 @@ RedsHouse2FScript2:
 	call RemovePokemon
 	call RemovePokemon
 	call RemovePokemon
+	; clear pokedex flags
+	xor a
+	ld hl, wPokedexOwned
+	ld bc, 30
+	call FillMemory
+	xor a
+	ld hl, wPokedexSeen
+	ld bc, 30
+	call FillMemory
 	ld a, 3
 	ld [W_REDSHOUSE2CURSCRIPT], a
 	ret	
@@ -91336,8 +91379,8 @@ Func_5c0dc: ; 5c0dc (17:40dc)
 	call Predef ; indirect jump to ShowPokedexData (402d1 (10:42d1))
 	xor a
 	ld [wPokedexOwned+7], a ; $d2f7
-	ld [wPokedexOwned+7], a
-	ld [wPokedexOwned+7], a
+	ld [wPokedexOwned+12], a
+	ld [wPokedexOwned+14], a
 	ret
 
 MuseumF1_h: ; 0x5c0eb to 0x5c0f7 (12 bytes) (id=52)
@@ -104516,8 +104559,25 @@ Func_7390e: ; 7390e (1c:790e)
 	ld [$6000], a
 	ld a, b
 	ld [$4000], a
-	ld bc, $462
+	ld bc, $289 ; used to be $462
+	; TODO: test this thoroughly...
+	push hl
+	push de
 	call CopyData
+	pop de
+	pop hl
+	ld bc, $2a9
+	push hl
+	ld h, d
+	ld l, e
+	add hl, bc
+	ld d, h
+	ld e, l
+	pop hl
+	add hl, bc
+	ld bc, $1b9
+	call CopyData 
+
 	pop hl
 	xor a
 	ld [hli], a

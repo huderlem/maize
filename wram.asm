@@ -908,10 +908,7 @@ wPokedexOwned:: ; d2f7
 	ds (150 / 8) + 1
 wPokedexOwnedEnd::
 
-wPokedexSeen:: ; d30a
 	ds (150 / 8) + 1
-wPokedexSeenEnd::
-
 
 wNumBagItems:: ; d31d
 	ds 1
@@ -1443,7 +1440,10 @@ W_NUMINBOX:: ; da80
 W_BOXMON1DATA:: ; da96
 	ds 33
 W_BOXMON2DATA:: ; dab7
-	ds 33 * 19
+	ds 33 * 18
+
+wPokedexSeen:: ; dd09
+	ds 33
 
 W_BOXMON1OT:: ; dd2a
 	ds 11
