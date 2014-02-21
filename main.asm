@@ -10492,7 +10492,7 @@ Func_3eb5:: ; 3eb5 (0:3eb5)
 	ld a, [$cd3e]
 	ld [$2000], a
 	ld [H_LOADEDROMBANK], a
-	ld de, .asm_3eda ; TODO: unhardcode this address in pokered
+	ld de, .asm_3eda
 	push de
 	jp [hl]
 .asm_3eda
@@ -32060,7 +32060,6 @@ UnnamedText_13a53: ; 13a53 (4:7a53)
 	db "@"
 
 Func_13a58: ; 13a58 (4:7a58)
-; TODO: document this function
 	ld hl, W_GRASSRATE ; $d887
 	ld a, [W_ISLINKBATTLE] ; $d12b
 	and a
@@ -38976,8 +38975,6 @@ UnnamedText_1d2fa: ; 1d2fa (7:52fa)
 
 OaksLabDeliverParcelText: ; 1d2ff (7:52ff)
 	TX_FAR _OaksLabDeliverParcelText1 ; 0x94f69
-	db $11
-	TX_FAR _OaksLabDeliverParcelText2
 	db "@"
 
 OaksLabAroundWorldText: ; 1d309 (7:5309)
@@ -63949,7 +63946,6 @@ TerminatorText_3f04a: ; 3f04a (f:704a)
 	db "@"
 
 Func_3f04b: ; 3f04b (f:704b)
-; TODO: document this function
 	ld a, [$d033]
 	ld e, a
 	ld a, [$d034]
@@ -104560,7 +104556,7 @@ Func_7390e: ; 7390e (1c:790e)
 	ld a, b
 	ld [$4000], a
 	ld bc, $289 ; used to be $462
-	; TODO: test this thoroughly...
+	; TODO: test this thoroughly... this is the change box thing for extending the dex
 	push hl
 	push de
 	call CopyData

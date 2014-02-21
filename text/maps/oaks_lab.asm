@@ -85,30 +85,20 @@ _UnnamedText_1d2fa:: ; 94f36 (25:4f36)
 	done
 
 _OaksLabDeliverParcelText1:: ; 94f69 (25:4f69)
-	text "OAK: Oh, ", $52, "!"
+	text "CEDAR: ", $52, "!"
 
-	para "How is my old"
-	line "#MON?"
+	para "Thank goodness"
+	line "you stopped by!"
 
-	para "Well, it seems to"
-	line "like you a lot."
+	para "I completely"
+	line "forgot to give"
+	cont "you and ", $53
+	cont "something very"
+	cont "important!"
 
-	para "You must be"
-	line "talented as a"
-	cont "#MON trainer!"
-
-	para "What? You have"
-	line "something for me?"
-
-	para $52, " delivered"
-	line "OAK's PARCEL.@@"
-
-_OaksLabDeliverParcelText2:: ; 9500f (25:500f)
-	db $0
-	para "Ah! This is the"
-	line "custom # BALL"
-	cont "I ordered!"
-	cont "Thank you!"
+	para "Speaking of"
+	line $53, ", where"
+	cont "is he?"
 	done
 
 _OaksLabAroundWorldText:: ; 95045 (25:5045)
@@ -287,18 +277,25 @@ _OaksLabRivalToughenUpText:: ; 95502 (25:5502)
 	done
 
 _OaksLabText21:: ; 95551 (25:5551)
-	text $53, ": Gramps!"
+	text $53, ": Get"
+	line "out of my way!"
 	done
 
 _OaksLabText22:: ; 9555d (25:555d)
-	text $53, ": What did"
-	line "you call me for?"
+	text $53, ": Why"
+	line "did you make me"
+	cont "come all the way"
+	cont "back here?!"
 	done
 
 _OaksLabText23:: ; 9557b (25:557b)
-	text "OAK: Oh right! I"
-	line "have a request"
-	cont "of you two."
+	text "CEDAR: Calm down."
+
+	para "I called you back"
+	line "because you need"
+	cont "to be equipped"
+	cont "with the best"
+	cont "technology!"
 	done
 
 _OaksLabText24:: ; 955a8 (25:55a8)
@@ -316,52 +313,73 @@ _OaksLabText24:: ; 955a8 (25:55a8)
 	done
 
 _OaksLabText25:: ; 9562a (25:562a)
-	text "OAK: ", $52, " and"
-	line $53, "! Take"
-	cont "these with you!"
+	text "CEDAR: Take"
+	line "these with you!"
 
 	para $52, " got"
-	line "#DEX from OAK!@@"
+	line "#DEX!@@"
 
 _OaksLabText26:: ; 95664 (25:5664)
-	text "To make a complete"
-	line "guide on all the"
-	cont "#MON in the"
-	cont "world..."
+	text "Excellent!"
 
-	para "That was my dream!"
+	para "As you travel far"
+	line "and wide, I"
+	cont "suggest that you"
+	cont "try filling the"
+	cont "#DEX."
 
-	para "But, I'm too old!"
-	line "I can't do it!"
+	para "You might know"
+	line "this already, but"
+	cont "most trainers'"
+	cont "goal is to defeat"
+	cont "all 8 gyms in the"
+	cont "Boldor Region!"
 
-	para "So, I want you two"
-	line "to fulfill my"
-	cont "dream for me!"
+	para "From there, many"
+	line "try to take on"
+	cont "the elite"
+	cont "trainers at"
+	cont "TOPAZ PEAK."
 
-	para "Get moving, you"
+	para "I'm getting way"
+	line "ahead of myself."
+
+	para "Only the very"
+	line "best of trainers"
+	cont "are good enough"
+	cont "to make it there!"
+
+	para "...blah blah..."
+	line "blah......blah"
+	cont "blah...blah..."
+
+	para "What are you"
+	line "waiting for?"
+
+	para "Get going, you"
 	line "two!"
-
-	para "This is a great"
-	line "undertaking in"
-	cont "#MON history!"
 	done
 
 _OaksLabText27:: ; 95741 (25:5741)
-	text $53, ": Alright"
-	line "Gramps! Leave it"
-	cont "all to me!"
+	text $53, ": Yes!"
 
-	para $52, ", I hate to"
-	line "say it, but I"
-	cont "don't need you!"
+	para "I can finally get"
+	line "out of this puny"
+	cont "town!"
 
-	para "I know! I'll"
-	line "borrow a TOWN MAP"
-	cont "from my sis!"
+	para "I'm going to be a"
+	line "WAY better"
+	cont "trainer than you!"
 
-	para "I'll tell her not"
-	line "to lend you one,"
-	cont $52, "! Hahaha!"
+	para "I'll go make sure"
+	line "my sister throws"
+	cont "away the other"
+	cont "TOWN MAP, too!"
+
+	para "Crush ya later,"
+	line "you creep!"
+
+	para "Hahahahaha!"
 	done
 
 _UnnamedText_1d405:: ; 957eb (25:57eb)
@@ -380,7 +398,7 @@ _UnnamedText_441cc:: ; 9580c (25:580c)
 	TX_NUM $ffdc, 1, 3
 	text " #MON owned"
 
-	para "PROF.OAK's"
+	para "CEDAR's"
 	line "Rating:"
 	prompt
 
