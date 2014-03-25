@@ -35944,24 +35944,15 @@ BluesHouseText1: ; 19b5d (6:5b5d)
 .GiveMap
 	ld hl,DaisyOfferMapText
 	call PrintText
-	ld bc,(TOWN_MAP << 8) | 1
-	call GiveItem
-	jr nc, .BagFull
 	ld a,$29
 	ld [$CC4D],a
 	ld a,$11
 	call Predef ; hide table map object
-	ld hl,GotMapText
-	call PrintText
 	ld hl,$D74A
 	set 0,[hl]
 	jr .done
 .GotMap
 	ld hl,DaisyUseMapText
-	call PrintText
-	jr .done
-.BagFull
-	ld hl,DaisyBagFullText
 	call PrintText
 .done
 	jp TextScriptEnd
@@ -35972,14 +35963,6 @@ DaisyInitialText: ; 19baa (6:5baa)
 
 DaisyOfferMapText: ; 19baf (6:5baf)
 	TX_FAR _DaisyOfferMapText
-	db "@"
-
-GotMapText: ; 19bb4 (6:5bb4)
-	TX_FAR _GotMapText
-	db $11,"@"
-
-DaisyBagFullText: ; 19bba (6:5bba)
-	TX_FAR _DaisyBagFullText
 	db "@"
 
 DaisyUseMapText: ; 19bbf (6:5bbf)
@@ -47301,19 +47284,19 @@ GrowlitheBaseStats: ; 38a1a (e:4a1a)
 	db FIRE ; species type 2
 
 	db 190 ; catch rate
-	db 91 ; base exp yield
+	db 65 ; base exp yield
 	db $55 ; sprite dimensions
 
 	dw GrowlithePicFront
 	dw GrowlithePicBack
 
 	; attacks known at lvl 0
-	db BITE
-	db ROAR
+	db TACKLE
+	db GROWL
 	db 0
 	db 0
 
-	db 5 ; growth rate
+	db 3 ; growth rate
 
 	; learnset
 	db %10100000
@@ -48929,7 +48912,7 @@ ExeggcuteBaseStats: ; 38eea (e:4eea)
 	db PSYCHIC ; species type 2
 
 	db 90 ; catch rate
-	db 98 ; base exp yield
+	db 65 ; base exp yield
 	db $77 ; sprite dimensions
 
 	dw ExeggcutePicFront
@@ -48937,11 +48920,11 @@ ExeggcuteBaseStats: ; 38eea (e:4eea)
 
 	; attacks known at lvl 0
 	db BARRAGE
-	db HYPNOSIS
+	db LEER
 	db 0
 	db 0
 
-	db 5 ; growth rate
+	db 3 ; growth rate
 
 	; learnset
 	db %00100000
@@ -49595,7 +49578,7 @@ StaryuBaseStats: ; 390e2 (e:50e2)
 	db WATER ; species type 2
 
 	db 225 ; catch rate
-	db 106 ; base exp yield
+	db 65 ; base exp yield
 	db $66 ; sprite dimensions
 
 	dw StaryuPicFront
@@ -49603,11 +49586,11 @@ StaryuBaseStats: ; 390e2 (e:50e2)
 
 	; attacks known at lvl 0
 	db TACKLE
-	db 0
+	db HARDEN
 	db 0
 	db 0
 
-	db 5 ; growth rate
+	db 3 ; growth rate
 
 	; learnset
 	db %00100000
@@ -54696,12 +54679,15 @@ Mon102_EvosMoves: ; 3b26e (e:726e)
 	db EV_ITEM,LEAF_STONE ,1,EXEGGUTOR
 	db 0
 ;Learnset
-	db 25,REFLECT
-	db 28,LEECH_SEED
-	db 32,STUN_SPORE
-	db 37,POISONPOWDER
-	db 42,SOLARBEAM
-	db 48,SLEEP_POWDER
+	db 7,ABSORB
+	db 14,HYPNOSIS
+	db 21,LEECH_SEED
+	db 25,STUN_SPORE
+	db 26,POISONPOWDER
+	db 27,SLEEP_POWDER
+	db 33,PSYBEAM
+	db 39,SOLARBEAM
+	db 43,PSYCHIC
 	db 0
 Mon088_EvosMoves: ; 3b280 (e:7280)
 ;GRIMER
@@ -54876,16 +54862,17 @@ Mon123_EvosMoves: ; 3b324 (e:7324)
 Mon120_EvosMoves: ; 3b332 (e:7332)
 ;STARYU
 ;Evolutions
-	db EV_ITEM,WATER_STONE ,1,STARMIE
+	db EV_ITEM,WATER_STONE,1,STARMIE
 	db 0
 ;Learnset
-	db 17,WATER_GUN
-	db 22,HARDEN
+	db 8,BUBBLE
+	db 15,WATER_GUN
+	db 22,DOUBLE_TEAM
 	db 27,RECOVER
-	db 32,SWIFT
-	db 37,MINIMIZE
-	db 42,LIGHT_SCREEN
-	db 47,HYDRO_PUMP
+	db 31,PSYWAVE
+	db 34,LIGHT_SCREEN
+	db 39,HYDRO_PUMP
+	db 43,PSYCHIC
 	db 0
 Mon009_EvosMoves: ; 3b346 (e:7346)
 ;BLASTOISE
@@ -54960,12 +54947,14 @@ Mon058_EvosMoves: ; 3b374 (e:7374)
 	db EV_ITEM,FIRE_STONE,1,ARCANINE
 	db 0
 ;Learnset
-	db 18,EMBER
-	db 23,LEER
-	db 30,TAKE_DOWN
-	db 39,AGILITY
-	db 42,CRUNCH
-	db 50,FLAMETHROWER
+	db 8,EMBER
+	db 14,LEER
+	db 20,BITE
+	db 26,TAKE_DOWN
+	db 32,DOUBLE_TEAM
+	db 33,CRUNCH
+	db 40,FLAMETHROWER
+	db 43,BODY_SLAM
 	db 0
 Mon095_EvosMoves: ; 3b384 (e:7384)
 ;ONIX
@@ -55137,11 +55126,13 @@ Mon054_EvosMoves: ; 3b439 (e:7439)
 	db EV_LEVEL,33,GOLDUCK
 	db 0
 ;Learnset
-	db 28,TAIL_WHIP
-	db 31,DISABLE
-	db 36,CONFUSION
-	db 43,FURY_SWIPES
-	db 52,HYDRO_PUMP
+	db 10,BUBBLE
+	db 14,DISABLE
+	db 18,WATER_GUN
+	db 25,SCREECH
+	db 29,CONFUSION
+	db 32,FURY_SWIPES
+	db 45,HYDRO_PUMP
 	db 0
 Mon096_EvosMoves: ; 3b448 (e:7448)
 ;DROWZEE
@@ -74303,10 +74294,9 @@ TVWrongSideText: ; 481df (12:41df)
 RedsHouse1FObject: ; 481e4 (12:41e4)
 	db $0A ; border tile
 
-	db 3 ; warps
+	db 2 ; warps
 	db 7,2,0,$FF ; exit1
 	db 7,3,0,$FF ; exit2
-	db 1,7,0,$26 ; staircase
 
 	db 1 ; signs
 	db 1,3,2 ; TV
@@ -74317,7 +74307,6 @@ RedsHouse1FObject: ; 481e4 (12:41e4)
 	; warp-to
 	EVENT_DISP REDS_HOUSE_1F_WIDTH, 7, 2
 	EVENT_DISP REDS_HOUSE_1F_WIDTH, 7, 3
-	EVENT_DISP REDS_HOUSE_1F_WIDTH, 1, 7
 
 RedsHouse1FBlocks: ; 48209 (12:4209)
 	INCBIN "maps/redshouse1f.blk"

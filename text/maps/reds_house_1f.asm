@@ -20,7 +20,8 @@ _MomWakeUpText::
 _MomHealText1::
 	text "MOM: ",$52,"!"
 	line "You should take a"
-	cont "quick rest."
+	cont "quick nap on"
+	cont "your bed."
 	prompt
 
 _MomHealText2::
@@ -28,7 +29,8 @@ _MomHealText2::
 	line "You and your"
 	cont "#MON are"
 	cont "looking great!"
-	cont "Take care now!"
+	
+	para "Buh-bye now!"
 	done
 
 _StandByMeText::

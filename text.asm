@@ -517,8 +517,8 @@ _CeladonCityHotelText:: ; 886a4 (22:46a4)
 	done
 
 _BookcaseText:: ; 886c9 (22:46c9)
-	text "Crammed full of"
-	line "#MON books!"
+	text "Those things are"
+	line "books!"
 	done
 
 _NewBicycleText:: ; 886e6 (22:46e6)
@@ -1008,8 +1008,8 @@ _IndigoPlateauStatuesText3:: ; 89596 (22:5596)
 	done
 
 _PokemonBooksText:: ; 895c1 (22:55c1)
-	text "Crammed full of"
-	line "#MON books!"
+	text "Those things are"
+	line "books!"
 	done
 
 _DiglettSculptureText:: ; 895de (22:55de)
@@ -1099,8 +1099,8 @@ _UnnamedText_3c7d3:: ; 8971a (22:571a)
 	done
 
 _Sony1WinText:: ; 8972a (22:572a)
-	text $53, ": Yeah! Am"
-	line "I great or what?"
+	text $53, ": That"
+	line "was pathetic..."
 	prompt
 
 _PlayerBlackedOutText2:: ; 89748 (22:5748)

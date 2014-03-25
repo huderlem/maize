@@ -1,17 +1,20 @@
 Maize TODO list
 ================
-1. -Change types of gen 1 attacks (Karate Chop, Gust)
-2. -Fix Focus Energy and Critical Hit Ratio
-3. -Fix Psychic's resistance to Ghost, and others
-4. -Add Item Stone
-5. -Update pokemon's evosMoves to use Item Stone, and make sure the new pokemon evolve as expected
-6. -Insert Young's sprite for the protagonist
-7. -Add custom tiles for tileset 0
-8. Make room for seen/owned pokemon flags by doing the pc thing
-10. -Update Title screen mon list and text stuff
-11. -Update Battle HUD
-12. -Update Text Box graphics
-13. -Make intro script go past the dark room
-14. Rebuild text/scripts in Maize Version!
-15. Import Town Map
-16. Update Oaks intro
+-Change types of gen 1 attacks (Karate Chop, Gust)
+-Fix Focus Energy and Critical Hit Ratio
+-Fix Psychic's resistance to Ghost, and others
+-Add Item Stone
+-Update pokemon's evosMoves to use Item Stone, and make sure the new pokemon evolve as expected
+-Insert Young's sprite for the protagonist
+-Add custom tiles for tileset 0
+-Make room for seen/owned pokemon flags by doing the pc thing
+-Update Title screen mon list and text stuff
+-Update Battle HUD
+-Update Text Box graphics
+-Make intro script go past the dark room
+Rebuild text/scripts in Maize Version!
+Import Town Map
+-Update Oaks intro
+Import Songs
+-Update Growlithe, Staryu, Exeggcute stats/moves
+

@@ -1,38 +1,29 @@
 _DaisyInitialText::
-	text "Hi ",$52,"!"
-	line $53," is out at"
-	cont "Grandpa's lab."
+	text "Did you just"
+	line "barge into this"
+	cont "house without"
+	cont "permission?!"
 	done
 
 _DaisyOfferMapText::
-	text "Grandpa asked you"
-	line "to run an errand?"
-	cont "Here, this will"
-	cont "help you!"
-	prompt
+	text "I knew you were"
+	line "trouble when you"
+	cont "walked in here."
 
-_GotMapText::
-	text $52," got a"
-	line "@"
-	TX_RAM $CF4B
-	text "!@@"
-
-_DaisyBagFullText::
-	text "You have too much"
-	line "stuff with you."
+	para "You can't have the"
+	line "TOWN MAP."
+	cont "It's mine."
 	done
 
 _DaisyUseMapText::
-	text "Use the TOWN MAP"
-	line "to find out where"
-	cont "you are."
+	text "Make like a tree"
+	line "and leave!"
 	done
 
 _BluesHouseText2::
-	text "#MON are living"
-	line "things! If they"
-	cont "get tired, give"
-	cont "them a rest!"
+	text "How many times"
+	line "has my brother"
+	cont "crushed you?"
 	done
 
 _BluesHouseText3::

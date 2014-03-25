@@ -31,6 +31,7 @@ globals.asm
 *.sgm
 *.sav
 *.sys
+*.sn*
 
 # for vim configuration
 # url: http://www.vim.org/scripts/script.php?script_id=441
