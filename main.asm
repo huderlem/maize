@@ -37420,9 +37420,8 @@ Route1Object: ; 0x1c0e5 (size=19)
 	db $1 ; signs
 	db $1b, $9, $3 ; Route1Text3
 
-	db $2 ; people
-	db SPRITE_BUG_CATCHER, $18 + 4, $5 + 4, $fe, $1, $1 ; person
-	db SPRITE_BUG_CATCHER, $d + 4, $f + 4, $fe, $2, $2 ; person
+	db $1 ; people
+	db SPRITE_LYING_OLD_MAN, $0 + 4, $7 + 4, $ff, $d0, $1 ; person
 
 	; warp-to
 	EVENT_DISP ROUTE_1_WIDTH, $12, $1a
@@ -101921,10 +101920,10 @@ Func_712f1: ; 712f1 (1c:52f1)
 	ret
 
 ExternalMapEntries: ; 71313 (1c:5313)
-	EMAP $2,$B,PalletTownName
-	EMAP $2,$8,ViridianCityName
-	EMAP $2,$3,PewterCityName
-	EMAP $A,$2,CeruleanCityName
+	EMAP $C,$A,PalletTownName
+	EMAP $F,$9,ViridianCityName
+	EMAP $E,$3,PewterCityName
+	EMAP $A,$4,CeruleanCityName
 	EMAP $E,$5,LavenderTownName
 	EMAP $A,$9,VermilionCityName
 	EMAP $7,$5,CeladonCityName
@@ -101933,8 +101932,8 @@ ExternalMapEntries: ; 71313 (1c:5313)
 	EMAP $0,$2,IndigoPlateauName
 	EMAP $A,$5,SaffronCityName
 	EMAP $0,$0,PalletTownName ; unused
-	EMAP $2,$A,Route1Name
-	EMAP $2,$6,Route2Name
+	EMAP $D,$9,Route1Name
+	EMAP $F,$6,Route2Name
 	EMAP $4,$3,Route3Name
 	EMAP $8,$2,Route4Name
 	EMAP $A,$3,Route5Name
@@ -101960,15 +101959,15 @@ ExternalMapEntries: ; 71313 (1c:5313)
 	EMAP $B,$0,Route25Name
 
 InternalMapEntries: ; 71382 (1c:5382)
-	IMAP $29,$2,$B,PalletTownName
-	IMAP $2E,$2,$8,ViridianCityName
-	IMAP $33,$2,$6,Route2Name
+	IMAP $29,$C,$A,PalletTownName
+	IMAP $2E,$F,$9,ViridianCityName
+	IMAP $33,$F,$6,Route2Name
 	IMAP $34,$2,$4,ViridianForestName
-	IMAP $3B,$2,$3,PewterCityName
+	IMAP $3B,$E,$3,PewterCityName
 	IMAP $3E,$6,$2,MountMoonName
-	IMAP $44,$A,$2,CeruleanCityName
+	IMAP $44,$A,$4,CeruleanCityName
 	IMAP $45,$5,$2,Route4Name
-	IMAP $46,$A,$2,CeruleanCityName
+	IMAP $46,$A,$4,CeruleanCityName
 	IMAP $49,$A,$4,Route5Name
 	IMAP $4C,$A,$6,Route6Name
 	IMAP $4F,$9,$5,Route7Name
@@ -102016,7 +102015,7 @@ InternalMapEntries: ; 71382 (1c:5382)
 	IMAP $E2,$8,$C,SafariZoneName
 	IMAP $E5,$9,$1,CeruleanCaveName
 	IMAP $E6,$E,$5,LavenderTownName
-	IMAP $E7,$A,$2,CeruleanCityName
+	IMAP $E7,$A,$4,CeruleanCityName
 	IMAP $E9,$E,$3,RockTunnelName
 	IMAP $ED,$A,$5,SilphCoName
 	IMAP $F8,$0,$2,PokemonLeagueName
@@ -102024,19 +102023,19 @@ InternalMapEntries: ; 71382 (1c:5382)
 
 MapNames: ; 71473 (1c:5473)
 PalletTownName: ; 71473 (1c:5473)
-	db "PALLET TOWN@"
+	db "LAPIS TOWN@"
 ViridianCityName: ; 7147f (1c:547f)
-	db "VIRIDIAN CITY@"
+	db "JADE VILLAGE@"
 PewterCityName: ; 7148d (1c:548d)
-	db "PEWTER CITY@"
+	db "NICKEL CITY@"
 CeruleanCityName: ; 71499 (1c:5499)
-	db "CERULEAN CITY@"
+	db "AGATE CITY@"
 LavenderTownName: ; 714a7 (1c:54a7)
 	db "LAVENDER TOWN@"
 VermilionCityName: ; 714b5 (1c:54b5)
-	db "VERMILION CITY@"
+	db "COPPER TOWN@"
 CeladonCityName: ; 714c4 (1c:54c4)
-	db "CELADON CITY@"
+	db "PYRITE CITY@"
 FuchsiaCityName: ; 714d1 (1c:54d1)
 	db "FUCHSIA CITY@"
 CinnabarIslandName: ; 714de (1c:54de)

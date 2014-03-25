@@ -1,27 +1,24 @@
 _Route1ViridianMartSampleText:: ; 8d5bf (23:55bf)
-	text "Hi! I work at a"
-	line "#MON MART."
+	text "Ehhhh...hehhhh..."
+	line ".....zzzzz......."
 
-	para "It's a convenient"
-	line "shop, so please"
-	cont "visit us in"
-	cont "VIRIDIAN CITY."
+	para "He looks rather"
+	line "out of it."
 
-	para "I know, I'll give"
-	line "you a sample!"
-	cont "Here you go!"
+	para "Hey! An object"
+	line "fell out of his"
+	cont "pocket!"
 	prompt
 
 _UnnamedText_1cae8:: ; 8d643 (23:5643)
-	text $52, " got"
+	text $52, " snatched"
 	line "@"
 	TX_RAM $cf4b
 	text "!@@"
 
 _UnnamedText_1caee:: ; 8d652 (23:5652)
-	text "We also carry"
-	line "# BALLs for"
-	cont "catching #MON!"
+	text "......zzzzz......"
+	line "...hehhhh........"
 	done
 
 _UnnamedText_1caf3:: ; 8d67c (23:567c)
