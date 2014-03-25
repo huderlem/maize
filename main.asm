@@ -33626,35 +33626,35 @@ ViridianCityObject: ; 0x18384 (size=104)
 	db $f ; border tile
 
 	db $5 ; warps
-	db $19, $17, $0, VIRIDIAN_POKECENTER
+	db $19, $9, $0, VIRIDIAN_POKECENTER
 	db $19, $f, $0, VIRIDIAN_MART
-	db $f, $15, $0, VIRIDIAN_SCHOOL
-	db $9, $15, $0, VIRIDIAN_HOUSE
+	db $15, $17, $0, VIRIDIAN_SCHOOL
+	db $11, $b, $0, VIRIDIAN_HOUSE
 	db $7, $20, $0, VIRIDIAN_GYM
 
 	db $6 ; signs
-	db $11, $11, $8 ; ViridianCityText8
-	db $1, $13, $9 ; ViridianCityText9
-	db $1d, $15, $a ; ViridianCityText10
-	db $13, $1e, $b ; MartSignText
-	db $19, $18, $c ; PokeCenterSignText
-	db $7, $1b, $d ; ViridianCityText13
+	db $13, $9, $8 ; ViridianCityText8
+	db $19, $d, $9 ; ViridianCityText9
+	db $13, $15, $a ; ViridianCityText10
+	db $19, $10, $b ; MartSignText
+	db $19, $a, $c ; PokeCenterSignText
+	db $1, $17, $d ; ViridianCityText13
 
 	db $7 ; people
-	db SPRITE_BUG_CATCHER, $14 + 4, $d + 4, $fe, $0, $1 ; person
+	db SPRITE_BUG_CATCHER, $14 + 4, $7 + 4, $fe, $0, $1 ; person
 	db SPRITE_GAMBLER, $8 + 4, $1e + 4, $ff, $ff, $2 ; person
-	db SPRITE_BUG_CATCHER, $19 + 4, $1e + 4, $fe, $0, $3 ; person
+	db SPRITE_GIRL, $1b + 4, $b + 4, $fe, $0, $3 ; person
 	db SPRITE_GIRL, $9 + 4, $11 + 4, $ff, $d3, $4 ; person
 	db SPRITE_LYING_OLD_MAN, $9 + 4, $12 + 4, $ff, $ff, $5 ; person
-	db SPRITE_FISHER2, $17 + 4, $6 + 4, $ff, $d0, $6 ; person
+	db SPRITE_BUG_CATCHER, $18 + 4, $20 + 4, $ff, $d2, $6 ; person
 	db SPRITE_GAMBLER, $5 + 4, $11 + 4, $fe, $2, $7 ; person
 
 	; warp-to
-	EVENT_DISP $14, $19, $17 ; VIRIDIAN_POKECENTER
-	EVENT_DISP $14, $19, $f  ; VIRIDIAN_MART
-	EVENT_DISP $14,  $f, $15 ; VIRIDIAN_SCHOOL
-	EVENT_DISP $14,  $9, $15 ; VIRIDIAN_HOUSE
-	EVENT_DISP $14,  $7, $20 ; VIRIDIAN_GYM
+	EVENT_DISP VIRIDIAN_CITY_WIDTH, $19, $9  ; VIRIDIAN_POKECENTER
+	EVENT_DISP VIRIDIAN_CITY_WIDTH, $19, $f  ; VIRIDIAN_MART
+	EVENT_DISP VIRIDIAN_CITY_WIDTH, $15, $17 ; VIRIDIAN_SCHOOL
+	EVENT_DISP VIRIDIAN_CITY_WIDTH, $11, $b  ; VIRIDIAN_HOUSE
+	EVENT_DISP VIRIDIAN_CITY_WIDTH, $7,  $20 ; VIRIDIAN_GYM
 
 ViridianCityBlocks: ; 183ec (6:43ec)
 	INCBIN "maps/viridiancity.blk"
@@ -34268,7 +34268,7 @@ ViridianCityScript1: ; 19062 (6:5062)
 	ld [W_BATTLETYPE], a
 	ld a, 5
 	ld [W_CURENEMYLVL], a
-	ld a, WEEDLE
+	ld a, MAREEP
 	ld [W_CUROPPONENT], a
 	ld a, $2
 	ld [W_VIRIDIANCITYCURSCRIPT], a
@@ -59072,7 +59072,7 @@ InitBattleMenu: ; 3ceb3 (f:4eb3)
 	jp Func_3cfe8
 
 OldManName: ; 3cf12 (f:4f12)
-	db "OLD MAN@"
+	db "#PRO@"
 
 RegularBattleMenu: ; 3cf1a (f:4f1a)
 	ld a, [$cc2d]
@@ -73953,7 +73953,7 @@ BillsHouseHiddenObjects: ; 46f86 (11:6f86)
 	dbw Bank(Func_1eb6e), Func_1eb6e
 	db $FF
 ViridianCityHiddenObjects: ; 46f8d (11:6f8d)
-	db $04,$0e,POTION
+	db $15,$1f,RARE_CANDY
 	dbw BANK(HiddenItems),HiddenItems
 	db $FF
 SafariZoneRestHouse2HiddenObjects: ; 46f94 (11:6f94)
@@ -82943,54 +82943,11 @@ ViridianSchoolNotebook: ; 529aa (14:69aa)
 	db $08 ; asm
 	ld hl, ViridianSchoolNotebookText1
 	call PrintText
-	call TurnPageSchoolNotebook
-	jr nz, .doneReading
-	ld hl, ViridianSchoolNotebookText2
-	call PrintText
-	call TurnPageSchoolNotebook
-	jr nz, .doneReading
-	ld hl, ViridianSchoolNotebookText3
-	call PrintText
-	call TurnPageSchoolNotebook
-	jr nz, .doneReading
-	ld hl, ViridianSchoolNotebookText4
-	call PrintText
-	ld hl, ViridianSchoolNotebookText5
-	call PrintText
-.doneReading
 	jp TextScriptEnd
-
-TurnPageSchoolNotebook: ; 529db (14:69db)
-	ld hl, TurnPageText
-	call PrintText
-	call YesNoChoice
-	ld a, [wCurrentMenuItem]
-	and a
-	ret
-
-TurnPageText: ; 529e9 (14:69e9)
-	TX_FAR _TurnPageText
-	db "@"
-
-ViridianSchoolNotebookText5: ; 529ee (14:69ee)
-	TX_FAR _ViridianSchoolNotebookText5
-	db $0d
-	db "@"
 
 ViridianSchoolNotebookText1: ; 529f4 (14:69f4)
 	TX_FAR _ViridianSchoolNotebookText1
-	db "@"
-
-ViridianSchoolNotebookText2: ; 529f9 (14:69f9)
-	TX_FAR _ViridianSchoolNotebookText2
-	db "@"
-
-ViridianSchoolNotebookText3: ; 529fe (14:69fe)
-	TX_FAR _ViridianSchoolNotebookText3
-	db "@"
-
-ViridianSchoolNotebookText4: ; 52a03 (14:6a03)
-	TX_FAR _ViridianSchoolNotebookText4
+	db $0d
 	db "@"
 
 Func_52a08: ; 52a08 (14:6a08)
@@ -109529,7 +109486,7 @@ HiddenItemCoords: ; 766b8 (1d:66b8)
 	db VICTORY_ROAD_2,$02,$05
 	db VICTORY_ROAD_2,$07,$1a
 	db $6f,$0b,$0e
-	db VIRIDIAN_CITY,$04,$0e
+	db VIRIDIAN_CITY,$15,$1f
 	db ROUTE_11,$05,$30
 	db ROUTE_12,$3f,$02
 	db ROUTE_17,$0e,$0f

@@ -702,74 +702,14 @@ TMNotebookText:: ; 88bfd (22:4bfd)
 
 	para "SILPH CO.@@"
 
-_TurnPageText:: ; 88c6f (22:4c6f)
-	text "Turn the page?"
-	done
-
-_ViridianSchoolNotebookText5:: ; 88c7f (22:4c7f)
-	text "GIRL: Hey! Don't"
-	line "look at my notes!@@"
-
 _ViridianSchoolNotebookText1:: ; 88ca3 (22:4ca3)
-	text "Looked at the"
-	line "notebook!"
+	text "The page has"
+	line "illegible writing"
+	cont "all over it."
 
-	para "First page..."
-
-	para "# BALLs are"
-	line "used to catch"
-	cont "#MON."
-
-	para "Up to 6 #MON"
-	line "can be carried."
-
-	para "People who raise"
-	line "and make #MON"
-	cont "fight are called"
-	cont "#MON trainers."
-	prompt
-
-_ViridianSchoolNotebookText2:: ; 88d46 (22:4d46)
-	text "Second page..."
-
-	para "A healthy #MON"
-	line "may be hard to"
-	cont "catch, so weaken"
-	cont "it first!"
-
-	para "Poison, burns and"
-	line "other damage are"
-	cont "effective!"
-	prompt
-
-_ViridianSchoolNotebookText3:: ; 88dbd (22:4dbd)
-	text "Third page..."
-
-	para "#MON trainers"
-	line "seek others to"
-	cont "engage in #MON"
-	cont "fights."
-
-	para "Battles are"
-	line "constantly fought"
-	cont "at #MON GYMs."
-	prompt
-
-_ViridianSchoolNotebookText4:: ; 88e2c (22:4e2c)
-	text "Fourth page..."
-
-	para "The goal for"
-	line "#MON trainers"
-	cont "is to beat the "
-	cont "top 8 #MON"
-	cont "GYM LEADERs."
-
-	para "Do so to earn the"
-	line "right to face..."
-
-	para "The ELITE FOUR of"
-	line "#MON LEAGUE!"
-	prompt
+	para "There is also a"
+	line "doodle of"
+	cont "MASTER CHIEF.@@"
 
 _UnnamedText_52a10:: ; 88ec1 (22:4ec1)
 	text "Enemies on every"

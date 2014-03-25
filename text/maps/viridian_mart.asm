@@ -8,12 +8,12 @@ _ViridianPokeCenterText1:: ; 95ba1 (25:5ba1)
 	done
 
 _ViridianPokeCenterText3:: ; 95be8 (25:5be8)
-	text "There's a #MON"
-	line "CENTER in every"
-	cont "town ahead."
-
-	para "They don't charge"
-	line "any money either!"
+	text "Don't you find it"
+	line "strange how the"
+	cont "#MON CENTER is"
+	cont "free, but things"
+	cont "like POTIONs are"
+	cont "expensive?"
 	done
 
 _ViridianMartText1:: ; 95c36 (25:5c36)

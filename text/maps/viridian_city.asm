@@ -1,12 +1,13 @@
 _ViridianCityText1:: ; a43cc (29:43cc)
-	text "Those # BALLs"
-	line "at your waist!"
-	cont "You have #MON!"
+	text "Did you know that"
+	line "the region you"
+	cont "live in is called"
+	cont "Boldor?"
 
-	para "It's great that"
-	line "you can carry and"
-	cont "use #MON any"
-	cont "time, anywhere!"
+	para "It's my dream to"
+	line "visit GARNET CITY"
+	cont "on the west half"
+	cont "of Boldor."
 	done
 
 _UnnamedText_19122:: ; a4437 (29:4437)
@@ -23,23 +24,23 @@ _UnnamedText_19127:: ; a4474 (29:4474)
 	done
 
 _UnnamedText_1914d:: ; a4494 (29:4494)
-	text "You want to know"
-	line "about the 2 kinds"
-	cont "of caterpillar"
-	cont "#MON?"
+	text "Do you believe in"
+	line "ghosts?"
 	done
 
 _UnnamedText_19152:: ; a44cd (29:44cd)
-	text "Oh, OK then!"
+	text "I have one word"
+	line "for you:"
+
+	para "GASTLY"
 	done
 
 _UnnamedText_19157:: ; a44db (29:44db)
-	text "CATERPIE has no"
-	line "poison, but"
-	cont "WEEDLE does."
+	text "Good."
 
-	para "Watch out for its"
-	line "POISON STING!"
+	para "I hate it when"
+	line "people say they"
+	cont "don't."
 	done
 
 _UnnamedText_19175:: ; a4525 (29:4525)
@@ -50,11 +51,13 @@ _UnnamedText_19175:: ; a4525 (29:4525)
 	done
 
 _UnnamedText_1917a:: ; a4560 (29:4560)
-	text "When I go shop in"
-	line "PEWTER CITY, I"
-	cont "have to take the"
-	cont "winding trail in"
-	cont "VIRIDIAN FOREST."
+	text "I've learned how"
+	line "to catch #MON"
+	cont "countless times"
+	cont "from that man!"
+
+	para "To say the least,"
+	line "he's a pro!"
 	done
 
 _UnnamedText_19191:: ; a45b5 (29:45b5)
@@ -101,37 +104,32 @@ _TM42NoRoomText:: ; a46d7 (29:46d7)
 	done
 
 _UnnamedText_1920a:: ; a46f9 (29:46f9)
-	text "Ahh, I've had my"
-	line "coffee now and I"
-	cont "feel great!"
+	text "Hiya!"
+	line "I'm the best"
+	cont "there is at"
+	cont "catching #MON!"
 
-	para "Sure you can go"
-	line "through!"
-
-	para "Are you in a"
-	line "hurry?"
+	para "Do you not want"
+	line "to not see not"
+	cont "how to catch a"
+	cont "#MON like a"
+	cont "professional?"
 	done
 
 _UnnamedText_1920f:: ; a4754 (29:4754)
-	text "I see you're using"
-	line "a #DEX."
+	text "Excellent!"
 
-	para "When you catch a"
-	line "#MON, #DEX"
-	cont "is automatically"
-	cont "updated."
+	para "It's really quite"
+	line "simple!"
 
-	para "What? Don't you"
-	line "know how to catch"
-	cont "#MON?"
-
-	para "I'll show you"
-	line "how to then."
+	para "I wonder which"
+	line "#MON I'll get"
+	cont "to catch now!"
 	done
 
 _UnnamedText_19214:: ; a47e6 (29:47e6)
-	text "Time is money..."
-	line "Go along then."
+	text "I don't even know"
+	line "what I just said."
 	done
 
 _UnnamedText_19219:: ; a4807 (29:4807)
@@ -141,40 +139,26 @@ _UnnamedText_19219:: ; a4807 (29:4807)
 	done
 
 _ViridianCityText8:: ; a4833 (29:4833)
-	text "VIRIDIAN CITY "
-	line "The Eternally"
-	cont "Green Paradise"
+	text "JADE VILLAGE "
+	line "A gem amongst"
+	cont "many!"
 	done
 
 _ViridianCityText9:: ; a4860 (29:4860)
-	text "TRAINER TIPS"
-
-	para "Catch #MON"
-	line "and expand your"
-	cont "collection!"
-
-	para "The more you have,"
-	line "the easier it is"
-	cont "to fight!"
+	text "People aren't"
+	line "wearing enough"
+	cont "hats."
 	done
 
 _ViridianCityText10:: ; a48c3 (29:48c3)
-	text "TRAINER TIPS"
-
-	para "The battle moves"
-	line "of #MON are"
-	cont "limited by their"
-	cont "POWER POINTs, PP."
-
-	para "To replenish PP,"
-	line "rest your tired"
-	cont "#MON at a"
-	cont "#MON CENTER!"
+	text "Don't forget that"
+	line "bridges can also"
+	cont "be made of stone."
 	done
 
 _ViridianCityText13:: ; a4949 (29:4949)
-	text "VIRIDIAN CITY"
-	line "#MON GYM"
+	text "ROUTE 2 -"
+	line "JADE VILLAGE"
 	done
 
 _ViridianCityText14:: ; a4961 (29:4961)
