@@ -1,12 +1,8 @@
 Music_TitleScreen:: ; 7c249 (1f:4249)
-	db ( $C0 | CH0 )
+	db ( $40 | CH0 )
 	dw Music_TitleScreen_Ch1
 	db CH1
 	dw Music_TitleScreen_Ch2
-	db CH2
-	dw Music_TitleScreen_Ch3
-	db CH3
-	dw Music_TitleScreen_Ch4
 
 Music_Credits:: ; 7c255 (1f:4255)
 	db ( $80 | CH0 )

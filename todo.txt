@@ -12,9 +12,9 @@ Maize TODO list
 -Update Battle HUD
 -Update Text Box graphics
 -Make intro script go past the dark room
-Rebuild text/scripts in Maize Version!
 -Import Town Map
 -Update Oaks intro
-Import Songs
 -Update Growlithe, Staryu, Exeggcute stats/moves
+Import Songs
 Update Town Map Locations/Text
+Rebuild text/scripts in Maize Version!
