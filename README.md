@@ -1,6 +1,6 @@
-# Pokémon Red
+# Pokémon Maize (Hack of Pokémon Red)
 
-This is a disassembly of Pokémon Red.
+This is a fork of the [**Pokémon Red disassembly**](https://github.com/iimarckus/pokered) used to create a new game!
 
 It uses the following ROM as a base:
 
