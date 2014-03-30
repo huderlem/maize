@@ -44,10 +44,13 @@ _UnnamedText_19157:: ; a44db (29:44db)
 	done
 
 _UnnamedText_19175:: ; a4525 (29:4525)
-	text "Oh Grandpa! Don't"
-	line "be so mean!"
-	cont "He hasn't had his"
-	cont "coffee yet."
+	text "If I had a nickel"
+	line "for every time"
+	cont "I've learned how"
+	cont "to catch a"
+	cont "#MON..."
+
+	para "I would be RICH!"
 	done
 
 _UnnamedText_1917a:: ; a4560 (29:4560)
