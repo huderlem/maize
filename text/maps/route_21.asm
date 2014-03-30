@@ -29,17 +29,18 @@ _Route21AfterBattleText2:: ; 9203a (24:603a)
 	done
 
 _Route21BattleText3:: ; 9205a (24:605a)
-	text "The sea cleanses"
-	line "my body and soul!"
+	text "Look what I"
+	line "reeled in!"
 	done
 
 _Route21EndBattleText3:: ; 9207e (24:607e)
-	text "Ayah!"
+	text "Tartar"
+	line "sauce!"
 	prompt
 
 _Route21AfterBattleText3:: ; 92085 (24:6085)
-	text "I like the"
-	line "mountains too!"
+	text "I spot something"
+	line "on the horizon!"
 	done
 
 _Route21BattleText4:: ; 920a0 (24:60a0)

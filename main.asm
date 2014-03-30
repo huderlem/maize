@@ -33618,7 +33618,7 @@ ViridianCity_h: ; 0x18357 to 0x18384 (45 bytes) (bank=6) (id=1)
 	dw ViridianCityBlocks, ViridianCityTextPointers, ViridianCityScript ; blocks, texts, scripts
 	db NORTH | SOUTH | WEST ; connections
 	NORTH_MAP_CONNECTION ROUTE_2, ROUTE_2_WIDTH, ROUTE_2_HEIGHT, 5, 0, ROUTE_2_WIDTH, Route2Blocks
-	SOUTH_MAP_CONNECTION ROUTE_1, ROUTE_1_WIDTH, 5, 0, ROUTE_1_WIDTH, Route1Blocks, VIRIDIAN_CITY_WIDTH, VIRIDIAN_CITY_HEIGHT
+	SOUTH_MAP_CONNECTION ROUTE_21, ROUTE_21_WIDTH, 4, 0, ROUTE_21_WIDTH, Route21Blocks, VIRIDIAN_CITY_WIDTH, VIRIDIAN_CITY_HEIGHT
 	WEST_MAP_CONNECTION ROUTE_1, ROUTE_1_WIDTH, 0, 0, 10, Route1Blocks, VIRIDIAN_CITY_WIDTH
 	dw ViridianCityObject ; objects
 
@@ -52781,7 +52781,7 @@ EngineerData: ; 3a007 (e:6007)
 Juggler1Data: ; 3a013 (e:6013)
 ; none
 FisherData: ; 3a013 (e:6013)
-	db 17,GOLDEEN,TENTACOOL,GOLDEEN,0
+	db  4,MAGIKARP,MAGIKARP,GOLDEEN,0
 	db 17,TENTACOOL,STARYU,SHELLDER,0
 	db 22,GOLDEEN,POLIWAG,GOLDEEN,0
 	db 24,TENTACOOL,GOLDEEN,0
@@ -83309,7 +83309,7 @@ Route21_h: ; 0x54fff to 0x55021 (34 bytes) (id=32)
 	db ROUTE_21_HEIGHT, ROUTE_21_WIDTH ; dimensions (y, x)
 	dw Route21Blocks, Route21TextPointers, Route21Script ; blocks, texts, scripts
 	db NORTH | SOUTH ; connections
-	NORTH_MAP_CONNECTION PALLET_TOWN, PALLET_TOWN_WIDTH, PALLET_TOWN_HEIGHT, 0, 0, PALLET_TOWN_WIDTH, PalletTownBlocks
+	NORTH_MAP_CONNECTION VIRIDIAN_CITY, VIRIDIAN_CITY_WIDTH, VIRIDIAN_CITY_HEIGHT, -4, 0, VIRIDIAN_CITY_WIDTH, ViridianCityBlocks
 	SOUTH_MAP_CONNECTION CINNABAR_ISLAND, CINNABAR_ISLAND_WIDTH, 0, 0, CINNABAR_ISLAND_WIDTH, CinnabarIslandBlocks, ROUTE_21_WIDTH, ROUTE_21_HEIGHT
 	dw Route21Object ; objects
 
@@ -83323,7 +83323,7 @@ Route21Object: ; 0x55021 (size=76)
 	db $9 ; people
 	db SPRITE_FISHER2, $18 + 4, $4 + 4, $ff, $d2, $41, FISHER + $C8, $7 ; trainer
 	db SPRITE_FISHER2, $19 + 4, $6 + 4, $ff, $d0, $42, FISHER + $C8, $9 ; trainer
-	db SPRITE_SWIMMER, $1f + 4, $a + 4, $ff, $d1, $43, SWIMMER + $C8, $c ; trainer
+	db SPRITE_FISHER2, $3 + 4, $4 + 4, $ff, $d3, $43, FISHER + $C8, $1 ; trainer
 	db SPRITE_SWIMMER, $1e + 4, $c + 4, $ff, $d3, $44, CUE_BALL + $C8, $9 ; trainer
 	db SPRITE_SWIMMER, $3f + 4, $10 + 4, $ff, $d0, $45, SWIMMER + $C8, $d ; trainer
 	db SPRITE_SWIMMER, $47 + 4, $5 + 4, $ff, $d3, $46, SWIMMER + $C8, $e ; trainer
