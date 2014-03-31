@@ -1,99 +1,146 @@
 _PewterCityText1:: ; a497f (29:497f)
-	text "It's rumored that"
-	line "CLEFAIRYs came"
-	cont "from the moon!"
-
-	para "They appeared "
-	line "after MOON STONE"
-	cont "fell on MT.MOON."
+	text "I like to train"
+	line "in this building"
+	cont "so that I can get"
+	cont "strong enough to"
+	cont "beat a Gym Leader"
+	cont "someday!"
 	done
 
 _PewterCityText2:: ; a49e0 (29:49e0)
-	text "There aren't many"
-	line "serious #MON"
-	cont "trainers here!"
+	text "Our previous Gym"
+	line "Leader left to"
+	cont "pursue her dream!"
 
-	para "They're all like"
-	line "BUG CATCHERs,"
-	cont "but PEWTER GYM's"
-	cont "BROCK is totally"
-	cont "into it!"
+	para "BLANDY was just"
+	line "chosen to be the"
+	cont "new Leader a few"
+	cont "days ago."
+
+	para "He has a lot to"
+	line "learn, though."
 	done
 
 _UnnamedText_193f1:: ; a4a56 (29:4a56)
-	text "Did you check out"
-	line "the MUSEUM?"
+	text "Have you seen the"
+	line "best building"
+	cont "here?"
 	done
 
 _UnnamedText_193f6:: ; a4a75 (29:4a75)
-	text "Weren't those"
-	line "fossils from MT."
-	cont "MOON amazing?"
+	text "You must already"
+	line "know about the"
+	cont "coolness of the"
+	cont "TRAINER HOUSE."
 	done
 
 _UnnamedText_193fb:: ; a4aa2 (29:4aa2)
-	text "Really?"
-	line "You absolutely"
-	cont "have to go!"
+	text "OMG!"
+
+	para "You have to come"
+	line "see this!"
 	done
 
 _PewterCityText13:: ; a4ac6 (29:4ac6)
-	text "It's right here!"
-	line "You have to pay"
-	cont "to get in, but"
-	cont "it's worth it!"
-	cont "See you around!"
+	text "This is the"
+	line "TRAINER HOUSE!"
+
+	para "It's fun to try"
+	line "and get to the"
+	cont "end of the rooms!"
+
+	para "I heard there is"
+	line "even a cool prize"
+	cont "in there!"
+
+	para "I'm going to walk"
+	line "this way now."
+
+	para "Bye!"
 	done
 
 _UnnamedText_19427:: ; a4b14 (29:4b14)
-	text "Psssst!"
-	line "Do you know what"
-	cont "I'm doing?"
+	text "Do you know much"
+	line "about our region"
+	cont "called Boldor?"
 	done
 
 _UnnamedText_1942c:: ; a4b38 (29:4b38)
-	text "That's right!"
-	line "It's hard work!"
+	text "It's fascinating,"
+	line "isn't it?"
 	done
 
 _UnnamedText_19431:: ; a4b55 (29:4b55)
-	text "I'm spraying REPEL"
-	line "to keep #MON"
-	cont "out of my garden!"
+	text "Boldor is widely"
+	line "known for its"
+	cont "mineral deposits"
+	cont "in the ground!"
+
+	para "Much of the stone"
+	line "found here is"
+	cont "shipped to other"
+	cont "nearby regions."
+
+	para "Kanto is a big"
+	line "importer of the"
+	cont "natural resources"
+	cont "found in Boldor!"
 	done
 
 _UnnamedText_1945d:: ; a4b87 (29:4b87)
-	text "You're a trainer"
-	line "right? BROCK's"
-	cont "looking for new"
-	cont "challengers!"
-	cont "Follow me!"
+	text "Hey, buddy!"
+
+	para "Yeah, I'm talking"
+	line "to you!"
+
+	para "Why don't you"
+	line "make like a cow"
+	cont "pie and hit the"
+	cont "road?"
+
+	para "..."
+
+	para "What's that?"
+	line "No?"
+
+	para "I'm going to teach"
+	line "you a lesson"
+	cont "you'll never"
+	cont "forget!"
 	done
 
 _UnnamedText_19462:: ; a4bce (29:4bce)
-	text "If you have the"
-	line "right stuff, go"
-	cont "take on BROCK!"
+	text "Ok, here's what"
+	line "just happened."
+
+	para "I WAS going to"
+	line "beat you up for"
+	cont "good reasons, but"
+	cont "then I saw a"
+	cont "#BALL on your"
+	cont "belt..."
+
+	para "Don't hurt me!"
 	done
 
 _PewterCityText6:: ; a4bfe (29:4bfe)
-	text "TRAINER TIPS"
+	text "TRAINER HOUSE"
 
-	para "Any #MON that"
-	line "takes part in"
-	cont "battle, however"
-	cont "short, earns EXP!"
+	para "A great place to"
+	line "test your #MON"
+	cont "against others."
 	done
 
 _PewterCityText7:: ; a4c4a (29:4c4a)
-	text "NOTICE!"
+	text "Are YOU doing"
+	line "your part to help"
+	cont "preserve the rich"
+	cont "soil of Boldor?"
 
-	para "Thieves have been"
-	line "stealing #MON"
-	cont "fossils at MT."
-	cont "MOON! Please call"
-	cont "PEWTER POLICE"
-	cont "with any info!"
+	para "Refrain from"
+	line "digging gaping"
+	cont "holes in the"
+	cont "ground!"
 	done
 
 _PewterCityText10:: ; a4cb1 (29:4cb1)
@@ -102,17 +149,17 @@ _PewterCityText10:: ; a4cb1 (29:4cb1)
 	done
 
 _PewterCityText11:: ; a4ccb (29:4ccb)
-	text "PEWTER CITY"
+	text "NICKEL CITY"
 	line "#MON GYM"
-	cont "LEADER: BROCK"
+	cont "LEADER: BLANDY"
 
-	para "The Rock Solid"
-	line "#MON Trainer!"
+	para "The Atypical,"
+	line "Normal Trainer!"
 	done
 
 _PewterCityText12:: ; a4d0c (29:4d0c)
-	text "PEWTER CITY"
-	line "A Stone Gray"
-	cont "City"
+	text "NICKEL CITY"
+	line "A place that does"
+	cont "not change."
 	done
 
