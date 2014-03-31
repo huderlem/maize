@@ -20793,16 +20793,16 @@ Route1Mons: ; d0df (3:50df)
 
 Route2Mons: ; d0f5 (3:50f5)
 	db $19
-	db 3,RATTATA
-	db 3,PIDGEY
-	db 4,PIDGEY
-	db 4,RATTATA
-	db 5,PIDGEY
-	db 3,WEEDLE
-	db 2,RATTATA
+	db 5,SPEAROW
+	db 4,MAREEP
 	db 5,RATTATA
-	db 4,WEEDLE
-	db 5,WEEDLE
+	db 6,SPEAROW
+	db 6,RATTATA
+	db 7,MAREEP
+	db 4,SPEAROW
+	db 6,NIDORAN_M
+	db 6,NIDORAN_F
+	db 6,NIDORAN_F
 
 	db $00
 
@@ -21622,17 +21622,17 @@ PlateauMons1: ; d59b (3:559b)
 	db $00
 
 CaveMons: ; d5b1 (3:55b1)
-	db $14
-	db 18,DIGLETT
-	db 19,DIGLETT
-	db 17,DIGLETT
-	db 20,DIGLETT
-	db 16,DIGLETT
-	db 15,DIGLETT
-	db 21,DIGLETT
-	db 22,DIGLETT
-	db 29,DUGTRIO
-	db 31,DUGTRIO
+	db $0e
+	db 6,SANDSHREW
+	db 6,GEODUDE
+	db 5,ZUBAT
+	db 7,PSYDUCK
+	db 6,DIGLETT
+	db 7,SANDSHREW
+	db 7,ZUBAT
+	db 8,PSYDUCK
+	db 8,DIGLETT
+	db 9,GASTLY
 
 	db $00
 
@@ -40642,7 +40642,7 @@ DiglettsCaveRoute2Object: ; 0x1debf (size=34)
 	db $3 ; warps
 	db $7, $2, $0, $ff
 	db $7, $3, $0, $ff
-	db $4, $4, $0, DIGLETTS_CAVE
+	db $4, $4, $1, DIGLETTS_CAVE
 
 	db $0 ; signs
 
@@ -41442,7 +41442,7 @@ DiglettsCaveEntranceRoute11Object: ; 0x1e5ca (size=34)
 	db $3 ; warps
 	db $7, $2, $4, $ff
 	db $7, $3, $4, $ff
-	db $4, $4, $1, DIGLETTS_CAVE
+	db $4, $4, $2, DIGLETTS_CAVE
 
 	db $0 ; signs
 
@@ -83003,36 +83003,21 @@ Route2_h: ; 54000 (15:4000)
 Route2Object: ; 0x54022 (size=72)
 	db $f ; border tile
 
-	db $6 ; warps
-	db $9, $c, $0, DIGLETTS_CAVE_EXIT
-	db $b, $3, $1, VIRIDIAN_FOREST_EXIT
-	db $13, $f, $0, ROUTE_2_HOUSE
-	db $23, $10, $1, ROUTE_2_GATE
-	db $27, $f, $2, ROUTE_2_GATE
-	db $2b, $3, $2, VIRIDIAN_FOREST_ENTRANCE
+	db $2 ; warps
+	db $17, $c, $0, DIGLETTS_CAVE
+	db $b, $c, $3, DIGLETTS_CAVE
 
 	db $2 ; signs
-	db $41, $5, $3 ; Route2Text3
+	db $1d, $9, $3 ; Route2Text3
 	db $b, $b, $4 ; Route2Text4
 
 	db $2 ; people
-	db SPRITE_BALL, $36 + 4, $d + 4, $ff, $ff, $81, MOON_STONE ; item
-	db SPRITE_BALL, $2d + 4, $d + 4, $ff, $ff, $82, HP_UP ; item
+	db SPRITE_BALL, $29 + 4, $4 + 4, $ff, $ff, $81, REPEL ; item
+	db SPRITE_BALL, $1a + 4, $11 + 4, $ff, $ff, $82, POKE_BALL ; item
 
 	; warp-to
-	EVENT_DISP $a, $9, $c ; DIGLETTS_CAVE_EXIT
-	EVENT_DISP $a, $b, $3 ; VIRIDIAN_FOREST_EXIT
-	EVENT_DISP $a, $13, $f ; ROUTE_2_HOUSE
-	EVENT_DISP $a, $23, $10 ; ROUTE_2_GATE
-	EVENT_DISP $a, $27, $f ; ROUTE_2_GATE
-	EVENT_DISP $a, $2b, $3 ; VIRIDIAN_FOREST_ENTRANCE
-
-	; unused
-	EVENT_DISP $4, $7, $2
-	db   $12, $c7, $9, $7
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $2
+	EVENT_DISP ROUTE_2_WIDTH, $17, $c  ; DIGLETTS_CAVE
+	EVENT_DISP ROUTE_2_WIDTH, $b, $c   ; DIGLETTS_CAVE
 
 Route2Blocks: ; 5407e (15:407e)
 	INCBIN "maps/route2.blk"
@@ -98436,17 +98421,21 @@ DiglettsCaveTextPointers: ; 61f71 (18:5f71)
 DiglettsCaveObject: ; 0x61f72 (size=20)
 	db $19 ; border tile
 
-	db $2 ; warps
-	db $5, $5, $2, DIGLETTS_CAVE_EXIT
-	db $1f, $25, $2, DIGLETTS_CAVE_ENTRANCE
+	db $4 ; warps
+	db $1f, $1f, $0, ROUTE_2
+	db $19, $1f, $2, DIGLETTS_CAVE_EXIT
+	db $10, $4, $2, DIGLETTS_CAVE_ENTRANCE
+	db $5, $5, $1, ROUTE_2
 
 	db $0 ; signs
 
 	db $0 ; people
 
 	; warp-to
-	EVENT_DISP $14, $5, $5 ; DIGLETTS_CAVE_EXIT
-	EVENT_DISP $14, $1f, $25 ; DIGLETTS_CAVE_ENTRANCE
+	EVENT_DISP DIGLETTS_CAVE_WIDTH, $1f, $1f ; ROUTE_2
+	EVENT_DISP DIGLETTS_CAVE_WIDTH, $19, $1f ; DIGLETTS_CAVE_EXIT
+	EVENT_DISP DIGLETTS_CAVE_WIDTH, $10, $4  ; DIGLETTS_CAVE_ENTRANCE
+	EVENT_DISP DIGLETTS_CAVE_WIDTH,  $5, $5  ; ROUTE_2
 
 DiglettsCaveBlocks: ; 61f86 (18:5f86)
 	INCBIN "maps/diglettscave.blk"

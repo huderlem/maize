@@ -1,9 +1,10 @@
 _DiglettsCaveEntRoute11Text1:: ; 8c7f9 (23:47f9)
-	text "What a surprise!"
-	line "DIGLETTs dug this"
-	cont "long tunnel!"
+	text "I don't have any"
+    line "#MON, so I'm"
+    cont "safely hiding."
 
-	para "It goes right to"
-	line "VIRIDIAN CITY!"
+    para "Hopefully, my"
+    line "friends will"
+    cont "notice I'm gone."
 	done
 
