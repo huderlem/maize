@@ -17291,7 +17291,7 @@ TextBoxTextAndCoordTable: ; 73b0 (1:73b0)
 BuySellQuitText: ; 7413 (1:7413)
 	db   "BUY"
 	next "SELL"
-	next "QUIT@@"
+	next "NAH BRAH@@"
 
 UseTossText: ; 7422 (1:7422)
 	db   "USE"
@@ -52610,7 +52610,7 @@ if _YELLOW
 endc
 LassData: ; 39e0c (e:5e0c)
 	db 9,PIDGEY,PIDGEY,0
-	db 10,RATTATA,NIDORAN_M,0
+	db 10,CLEFAIRY,SPEAROW,0 ; Blandy's gym
 	db 14,JIGGLYPUFF,0
 	db 31,PARAS,PARAS,PARASECT,0
 	db 11,ODDISH,BELLSPROUT,0
@@ -52781,7 +52781,7 @@ EngineerData: ; 3a007 (e:6007)
 Juggler1Data: ; 3a013 (e:6013)
 ; none
 FisherData: ; 3a013 (e:6013)
-	db  4,MAGIKARP,MAGIKARP,GOLDEEN,0
+	db  4,MAGIKARP,MAGIKARP,GOLDEEN,0 ; route south of Jade Village
 	db 17,TENTACOOL,STARYU,SHELLDER,0
 	db 22,GOLDEEN,POLIWAG,GOLDEEN,0
 	db 24,TENTACOOL,GOLDEEN,0
@@ -53027,7 +53027,7 @@ BrockData: ; 3a3b5 (e:63b5)
 if _YELLOW
 	db $FF,10,GEODUDE,12,ONIX,0
 else
-	db $FF,12,GEODUDE,14,ONIX,0
+	db $FF,10,CLEFAIRY,11,PORYGON,12,SPEAROW,0 ; Blandy
 endc
 MistyData: ; 3a3bb (e:63bb)
 	db $FF,18,STARYU,21,STARMIE,0
@@ -91689,10 +91689,10 @@ PewterGymScript_5c3a4: ; 5c3a4 (17:43a4)
 	jp LoadGymLeaderAndCityName
 
 Gym1CityName: ; 5c3ad (17:43ad)
-	db "PEWTER CITY@"
+	db "NICKEL CITY@"
 
 Gym1LeaderName: ; 5c3b9 (17:43b9)
-	db "BROCK@"
+	db "BLANDY@"
 
 Func_5c3bf: ; 5c3bf (17:43bf)
 	xor a
@@ -91720,7 +91720,7 @@ Func_5c3df: ; 5c3df (17:43df)
 	call DisplayTextID
 	ld hl, $d755
 	set 7, [hl]
-	ld bc, (TM_34 << 8) | 1
+	ld bc, (TM_39 << 8) | 1
 	call GiveItem
 	jr nc, .BagFull
 	ld a, $5
@@ -91857,50 +91857,7 @@ PewterGymAfterBattleText1: ; 5c4da (17:44da)
 	db "@"
 
 PewterGymText3: ; 5c4df (17:44df)
-	db $08 ; asm
-	ld a, [$d72a]
-	bit 0, a
-	jr nz, .asm_71369 ; 0x5c4e5
-	ld hl, UnnamedText_5c515
-	call PrintText
-	call YesNoChoice
-	ld a, [$cc26]
-	and a
-	jr nz, .asm_6123a ; 0x5c4f4
-	ld hl, UnnamedText_5c51a
-	call PrintText
-	jr .asm_d1578 ; 0x5c4fc
-.asm_6123a ; 0x5c4fe
-	ld hl, UnnamedText_5c524
-	call PrintText
-.asm_d1578 ; 0x5c504
-	ld hl, UnnamedText_5c51f
-	call PrintText
-	jr .asm_07013 ; 0x5c50a
-.asm_71369 ; 0x5c50c
-	ld hl, UnnamedText_5c529
-	call PrintText
-.asm_07013 ; 0x5c512
-	jp TextScriptEnd
-
-UnnamedText_5c515: ; 5c515 (17:4515)
 	TX_FAR _UnnamedText_5c515
-	db "@"
-
-UnnamedText_5c51a: ; 5c51a (17:451a)
-	TX_FAR _UnnamedText_5c51a
-	db "@"
-
-UnnamedText_5c51f: ; 5c51f (17:451f)
-	TX_FAR _UnnamedText_5c51f
-	db "@"
-
-UnnamedText_5c524: ; 5c524 (17:4524)
-	TX_FAR _UnnamedText_5c524
-	db "@"
-
-UnnamedText_5c529: ; 5c529 (17:4529)
-	TX_FAR _UnnamedText_5c529
 	db "@"
 
 PewterGymObject: ; 0x5c52e (size=42)
@@ -91914,8 +91871,8 @@ PewterGymObject: ; 0x5c52e (size=42)
 
 	db $3 ; people
 	db SPRITE_BLACK_HAIR_BOY_2, $1 + 4, $4 + 4, $ff, $d0, $41, BROCK + $C8, $1 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_1, $6 + 4, $3 + 4, $ff, $d3, $42, JR__TRAINER_M + $C8, $1 ; trainer
-	db SPRITE_GYM_HELPER, $a + 4, $7 + 4, $ff, $d0, $3 ; person
+	db SPRITE_LASS, $7 + 4, $4 + 4, $ff, $d1, $42, LASS + $C8, $2 ; trainer
+	db SPRITE_GYM_HELPER, $a + 4, $5 + 4, $ff, $d0, $3 ; person
 
 	; warp-to
 	EVENT_DISP $5, $d, $4
@@ -92018,8 +91975,8 @@ PewterPokecenterObject: ; 0x5c60d (size=44)
 
 	db $4 ; people
 	db SPRITE_NURSE, $1 + 4, $3 + 4, $ff, $d0, $1 ; person
-	db SPRITE_GENTLEMAN, $7 + 4, $b + 4, $ff, $d2, $2 ; person
-	db SPRITE_CLEFAIRY, $3 + 4, $1 + 4, $ff, $d0, $3 ; person
+	db SPRITE_GENTLEMAN, $1 + 4, $9 + 4, $ff, $d1, $2 ; person
+	db SPRITE_CLEFAIRY, $7 + 4, $a + 4, $ff, $d0, $3 ; person
 	db SPRITE_CABLE_CLUB_WOMAN, $2 + 4, $b + 4, $ff, $d0, $4 ; person
 
 	; warp-to
@@ -103864,8 +103821,8 @@ SuperPalettes: ; 72660 (1c:6660)
 	RGB 13,24,0
 	RGB 3,2,2
 	RGB 31,29,31 ; PAL_PEWTER
-	RGB 23,25,16
-	RGB 20,26,31
+	RGB 17,18,19
+	RGB 23,25,28
 	RGB 3,2,2
 	RGB 31,29,31 ; PAL_CERULEAN
 	RGB 17,20,30

@@ -400,14 +400,11 @@ _ViridianCityPokecenterGuyText:: ; 882d7 (22:42d7)
 	done
 
 _PewterCityPokecenterGuyText:: ; 8830c (22:430c)
-	text "Yawn!"
-
-	para "When JIGGLYPUFF"
-	line "sings, #MON"
-	cont "get drowsy..."
-
-	para "...Me too..."
-	line "Snore..."
+	text "I threw that"
+	line "JIGGLYPUFF over"
+	cont "there because it"
+	cont "wouldn't stop"
+	cont "singing."
 	done
 
 _CeruleanPokecenterGuyText:: ; 88353 (22:4353)

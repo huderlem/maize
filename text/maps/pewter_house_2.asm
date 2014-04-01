@@ -1,20 +1,21 @@
 _PewterHouse2Text1:: ; 98656 (26:4656)
-	text "#MON learn new"
-	line "techniques as"
-	cont "they grow!"
+	text "In other regions,"
+	line "some #MON need"
+	cont "to be traded to"
+	cont "evolve."
 
-	para "But, some moves"
-	line "must be taught by"
-	cont "the trainer!"
+	para "Here, they simply"
+	line "evolve when they"
+	cont "reach a certain"
+	cont "level!"
+
+	para "Isn't that great?"
 	done
 
 _PewterHouse2Text2:: ; 986ae (26:46ae)
-	text "#MON become"
-	line "easier to catch"
-	cont "when they are"
-	cont "hurt or asleep!"
+	text "My KADABRA is"
+	line "level 37!"
 
-	para "But, it's not a"
-	line "sure thing!"
+	para "Soon..."
 	done
 

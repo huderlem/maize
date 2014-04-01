@@ -1,47 +1,51 @@
 _UnnamedText_5c4a3:: ; 98000 (26:4000)
-	text "There are all"
-	line "kinds of trainers"
-	cont "in the world!"
+	text "Boldor is full"
+	line "of places and"
+	cont "people to see."
 
-	para "You appear to be"
-	line "very gifted as a"
-	cont "#MON trainer!"
+	para "Get out of this"
+	line "dull place, and"
+	cont "seize the day."
 
-	para "Go to the GYM in"
-	line "CERULEAN and test"
-	cont "your abilities!"
+	para "By the way, I"
+	line "don't think that"
+	cont "I'll ever win."
 	done
 
 _TM34PreReceiveText:: ; 98092 (26:4092)
-	text "Wait! Take this"
-	line "with you!"
+	text "Before you go,"
+	line "I want you to"
+	cont "accept this gift."
 	done
 
 _ReceivedTM34Text:: ; 980ad (26:40ad)
 	text $52, " received"
-	line "TM34!@@"
+	line "TM39!@@"
 
 _TM34ExplanationText:: ; 980c0 (26:40c0)
 	db $0
-	para "A TM contains a"
-	line "technique that"
-	cont "can be taught to"
-	cont "#MON!"
+	para "That machine I"
+	line "just gave you can"
+	cont "be used to teach"
+	cont "a #MON a move"
+	cont "one time only."
 
-	para "A TM is good only"
-	line "once! So when you"
-	cont "use one to teach"
-	cont "a new technique,"
-	cont "pick the #MON"
-	cont "carefully!"
+	para "TM39 happens to"
+	line "contain a move"
+	cont "called SWIFT!"
 
-	para "TM34 contains"
-	line "BIDE!"
+	para "Please excuse my"
+	line "sudden excitement"
+	cont "over this trivial"
+	cont "bit of knowledge."
 
-	para "Your #MON will"
-	line "absorb damage in"
-	cont "battle then pay"
-	cont "it back double!"
+	para "I have nothing"
+	line "more for you now,"
+	cont "and I'll be sure"
+	cont "to let you know"
+	cont "if I ever win a"
+	cont "battle in these"
+	cont "doldrums."
 	done
 
 _TM34NoRoomText:: ; 981ab (26:41ab)
@@ -50,94 +54,76 @@ _TM34NoRoomText:: ; 981ab (26:41ab)
 	done
 
 _UnnamedText_5c4bc:: ; 981c9 (26:41c9)
-	text "I took"
-	line "you for granted."
+	text "Oh man."
 
-	para "As proof of your"
-	line "victory, here's"
-	cont "the BOULDERBADGE!"
+	para "Everyone knows"
+	line "I'm in over my"
+	cont "head."
+
+	para "Here, take this."
+	line "You've earned it."
+
+	para "Although, it's"
+	line "not saying much."
 
 	para $52, " received"
-	line "the BOULDERBADGE!@@"
+	line "the REGULARBADGE!@@"
 
 _UnnamedText_5c4c1:: ; 98232 (26:4232)
 	db $0
-	para "That's an official"
-	line "#MON LEAGUE"
-	cont "BADGE!"
+	para "I just gave you"
+	line "your first of the"
+	cont "8 official Gym"
+	cont "badges in Boldor."
 
-	para "Its bearer's"
-	line "#MON become"
-	cont "more powerful!"
+	para "If you manage to"
+	line "obtain all 8,"
+	cont "you may venture"
+	cont "to TOPAZ PEAK."
 
-	para "The technique"
-	line "FLASH can now be"
-	cont "used any time!"
+	para "There you will"
+	line "find truly gifted"
+	cont "#MON trainers."
+
+	para "Oh, and just so"
+	line "you're aware, you"
+	cont "may use FLASH out"
+	cont "of battle now."
 	prompt
 
 _PewterGymBattleText1:: ; 982ae (26:42ae)
-	text "Stop right there,"
-	line "kid!"
+	text "BLANDY is not"
+	line "your typical"
+	cont "trainer."
 
-	para "You're still light"
-	line "years from facing"
-	cont "BROCK!"
+	para "Neither am I!"
 	done
 
 _PewterGymEndBattleText1:: ; 982f1 (26:42f1)
-	text "Darn!"
+	text "Hmm..."
 
-	para "Light years isn't"
-	line "time! It measures"
-	cont "distance!"
+	para "It appears that"
+	line "you don't sit at"
+	cont "ninety degrees."
 	prompt
 
 _PewterGymAfterBattleText1:: ; 98325 (26:4325)
-	text "You're pretty hot,"
-	line "but not as hot"
-	cont "as BROCK!"
+	text "BLANDY has much"
+	line "potential, but he"
+	cont "lacks motivation."
 	done
 
 _UnnamedText_5c515:: ; 98351 (26:4351)
-	text "Hiya! I can tell"
-	line "you have what it"
-	cont "takes to become a"
-	cont "#MON champ!"
+	text "Thanks for"
+	line "playing #MON"
+	cont "Maize Version!"
 
-	para "I'm no trainer,"
-	line "but I can tell"
-	cont "you how to win!"
+	para "I've worked hard"
+	line "to create a whole"
+	cont "new experience"
+	cont "for anyone who"
+	cont "enjoys these"
+	cont "games!"
 
-	para "Let me take you"
-	line "to the top!"
+	para "Have fun."
 	done
-
-_UnnamedText_5c51a:: ; 983dc (26:43dc)
-	text "All right! Let's"
-	line "get happening!"
-	prompt
-
-_UnnamedText_5c51f:: ; 983fc (26:43fc)
-	text "The 1st #MON"
-	line "out in a match is"
-	cont "at the top of the"
-	cont "#MON LIST!"
-
-	para "By changing the"
-	line "order of #MON,"
-	cont "matches could be"
-	cont "made easier!"
-	done
-
-_UnnamedText_5c524:: ; 98476 (26:4476)
-	text "It's a free"
-	line "service! Let's"
-	cont "get happening!"
-	prompt
-
-_UnnamedText_5c529:: ; 9849f (26:449f)
-	text "Just as I thought!"
-	line "You're #MON"
-	cont "champ material!"
-	done
-

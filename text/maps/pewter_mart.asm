@@ -1,18 +1,13 @@
 _UnnamedText_74cc6:: ; 985ac (26:45ac)
-	text "A shady, old man"
-	line "got me to buy"
-	cont "this really weird"
-	cont "fish #MON!"
-
-	para "It's totally weak"
-	line "and it cost ¥500!"
+	text "The guy who lives"
+	line "in the Outpost of"
+	cont "this city seems"
+	cont "to attract"
+	cont "#MON."
 	done
 
 _UnnamedText_74cd5:: ; 9860c (26:460c)
-	text "Good things can"
-	line "happen if you"
-	cont "raise #MON"
-	cont "diligently, even"
-	cont "the weak ones!"
+	text "BURN HEAL is the"
+	line "SPLASH of items."
 	done
 

@@ -1,25 +1,27 @@
 _PewterHouse1Text1:: ; 984ce (26:44ce)
-	text "NIDORAN: Bowbow!@@"
+	text "Elwood:"
+	line "Bow-bow-bow!@@"
 
 _PewterHouse1Text2:: ; 984e1 (26:44e1)
-	text "NIDORAN sit!"
+	text "I nicknamed my"
+	line "NIDORAN Elwood!"
 	done
 
 _PewterHouse1Text3:: ; 984ef (26:44ef)
-	text "Our #MON's an"
-	line "outsider, so it's"
-	cont "hard to handle."
+	text "Nicknaming the"
+	line "#MON you catch"
+	cont "can be fun!"
 
-	para "An outsider is a"
-	line "#MON that you"
-	cont "get in a trade."
+	para "Try to avoid"
+	line "boring names such"
+	cont "as HORNDUDE,"
+	cont "ILOVEMYDAD,"
+	cont "FLYGUY,"
+	cont "DESTROYER!!,"
+	cont "or PWNER."
 
-	para "It grows fast, but"
-	line "it may ignore an"
-	cont "unskilled trainer"
-	cont "in battle!"
-
-	para "If only we had"
-	line "some BADGEs..."
+	para "Use some of that"
+	line "creative juice in"
+	cont "your brain."
 	done
 
