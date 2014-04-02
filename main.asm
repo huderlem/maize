@@ -52049,7 +52049,7 @@ TrainerNames: ; 399ff (e:59ff)
 	db "COOLTRAINER♂@"
 	db "COOLTRAINER♀@"
 	db "BRUNO@"
-	db "BROCK@"
+	db "BLANDY@"
 	db "MISTY@"
 	db "LT.SURGE@"
 	db "ERIKA@"
@@ -52360,7 +52360,7 @@ LoneMoves: ; 39d22 (e:5d22)
 ; first byte:  pokemon in the trainer's party that gets the move
 ; second byte: move
 ; unterminated
-	db 1,BIDE
+	db 1,SWIFT
 	db 1,BUBBLEBEAM
 	db 2,THUNDERBOLT
 	db 2,MEGA_DRAIN
@@ -53915,8 +53915,8 @@ Func_3ad71: ; 3ad71 (e:6d71)
 	and a
 	jr z, asm_3ad2e
 	ld b, a
-	cp $3
-	jr z, .asm_3ad91
+	; cp $3 ; pretty sure this can't ever happen
+	; jr z, .asm_3ad91
 	ld a, [W_ISLINKBATTLE] ; $d12b
 	cp $32
 	jr z, asm_3ad2e
@@ -53940,10 +53940,14 @@ Func_3ad71: ; 3ad71 (e:6d71)
 	jp c, asm_3ad2e
 	jr .asm_3adb6
 .asm_3ada4
+	ld a, [W_ISINBATTLE]
+	and a
+	jr nz, .noItemEvo
 	ld a, [hli]
 	ld b, a
 	ld a, [$cf91]
 	cp b
+.noItemEvo
 	jp nz, Func_3aed9
 .asm_3adad
 	ld a, [hli]
@@ -54940,6 +54944,7 @@ Mon153_EvosMoves: ; 3b372 (e:7372)
 	db 30,LIGHT_SCREEN
 	db 37,THUNDER
 	db 0
+
 Mon058_EvosMoves: ; 3b374 (e:7374)
 ;GROWLITHE
 ;Evolutions
