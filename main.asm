@@ -52568,7 +52568,7 @@ TrainerDataPointers: ; 39d3b (e:5d3b)
 	; null-terminated
 
 YoungsterData: ; 39d99 (e:5d99)
-	db 11,RATTATA,EKANS,0
+	db 6,WEEDLE,RATTATA,0 ; trainer house (Nickel City)
 	db 14,SPEAROW,0
 	db 10,RATTATA,RATTATA,ZUBAT,0
 	db 14,RATTATA,EKANS,ZUBAT,0
@@ -52655,7 +52655,7 @@ JrTrainerMData: ; 39e78 (e:5e78)
 if _YELLOW
 	db 9,DIGLETT,SANDSHREW,0
 else
-	db 11,DIGLETT,SANDSHREW,0
+	db 11,VULPIX,MACHOP,0
 endc
 	db 14,RATTATA,EKANS,0
 	db 18,MANKEY,0
@@ -52827,7 +52827,7 @@ GamblerData: ; 3a0b3 (e:60b3)
 	db 22,ONIX,GEODUDE,GRAVELER,0
 	db 24,GROWLITHE,VULPIX,0
 BeautyData: ; 3a0d1 (e:60d1)
-	db 21,ODDISH,BELLSPROUT,ODDISH,BELLSPROUT,0
+	db 4,NIDORAN_M,NIDORAN_F,SPEAROW,SPEAROW,0 ; trainer house (Nickel city)
 	db 24,BELLSPROUT,BELLSPROUT,0
 	db 26,EXEGGCUTE,0
 if _YELLOW
@@ -53062,7 +53062,7 @@ else
 	db $FF,38,KADABRA,37,MR_MIME,38,VENOMOTH,43,ALAKAZAM,0
 endc
 GentlemanData: ; 3a3ef (e:63ef)
-	db 18,GROWLITHE,GROWLITHE,0
+	db 7,MANKEY,GEODUDE,0 ; trainer house (Nickel City)
 	db 19,NIDORAN_M,NIDORAN_F,0
 if _YELLOW
 	db 22,VOLTORB,MAGNEMITE,0
@@ -97574,7 +97574,7 @@ SSAnne7Blocks: ; 6195e (18:595e)
 	INCBIN "maps/ssanne7.blk"
 
 SSAnne8_h: ; 0x6196a to 0x61976 (12 bytes) (id=102)
-	db $0d ; tileset
+	db $16 ; tileset
 	db SS_ANNE_8_HEIGHT, SS_ANNE_8_WIDTH ; dimensions (y, x)
 	dw SSAnne8Blocks, SSAnne8TextPointers, SSAnne8Script ; blocks, texts, scripts
 	db $00 ; connections
@@ -97610,7 +97610,7 @@ SSAnne8TextPointers: ; 6198f (18:598f)
 SSAnne8TrainerHeaders: ; 619a5 (18:59a5)
 SSAnne8TrainerHeader0: ; 619a5 (18:59a5)
 	db $1 ; flag's bit
-	db ($2 << 4) ; trainer's view range
+	db ($3 << 4) ; trainer's view range
 	dw $d805 ; flag's byte
 	dw SSAnne8BattleText1 ; 0x5a0b TextBeforeBattle
 	dw SSAnne8AfterBattleText1 ; 0x5a15 TextAfterBattle
@@ -97622,7 +97622,7 @@ SSAnne8TrainerHeader1: ; 619b1 (18:59b1)
 	db ($3 << 4) ; trainer's view range
 	dw $d805 ; flag's byte
 	dw SSAnne8BattleText2 ; 0x5a1a TextBeforeBattle
-	dw SSAnne8AfterBattleText2 ; 0x5a24 TextAfterBattle
+	dw UnnamedText_61a24 ; 0x5a24 TextAfterBattle
 	dw SSAnne8EndBattleText2 ; 0x5a1f TextEndBattle
 	dw SSAnne8EndBattleText2 ; 0x5a1f TextEndBattle
 
@@ -97746,38 +97746,38 @@ SSAnne8Text11: ; 61a5b (18:5a5b)
 	db "@"
 
 SSAnne8Object: ; 0x61a60 (size=127)
-	db $c ; border tile
+	db $2e ; border tile
 
 	db $6 ; warps
-	db $0, $0, $2, SS_ANNE_1
-	db $0, $a, $3, SS_ANNE_1
-	db $0, $14, $4, SS_ANNE_1
-	db $a, $0, $5, SS_ANNE_1
-	db $a, $a, $6, SS_ANNE_1
-	db $a, $14, $7, SS_ANNE_1
+	db $3, $1, $3, SS_ANNE_8
+	db $3, $d, $2, SS_ANNE_8
+	db $7, $15, $1, SS_ANNE_8
+	db $f, $1, $0, SS_ANNE_8
+	db $f, $14, $0, PEWTER_CITY
+	db $f, $15, $0, PEWTER_CITY
 
 	db $0 ; signs
 
 	db $b ; people
-	db SPRITE_GENTLEMAN, $3 + 4, $2 + 4, $ff, $d2, $41, GENTLEMAN + $C8, $1 ; trainer
-	db SPRITE_GENTLEMAN, $4 + 4, $b + 4, $ff, $d1, $42, GENTLEMAN + $C8, $2 ; trainer
-	db SPRITE_BUG_CATCHER, $e + 4, $b + 4, $ff, $d1, $43, YOUNGSTER + $C8, $8 ; trainer
-	db SPRITE_LASS, $b + 4, $d + 4, $ff, $d2, $44, LASS + $C8, $b ; trainer
-	db SPRITE_GIRL, $3 + 4, $16 + 4, $fe, $1, $5 ; person
-	db SPRITE_FAT_BALD_GUY, $e + 4, $0 + 4, $ff, $ff, $6 ; person
-	db SPRITE_LITTLE_GIRL, $b + 4, $2 + 4, $ff, $d0, $7 ; person
-	db SPRITE_CLEFAIRY, $b + 4, $3 + 4, $ff, $d0, $8 ; person
-	db SPRITE_GIRL, $d + 4, $a + 4, $ff, $d3, $9 ; person
-	db SPRITE_BALL, $f + 4, $c + 4, $ff, $ff, $8a, TM_08 ; item
-	db SPRITE_GENTLEMAN, $d + 4, $15 + 4, $fe, $2, $b ; person
+	db SPRITE_BLACK_HAIR_BOY_2, $4 + 4, $15 + 4, $ff, $d0, $41, JR__TRAINER_M + $C8, $1 ; trainer
+	db SPRITE_GENTLEMAN, $7 + 4, $7 + 4, $ff, $d1, $42, GENTLEMAN + $C8, $1 ; trainer
+	db SPRITE_BUG_CATCHER, $d + 4, $3 + 4, $ff, $d3, $43, YOUNGSTER + $C8, $1 ; trainer
+	db SPRITE_LASS, $d + 4, $10 + 4, $ff, $d0, $44, BEAUTY + $C8, $1 ; trainer
+	db SPRITE_GIRL, $1 + 4, $3 + 4, $fe, $1, $5 ; person
+	db SPRITE_FAT_BALD_GUY, $1 + 4, $c + 4, $ff, $ff, $6 ; person
+	db SPRITE_LITTLE_GIRL, $6 + 4, $b + 4, $ff, $d0, $7 ; person
+	db SPRITE_CLEFAIRY, $d + 4, $16 + 4, $ff, $d0, $8 ; person
+	db SPRITE_GIRL, $e + 4, $c + 4, $ff, $d3, $9 ; person
+	db SPRITE_BALL, $1 + 4, $15 + 4, $ff, $ff, $8a, HM_05 ; item
+	db SPRITE_GENTLEMAN, $f + 4, $6 + 4, $fe, $2, $b ; person
 
 	; warp-to
-	EVENT_DISP $c, $0, $0 ; SS_ANNE_1
-	EVENT_DISP $c, $0, $a ; SS_ANNE_1
-	EVENT_DISP $c, $0, $14 ; SS_ANNE_1
-	EVENT_DISP $c, $a, $0 ; SS_ANNE_1
-	EVENT_DISP $c, $a, $a ; SS_ANNE_1
-	EVENT_DISP $c, $a, $14 ; SS_ANNE_1
+	EVENT_DISP $c, $3, $1 ; SS_ANNE_1
+	EVENT_DISP $c, $3, $d ; SS_ANNE_1
+	EVENT_DISP $c, $7, $15 ; SS_ANNE_1
+	EVENT_DISP $c, $f, $1 ; SS_ANNE_1
+	EVENT_DISP $c, $f, $14 ; SS_ANNE_1
+	EVENT_DISP $c, $f, $15 ; SS_ANNE_1
 
 SSAnne8Blocks: ; 61adf (18:5adf)
 	INCBIN "maps/ssanne8.blk"

@@ -1,105 +1,107 @@
 _SSAnne8Text8:: ; 814d7 (20:54d7)
-	text "WIGGLYTUFF: Puup"
-	line "pupuu!@@"
+	text "It's just staring"
+	line "at you with those"
+	cont "huge eyes...@@"
 
 _SSAnne8BattleText1:: ; 814f1 (20:54f1)
-	text "I travel alone"
-	line "on my journeys!"
+	text "Oh no you don't!"
 
-	para "My #MON are my"
-	line "only friends!"
+	para "The prize is mine!"
 	done
 
 _SSAnne8EndBattleText1:: ; 8152e (20:552e)
-	text "My, my"
-	line "friends..."
+	text "I"
+	line "was so close..."
 	prompt
 
 _SSAnne8AfterBattleText1:: ; 81541 (20:5541)
-	text "You should be"
-	line "nice to friends!"
+	text "How will I get"
+	line "through the dark?"
 	done
 
 _SSAnne8BattleText2:: ; 81561 (20:5561)
-	text "You pup! How dare"
-	line "you barge in!"
+	text "I haven't found"
+	line "the prize, yet!"
 	done
 
 _SSAnne8EndBattleText2:: ; 81582 (20:5582)
-	text "Humph!"
-	line "You rude child!"
+	text "You"
+	line "flash signs of"
+	cont "brilliance!"
 	prompt
 
 _UnnamedText_61a24:: ; 8159a (20:559a)
-	text "I wish to be left"
-	line "alone! Get out!"
+	text "They say that the"
+	line "prize in here"
+	cont "allows you to see"
+	cont "what others may"
+	cont "not."
 	done
 
 _SSAnne8BattleText3:: ; 815bd (20:55bd)
-	text "I love #MON!"
-	line "Do you?"
+	text "Hi! I like hats!"
+	line "They're round and"
+	cont "stylish to wear!"
 	done
 
 _SSAnne8EndBattleText3:: ; 815d3 (20:55d3)
-	text "Wow! "
-	line "You're great!"
+	text "Hats"
+	line "off to you!"
 	prompt
 
 _SSAnne8AfterBattleText3:: ; 815e7 (20:55e7)
-	text "Let me be your"
-	line "friend, OK?"
-
-	para "Then we can trade"
-	line "#MON!"
+	text "I wear my hats"
+	line "with pride!"
 	done
 
 _SSAnne8BattleText4:: ; 8161b (20:561b)
-	text "I collected these"
-	line "#MON from all"
-	cont "around the world!"
+	text "I absolutely love"
+	line "this house!"
 	done
 
 _SSAnne8EndBattleText4:: ; 8164e (20:564e)
-	text "Oh no!"
-	line "I went around the"
-	cont "world for these!"
+	text "Wow!"
+	line "You're one tough"
+	cont "cookie!"
 	prompt
 
 _SSAnne8AfterBattleText4:: ; 81679 (20:5679)
-	text "You hurt my poor"
-	line "worldly #MON!"
+	text "Oh well."
 
-	para "I demand that you"
-	line "heal them at a"
-	cont "#MON CENTER!"
+	para "You aren't the"
+	line "first trainer to"
+	cont "beat me in here."
 	done
 
 _SSAnne8Text5:: ; 816c7 (20:56c7)
-	text "Waiter, I would"
-	line "like a cherry pie"
-	cont "please!"
+	text "Why is everyone"
+	line "always fighting?!"
+
+	para "Let there be"
+	line "peace among us!"
 	done
 
 _SSAnne8Text6:: ; 816f2 (20:56f2)
-	text "A cruise is so"
-	line "elegant yet cozy!"
+	text "Doesn't that punk"
+	line "on the east side"
+	cont "of town bug you?"
 	done
 
 _SSAnne8Text7:: ; 81714 (20:5714)
-	text "I always travel"
-	line "with WIGGLYTUFF!"
+	text "BLANDY stands no"
+	line "chance against me"
+	cont "now!"
 	done
 
 _SSAnne8Text9:: ; 81736 (20:5736)
-	text "We are cruising"
-	line "around the world."
+	text "My #MON have"
+	line "all fainted."
 	done
 
 _SSAnne8Text11:: ; 81759 (20:5759)
-	text "Ssh! I'm a GLOBAL"
-	line "POLICE agent!"
-
-	para "I'm on the trail"
-	line "of TEAM ROCKET!"
+	text "I heard rumors"
+	line "about some small"
+	cont "earthquakes west"
+	cont "of here."
 	done
 
