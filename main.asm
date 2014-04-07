@@ -20840,15 +20840,15 @@ ForestMons: ; d121 (3:5121)
 Route3Mons: ; d137 (3:5137)
 	db $14
 	db 6,PIDGEY
-	db 5,SPEAROW
-	db 7,PIDGEY
-	db 6,SPEAROW
-	db 7,SPEAROW
-	db 8,PIDGEY
-	db 8,SPEAROW
-	db 3,JIGGLYPUFF
-	db 5,JIGGLYPUFF
-	db 7,JIGGLYPUFF
+	db 7,BELLSPROUT
+	db 7,EKANS
+	db 7,MANKEY
+	db 5,BELLSPROUT
+	db 5,EKANS
+	db 8,PIKACHU
+	db 6,JIGGLYPUFF
+	db 6,CLEFAIRY
+	db 5,PIKACHU
 
 	db $00
 
@@ -33664,8 +33664,8 @@ PewterCity_h: ; 0x18554 to 0x18576 (34 bytes) (bank=6) (id=2)
 	db $00 ; tileset
 	db PEWTER_CITY_HEIGHT, PEWTER_CITY_WIDTH ; dimensions (y, x)
 	dw PewterCityBlocks, PewterCityTextPointers, PewterCityScript ; blocks, texts, scripts
-	db SOUTH | EAST ; connections
-	SOUTH_MAP_CONNECTION ROUTE_2, ROUTE_2_WIDTH, 5, 0, ROUTE_2_WIDTH, Route2Blocks, PEWTER_CITY_WIDTH, PEWTER_CITY_HEIGHT
+	db WEST | EAST ; connections
+	WEST_MAP_CONNECTION ROUTE_3, ROUTE_3_WIDTH, 1, 0, ROUTE_3_HEIGHT, Route3Blocks, PEWTER_CITY_WIDTH, PEWTER_CITY_HEIGHT
 	EAST_MAP_CONNECTION ROUTE_2, ROUTE_2_WIDTH, 11, 0, ROUTE_2_HEIGHT, Route2Blocks, PEWTER_CITY_WIDTH
 	dw PewterCityObject ; objects
 
@@ -83032,29 +83032,34 @@ Route3_h: ; 0x541e6 to 0x54208 (34 bytes) (id=14)
 	db $00 ; tileset
 	db ROUTE_3_HEIGHT, ROUTE_3_WIDTH ; dimensions (y, x)
 	dw Route3Blocks, Route3TextPointers, Route3Script ; blocks, texts, scripts
-	db NORTH | WEST ; connections
-	NORTH_MAP_CONNECTION ROUTE_4, ROUTE_4_WIDTH, ROUTE_4_HEIGHT, 25, 0, ROUTE_4_WIDTH - 32, Route4Blocks
-	WEST_MAP_CONNECTION PEWTER_CITY, PEWTER_CITY_WIDTH, -3, 1, PEWTER_CITY_HEIGHT - 3, PewterCityBlocks, ROUTE_3_WIDTH
+	db EAST ; connections
+	EAST_MAP_CONNECTION PEWTER_CITY, PEWTER_CITY_WIDTH, -1, 0, PEWTER_CITY_HEIGHT - 3, PewterCityBlocks, ROUTE_3_WIDTH
 	dw Route3Object ; objects
 
 Route3Object: ; 0x54208 (size=77)
-	db $2c ; border tile
+	db $f ; border tile
 
-	db $0 ; warps
+	db $2 ; warps
+	db $3, $23, $9, ROCK_TUNNEL_1
+	db $d, $11, $7, ROCK_TUNNEL_1
 
 	db $1 ; signs
-	db $9, $3b, $a ; Route3Text10
+	db $2, $24, $a ; Route3Text10
 
 	db $9 ; people
-	db SPRITE_BLACK_HAIR_BOY_2, $b + 4, $39 + 4, $ff, $ff, $1 ; person
-	db SPRITE_BUG_CATCHER, $6 + 4, $a + 4, $ff, $d3, $42, BUG_CATCHER + $C8, $4 ; trainer
-	db SPRITE_BUG_CATCHER, $4 + 4, $e + 4, $ff, $d0, $43, YOUNGSTER + $C8, $1 ; trainer
-	db SPRITE_LASS, $9 + 4, $10 + 4, $ff, $d2, $44, LASS + $C8, $1 ; trainer
-	db SPRITE_BUG_CATCHER, $5 + 4, $13 + 4, $ff, $d0, $45, BUG_CATCHER + $C8, $5 ; trainer
-	db SPRITE_LASS, $4 + 4, $17 + 4, $ff, $d2, $46, LASS + $C8, $2 ; trainer
-	db SPRITE_BUG_CATCHER, $9 + 4, $16 + 4, $ff, $d2, $47, YOUNGSTER + $C8, $2 ; trainer
-	db SPRITE_BUG_CATCHER, $6 + 4, $18 + 4, $ff, $d3, $48, BUG_CATCHER + $C8, $6 ; trainer
-	db SPRITE_LASS, $a + 4, $21 + 4, $ff, $d1, $49, LASS + $C8, $3 ; trainer
+	db SPRITE_BLACK_HAIR_BOY_2, $7 + 4, $20 + 4, $ff, $ff, $1 ; person
+	db SPRITE_BUG_CATCHER, $2 + 4, $32 + 4, $ff, $d0, $42, BUG_CATCHER + $C8, $4 ; trainer
+	db SPRITE_BUG_CATCHER, $2 + 4, $3d + 4, $ff, $d0, $43, YOUNGSTER + $C8, $2 ; trainer
+	db SPRITE_LASS, $b + 4, $31 + 4, $ff, $d0, $44, LASS + $C8, $1 ; trainer
+	db SPRITE_BUG_CATCHER, $6 + 4, $37 + 4, $ff, $d2, $45, BUG_CATCHER + $C8, $5 ; trainer
+	db SPRITE_LASS, $7 + 4, $2d + 4, $ff, $d2, $46, LASS + $C8, $2 ; trainer
+	db SPRITE_BUG_CATCHER, $a + 4, $27 + 4, $ff, $d0, $47, JR__TRAINER_M + $C8, $2 ; trainer
+	db SPRITE_BUG_CATCHER, $5 + 4, $38 + 4, $ff, $d3, $48, BUG_CATCHER + $C8, $6 ; trainer
+	db SPRITE_LASS, $e + 4, $3c + 4, $ff, $d2, $49, LASS + $C8, $3 ; trainer
+
+	; warp-to
+	EVENT_DISP ROUTE_3_WIDTH, $3, $23 ; ARBOR_HOLLOW
+	EVENT_DISP ROUTE_3_WIDTH, $d, $11 ; ARBOR_HOLLOW
 
 Route3Blocks: ; 54255 (15:4255)
 	INCBIN "maps/route3.blk"
