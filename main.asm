@@ -15199,6 +15199,7 @@ AskForMonNickname: ; 64eb (1:64eb)
 	ld a, [$cf4b]
 	cp $50
 	ret nz
+	jr .asm_654c
 .popHL
 	pop hl
 .asm_654c
@@ -18551,7 +18552,7 @@ MapSongBanks: ; c04d (3:404d)
 	db MUSIC_DUNGEON2, BANK(Music_Dungeon2) ; SeafoamIslands3
 	db MUSIC_DUNGEON2, BANK(Music_Dungeon2) ; SeafoamIslands4
 	db MUSIC_DUNGEON2, BANK(Music_Dungeon2) ; SeafoamIslands5
-	db MUSIC_CITIES2, BANK(Music_Cities2) ; VermilionHouse2
+	db MUSIC_CITIES1, BANK(Music_Cities1) ; VermilionHouse2
 	db MUSIC_CITIES2, BANK(Music_Cities2) ; FuchsiaHouse3
 	db MUSIC_CINNABAR_MANSION, BANK(Music_CinnabarMansion) ; Mansion1
 	db MUSIC_GYM, BANK(Music_Gym) ; CinnabarGym
@@ -85875,14 +85876,14 @@ VermilionHouse2Text1: ; 56075 (15:6075)
 	ld a, [$cc26]
 	and a
 	jr nz, asm_eb1b7 ; 0x5608a
-	ld bc, (OLD_ROD << 8) | 1
-	call GiveItem
-	jr nc, .BagFull
+	ld bc,(BULBASAUR << 8) | 5
+	call GivePokemon
+	jr nc, .noRoom
 	ld hl, $d728
 	set 3, [hl]
 	ld hl, UnnamedText_560b6
 	jr asm_5dd95 ; 0x5609c
-.BagFull
+.noRoom
 	ld hl, UnnamedText_560ca
 	jr asm_5dd95 ; 0x560a1
 asm_eb1b7 ; 0x560a3
@@ -85900,8 +85901,6 @@ UnnamedText_560b1: ; 560b1 (15:60b1)
 
 UnnamedText_560b6: ; 560b6 (15:60b6)
 	TX_FAR _UnnamedText_560b6 ; 0x9c554
-	db $0B
-	TX_FAR _UnnamedText_560bb ; 0x9c5a4
 	db "@"
 
 UnnamedText_560c0: ; 560c0 (15:60c0)
@@ -85920,13 +85919,13 @@ VermilionHouse2Object: ; 0x560cf (size=26)
 	db $a ; border tile
 
 	db $2 ; warps
-	db $7, $2, $8, $ff
-	db $7, $3, $8, $ff
+	db $7, $2, $1, PEWTER_CITY
+	db $7, $3, $1, PEWTER_CITY
 
 	db $0 ; signs
 
 	db $1 ; people
-	db SPRITE_FISHER, $4 + 4, $2 + 4, $ff, $d3, $1 ; person
+	db SPRITE_MART_GUY, $1 + 4, $5 + 4, $ff, $d1, $1 ; person
 
 	; warp-to
 	EVENT_DISP $4, $7, $2

@@ -144,8 +144,8 @@ _PewterCityText7:: ; a4c4a (29:4c4a)
 	done
 
 _PewterCityText10:: ; a4cb1 (29:4cb1)
-	text "PEWTER MUSEUM"
-	line "OF SCIENCE"
+	text "NICKEL CITY"
+	line "OUTPOST"
 	done
 
 _PewterCityText11:: ; a4ccb (29:4ccb)

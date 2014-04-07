@@ -1,54 +1,48 @@
 _UnnamedText_560b1:: ; 9c510 (27:4510)
-	text "I'm the FISHING"
-	line "GURU!"
+	text "I was patrolling"
+	line "the woods behind"
+	cont "this house, and a"
+	cont "#MON followed"
+	cont "me back!"
 
-	para "I simply Looove"
-	line "fishing!"
+	para "I can't keep it"
+	line "because I have my"
+	cont "outpost duties to"
+	cont "take care of."
 
-	para "Do you like to"
-	line "fish?"
+	para "Could you give it"
+	line "a home, please?"
 	done
 
 _UnnamedText_560b6:: ; 9c554 (27:4554)
-	text "Grand! I like"
-	line "your style!"
+	text "Fantastic!"
 
-	para "Take this and"
-	line "fish, young one!"
+	para "Now I can stop"
+	line "worrying about"
+	cont "what to do with"
+	cont "BULBASAUR!"
 
-	para $52, " received"
-	line "an @"
-	TX_RAM $cf4b
-	text "!@@"
-
-_UnnamedText_560bb:: ; 9c5a4 (27:45a4)
-	db $0
-	para "Fishing is a way"
-	line "of life!"
-
-	para "From the seas to"
-	line "rivers, go out"
-	cont "and land the big"
-	cont "one, young one!"
-	done
+	para "After all, it's"
+	line "my duty to look"
+	cont "after the city."
+	prompt
 
 _UnnamedText_560c0:: ; 9c601 (27:4601)
-	text "Oh... That's so"
-	line "disappointing..."
+	text "How could you be"
+	line "so heartless?"
 	done
 
 _UnnamedText_560c5:: ; 9c622 (27:4622)
-	text "Hello there,"
-	line $52, "!"
+	text "No danger in the"
+	line "woods today!"
 
-	para "How are the fish"
-	line "biting?"
+	para "How's BULBASAUR?"
 	done
 
 _UnnamedText_560ca:: ; 9c64c (27:464c)
-	text "Oh no!"
-
-	para "You have no room"
-	line "for my gift!"
+	text "Hmm..."
+	line "You don't have any"
+	cont "room for this"
+	cont "#MON!"
 	done
 
