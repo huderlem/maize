@@ -52570,7 +52570,7 @@ TrainerDataPointers: ; 39d3b (e:5d3b)
 
 YoungsterData: ; 39d99 (e:5d99)
 	db 6,WEEDLE,RATTATA,0 ; trainer house (Nickel City)
-	db 14,SPEAROW,0
+	db 8,PSYDUCK,RATTATA,RATTATA,0 ; Route 3
 	db 10,RATTATA,RATTATA,ZUBAT,0
 	db 14,RATTATA,EKANS,ZUBAT,0
 	db 15,RATTATA,SPEAROW,0
@@ -52591,11 +52591,11 @@ if _YELLOW
 	db 6,METAPOD,CATERPIE,METAPOD,0
 	db 10,CATERPIE,0
 else
-	db 6,WEEDLE,CATERPIE,0
-	db 7,WEEDLE,KAKUNA,WEEDLE,0
-	db 9,WEEDLE,0
+	db 12,CATERPIE,METAPOD,0 ; Route 3
+	db 11,WEEDLE,KAKUNA,WEEDLE,WEEDLE,0 ; Route 3
+	db 10,CATERPIE,WEEDLE,BUTTERFREE,0 ; Route 3
 endc
-	db 10,CATERPIE,WEEDLE,CATERPIE,0
+	db 10,CATERPIE,0
 	db 9,WEEDLE,KAKUNA,CATERPIE,METAPOD,0
 	db 11,CATERPIE,METAPOD,0
 	db 11,WEEDLE,KAKUNA,0
@@ -52610,10 +52610,10 @@ if _YELLOW
 	db 8,CATERPIE,METAPOD,0
 endc
 LassData: ; 39e0c (e:5e0c)
-	db 9,PIDGEY,PIDGEY,0
+	db 10,JIGGLYPUFF,0 ; Route 3
 	db 10,CLEFAIRY,SPEAROW,0 ; Blandy's gym
-	db 14,JIGGLYPUFF,0
-	db 31,PARAS,PARAS,PARASECT,0
+	db 10,VULPIX,JIGGLYPUFF,0 ; Route 3
+	db 11,NIDORAN_F,PIKACHU,0 ; Route 3
 	db 11,ODDISH,BELLSPROUT,0
 	db 14,CLEFAIRY,0
 	db 16,PIDGEY,NIDORAN_F,0
@@ -52656,7 +52656,7 @@ JrTrainerMData: ; 39e78 (e:5e78)
 if _YELLOW
 	db 9,DIGLETT,SANDSHREW,0
 else
-	db 11,VULPIX,MACHOP,0
+	db 11,MACHOP,EKANS,0 ; Route 3
 endc
 	db 14,RATTATA,EKANS,0
 	db 18,MANKEY,0
@@ -83044,18 +83044,18 @@ Route3Object: ; 0x54208 (size=77)
 	db $d, $11, $7, ROCK_TUNNEL_1
 
 	db $1 ; signs
-	db $2, $24, $a ; Route3Text10
+	db $7, $30, $a ; Route3Text10
 
 	db $9 ; people
 	db SPRITE_BLACK_HAIR_BOY_2, $7 + 4, $20 + 4, $ff, $ff, $1 ; person
-	db SPRITE_BUG_CATCHER, $2 + 4, $32 + 4, $ff, $d0, $42, BUG_CATCHER + $C8, $4 ; trainer
+	db SPRITE_BUG_CATCHER, $2 + 4, $32 + 4, $ff, $d0, $42, BUG_CATCHER + $C8, $3 ; trainer
 	db SPRITE_BUG_CATCHER, $2 + 4, $3d + 4, $ff, $d0, $43, YOUNGSTER + $C8, $2 ; trainer
-	db SPRITE_LASS, $b + 4, $31 + 4, $ff, $d0, $44, LASS + $C8, $1 ; trainer
-	db SPRITE_BUG_CATCHER, $6 + 4, $37 + 4, $ff, $d2, $45, BUG_CATCHER + $C8, $5 ; trainer
-	db SPRITE_LASS, $7 + 4, $2d + 4, $ff, $d2, $46, LASS + $C8, $2 ; trainer
-	db SPRITE_BUG_CATCHER, $a + 4, $27 + 4, $ff, $d0, $47, JR__TRAINER_M + $C8, $2 ; trainer
-	db SPRITE_BUG_CATCHER, $5 + 4, $38 + 4, $ff, $d3, $48, BUG_CATCHER + $C8, $6 ; trainer
-	db SPRITE_LASS, $e + 4, $3c + 4, $ff, $d2, $49, LASS + $C8, $3 ; trainer
+	db SPRITE_LASS, $b + 4, $31 + 4, $ff, $d0, $44, LASS + $C8, $3 ; trainer
+	db SPRITE_BUG_CATCHER, $6 + 4, $37 + 4, $ff, $d2, $45, BUG_CATCHER + $C8, $2 ; trainer
+	db SPRITE_LASS, $7 + 4, $2d + 4, $ff, $d2, $46, LASS + $C8, $4 ; trainer
+	db SPRITE_BUG_CATCHER, $a + 4, $27 + 4, $ff, $d0, $47, JR__TRAINER_M + $C8, $1 ; trainer
+	db SPRITE_BUG_CATCHER, $5 + 4, $38 + 4, $ff, $d3, $48, BUG_CATCHER + $C8, $1 ; trainer
+	db SPRITE_LASS, $e + 4, $3c + 4, $ff, $d2, $49, LASS + $C8, $1 ; trainer
 
 	; warp-to
 	EVENT_DISP ROUTE_3_WIDTH, $3, $23 ; ARBOR_HOLLOW
@@ -83988,6 +83988,27 @@ Route3AfterBattleText8: ; 5564e (15:564e)
 	db "@"
 
 Route3Text10: ; 55653 (15:5653)
+	db $08 ; asm
+	ld hl, Route3TalkingBushText
+	call PrintText
+	ld a, [$cce5]
+	ld b, a
+	push bc
+
+	ld hl,$cce5 ; total price of items
+	ld [hl], $1
+	ld de,wPlayerMoney + 2
+	ld c,1 ; length of money in bytes
+	ld a,$0b
+	call Predef ; add total price to money
+	pop bc
+
+	ld a, b
+	ld [$cce5], a
+
+	jp TextScriptEnd
+	
+Route3TalkingBushText:
 	TX_FAR _Route3Text10
 	db "@"
 
