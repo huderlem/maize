@@ -21004,31 +21004,31 @@ Route11Mons: ; d213 (3:5213)
 
 TunnelMonsB1: ; d229 (3:5229)
 	db $0F
-	db 16,ZUBAT
-	db 17,ZUBAT
-	db 17,GEODUDE
-	db 15,MACHOP
-	db 16,GEODUDE
-	db 18,ZUBAT
-	db 15,ZUBAT
-	db 17,MACHOP
-	db 13,ONIX
-	db 15,ONIX
+	db 8,PIDGEY
+	db 8,CATERPIE
+	db 8,WEEDLE
+	db 9,METAPOD
+	db 9,KAKUNA
+	db 9,MURKROW
+	db 10,MURKROW
+	db 8,ZUBAT
+	db 9,ZUBAT
+	db 10,ZUBAT
 
 	db $00
 
 TunnelMonsB2: ; d23f (3:523f)
 	db $0F
-	db 16,ZUBAT
-	db 17,ZUBAT
-	db 17,GEODUDE
-	db 15,MACHOP
-	db 16,GEODUDE
-	db 18,ZUBAT
-	db 17,MACHOP
-	db 17,ONIX
-	db 13,ONIX
-	db 18,GEODUDE
+	db 9,GEODUDE
+	db 8,PARAS
+	db 8,MACHOP
+	db 10,ONIX
+	db 8,ZUBAT
+	db 9,ZUBAT
+	db 11,ABRA
+	db 9,ONIX
+	db 12,ABRA
+	db 13,ABRA
 
 	db $00
 
@@ -52595,8 +52595,8 @@ else
 	db 11,WEEDLE,KAKUNA,WEEDLE,WEEDLE,0 ; Route 3
 	db 10,CATERPIE,WEEDLE,BUTTERFREE,0 ; Route 3
 endc
-	db 10,CATERPIE,0
-	db 9,WEEDLE,KAKUNA,CATERPIE,METAPOD,0
+	db 12,PARAS,METAPOD,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
+	db 9,WEEDLE,KAKUNA,CATERPIE,0
 	db 11,CATERPIE,METAPOD,0
 	db 11,WEEDLE,KAKUNA,0
 	db 10,CATERPIE,METAPOD,CATERPIE,0
@@ -52658,8 +52658,8 @@ if _YELLOW
 else
 	db 11,MACHOP,EKANS,0 ; Route 3
 endc
-	db 14,RATTATA,EKANS,0
-	db 18,MANKEY,0
+	db 100,PIDGEY,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
+	db 14,PIDGEY,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 20,SQUIRTLE,0
 	db 16,SPEAROW,RATICATE,0
 	db 18,DIGLETT,DIGLETT,SANDSHREW,0
@@ -52670,7 +52670,7 @@ if _YELLOW
 	db 16,WEEPINBELL,0
 endc
 JrTrainerFData: ; 39e9d (e:5e9d)
-	db 19,GOLDEEN,0
+	db 14,VULPIX,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 if _YELLOW
 	db 16,ODDISH,BELLSPROUT,0
 else
@@ -52714,7 +52714,7 @@ if _YELLOW
 	db 20,CUBONE,0
 endc
 PokemaniacData: ; 39f09 (e:5f09)
-	db 30,RHYHORN,LICKITUNG,0
+	db 12,ODDISH,BELLSPROUT,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 20,CUBONE,SLOWPOKE,0
 	db 20,SLOWPOKE,SLOWPOKE,SLOWPOKE,0
 	db 22,CHARMANDER,CUBONE,0
@@ -52722,7 +52722,7 @@ PokemaniacData: ; 39f09 (e:5f09)
 	db 40,CHARMELEON,LAPRAS,LICKITUNG,0
 	db 23,CUBONE,SLOWPOKE,0
 SuperNerdData: ; 39f26 (e:5f26)
-	db 11,MAGNEMITE,VOLTORB,0
+	db 12,KOFFING,GRIMER,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 12,GRIMER,VOLTORB,KOFFING,0
 	db 20,VOLTORB,KOFFING,VOLTORB,MAGNEMITE,0
 	db 22,GRIMER,MUK,GRIMER,0
@@ -52735,7 +52735,7 @@ SuperNerdData: ; 39f26 (e:5f26)
 	db 41,RAPIDASH,0
 	db 37,GROWLITHE,VULPIX,0
 HikerData: ; 39f5e (e:5f5e)
-	db 10,GEODUDE,GEODUDE,ONIX,0
+	db 10,GEODUDE,ONIX,GEODUDE,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 15,MACHOP,GEODUDE,0
 	db 13,GEODUDE,GEODUDE,MACHOP,GEODUDE,0
 	db 17,ONIX,0
@@ -52950,22 +52950,22 @@ else
 	db $FF,45,RHYHORN,42,DUGTRIO,44,NIDOQUEEN,45,NIDOKING,50,RHYDON,0
 endc
 RocketData: ; 3a29c (e:629c)
-	db 13,RATTATA,ZUBAT,0
-	db 11,SANDSHREW,RATTATA,ZUBAT,0
-	db 12,ZUBAT,EKANS,0
-	db 16,RATICATE,0
-	db 17,MACHOP,DROWZEE,0
-	db 15,EKANS,ZUBAT,0
-	db 20,RATICATE,ZUBAT,0
-	db 21,DROWZEE,MACHOP,0
-	db 21,RATICATE,RATICATE,0
+	db 11,CUBONE,MACHOP,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
+	db 12,DIGLETT,DIGLETT,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
+	db 12,SANDSHREW,RATTATA,SANDSHREW,0 ; Arbor Hollow 1bf (ROCK_TUNNEL_2)
+	db 12,RATTATA,ZUBAT,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
+	db 14,MACHOP,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
+	db 12,ZUBAT,CUBONE,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
+	db 11,ONIX,GEODUDE,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
+	db 12,RATTATA,MACHOP,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
+	db 11,DIGLETT,GEODUDE,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
 	db 20,GRIMER,KOFFING,KOFFING,0
 	db 19,RATTATA,RATICATE,RATICATE,RATTATA,0
 	db 22,GRIMER,KOFFING,0
 	db 17,ZUBAT,KOFFING,GRIMER,ZUBAT,RATICATE,0
 	db 20,RATTATA,RATICATE,DROWZEE,0
 	db 21,MACHOP,MACHOP,0
-	db 23,SANDSHREW,EKANS,SANDSLASH,0
+	db 23,SANDSHREW,EKANS,0
 	db 23,EKANS,SANDSHREW,ARBOK,0
 	db 21,KOFFING,ZUBAT,0
 	db 25,ZUBAT,ZUBAT,GOLBAT,0
@@ -69706,8 +69706,9 @@ Mansion1Object: ; 0x443a4 (size=90)
 Mansion1Blocks: ; 443fe (11:43fe)
 	INCBIN "maps/mansion1.blk"
 
+; Arbor Hollow 1
 RockTunnel1_h: ; 0x444d0 to 0x444dc (12 bytes) (bank=11) (id=82)
-	db $11 ; tileset
+	db $3 ; tileset
 	db ROCK_TUNNEL_1_HEIGHT, ROCK_TUNNEL_1_WIDTH ; dimensions (y, x)
 	dw RockTunnel1Blocks, RockTunnel1TextPointers, RockTunnel1Script ; blocks, texts, scripts
 	db $00 ; connections
@@ -69931,37 +69932,42 @@ RockTunnel1Text8: ; 445f1 (11:45f1)
 RockTunnel1Object: ; 0x445f6 (size=127)
 	db $3 ; border tile
 
-	db $8 ; warps
-	db $3, $f, $1, $ff
-	db $0, $f, $1, $ff
-	db $21, $f, $2, $ff
-	db $23, $f, $2, $ff
-	db $3, $25, $0, ROCK_TUNNEL_2
-	db $3, $5, $1, ROCK_TUNNEL_2
-	db $b, $11, $2, ROCK_TUNNEL_2
-	db $11, $25, $3, ROCK_TUNNEL_2
+	db $a ; warps
+	db $5, $22, $0, ROCK_TUNNEL_2
+	db $7, $18, $1, ROCK_TUNNEL_2
+	db $e, $2, $2, ROCK_TUNNEL_2
+	db $13, $c, $3, ROCK_TUNNEL_2
+	db $13, $18, $4, ROCK_TUNNEL_2
+	db $19, $12, $5, ROCK_TUNNEL_2
+	db $23, $2, $1, $ff
+	db $23, $3, $1, $ff
+	db $23, $24, $0, $ff
+	db $23, $25, $0, $ff
 
 	db $1 ; signs
-	db $1d, $b, $8 ; RockTunnel1Text8
+	db $1f, $23, $8 ; RockTunnel1Text8
 
 	db $7 ; people
-	db SPRITE_HIKER, $5 + 4, $7 + 4, $ff, $d0, $41, HIKER + $C8, $c ; trainer
-	db SPRITE_HIKER, $10 + 4, $5 + 4, $ff, $d0, $42, HIKER + $C8, $d ; trainer
-	db SPRITE_HIKER, $f + 4, $11 + 4, $ff, $d2, $43, HIKER + $C8, $e ; trainer
-	db SPRITE_BLACK_HAIR_BOY_2, $8 + 4, $17 + 4, $ff, $d2, $44, POKEMANIAC + $C8, $7 ; trainer
-	db SPRITE_LASS, $15 + 4, $25 + 4, $ff, $d2, $45, JR__TRAINER_F + $C8, $11 ; trainer
-	db SPRITE_LASS, $18 + 4, $16 + 4, $ff, $d0, $46, JR__TRAINER_F + $C8, $12 ; trainer
-	db SPRITE_LASS, $18 + 4, $20 + 4, $ff, $d3, $47, JR__TRAINER_F + $C8, $13 ; trainer
+	db SPRITE_BLACK_HAIR_BOY_1, $5 + 4, $23 + 4, $ff, $d2, $41, SUPER_NERD + $C8, $1 ; trainer
+	db SPRITE_HIKER, $6 + 4, $19 + 4, $ff, $d0, $42, HIKER + $C8, $1 ; trainer
+	db SPRITE_BLACK_HAIR_BOY_1, $c + 4, $8 + 4, $ff, $d3, $43, POKEMANIAC + $C8, $1 ; trainer
+	db SPRITE_LASS, $10 + 4, $5 + 4, $ff, $d2, $44, JR__TRAINER_F + $C8, $1 ; trainer
+	db SPRITE_ROCKET, $1a + 4, $1e + 4, $ff, $d2, $45, ROCKET + $C8, $1 ; trainer
+	db SPRITE_BLACK_HAIR_BOY_1, $1b + 4, $5 + 4, $ff, $d1, $46, JR__TRAINER_M + $C8, $2 ; trainer
+	db SPRITE_BUG_CATCHER, $20 + 4, $1b + 4, $ff, $d3, $47, BUG_CATCHER + $C8, $4 ; trainer
 
 	; warp-to
-	EVENT_DISP $14, $3, $f
-	EVENT_DISP $14, $0, $f
-	EVENT_DISP $14, $21, $f
-	EVENT_DISP $14, $23, $f
-	EVENT_DISP $14, $3, $25 ; ROCK_TUNNEL_2
-	EVENT_DISP $14, $3, $5 ; ROCK_TUNNEL_2
-	EVENT_DISP $14, $b, $11 ; ROCK_TUNNEL_2
-	EVENT_DISP $14, $11, $25 ; ROCK_TUNNEL_2
+	EVENT_DISP ROCK_TUNNEL_1_WIDTH, $5, $22  ; ROCK_TUNNEL_2
+	EVENT_DISP ROCK_TUNNEL_1_WIDTH, $7, $18  ; ROCK_TUNNEL_2
+	EVENT_DISP ROCK_TUNNEL_1_WIDTH, $e, $2   ; ROCK_TUNNEL_2
+	EVENT_DISP ROCK_TUNNEL_1_WIDTH, $13, $c  ; ROCK_TUNNEL_2
+	EVENT_DISP ROCK_TUNNEL_1_WIDTH, $13, $18 ; ROCK_TUNNEL_2
+	EVENT_DISP ROCK_TUNNEL_1_WIDTH, $19, $12 ; ROCK_TUNNEL_2
+	EVENT_DISP ROCK_TUNNEL_1_WIDTH, $23, $2  ; ROUTE_3
+	EVENT_DISP ROCK_TUNNEL_1_WIDTH, $23, $3  ; ROUTE_3
+	EVENT_DISP ROCK_TUNNEL_1_WIDTH, $23, $24 ; ROUTE_3
+	EVENT_DISP ROCK_TUNNEL_1_WIDTH, $23, $25 ; ROUTE_3
+
 
 RockTunnel1Blocks: ; 44675 (11:4675)
 	INCBIN "maps/rocktunnel1.blk"
@@ -72578,31 +72584,35 @@ RockTunnel2AfterBattleText9: ; 46138 (11:6138)
 	db "@"
 
 RockTunnel2Object: ; 0x4613d (size=100)
-	db $3 ; border tile
+	db $52 ; border tile
 
-	db $4 ; warps
-	db $19, $21, $4, ROCK_TUNNEL_1
-	db $3, $1b, $5, ROCK_TUNNEL_1
-	db $b, $17, $6, ROCK_TUNNEL_1
-	db $3, $3, $7, ROCK_TUNNEL_1
+	db $6 ; warps
+	db $5, $23, $0, ROCK_TUNNEL_1
+	db $7, $19, $1, ROCK_TUNNEL_1
+	db $b, $3, $2, ROCK_TUNNEL_1
+	db $11, $d, $3, ROCK_TUNNEL_1
+	db $11, $19, $4, ROCK_TUNNEL_1
+	db $17, $13, $5, ROCK_TUNNEL_1
 
 	db $0 ; signs
 
 	db $8 ; people
-	db SPRITE_LASS, $d + 4, $b + 4, $ff, $d0, $41, JR__TRAINER_F + $C8, $9 ; trainer
-	db SPRITE_HIKER, $a + 4, $6 + 4, $ff, $d0, $42, HIKER + $C8, $9 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_2, $5 + 4, $3 + 4, $ff, $d0, $43, POKEMANIAC + $C8, $3 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_2, $15 + 4, $14 + 4, $ff, $d3, $44, POKEMANIAC + $C8, $4 ; trainer
-	db SPRITE_HIKER, $a + 4, $1e + 4, $ff, $d0, $45, HIKER + $C8, $a ; trainer
-	db SPRITE_LASS, $1c + 4, $e + 4, $ff, $d3, $46, JR__TRAINER_F + $C8, $a ; trainer
-	db SPRITE_HIKER, $5 + 4, $21 + 4, $ff, $d3, $47, HIKER + $C8, $b ; trainer
-	db SPRITE_BLACK_HAIR_BOY_2, $1e + 4, $1a + 4, $ff, $d0, $48, POKEMANIAC + $C8, $5 ; trainer
+	db SPRITE_ROCKET, $4 + 4, $2 + 4, $ff, $d2, $41, ROCKET + $C8, $2 ; trainer
+	db SPRITE_ROCKET, $7 + 4, $1 + 4, $ff, $d3, $42, ROCKET + $C8, $3 ; trainer
+	db SPRITE_ROCKET, $8 + 4, $11 + 4, $ff, $d1, $43, ROCKET + $C8, $4 ; trainer
+	db SPRITE_ROCKET, $10 + 4, $1d + 4, $ff, $d2, $44, ROCKET + $C8, $5 ; trainer
+	db SPRITE_ROCKET, $11 + 4, $b + 4, $ff, $d1, $45, ROCKET + $C8, $6 ; trainer
+	db SPRITE_ROCKET, $17 + 4, $12 + 4, $ff, $d3, $46, ROCKET + $C8, $7 ; trainer
+	db SPRITE_ROCKET, $1c + 4, $b + 4, $ff, $d0, $47, ROCKET + $C8, $8 ; trainer
+	db SPRITE_ROCKET, $1e + 4, $19 + 4, $ff, $d1, $48, ROCKET + $C8, $9 ; trainer
 
 	; warp-to
-	EVENT_DISP $14, $19, $21 ; ROCK_TUNNEL_1
-	EVENT_DISP $14, $3, $1b ; ROCK_TUNNEL_1
-	EVENT_DISP $14, $b, $17 ; ROCK_TUNNEL_1
-	EVENT_DISP $14, $3, $3 ; ROCK_TUNNEL_1
+	EVENT_DISP ROCK_TUNNEL_2_WIDTH, $5, $23  ; ROCK_TUNNEL_1
+	EVENT_DISP ROCK_TUNNEL_2_WIDTH, $7, $19  ; ROCK_TUNNEL_1
+	EVENT_DISP ROCK_TUNNEL_2_WIDTH, $b, $3   ; ROCK_TUNNEL_1
+	EVENT_DISP ROCK_TUNNEL_2_WIDTH, $11, $d  ; ROCK_TUNNEL_1
+	EVENT_DISP ROCK_TUNNEL_2_WIDTH, $11, $19 ; ROCK_TUNNEL_1
+	EVENT_DISP ROCK_TUNNEL_2_WIDTH, $17, $13 ; ROCK_TUNNEL_1
 
 RockTunnel2Blocks: ; 461a1 (11:61a1)
 	INCBIN "maps/rocktunnel2.blk"
