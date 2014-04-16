@@ -97,10 +97,9 @@ _UnnamedText_196f3:: ; a5010 (29:5010)
 	prompt
 
 _CeruleanCityText3:: ; a5030 (29:5030)
-	text "You're a trainer"
-	line "too? Collecting,"
-	cont "fighting, it's a"
-	cont "tough life."
+	text "Most cities in"
+	line "Boldor have an"
+	cont "Outpost in them."
 	done
 
 _CeruleanCityText4:: ; a506e (29:506e)
@@ -113,70 +112,61 @@ _CeruleanCityText4:: ; a506e (29:506e)
 	done
 
 _CeruleanCityText5:: ; a50ba (29:50ba)
-	text "You're making an"
-	line "encyclopedia on"
-	cont "#MON? That"
-	cont "sounds amusing."
+	text "The Bike Shop ran"
+	line "out of bikes!"
+
+	para "Now it's selling"
+	line "an HM."
 	done
 
 _CeruleanCityText6:: ; a50f6 (29:50f6)
-	text "The people here"
-	line "were robbed."
+	text "A kid your age is"
+	line "having a mental"
+	cont "breakdown up this"
+	cont "path."
 
-	para "It's obvious that"
-	line "TEAM ROCKET is"
-	cont "behind this most"
-	cont "heinous crime!"
+	para "He kept calling"
+	line "me a creep."
 
-	para "Even our POLICE"
-	line "force has trouble"
-	cont "with the ROCKETs!"
+	para "I'm going to go"
+	line "look for help in"
+	cont "a little bit."
+
+	para "I'm on break."
 	done
 
 _UnnamedText_19730:: ; a5188 (29:5188)
-	text "OK! SLOWBRO!"
-	line "Use SONICBOOM!"
-	cont "Come on, SLOWBRO"
-	cont "pay attention!"
+	text "I know I dropped"
+	line "it in this bush"
+	cont "somewhere!"
 	done
 
 _UnnamedText_19735:: ; a51c5 (29:51c5)
-	text "SLOWBRO punch!"
-	line "No! You blew it"
-	cont "again!"
+	text "People often drop"
+	line "things in bushes!"
 	done
 
 _UnnamedText_1973a:: ; a51ec (29:51ec)
-	text "SLOWBRO, WITHDRAW!"
-	line "No! That's wrong!"
-
-	para "It's so hard to"
-	line "control #MON!"
-
-	para "Your #MON's"
-	line "obedience depends"
-	cont "on your abilities"
-	cont "as a trainer!"
+	text "I'm going to be"
+	line "so mad if someone"
+	cont "already took it!"
 	done
 
 _UnnamedText_1976f:: ; a526b (29:526b)
-	text "SLOWBRO took a"
-	line "snooze..."
+	text "Wie geht es dir?"
 	done
 
 _UnnamedText_19774:: ; a5285 (29:5285)
-	text "SLOWBRO is"
-	line "loafing around..."
+	text "Verstehen Sie"
+	line "mich?"
 	done
 
 _UnnamedText_19779:: ; a52a3 (29:52a3)
-	text "SLOWBRO turned"
-	line "away..."
+	text "Kuessen verboten!"
 	done
 
 _UnnamedText_1977e:: ; a52bb (29:52bb)
-	text "SLOWBRO"
-	line "ignored orders..."
+	text "Warum riechst du?"
 	done
 
 _CeruleanCityText9:: ; a52d6 (29:52d6)
@@ -189,22 +179,20 @@ _CeruleanCityText9:: ; a52d6 (29:52d6)
 	done
 
 _CeruleanCityText10:: ; a531f (29:531f)
-	text "This is CERULEAN"
-	line "CAVE! Horribly"
-	cont "strong #MON"
-	cont "live in there!"
+	text "Only the toughest"
+	line "people are able"
+	cont "to pass by me."
 
-	para "The #MON LEAGUE"
-	line "champion is the"
-	cont "only person who"
-	cont "is allowed in!"
+	para "You, sir, are as"
+	line "tough as a bowl"
+	cont "of pudding."
 	done
 
 _CeruleanCityText12:: ; a539a (29:539a)
-	text "CERULEAN CITY"
-	line "A Mysterious,"
-	cont "Blue Aura"
-	cont "Surrounds It"
+	text "AGATE CITY"
+	line "Its origins are"
+	cont "deeply rooted"
+	cont "in the ground."
 	done
 
 _CeruleanCityText13:: ; a53ce (29:53ce)
@@ -217,17 +205,16 @@ _CeruleanCityText13:: ; a53ce (29:53ce)
 	done
 
 _CeruleanCityText16:: ; a541a (29:541a)
-	text "Grass and caves"
-	line "handled easily!"
-	cont "BIKE SHOP"
+	text "BIKE SHOP"
+	line "--SOLD OUT--"
 	done
 
 _CeruleanCityText17:: ; a5445 (29:5445)
 	text "CERULEAN CITY"
 	line "#MON GYM"
-	cont "LEADER: MISTY"
+	cont "LEADER: TARA"
 
-	para "The Tomboyish"
-	line "Mermaid!"
+	para "The earth-shaking"
+	line "force!"
 	done
 
