@@ -33715,11 +33715,8 @@ CeruleanCity_h: ; 0x1874e to 0x18786 (56 bytes) (bank=6) (id=3)
 	db $00 ; tileset
 	db CERULEAN_CITY_HEIGHT, CERULEAN_CITY_WIDTH ; dimensions (y, x)
 	dw CeruleanCityBlocks, CeruleanCityTextPointers, CeruleanCityScript ; blocks, texts, scripts
-	db NORTH | SOUTH | WEST | EAST ; connections
-	NORTH_MAP_CONNECTION ROUTE_24, ROUTE_24_WIDTH, ROUTE_24_HEIGHT, 5, 0, ROUTE_24_WIDTH, Route24Blocks
-	SOUTH_MAP_CONNECTION ROUTE_5, ROUTE_5_WIDTH, 5, 0, ROUTE_5_WIDTH, Route5Blocks, CERULEAN_CITY_WIDTH, CERULEAN_CITY_HEIGHT
-	WEST_MAP_CONNECTION ROUTE_4, ROUTE_4_WIDTH, 4, 0, ROUTE_4_HEIGHT, Route4Blocks, CERULEAN_CITY_WIDTH
-	EAST_MAP_CONNECTION ROUTE_9, ROUTE_9_WIDTH, 4, 0, ROUTE_9_HEIGHT, Route9Blocks, CERULEAN_CITY_WIDTH
+	db NORTH ; connections
+	NORTH_MAP_CONNECTION ROUTE_3, ROUTE_3_WIDTH, ROUTE_3_HEIGHT, 1, 0, $10, Route3Blocks
 	dw CeruleanCityObject ; objects
 
 CeruleanCityObject: ; 0x18786 (size=170)
@@ -83042,7 +83039,8 @@ Route3_h: ; 0x541e6 to 0x54208 (34 bytes) (id=14)
 	db $00 ; tileset
 	db ROUTE_3_HEIGHT, ROUTE_3_WIDTH ; dimensions (y, x)
 	dw Route3Blocks, Route3TextPointers, Route3Script ; blocks, texts, scripts
-	db EAST ; connections
+	db SOUTH | EAST ; connections
+	SOUTH_MAP_CONNECTION CERULEAN_CITY, CERULEAN_CITY_WIDTH, -1, 0, CERULEAN_CITY_WIDTH - 4, CeruleanCityBlocks, ROUTE_3_WIDTH, ROUTE_3_HEIGHT
 	EAST_MAP_CONNECTION PEWTER_CITY, PEWTER_CITY_WIDTH, -1, 0, PEWTER_CITY_HEIGHT - 3, PewterCityBlocks, ROUTE_3_WIDTH
 	dw Route3Object ; objects
 
