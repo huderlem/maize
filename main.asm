@@ -39533,9 +39533,9 @@ CeruleanHouseTrashedObject: ; 0x1d6bf (size=43)
 	db $a ; border tile
 
 	db $3 ; warps
-	db $7, $2, $0, $ff
-	db $7, $3, $0, $ff
-	db $0, $3, $7, $ff
+	db $7, $2, $3, $ff
+	db $7, $3, $3, $ff
+	db $0, $3, $2, $ff
 
 	db $1 ; signs
 	db $0, $3, $3 ; CeruleanHouseTrashedText3
@@ -39757,15 +39757,15 @@ BikeShopObject: ; 0x1d866 (size=38)
 	db $e ; border tile
 
 	db $2 ; warps
-	db $7, $2, $4, $ff
-	db $7, $3, $4, $ff
+	db $7, $2, $7, $ff
+	db $7, $3, $7, $ff
 
 	db $0 ; signs
 
 	db $3 ; people
-	db SPRITE_BIKE_SHOP_GUY, $2 + 4, $6 + 4, $ff, $ff, $1 ; person
-	db SPRITE_MOM_GEISHA, $6 + 4, $5 + 4, $fe, $1, $2 ; person
-	db SPRITE_BUG_CATCHER, $3 + 4, $1 + 4, $ff, $d1, $3 ; person
+	db SPRITE_BIKE_SHOP_GUY, $2 + 4, $5 + 4, $ff, $d0, $1 ; person
+	db SPRITE_BLACK_HAIR_BOY_2, $6 + 4, $5 + 4, $fe, $2, $2 ; person
+	db SPRITE_BIKE_SHOP_GUY, $3 + 4, $3 + 4, $ff, $d0, $3 ; person
 
 	; warp-to
 	EVENT_DISP $4, $7, $2
@@ -92056,8 +92056,8 @@ CeruleanPokecenterObject: ; 0x5c65f (size=44)
 	db $0 ; border tile
 
 	db $2 ; warps
-	db $7, $3, $2, $ff
-	db $7, $4, $2, $ff
+	db $7, $3, $5, $ff
+	db $7, $4, $5, $ff
 
 	db $0 ; signs
 
@@ -92352,8 +92352,8 @@ CeruleanMartObject: ; 0x5c8a8 (size=38)
 	db $0 ; border tile
 
 	db $2 ; warps
-	db $7, $3, $5, $ff
-	db $7, $4, $5, $ff
+	db $7, $3, $4, $ff
+	db $7, $4, $4, $ff
 
 	db $0 ; signs
 

@@ -1,25 +1,17 @@
 _CeruleanPokecenterText1:: ; 988e5 (26:48e5)
-	text "That BILL!"
-
-	para "I heard that"
-	line "he'll do whatever"
-	cont "it takes to get"
-	cont "rare #MON!"
+	text "TARA really digs"
+	line "deep when it"
+	cont "comes to battling"
+	cont "with others."
 	done
 
 _CeruleanPokecenterText3:: ; 9892a (26:492a)
-	text "Have you heard"
-	line "about BILL?"
+	text "My friend, CARL,"
+	line "lives by himself"
+	cont "south of here."
 
-	para "Everyone calls"
-	line "him a #MANIAC!"
-
-	para "I think people"
-	line "are just jealous"
-	cont "of BILL, though."
-
-	para "Who wouldn't want"
-	line "to boast about"
-	cont "their #MON?"
+	para "He always has"
+	line "helpful items and"
+	cont "advice for me!"
 	done
 

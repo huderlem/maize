@@ -408,11 +408,11 @@ _PewterCityPokecenterGuyText:: ; 8830c (22:430c)
 	done
 
 _CeruleanPokecenterGuyText:: ; 88353 (22:4353)
-	text "BILL has lots of"
-	line "#MON!"
+	text "I remember when I"
+	line "was champion..."
 
-	para "He collects rare"
-	line "ones too!"
+	para "Oh wait, that"
+	line "was a dream."
 	done
 
 _LavenderPokecenterGuyText:: ; 88386 (22:4386)

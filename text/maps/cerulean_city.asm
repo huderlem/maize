@@ -103,12 +103,10 @@ _CeruleanCityText3:: ; a5030 (29:5030)
 	done
 
 _CeruleanCityText4:: ; a506e (29:506e)
-	text "That bush in"
-	line "front of the shop"
-	cont "is in the way."
-
-	para "There might be a"
-	line "way around."
+	text "A #MON just"
+	line "trashed our house"
+	cont "and escaped into"
+	cont "the pond!"
 	done
 
 _CeruleanCityText5:: ; a50ba (29:50ba)
