@@ -10815,6 +10815,7 @@ Func_42b7: ; 42b7 (1:42b7)
 	ld [$c0f0], a
 
 Func_42dd: ; 42dd (1:42dd)
+; load titlescreen stuff?
 	call GBPalWhiteOut
 	ld a, $1
 	ld [H_AUTOBGTRANSFERENABLED], a ; $FF00+$ba
@@ -10827,45 +10828,39 @@ Func_42dd: ; 42dd (1:42dd)
 	ld [$FF00+$b0], a
 	call ClearScreen
 	call DisableLCD
-	call LoadFontTilePatterns
-	ld hl, NintendoCopyrightLogoGraphics ; $60c8
-	ld de, $9410
-	ld bc, $50
-	ld a, BANK(NintendoCopyrightLogoGraphics)
-	call FarCopyData2
-	ld hl, GamefreakLogoGraphics ; $61f8
-	ld de, $9460
-	ld bc, $90
-	ld a, BANK(GamefreakLogoGraphics)
-	call FarCopyData2
-	ld hl, PokemonLogoGraphics ; $5380
+	; call LoadFontTilePatterns
+	ld hl, TitleScreenPic
 	ld de, $8800
-	ld bc, $600
-	ld a, BANK(PokemonLogoGraphics)
+	ld bc, $1000
+	ld a, BANK(TitleScreenPic)
 	call FarCopyData2          ; first chunk
-	ld hl, PokemonLogoGraphics+$600 ; $5980
-	ld de, $9310
-	ld bc, $100
-	ld a, BANK(PokemonLogoGraphics)
-	call FarCopyData2          ; second chunk
-	ld hl, Version_GFX ; $402f
-IF _RED
-	ld de,$9600 ; where to put redgreenversion.2bpp in the VRAM
-	ld bc,$50 ; how big that file is
-ENDC
-IF _BLUE
-	ld de,$9610 ; where to put blueversion.2bpp in the VRAM
-	ld bc,$40 ; how big that file is
-ENDC
 
-	ld a, BANK(Version_GFX)
-	call FarCopyDataDouble
-	call Func_4519
-	FuncCoord 2, 1 ; $c3b6
+	; blinking right eye gfx
+	ld hl, TitleScreenBlink1Pic
+	ld de, $8ec0
+	ld bc, $40
+	ld a, BANK(TitleScreenBlink1Pic)
+	call FarCopyData2
+	; blinking left eye gfx
+	ld hl, TitleScreenBlink2Pic
+	ld de, $8fc0
+	ld bc, $40
+	ld a, BANK(TitleScreenBlink2Pic)
+	call FarCopyData2
+	
+	call Func_4519 ; clear screen
+
+	; start drawing stuff
+	; set scroll y and x to 0
+	xor a
+	ld [$ffaf], a
+	ld [$ffae], a
+
+	FuncCoord 0, 2 ; $c3b6
 	ld hl, Coord
 	ld a, $80
 	ld de, $14
-	ld c, $6
+	ld c, $10
 .asm_434d
 	ld b, $10
 	push hl
@@ -10878,48 +10873,59 @@ ENDC
 	add hl, de
 	dec c
 	jr nz, .asm_434d
-	FuncCoord 2, 7 ; $c42e
+
+	; get rid of blinking eyes on the right
+	ld a, $7f
+	FuncCoord 12, 8
 	ld hl, Coord
-	ld a, $31
-	ld b, $10
-.asm_4361
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	ld [hl], a
+	FuncCoord 12, 9
+	ld hl, Coord
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	ld [hl], a
+	
+	; finished drawing titlesreen picture
+	call Func_44dd ; something with the player's graphics
+
+	ld hl, Version_GFX ; $402f
+	ld de,$8300 ; where to put redgreenversion.2bpp in the VRAM
+	ld bc,$50 ; how big that file is
+
+	ld a, BANK(Version_GFX)
+	call FarCopyDataDouble
+	; load ::MAIZE:: gfx directly to OAM
+	ld hl, wOAMBuffer + (4*35)
+	ld de, $546c
+	ld c, $5
+	ld b, $32
+.loopdeeloopMaizeGfx:
+	ld a, d
+	ld [hli], a
+	ld a, e
+	ld [hli], a
+	add a, $8
+	ld e, a
+
+	ld a, b
 	ld [hli], a
 	inc a
-	dec b
-	jr nz, .asm_4361
-	call Func_44dd
-	FuncCoord 2, 17 ; $c4f6
-	ld hl, Coord
-	ld de, .titlescreenTilemap ; $437f
-	ld b, $10
-.asm_4377
-	ld a, [de]
-	ld [hli], a
-	inc de
-	dec b
-	jr nz, .asm_4377
-	jr .asm_438f
-
-.titlescreenTilemap ; 437f (1:437f)
-	db $41,$42,$43,$42,$44,$42,$45,$46,$47,$48,$49,$4A,$4B,$4C,$4D,$4E ; ©'95.'96.'98 GAME FREAK inc.
+	ld b, a
+	inc hl
+	dec c
+	jr nz, .loopdeeloopMaizeGfx
 
 .asm_438f
 	call SaveScreenTilesToBuffer2
 	call LoadScreenTilesFromBuffer2
 	call EnableLCD
-IF _RED
-	ld a,AMPHAROS ; which Pokemon to show first on the title screen
-ENDC
-IF _BLUE
-	ld a,SQUIRTLE ; which Pokemon to show first on the title screen
-ENDC
 
-	ld [wWhichTrade], a ; $cd3d
-	call Func_4524
-	ld a, $9b
-	call Func_4533
 	call SaveScreenTilesToBuffer1
-	ld a, $40
+	ld a, $90
 	ld [$FF00+$b0], a
 	call LoadScreenTilesFromBuffer2
 	ld a, $98
@@ -10929,94 +10935,25 @@ ENDC
 	call GBPalNormal
 	ld a, $e4
 	ld [rOBP0], a ; $FF00+$48
-	ld bc, $ffaf ; background scroll Y
-	ld hl, .TitleScreenPokemonLogoYScrolls ; $43db
-.asm_43c6
-	ld a, [hli]
-	and a
-	jr z, .asm_43f4
-	ld d, a
-	cp $fd
-	jr nz, .asm_43d4
-	ld a, $bc
-	call PlaySound
-.asm_43d4
-	ld a, [hli]
-	ld e, a
-	call .ScrollTitleScreenPokemonLogo
-	jr .asm_43c6
 
-.TitleScreenPokemonLogoYScrolls: ; 43db (1:43db)
-; Controls the bouncing effect of the Pokemon logo on the title screen
-	db -4,16  ; y scroll amount, number of times to scroll
-	db 3,4
-	db -3,4
-	db 2,2
-	db -2,2
-	db 1,2
-	db -1,2
-	db 0      ; terminate list with 0
-
-.ScrollTitleScreenPokemonLogo
-; Scrolls the Pokemon logo on the title screen to create the bouncing effect
-; Scrolls d pixels e times
-	call DelayFrame
-	ld a, [bc]
-	add d
-	ld [bc], a
-	dec e
-	jr nz, .ScrollTitleScreenPokemonLogo
-	ret
-.asm_43f4
-	call LoadScreenTilesFromBuffer1
-	ld c, $24
-	call DelayFrames
-	ld a, $bd
-	call PlaySound
-	call PrintGameVersionOnTitleScreen
-	ld a, $90
-	ld [$FF00+$b0], a
-	ld d, $90
-.asm_440a
-	ld h, d
-	ld l, $40
-	call Func_44cf
-	ld h, $0
-	ld l, $50
-	call Func_44cf
-	ld a, d
-	add $4
-	ld d, a
-	and a
-	jr nz, .asm_440a
-	ld a, $9c
-	call Func_4533
-	call LoadScreenTilesFromBuffer2
-	call PrintGameVersionOnTitleScreen
-	call Delay3
-	call WaitForSoundToFinish
 	ld a, MUSIC_TITLE_SCREEN
 	ld [$c0ee], a
 	call PlaySound
 	xor a
 	ld [$cc5b], a
 .asm_443b
-	ld c, $c8
+	call GenRandom
+	and $7f
+	add $10
+	ld c, a
 	call CheckForUserInterruption
 	jr c, .asm_4459
-	call Func_44c1
 	ld c, $1
 	call CheckForUserInterruption
 	jr c, .asm_4459
-	ld b, BANK(Func_372ac)
-	ld hl, Func_372ac
-	call Bankswitch ; indirect jump to Func_372ac (372ac (d:72ac))
 	call Func_4496
 	jr .asm_443b
 .asm_4459
-	ld a, [wWhichTrade] ; $cd3d
-	call PlayCry
-	call WaitForSoundToFinish
 	call GBPalWhiteOutWithDelay3
 	call CleanLCD_OAM
 	xor a
@@ -11047,29 +10984,62 @@ Func_4496: ; 4496 (1:4496)
 	call Func_4533
 
 .new
-; Generate a new TitleMon.
-	call GenRandom
-	and $f
-	ld c, a
-	ld b, 0
-	ld hl, TitleMons
-	add hl, bc
-	ld a, [hl]
-	ld hl, wWhichTrade ; $cd3d
-
-; Can't be the same as before.
-	cp [hl]
-	jr z, .new
-
+; make ampharos blink
+	FuncCoord 6, 9
+	ld hl, Coord
+	ld a, $ec
+	ld [hli], a
+	inc a
 	ld [hl], a
-	call Func_4524
+	inc a
+	FuncCoord 6, 10
+	ld hl, Coord
+	ld [hli], a
+	inc a
+	ld [hl], a
 
-	ld a, $90
-	ld [$FF00+$b0], a
-	ld d, 1 ; scroll out
-	ld b, BANK(TitleScroll)
-	ld hl, TitleScroll
-	call Bankswitch ; indirect jump to TitleScroll (37258 (d:7258))
+	FuncCoord 1, 9
+	ld hl, Coord
+	ld a, $fc
+	ld [hli], a
+	inc a
+	ld [hl], a
+	inc a
+	FuncCoord 1, 10
+	ld hl, Coord
+	ld [hli], a
+	inc a
+	ld [hl], a
+
+	call Delay3
+	call Delay3
+; reopen eyes
+	FuncCoord 6, 9
+	ld hl, Coord
+	ld a, $f6
+	ld [hli], a
+	inc a
+	ld [hl], a
+	ld a, $06
+	FuncCoord 6, 10
+	ld hl, Coord
+	ld [hli], a
+	inc a
+	ld [hl], a
+
+	FuncCoord 1, 9
+	ld hl, Coord
+	ld a, $f1
+	ld [hli], a
+	inc a
+	ld [hl], a
+	ld a, $01
+	FuncCoord 1, 10
+	ld hl, Coord
+	ld [hli], a
+	inc a
+	ld [hl], a
+
 	ret
 
 Func_44c1: ; 44c1 (1:44c1)
@@ -11106,7 +11076,7 @@ Func_44dd: ; 44dd (1:44dd)
 	xor a
 	ld [wWhichTrade], a ; $cd3d
 	ld hl, wOAMBuffer
-	ld de, $605a
+	ld de, $6068
 	ld b, $7
 .asm_44fa
 	push de
@@ -11232,7 +11202,7 @@ ENDC
 
 ; prints version text (red, blue)
 PrintGameVersionOnTitleScreen: ; 4598 (1:4598)
-	FuncCoord 7, 8 ; $c447
+	FuncCoord 11, 8 ; $c447
 	ld hl, Coord
 	ld de, VersionOnTitleScreenText ; $45a1
 	jp PlaceString
@@ -103560,8 +103530,8 @@ BlkPacket_7224f: ; 7224f (1c:624f)
 	db $03,$00,$00,$13,$0b,$01,$03,$00,$04,$13,$09,$02,$03,$00,$06,$13
 	db $07,$03,$03,$04,$04,$0f,$09,$00,$03,$00,$0c,$13,$11,$00,$00
 
-BlkPacket_7228e: ; 7228e (1c:628e)
-	db $22,$03,$03,$00,$00,$00,$13,$07,$02,$05,$00,$08,$13,$09,$03,$0a
+BlkPacket_7228e: ; 7228e (1c:628e) ; titlescreen
+	db $22,$01,$03,$00,$00,$00,$13,$14,$02,$05,$00,$08,$13,$09,$03,$0a
 	db $00,$0a,$13,$11,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00
 	db $03,$00,$00,$13,$07,$00,$03,$00,$08,$13,$09,$01,$03,$00,$0a,$13
 	db $11,$02,$00
@@ -103616,7 +103586,7 @@ PalPacket_72468: ; 72468 (1c:6468)
 PalPacket_72478: ; 72478 (1c:6478)
 	db $51,$1A,$00,$1B,$00,$1C,$00,$1D,$00,$00,$00,$00,$00,$00,$00,$00
 
-PalPacket_72488: ; 72488 (1c:6488)
+PalPacket_72488: ; 72488 (1c:6488) ; titlescreen
 	db $51,$0E,$00,$0D,$00,$10,$00,$14,$00,$00,$00,$00,$00,$00,$00,$00
 
 PalPacket_72498: ; 72498 (1c:6498)
@@ -103898,25 +103868,17 @@ SuperPalettes: ; 72660 (1c:6660)
 	RGB 20,26,31
 	RGB 17,23,10
 	RGB 3,2,2
-IF _RED
 	RGB 31,29,31 ; PAL_LOGO1
-	RGB 30,30,17
-	RGB 17,23,10
+	RGB 30,27,10  
+	RGB 26,0,2
 	RGB 21,0,4
-ENDC
-IF _BLUE
-	RGB 31,29,31 ; PAL_LOGO1
-	RGB 30,30,17
-	RGB 21,0,4
-	RGB 14,19,29
-ENDC
 	RGB 31,29,31 ; XXX
-	RGB 30,30,17
-	RGB 18,18,24
-	RGB 7,7,16
+	RGB 30,27,10  
+	RGB 26,0,2
+	RGB 3,2,2
 	RGB 31,29,31 ; PAL_LOGO2
-	RGB 24,20,30
-	RGB 11,20,30
+	RGB 30,27,10  
+	RGB 26,0,2
 	RGB 3,2,2
 	RGB 31,29,31 ; PAL_MEWMON
 	RGB 30,22,17
@@ -116709,5 +116671,16 @@ Tset0C_Block:
 	INCBIN "gfx/blocksets/0c.bst"
 Tset0C_Coll:
 	INCBIN "gfx/tilesets/0c.tilecoll"
+
+
+SECTION "New Titlescreen", ROMX, BANK[$32]
+
+TitleScreenPic:
+	INCBIN "gfx/ampharos_title.2bpp"
+
+TitleScreenBlink1Pic:
+	INCBIN "gfx/ampharos_title_blink_1.2bpp"
+TitleScreenBlink2Pic:
+	INCBIN "gfx/ampharos_title_blink_2.2bpp"
 
 
