@@ -11420,7 +11420,7 @@ ItemNames: ; 472b (1:472b)
 	db "LEAF STONE@"
 	db "CARD KEY@"
 	db "NUGGET@"
-	db "PP UP@"
+	db "SCOUTER@"
 	db "POKé DOLL@"
 	db "FULL HEAL@"
 	db "REVIVE@"
@@ -24357,7 +24357,7 @@ ItemUsePtrTable: ; d5e1 (3:55e1)
 	dw ItemUseEvoStone   ; LEAF_STONE
 	dw ItemUseCardKey    ; CARD_KEY
 	dw UnusableItem      ; NUGGET
-	dw UnusableItem      ; ??? PP_UP
+	dw UnusableItem      ; SCOUTER
 	dw ItemUsePokedoll   ; POKE_DOLL
 	dw ItemUseMedicine   ; FULL_HEAL
 	dw ItemUseMedicine   ; REVIVE
@@ -26912,7 +26912,7 @@ KeyItemBitfield: ; e799 (3:6799)
 	db %01001111
 	db %00000000
 	db %10010111
-	db %00000000
+	db %00000010
 	db %11000000
 	db %11110000
 	db %00111011
@@ -58874,6 +58874,7 @@ Func_3cd60: ; 3cd60 (f:4d60)
 	ret
 
 Func_3cdec: ; 3cdec (f:4dec)
+; draw enemy mon hud stuff in battle
 	xor a
 	ld [H_AUTOBGTRANSFERENABLED], a ; $FF00+$ba
 	ld hl, wTileMap
@@ -87513,18 +87514,18 @@ Func_58d99: ; 58d99 (16:4d99)
 .asm_58daa
 	ld a, [W_ENEMYMONID]
 	call PlayCry
-	ld hl, UnnamedText_58e3b ; $4e3b
+	ld hl, UnnamedText_58e3b ; $4e3b "wild whatever appeared!"
 	ld a, [W_MOVEMISSED] ; $d05f
 	and a
 	jr z, .asm_58dbc
-	ld hl, UnnamedText_58e40 ; $4e40
+	ld hl, UnnamedText_58e40 ; $4e40 "hooked whatever attacked!"
 .asm_58dbc
 	jr .asm_58dc9
 .asm_58dbe
 	call Func_58e29
 	ld c, $14
 	call DelayFrames
-	ld hl, UnnamedText_58e4a ; $4e4a
+	ld hl, UnnamedText_58e4a ; $4e4a "trainer wants to fight!"
 .asm_58dc9
 	push hl
 	ld hl, Func_3a849
@@ -87532,6 +87533,25 @@ Func_58d99: ; 58d99 (16:4d99)
 	call Bankswitch ; indirect jump to Func_3a849 (3a849 (e:6849))
 	pop hl
 	call PrintText
+
+	ld a, [W_ISINBATTLE] ; $d057
+	dec a
+	jr nz, .continue
+
+	; scouter here
+	; is SCOUTER in the first item slot?
+	ld hl, wBagItems
+	ld a, [hl]
+	cp SCOUTER
+	jr nz, .continue
+.countDVs	
+	call CountTotalDV
+	cp SCOUTER_DV_TRIGGER
+	jr c, .continue ; jump if the DVs are too low
+	ld hl, ScouterText
+	call PrintText
+
+.continue
 	jr asm_58e3a
 .asm_58dd8
 	ld b, $48
@@ -87603,6 +87623,10 @@ UnnamedText_58e4f: ; 58e4f (16:4e4f)
 
 UnnamedText_58e54: ; 58e54 (16:4e54)
 	TX_FAR _UnnamedText_58e54
+	db "@"
+
+ScouterText:
+	TX_FAR _ScouterText
 	db "@"
 
 Func_58e59: ; 58e59 (16:4e59)
@@ -91115,6 +91139,71 @@ RemoveGuardDrink: ; 5a59f (16:659f)
 
 GuardDrinksList: ; 5a5b7 (16:65b7)
 	db FRESH_WATER, SODA_POP, LEMONADE, $00
+
+CountTotalDV:
+; if scouter is in position 1, show a star or something if the pokemon has good DVs
+	ld d, 0 ; d accumulates the total DV count
+
+	; get attack/defense DVs
+	ld hl, W_ENEMYMONATKDEFIV
+	ld a, [hl]
+	and $f
+	ld d, a
+
+	ld a, [hli]
+	swap a
+	and $f
+	ld e, a
+	ld a, d
+	add a, e
+
+	ld d, a
+
+	; get speed/special DVs
+	ld a, [hl]
+	and $f
+	ld e, a
+	ld a, d
+	add a, e
+	ld d, a
+
+	ld a, [hl]
+	swap a
+	and $f
+	ld e, a
+	ld a, d
+	add a, e
+
+	ld d, a
+
+	; get HP dv
+	ld hl, W_ENEMYMONATKDEFIV
+	ld a, [hl]  ; Atk IV
+	swap a
+	and $1
+	sla a
+	sla a
+	sla a
+	ld b, a
+	ld a, [hli] ; Def IV
+	and $1
+	sla a
+	sla a
+	add b
+	ld b, a
+	ld a, [hl] ; Spd IV
+	swap a
+	and $1
+	sla a
+	add b
+	ld b, a
+	ld a, [hl] ; Spc IV
+	and $1
+	add b      ; HP IV: LSB of the other 4 IVs
+
+	add d
+	; a contains total DV count
+	ret
 
 SECTION "bank17",ROMX,BANK[$17]
 
@@ -116682,5 +116771,4 @@ TitleScreenBlink1Pic:
 	INCBIN "gfx/ampharos_title_blink_1.2bpp"
 TitleScreenBlink2Pic:
 	INCBIN "gfx/ampharos_title_blink_2.2bpp"
-
 

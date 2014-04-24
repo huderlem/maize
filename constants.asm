@@ -29,3 +29,6 @@ INCLUDE "constants/map_dimensions.asm"
 INCLUDE "constants/connection_constants.asm"
 INCLUDE "constants/credits_constants.asm"
 INCLUDE "constants/music_constants.asm"
+
+; mininum total DVs a wild pokemon needs to have for set off the SCOUTER
+SCOUTER_DV_TRIGGER EQU 50
