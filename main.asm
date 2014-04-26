@@ -7719,9 +7719,12 @@ GetItemName:: ; 2fcf (0:2fcf)
 	push hl
 	push bc
 	ld a,[$D11E]
+	cp DV_BALL ; is this past the machines?
+	jr nc, .nonMachine
 	cp HM_01 ; is this a TM/HM?
 	jr nc,.Machine
 
+.nonMachine
 	ld [$D0B5],a
 	ld a,ITEM_NAME
 	ld [W_LISTTYPE],a
@@ -9073,8 +9076,12 @@ GetName:: ; 376b (0:376b)
 ; returns pointer to name in de
 	ld a,[$d0b5]
 	ld [$d11e],a
+	cp DV_BALL
+	jr nc, .nonMachine
 	cp a,$C4        ;it's TM/HM
 	jp nc,GetMachineName
+
+.nonMachine
 	ld a,[H_LOADEDROMBANK]
 	push af
 	push hl
@@ -9161,8 +9168,11 @@ GetItemPrice:: ; 37df (0:37df)
 	ld h, [hl]
 	ld l, a
 	ld a, [$cf91]
+	cp DV_BALL
+	jr nc, .nonMachine
 	cp HM_01
 	jr nc, .asm_3812
+.nonMachine
 	ld bc, $3
 .asm_3802
 	add hl, bc
@@ -11369,6 +11379,160 @@ ItemPrices: ; 4608 (1:4608)
 	db $00,$00,$00
 	db $00,$00,$00
 	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$00,$00
+	db $00,$02,$00
 
 ItemNames: ; 472b (1:472b)
 	db "MASTER BALL@"
@@ -11468,6 +11632,160 @@ ItemNames: ; 472b (1:472b)
 	db "10F@"
 	db "11F@"
 	db "B4F@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "X@"
+	db "DV BALL@"
 
 UnusedNames: ; 4a92 (1:4a92)
 	db "かみなりバッヂ@"
@@ -24294,10 +24612,17 @@ UseItem_: ; d5c7 (3:55c7)
 	ld a,1
 	ld [$cd6a],a
 	ld a,[$cf91]	;contains item_ID
+	cp a, DV_BALL
+	jr c, .checkHM
+	ld hl, ExtraItemUsePtrTable
+	sub DV_BALL
+	jr .foundTable
+.checkHM
 	cp a,HM_01
 	jp nc,ItemUseTMHM
 	ld hl,ItemUsePtrTable
 	dec a
+.foundTable
 	add a
 	ld c,a
 	ld b,0
@@ -24392,6 +24717,9 @@ ItemUsePtrTable: ; d5e1 (3:55e1)
 	dw ItemUsePPRestore  ; ELIXER
 	dw ItemUsePPRestore  ; MAX_ELIXER
 
+ExtraItemUsePtrTable:
+	dw ItemUseBall       ; DV_BALL
+
 ItemUseBall: ; d687 (3:5687)
 	ld a,[W_ISINBATTLE]
 	and a
@@ -24457,6 +24785,8 @@ ItemUseBall: ; d687 (3:5687)
 	cp a,MASTER_BALL
 	jp z,.BallSuccess	;$578b
 	cp a,POKE_BALL
+	jr z,.checkForAilments
+	cp a,DV_BALL
 	jr z,.checkForAilments
 	ld a,200
 	cp b
@@ -24559,6 +24889,8 @@ ItemUseBall: ; d687 (3:5687)
 	ld b,255
 	cp a,POKE_BALL
 	jr z,.next11
+	cp a,DV_BALL
+	jr z,.next11
 	ld b,200
 	cp a,GREAT_BALL
 	jr z,.next11
@@ -24608,6 +24940,15 @@ ItemUseBall: ; d687 (3:5687)
 	ld a,b
 	ld [$d11e],a
 .BallSuccess2	;$5805
+	; DV_BALL sets the DVs to max
+	ld a,[$cf91]
+	cp DV_BALL
+	jr nz, .skipDVBall
+	ld a,$ff
+	ld hl, W_ENEMYMONATKDEFIV
+	ld [hli], a
+	ld [hl], a
+.skipDVBall
 	ld c,20
 	call DelayFrames
 	ld a,TOSS_ANIM
