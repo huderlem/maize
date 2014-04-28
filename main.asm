@@ -39997,11 +39997,11 @@ BikeShopText1: ; 1d745 (7:5745)
 	jp TextScriptEnd
 
 BikeShopMenuText: ; 1d7f8 (7:57f8)
-	db   "BICYCLE"
+	db   "HM01"
 	next "CANCEL@"
 
 BikeShopMenuPrice: ; 1d807 (7:5807)
-	db "¥1000000@"
+	db "¥3141593@"
 
 UnnamedText_1d810: ; 1d810 (7:5810)
 	TX_FAR _UnnamedText_1d810
@@ -52358,7 +52358,7 @@ TrainerNames: ; 399ff (e:59ff)
 	db "COOLTRAINER♀@"
 	db "BRUNO@"
 	db "BLANDY@"
-	db "MISTY@"
+	db "TARA@"
 	db "LT.SURGE@"
 	db "ERIKA@"
 	db "KOGA@"
@@ -52669,7 +52669,7 @@ LoneMoves: ; 39d22 (e:5d22)
 ; second byte: move
 ; unterminated
 	db 1,SWIFT
-	db 1,BUBBLEBEAM
+	db 1,DIG
 	db 2,THUNDERBOLT
 	db 2,MEGA_DRAIN
 	db 3,TOXIC
@@ -52978,11 +52978,7 @@ if _YELLOW
 endc
 JrTrainerFData: ; 39e9d (e:5e9d)
 	db 14,VULPIX,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
-if _YELLOW
-	db 16,ODDISH,BELLSPROUT,0
-else
-	db 16,RATTATA,PIKACHU,0
-endc
+	db 16,SANDSHREW,DIGLETT,0 ; Agate City Gym
 	db 16,PIDGEY,PIDGEY,PIDGEY,0
 	db 22,BULBASAUR,0
 	db 18,ODDISH,BELLSPROUT,ODDISH,BELLSPROUT,0
@@ -53321,7 +53317,7 @@ CooltrainerMData: ; 3a35a (e:635a)
 	db 39,SANDSLASH,DUGTRIO,0
 	db 43,RHYHORN,0
 CooltrainerFData: ; 3a385 (e:6385)
-	db 24,WEEPINBELL,GLOOM,IVYSAUR,0
+	db 16,CUBONE,GEODUDE,CUBONE,0 ; Agate City Gym
 	db 43,BELLSPROUT,WEEPINBELL,VICTREEBEL,0
 	db 43,PARASECT,DEWGONG,CHANSEY,0
 	db 46,VILEPLUME,BUTTERFREE,0
@@ -53338,7 +53334,7 @@ else
 	db $FF,10,CLEFAIRY,11,PORYGON,12,SPEAROW,0 ; Blandy
 endc
 MistyData: ; 3a3bb (e:63bb)
-	db $FF,18,STARYU,21,STARMIE,0
+	db $FF,20,ONIX,22,RHYHORN,0
 LtSurgeData: ; 3a3c1 (e:63c1)
 if _YELLOW
 	db $FF,28,RAICHU,0
@@ -92500,10 +92496,10 @@ CeruleanGymScript_5c6d0: ; 5c6d0 (17:46d0)
 	jp LoadGymLeaderAndCityName
 
 Gym2CityName: ; 5c6d9 (17:46d9)
-	db "CERULEAN CITY@"
+	db "AGATE CITY@"
 
 Gym2LeaderName: ; 5c6e7 (17:46e7)
-	db "MISTY@"
+	db "TARA@"
 
 Func_5c6ed: ; 5c6ed (17:46ed)
 	xor a
@@ -92531,7 +92527,7 @@ Func_5c70d: ; 5c70d (17:470d)
 	call DisplayTextID
 	ld hl, $d75e
 	set 7, [hl]
-	ld bc, (TM_11 << 8) | 1
+	ld bc, (TM_28 << 8) | 1
 	call GiveItem
 	jr nc, .BagFull
 	ld a, $6
@@ -92707,20 +92703,20 @@ CeruleanGymObject: ; 0x5c834 (size=50)
 	db $3 ; border tile
 
 	db $2 ; warps
-	db $d, $4, $3, $ff
-	db $d, $5, $3, $ff
+	db $d, $4, $6, $ff
+	db $d, $5, $6, $ff
 
 	db $0 ; signs
 
 	db $4 ; people
-	db SPRITE_BRUNETTE_GIRL, $2 + 4, $4 + 4, $ff, $d0, $41, MISTY + $C8, $1 ; trainer
-	db SPRITE_LASS, $3 + 4, $2 + 4, $ff, $d3, $42, JR__TRAINER_F + $C8, $1 ; trainer
-	db SPRITE_SWIMMER, $7 + 4, $8 + 4, $ff, $d2, $43, SWIMMER + $C8, $1 ; trainer
+	db SPRITE_BRUNETTE_GIRL, $4 + 4, $8 + 4, $ff, $d0, $41, MISTY + $C8, $1 ; trainer
+	db SPRITE_LASS, $4 + 4, $4 + 4, $ff, $d0, $42, JR__TRAINER_F + $C8, $2 ; trainer
+	db SPRITE_LASS, $4 + 4, $6 + 4, $ff, $d0, $43, COOLTRAINER_F + $C8, $1 ; trainer
 	db SPRITE_GYM_HELPER, $a + 4, $7 + 4, $ff, $d0, $4 ; person
 
 	; warp-to
-	EVENT_DISP $5, $d, $4
-	EVENT_DISP $5, $d, $5
+	EVENT_DISP CERULEAN_GYM_WIDTH, $d, $4
+	EVENT_DISP CERULEAN_GYM_WIDTH, $d, $5
 
 CeruleanGymBlocks: ; 5c866 (17:4866)
 	INCBIN "maps/ceruleangym.blk"

@@ -1,17 +1,17 @@
 _UnnamedText_1d6ab:: ; 9875c (26:475c)
-	text "Those miserable"
-	line "ROCKETs!"
+	text "Our son claims"
+	line "that a #MON"
+	cont "ran through our"
+	cont "house and made a"
+	cont "mess."
 
-	para "Look what they"
-	line "did here!"
+	para "I'll tell you a"
+	line "secret, though."
 
-	para "They stole a TM"
-	line "for teaching"
-	cont "#MON how to"
-	cont "DIG holes!"
+	para "..."
+	line "..."
 
-	para "That cost me a"
-	line "bundle, it did!"
+	para "It was me."
 	done
 
 _UnnamedText_1d6b0:: ; 987e2 (26:47e2)
@@ -24,10 +24,10 @@ _UnnamedText_1d6b0:: ; 987e2 (26:47e2)
 	done
 
 _CeruleanHouseTrashedText2:: ; 98834 (26:4834)
-	text "TEAM ROCKET must"
-	line "be trying to DIG"
-	cont "their way into no"
-	cont "good!"
+	text "What would make"
+	line "a #MON cause"
+	cont "this much trouble"
+	cont "in a house?"
 	done
 
 _CeruleanHouseTrashedText3:: ; 9886f (26:486f)

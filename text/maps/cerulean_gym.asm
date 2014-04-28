@@ -1,53 +1,54 @@
 _UnnamedText_5c7be:: ; 989c1 (26:49c1)
-	text "Hi, you're a new"
-	line "face!"
+	text "As you probably"
+	line "know, I'm TARA."
 
-	para "Trainers who want"
-	line "to turn pro have"
-	cont "to have a policy"
-	cont "about #MON!"
+	para "Have you ever"
+	line "heard of the"
+	cont "Richter Scale?"
 
-	para "What is your"
-	line "approach when you"
-	cont "catch #MON?"
+	para "It is used to"
+	line "quantify the"
+	cont "intensity of an"
+	cont "earthquake."
 
-	para "My policy is an"
-	line "all-out offensive"
-	cont "with water-type"
-	cont "#MON!"
+	para "My GROUND #MON"
+	line "are capable of"
+	cont "producing the"
+	cont "same intensity!"
 	done
 
 _UnnamedText_5c7c3:: ; 98a7b (26:4a7b)
-	text "TM11 teaches"
-	line "BUBBLEBEAM!"
-
-	para "Use it on an"
-	line "aquatic #MON!"
+	text "If your #MON"
+	line "uses DIG outside"
+	cont "of battle, you"
+	cont "will be taken to"
+	cont "the last #MON"
+	cont "CENTER you have"
+	cont "visited."
 	done
 
 _UnnamedText_5c7c8:: ; 98ab0 (26:4ab0)
-	text "The CASCADEBADGE"
-	line "makes all #MON"
-	cont "up to L30 obey!"
+	text "Now that you have"
+	line "earned my badge,"
+	cont "a couple things"
+	cont "have changed!"
 
-	para "That includes"
-	line "even outsiders!"
+	para "HM01 CUT may be"
+	line "used outside of"
+	cont "battle on small"
+	cont "trees."
 
-	para "There's more, you"
-	line "can now use CUT"
-	cont "any time!"
+	para "Also, #MON up"
+	line "to L30 will be"
+	cont "obedient!"
 
-	para "You can CUT down"
-	line "small bushes to"
-	cont "open new paths!"
-
-	para "You can also have"
-	line "my favorite TM!"
+	para "You should also"
+	line "find this useful."
 	done
 
 _ReceivedTM11Text:: ; 98b7d (26:4b7d)
 	text $52, " received"
-	line "TM11!@@"
+	line "TM28!@@"
 
 _UnnamedText_5c7d3:: ; 98b90 (26:4b90)
 	text "You better make"
@@ -55,52 +56,46 @@ _UnnamedText_5c7d3:: ; 98b90 (26:4b90)
 	done
 
 _UnnamedText_5c7d8:: ; 98bb0 (26:4bb0)
-	text "Wow!"
-	line "You're too much!"
+	text "Impressive!"
+	line "That battle got"
+	cont "my blood pumping!"
 
-	para "All right!"
-
-	para "You can have the"
-	line "CASCADEBADGE to"
-	cont "show you beat me!@@"
+	para "You've earned the"
+	line "ROCKBADGE!@@"
 
 _CeruleanGymBattleText1:: ; 98c05 (26:4c05)
-	text "I'm more than good"
-	line "enough for you!"
-
-	para "MISTY can wait!"
+	text "I'm supposed to"
+	line "weed out the"
+	cont "weak trainers!"
 	done
 
 _CeruleanGymEndBattleText1:: ; 98c38 (26:4c38)
 	text "You"
-	line "overwhelmed me!"
+	line "aren't weak!"
 	prompt
 
 _CeruleanGymAfterBattleText1:: ; 98c4d (26:4c4d)
-	text "You have to face"
-	line "other trainers to"
-	cont "find out how good"
-	cont "you really are."
+	text "You should take"
+	line "my job because"
+	cont "you know how to"
+	cont "win!"
 	done
 
 _CeruleanGymBattleText2:: ; 98c93 (26:4c93)
-	text "Splash!"
-
-	para "I'm first up!"
-	line "Let's do it!"
+	text "Do you feel those"
+	line "tremors?"
 	done
 
 _CeruleanGymEndBattleText2:: ; 98cb5 (26:4cb5)
-	text "That"
-	line "can't be!"
+	text "Wow!"
+	line "An 8.3!"
 	prompt
 
 _CeruleanGymAfterBattleText2:: ; 98cc4 (26:4cc4)
-	text "MISTY is going to"
-	line "keep improving!"
-
-	para "She won't lose to"
-	line "someone like you!"
+	text "I will always"
+	line "have TARA's back"
+	cont "because she rocks"
+	cont "my world!"
 	done
 
 _UnnamedText_5c82a:: ; 98d0a (26:4d0a)

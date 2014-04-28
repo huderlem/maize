@@ -208,7 +208,7 @@ _CeruleanCityText16:: ; a541a (29:541a)
 	done
 
 _CeruleanCityText17:: ; a5445 (29:5445)
-	text "CERULEAN CITY"
+	text "AGATE CITY"
 	line "#MON GYM"
 	cont "LEADER: TARA"
 

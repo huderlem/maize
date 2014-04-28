@@ -1,14 +1,20 @@
 _UnnamedText_1d810:: ; 98e03 (26:4e03)
-	text "Hi! Welcome to"
-	line "our BIKE SHOP."
+	text "If you're looking"
+	line "for a bike, then"
+	cont "you will have to"
+	cont "look elsewhere."
 
-	para "Have we got just"
-	line "the BIKE for you!"
+	para "We're sold out!"
+
+	para "However, I'm"
+	line "starting a new"
+	cont "business selling"
+	cont "HIDDEN MACHINES!"
 	prompt
 
 _UnnamedText_1d815:: ; 98e45 (26:4e45)
-	text "It's a cool BIKE!"
-	line "Do you want it?"
+	text "Can you afford"
+	line "this luxury item?"
 	done
 
 _UnnamedText_1d81a:: ; 98e67 (26:4e67)
@@ -49,19 +55,22 @@ _UnnamedText_1d834:: ; 98f4d (26:4f4d)
 	done
 
 _UnnamedText_1d843:: ; 98f6d (26:4f6d)
-	text "A plain city BIKE"
-	line "is good enough"
-	cont "for me!"
-
-	para "You can't put a"
-	line "shopping basket"
-	cont "on an MTB!"
+	text "I saved up"
+	line "¥1000000 for a"
+	cont "BIKE, but now"
+	cont "they're sold out!"
 	done
 
 _UnnamedText_1d85c:: ; 98fc1 (26:4fc1)
-	text "These BIKEs are"
-	line "cool, but they're"
-	cont "way expensive!"
+	text "We printed way"
+	line "too many"
+	cont "BIKE VOUCHERs,"
+	cont "so everybody was"
+	cont "getting BIKEs"
+	cont "for free!"
+
+	para "It was a poor"
+	line "decision."
 	done
 
 _UnnamedText_1d861:: ; 98ff2 (26:4ff2)
