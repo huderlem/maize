@@ -60171,7 +60171,7 @@ Func_3d4b6: ; 3d4b6 (f:54b6)
 	ld hl, Coord
 	ld de, DisabledText ; $5555
 	call PlaceString
-	jr .asm_3d54e
+	jp .asm_3d54e
 .asm_3d4df
 	ld hl, wCurrentMenuItem ; $cc26
 	dec [hl]
@@ -60204,6 +60204,20 @@ Func_3d4b6: ; 3d4b6 (f:54b6)
 	ld hl, Coord
 	ld de, TypeText ; $555f
 	call PlaceString
+
+	; show type of attack (physical or special)
+	ld a, [wPlayerSelectedMove]
+	call IsMovePhysical
+	jr z, .physical
+	ld de, SpecialText
+	jr .continue
+.physical
+	ld de, PhysicalText
+.continue
+	FuncCoord 6, 9
+	ld hl, Coord
+	call PlaceString
+
 	FuncCoord 7, 11 ; $c483
 	ld hl, Coord
 	ld [hl], "/"
@@ -60235,6 +60249,12 @@ DisabledText: ; 3d555 (f:5555)
 
 TypeText: ; 3d55f (f:555f)
 	db "TYPE@"
+
+PhysicalText:
+	db "Ph.@"
+
+SpecialText:
+	db "Sp.@"
 
 SelectEnemyMove: ; 3d564 (f:5564)
 	ld a, [W_ISLINKBATTLE]
@@ -61445,9 +61465,10 @@ CalculateDamage: ; 3ddcf (f:5dcf)
 	and a
 	ld d, a         ;*D = attack base, used later
 	ret z           ;return if attack is zero
-	ld a, [hl]      ;*test attacking type
-	cp a, DARK       ;types >= $13 are all special
-	jr nc, .specialAttack
+	; check for physical/special move
+	ld a, [W_PLAYERMOVENUM]
+	call IsMovePhysical
+	jr nz, .specialAttack
 .physicalAttack
 	ld hl, W_ENEMYMONDEFENSE    ;opponent defense
 	ld a, [hli]                 ;*BC = opponent defense used later
@@ -61537,6 +61558,60 @@ CalculateDamage: ; 3ddcf (f:5dcf)
 	and a
 	ret
 
+IsMovePhysical:
+; a = move id
+; sets zero flag if move is physical
+	dec a
+	push bc
+	ld hl, MoveTypeBitField
+.loop
+	cp a, 8
+	jr c, .done
+	sub 8
+	inc hl
+	jr .loop
+.done
+	ld b, [hl]
+.shift
+	cp a, 0
+	jr z, .doneShifting
+	dec a
+	srl b
+	jr .shift
+.doneShifting
+	ld a, b
+	and 1
+	pop bc
+	ret
+
+MoveTypeBitField:
+; 0 = physical
+; 1 = special
+	db %00000000 ; 1-8
+	db %10110000 ; 9-10
+	db %00000010 ; 11-18
+	db %00001000 ; 19-20
+	db %01000000 ; 21-28
+	db %11110100 ; 29-30
+	db %11111111 ; 31-38
+	db %01111111 ; 39-40
+	db %11000000 ; 41-48
+	db %11111011 ; 49-50
+	db %01111111 ; 51-58
+	db %11111000 ; 59-60
+	db %11111001 ; 61-68
+	db %11111111 ; 69-70
+	db %01101111 ; 71-78
+	db %00101100 ; 79-80
+	db %01110001 ; 81-88
+	db %10100111 ; 89-90
+	db %01111101 ; 91-98
+	db %11001000 ; 99-A0
+	db %00101001 ; A1-A8
+	db %00000111 ; A9-B0
+	db %01110000 ; B1-B8
+	db %10110000 ; B9-C0
+
 Func_3de75: ; 3de75 (f:5e75)
 	ld hl, W_DAMAGE ; $d0d7
 	xor a
@@ -61547,9 +61622,10 @@ Func_3de75: ; 3de75 (f:5e75)
 	ld d, a
 	and a
 	ret z
-	ld a, [hl]
-	cp $14
-	jr nc, .asm_3debc
+	; check for physical/special move
+	ld a, [W_ENEMYMOVENUM]
+	call IsMovePhysical
+	jr nz, .specialAttack
 	ld hl, W_PLAYERMONDEF
 	ld a, [hli]
 	ld b, a
@@ -61577,7 +61653,7 @@ Func_3de75: ; 3de75 (f:5e75)
 	ld hl, $ff97
 	pop bc
 	jr .asm_3deef
-.asm_3debc
+.specialAttack
 	ld hl, W_PLAYERMONSPECIAL
 	ld a, [hli]
 	ld b, a
