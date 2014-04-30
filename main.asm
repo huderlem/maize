@@ -21216,17 +21216,17 @@ Route24Mons: ; d1a5 (3:51a5)
 	db $00
 
 Route25Mons: ; d1bb (3:51bb)
-	db $0F
-	db 8,WEEDLE
-	db 9,KAKUNA
+	db $19
+	db 12,PIDGEY
+	db 12,NIDORAN_M
+	db 12,NIDORAN_F
 	db 13,PIDGEY
-	db 12,ODDISH
-	db 13,ODDISH
-	db 12,ABRA
-	db 14,ODDISH
-	db 10,ABRA
-	db 7,METAPOD
-	db 8,CATERPIE
+	db 13,NIDORAN_M
+	db 13,NIDORAN_F
+	db 14,POLIWAG
+	db 14,BELLSPROUT
+	db 14,VULPIX
+	db 15,VULPIX
 
 	db $00
 
@@ -52878,9 +52878,9 @@ TrainerDataPointers: ; 39d3b (e:5d3b)
 YoungsterData: ; 39d99 (e:5d99)
 	db 6,WEEDLE,RATTATA,0 ; trainer house (Nickel City)
 	db 8,PSYDUCK,RATTATA,RATTATA,0 ; Route 3
-	db 10,RATTATA,RATTATA,ZUBAT,0
-	db 14,RATTATA,EKANS,ZUBAT,0
-	db 15,RATTATA,SPEAROW,0
+	db 10,RATTATA,RATTATA,ZUBAT,0 ; Route 4 (south of Agate)
+	db 14,RATTATA,EKANS,ZUBAT,0 ; Route 4 (south of Agate)
+	db 15,RATTATA,SPEAROW,0 ; Route 4 (south of Agate)
 	db 17,SLOWPOKE,0
 	db 14,EKANS,SANDSHREW,0
 	db 21,NIDORAN_M,0
@@ -52903,7 +52903,7 @@ else
 	db 10,CATERPIE,WEEDLE,BUTTERFREE,0 ; Route 3
 endc
 	db 12,PARAS,METAPOD,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
-	db 9,WEEDLE,KAKUNA,CATERPIE,0
+	db 9,WEEDLE,KAKUNA,CATERPIE,0 ; Route 4 (south of Agate)
 	db 11,CATERPIE,METAPOD,0
 	db 11,WEEDLE,KAKUNA,0
 	db 10,CATERPIE,METAPOD,CATERPIE,0
@@ -52921,8 +52921,8 @@ LassData: ; 39e0c (e:5e0c)
 	db 10,CLEFAIRY,SPEAROW,0 ; Blandy's gym
 	db 10,VULPIX,JIGGLYPUFF,0 ; Route 3
 	db 11,NIDORAN_F,PIKACHU,0 ; Route 3
-	db 11,ODDISH,BELLSPROUT,0
-	db 14,CLEFAIRY,0
+	db 11,ODDISH,BELLSPROUT,0 ; Route 4 (south of Agate)
+	db 14,CLEFAIRY,0 ; Route 4 (south of Agate)
 	db 16,PIDGEY,NIDORAN_F,0
 	db 14,PIDGEY,NIDORAN_F,0
 	db 15,NIDORAN_M,NIDORAN_F,0
@@ -52967,7 +52967,7 @@ else
 endc
 	db 100,PIDGEY,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 14,PIDGEY,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
-	db 20,SQUIRTLE,0
+	db 20,SQUIRTLE,0 ; Route 4 (south of Agate)
 	db 16,SPEAROW,RATICATE,0
 	db 18,DIGLETT,DIGLETT,SANDSHREW,0
 	db 21,GROWLITHE,CHARMANDER,0
@@ -53039,8 +53039,8 @@ SuperNerdData: ; 39f26 (e:5f26)
 	db 37,GROWLITHE,VULPIX,0
 HikerData: ; 39f5e (e:5f5e)
 	db 10,GEODUDE,ONIX,GEODUDE,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
-	db 15,MACHOP,GEODUDE,0
-	db 13,GEODUDE,GEODUDE,MACHOP,GEODUDE,0
+	db 15,MACHOP,GEODUDE,0 ; Route 4 (south of Agate)
+	db 13,GEODUDE,GEODUDE,MACHOP,GEODUDE,0 ; Route 4 (south of Agate)
 	db 17,ONIX,0
 	db 21,GEODUDE,ONIX,0
 	db 20,GEODUDE,MACHOP,GEODUDE,0
@@ -79270,25 +79270,25 @@ Route25Object: ; 0x507b2 (size=94)
 	db $2c ; border tile
 
 	db $1 ; warps
-	db $3, $2d, $0, BILLS_HOUSE
+	db $25, $d, $0, BILLS_HOUSE
 
 	db $1 ; signs
-	db $3, $2b, $b ; Route25Text11
+	db $25, $b, $b ; Route25Text11
 
 	db $a ; people
-	db SPRITE_BUG_CATCHER, $2 + 4, $e + 4, $ff, $d0, $41, YOUNGSTER + $C8, $5 ; trainer
-	db SPRITE_BUG_CATCHER, $5 + 4, $12 + 4, $ff, $d1, $42, YOUNGSTER + $C8, $6 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_1, $4 + 4, $18 + 4, $ff, $d0, $43, JR__TRAINER_M + $C8, $2 ; trainer
-	db SPRITE_LASS, $8 + 4, $12 + 4, $ff, $d3, $44, LASS + $C8, $9 ; trainer
-	db SPRITE_BUG_CATCHER, $3 + 4, $20 + 4, $ff, $d2, $45, YOUNGSTER + $C8, $7 ; trainer
-	db SPRITE_LASS, $4 + 4, $25 + 4, $ff, $d0, $46, LASS + $C8, $a ; trainer
-	db SPRITE_HIKER, $4 + 4, $8 + 4, $ff, $d3, $47, HIKER + $C8, $2 ; trainer
-	db SPRITE_HIKER, $9 + 4, $17 + 4, $ff, $d1, $48, HIKER + $C8, $3 ; trainer
-	db SPRITE_HIKER, $7 + 4, $d + 4, $ff, $d3, $49, HIKER + $C8, $4 ; trainer
-	db SPRITE_BALL, $2 + 4, $16 + 4, $ff, $ff, $8a, TM_19 ; item
+	db SPRITE_BUG_CATCHER, $2c + 4, $4 + 4, $ff, $d1, $41, YOUNGSTER + $C8, $3 ; trainer
+	db SPRITE_BUG_CATCHER, $23 + 4, $2 + 4, $ff, $d1, $42, YOUNGSTER + $C8, $4 ; trainer
+	db SPRITE_BLACK_HAIR_BOY_1, $2e + 4, $9 + 4, $ff, $d2, $43, JR__TRAINER_M + $C8, $4 ; trainer
+	db SPRITE_LASS, $30 + 4, $d + 4, $ff, $d2, $44, LASS + $C8, $5 ; trainer
+	db SPRITE_BUG_CATCHER, $31 + 4, $5 + 4, $ff, $d3, $45, YOUNGSTER + $C8, $5 ; trainer
+	db SPRITE_LASS, $35 + 4, $9 + 4, $ff, $d0, $46, LASS + $C8, $6 ; trainer
+	db SPRITE_HIKER, $39 + 4, $6 + 4, $ff, $d1, $47, HIKER + $C8, $2 ; trainer
+	db SPRITE_BUG_CATCHER, $39 + 4, $d + 4, $ff, $d1, $48, BUG_CATCHER + $C8, $5 ; trainer
+	db SPRITE_HIKER, $13 + 4, $3 + 4, $ff, $d2, $49, HIKER + $C8, $3 ; trainer
+	db SPRITE_BALL, $2e + 4, $d + 4, $ff, $ff, $8a, TM_32 ; item
 
 	; warp-to
-	EVENT_DISP $1e, $3, $2d ; BILLS_HOUSE
+	EVENT_DISP ROUTE_25_WIDTH, $25, $d ; BILLS_HOUSE
 
 Route25Blocks: ; 50810 (14:4810)
 	INCBIN "maps/route25.blk"
