@@ -3155,8 +3155,8 @@ _LostChampionshipText::
 	prompt
 
 _ScouterText::
-	text "The SCOUTER is"
-	line "beeping!"
+	text "The SCOUTER RING"
+	line "is beeping!"
 	prompt
 
 

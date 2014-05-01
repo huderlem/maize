@@ -11584,7 +11584,7 @@ ItemNames: ; 472b (1:472b)
 	db "LEAF STONE@"
 	db "CARD KEY@"
 	db "NUGGET@"
-	db "SCOUTER@"
+	db "SCOUTER RING@"
 	db "POKé DOLL@"
 	db "FULL HEAL@"
 	db "REVIVE@"
@@ -11786,6 +11786,7 @@ ItemNames: ; 472b (1:472b)
 	db "X@"
 	db "X@"
 	db "DV BALL@"
+	db "HUSTLE RING@"
 
 UnusedNames: ; 4a92 (1:4a92)
 	db "かみなりバッヂ@"
@@ -24683,7 +24684,7 @@ ItemUsePtrTable: ; d5e1 (3:55e1)
 	dw ItemUseEvoStone   ; LEAF_STONE
 	dw ItemUseCardKey    ; CARD_KEY
 	dw UnusableItem      ; NUGGET
-	dw UnusableItem      ; SCOUTER
+	dw UnusableItem      ; SCOUTER_RING
 	dw ItemUsePokedoll   ; POKE_DOLL
 	dw ItemUseMedicine   ; FULL_HEAL
 	dw ItemUseMedicine   ; REVIVE
@@ -24720,6 +24721,7 @@ ItemUsePtrTable: ; d5e1 (3:55e1)
 
 ExtraItemUsePtrTable:
 	dw ItemUseBall       ; DV_BALL
+	dw UnusableItem      ; HUSTLE_RING
 
 ItemUseBall: ; d687 (3:5687)
 	ld a,[W_ISINBATTLE]
@@ -27221,6 +27223,9 @@ IsKeyItem_: ; e764 (3:6764)
 	ld a,$01
 	ld [$d124],a
 	ld a,[$cf91]
+	cp a,HUSTLE_RING
+	ret nc
+.checkForHM
 	cp a,HM_01 ; is the item an HM or TM?
 	jr nc,.checkIfItemIsHM
 ; if the item is not an HM or TM
@@ -27248,17 +27253,17 @@ IsKeyItem_: ; e764 (3:6764)
 	ret
 
 KeyItemBitfield: ; e799 (3:6799)
-	db %11110000
-	db %00000001
-	db %11110000
-	db %01001111
-	db %00000000
-	db %10010111
-	db %00000010
-	db %11000000
-	db %11110000
-	db %00111011
-	db %00000000
+	db %11110000 ; 1-8
+	db %00000001 ; 9-10
+	db %11110000 ; 11-18
+	db %01001111 ; 19-20
+	db %00000000 ; 21-28
+	db %10010111 ; 29-30
+	db %00000010 ; 31-38
+	db %11000000 ; 39-40
+	db %11110000 ; 41-48
+	db %00111011 ; 49-50
+	db %00000000 ; 51-58
 
 Func_e7a4: ; e7a4 (3:67a4)
 	ld de, W_NUMINBOX ; $da80
@@ -31583,7 +31588,7 @@ ItemInfoPointers:
 	db "@"
 	TX_FAR _NuggetDescription
 	db "@"
-	TX_FAR _ScouterDescription
+	TX_FAR _ScouterRingDescription
 	db "@"
 	TX_FAR _PokeDollDescription
 	db "@"
@@ -31762,6 +31767,8 @@ ItemInfoPointers:
 	TX_FAR _TM50Description
 	db "@"
 	TX_FAR _DVBallDescription
+	db "@"
+	TX_FAR _HustleRingDescription
 	db "@"
 	
 
@@ -32451,6 +32458,24 @@ Func_13870: ; 13870 (4:7870)
 	ld b, $0
 	add hl, bc
 	ld a, [hli]
+	ld b, a
+	; check for hustle ring
+	push hl
+	ld hl, wBagItems
+	ld a, [hl]
+	cp HUSTLE_RING
+	ld a, b
+	jr nz, .continue
+	; multiply by 5
+	add a, b
+	add a, b
+	add a, b
+	add a, b
+	; divide by 4
+	srl a
+	srl a
+.continue
+	pop hl
 	ld [W_CURENEMYLVL], a ; $d127
 	ld a, [hl]
 	ld [$cf91], a
@@ -88260,10 +88285,10 @@ Func_58d99: ; 58d99 (16:4d99)
 	jr nz, .continue
 
 	; scouter here
-	; is SCOUTER in the first item slot?
+	; is SCOUTER_RING in the first item slot?
 	ld hl, wBagItems
 	ld a, [hl]
-	cp SCOUTER
+	cp SCOUTER_RING
 	jr nz, .continue
 .countDVs	
 	call CountTotalDV
@@ -117809,18 +117834,21 @@ _NuggetDescription::
 	cont "money."
 	prompt
 
-_ScouterDescription::
-	text "When placed at"
-	line "the top of your"
-	cont "inventory, it"
-	cont "will beep when"
-	cont "you encounter a"
-	cont "wild #MON with"
+_ScouterRingDescription::
+	text "A green ring that"
+	line "beeps when you"
+	cont "encounter a wild"
+	cont "#MON with"
 	cont "exceptional DVs."
 
 	para "High DVs means"
 	line "the #MON is"
 	cont "strong."
+
+	para "Must be in the"
+	line "top item slot of"
+	cont "your inventory to"
+	cont "be in effect."
 	prompt
 
 _PokeDollDescription::
@@ -118267,4 +118295,15 @@ _DVBallDescription::
 
 	para "However, it has"
 	line "a low catch rate."
+	prompt
+
+_HustleRingDescription::
+	text "A blue ring that"
+	line "boosts the levels"
+	cont "of wild #MON."
+
+	para "Must be in the"
+	line "top item slot of"
+	cont "your inventory to"
+	cont "be in effect."
 	prompt
