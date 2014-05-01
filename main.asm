@@ -17526,7 +17526,7 @@ TextBoxTextAndCoordTable: ; 73b0 (1:73b0)
 	db 3,0   ; text coordinates
 
 	db $06 ; text box ID
-	db 13,10,19,14 ; text box coordinates
+	db 13,10,19,16 ; text box coordinates
 	dw UseTossText
 	db 15,11 ; text coordinates
 
@@ -17584,7 +17584,8 @@ BuySellQuitText: ; 7413 (1:7413)
 
 UseTossText: ; 7422 (1:7422)
 	db   "USE"
-	next "TOSS@"
+	next "TOSS"
+	next "INFO@"
 
 JapaneseSaveMessageText: ; 742b (1:742b)
 	db   "きろく"
@@ -31360,7 +31361,7 @@ StartMenu_Item: ; 13302 (4:7302)
 	cp a,BICYCLE
 	jp z,.useOrTossItem
 .notBicycle1
-	ld a,$06 ; use/toss menu
+	ld a,$06 ; use/toss/info menu
 	ld [$d125],a
 	call DisplayTextBoxID
 	ld hl,wTopMenuItemY
@@ -31372,6 +31373,7 @@ StartMenu_Item: ; 13302 (4:7302)
 	ld [hli],a ; current menu item ID
 	inc hl
 	inc a ; a = 1
+	inc a ; a = 2
 	ld [hli],a ; max menu item ID
 	ld a,%00000011 ; A button, B button
 	ld [hli],a ; menu watched keys
@@ -31398,8 +31400,10 @@ StartMenu_Item: ; 13302 (4:7302)
 	jp ItemMenuLoop
 .notBicycle2
 	ld a,[wCurrentMenuItem]
-	and a
-	jr nz,.tossItem
+	cp a, 1
+	jr z, .tossItem
+	cp a, 2
+	jr z, .infoItem
 .useItem
 	ld [$d152],a
 	ld a,[$cf91]
@@ -31456,6 +31460,172 @@ StartMenu_Item: ; 13302 (4:7302)
 	call TossItem
 .tossZeroItems
 	jp ItemMenuLoop
+.infoItem
+	ld a,[$cf91]
+	call DisplayItemInfo
+	jp ItemMenuLoop
+
+DisplayItemInfo:
+; a = item id
+	dec a
+	cp a, HM_01
+	jr c, .ready
+	sub $70 ; HM_01's id is now $54
+.ready
+	ld hl,ItemInfoPointers
+	ld bc, 5
+.add
+	and a
+	jr z, .doneAdding
+	dec a
+	add hl, bc
+	jr .add
+.doneAdding
+	call PrintText
+	ret
+
+ItemInfoPointers:
+	TX_FAR _MasterBallDescription
+	db "@"
+	TX_FAR _UltraBallDescription
+	db "@"
+	TX_FAR _GreatBallDescription
+	db "@"
+	TX_FAR _PokeBallDescription
+	db "@"
+	TX_FAR _TownMapDescription
+	db "@"
+	TX_FAR _BicycleDescription
+	db "@"
+	TX_FAR _SurfboardDescription
+	db "@"
+	TX_FAR _SafariBallDescription
+	db "@"
+	TX_FAR _PokedexDescription
+	db "@"
+	TX_FAR _MoonStoneDescription
+	db "@"
+	TX_FAR _AntidoteDescription
+	db "@"
+	TX_FAR _BurnHealDescription
+	db "@"
+	TX_FAR _IceHealDescription
+	db "@"
+	TX_FAR _AwakeningDescription
+	db "@"
+	TX_FAR _ParalyzeHealDescription
+	db "@"
+	TX_FAR _FullRestoreDescription
+	db "@"
+	TX_FAR _MaxPotionDescription
+	db "@"
+	TX_FAR _HyperPotionDescription
+	db "@"
+	TX_FAR _SuperPotionDescription
+	db "@"
+	TX_FAR _PotionDescription
+	db "@"
+	TX_FAR _BoulderBadgeDescription
+	db "@"
+	TX_FAR _CascadeBadgeDescription
+	db "@"
+	TX_FAR _ThunderBadgeDescription
+	db "@"
+	TX_FAR _RainbowBadgeDescription
+	db "@"
+	TX_FAR _SoulBadgeDescription
+	db "@"
+	TX_FAR _MarshBadgeDescription
+	db "@"
+	TX_FAR _VolcanoBadgeDescription
+	db "@"
+	TX_FAR _EarthBadgeDescription
+	db "@"
+	TX_FAR _EscapeRopeDescription
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+	TX_FAR _CannotUseItemsHereText
+	db "@"
+
 
 CannotUseItemsHereText: ; 1342a (4:742a)
 	TX_FAR _CannotUseItemsHereText
@@ -117184,4 +117354,169 @@ TitleScreenBlink1Pic:
 	INCBIN "gfx/ampharos_title_blink_1.2bpp"
 TitleScreenBlink2Pic:
 	INCBIN "gfx/ampharos_title_blink_2.2bpp"
+
+
+SECTION "New Text", ROMX, BANK[$33]
+
+_MasterBallDescription::
+	text "A #BALL that"
+	line "never fails."
+	done
+
+_UltraBallDescription::
+	text "A #BALL with"
+	line "a high rate of"
+	cont "success."
+
+_GreatBallDescription::
+	text "A #BALL with"
+	line "a decent success"
+	cont "rate."
+	prompt
+
+_PokeBallDescription::
+	text "Allows the player"
+	line "to catch wild"
+	cont "#MON."
+	prompt
+
+_TownMapDescription::
+	text "A very convenient"
+	line "map that can be"
+	cont "viewed anytime."
+
+	para "It even shows you"
+	line "your present"
+	cont "location in the"
+	cont "region."
+	prompt
+
+_BicycleDescription::
+	text "Allows for quick"
+	line "traveling!"
+	prompt
+
+_SurfboardDescription::
+	text "A buggy item that"
+	line "is supposed to"
+	cont "allow you to surf"
+	cont "I think."
+	prompt
+
+_SafariBallDescription::
+	text "#BALL used in"
+	line "the SAFARI ZONE."
+	prompt
+
+_PokedexDescription::
+	text "A #MON"
+	line "encyclopedia."
+	prompt
+
+_MoonStoneDescription::
+	text "An odd stone that"
+	line "gleams like the"
+	cont "moon in the"
+	cont "evening sky."
+
+	para "It allows certain"
+	line "kinds of #MON"
+	cont "to evolve."
+	prompt
+
+_AntidoteDescription::
+	text "Cures a poisoned"
+	line "#MON."
+	prompt
+
+_BurnHealDescription::
+	text "Cures a #MON"
+	line "of its burn."
+	prompt
+
+_IceHealDescription::
+	text "Thaws a frozen"
+	line "#MON."
+	prompt
+
+_AwakeningDescription::
+	text "Wakes a sleeping"
+	line "#MON."
+	prompt
+
+_ParalyzeHealDescription::
+	text "Cures a #MON"
+	line "of paralysis."
+	prompt
+
+_FullRestoreDescription::
+	text "Heals a #MON"
+	line "to its full HP"
+	cont "and restores all"
+	cont "status ailments."
+	prompt
+
+_MaxPotionDescription::
+	text "Heals a #MON"
+	line "to its full HP."
+	prompt
+
+_HyperPotionDescription::
+	text "Heals a #MON"
+	line "by 200HP.
+	prompt
+
+_SuperPotionDescription::
+	text "Heals a #MON"
+	line "by 50HP.
+	prompt
+
+_PotionDescription::
+	text "Heals a #MON"
+	line "by 20HP.
+	prompt
+
+_BoulderBadgeDescription::
+	text "..."
+	prompt
+
+_CascadeBadgeDescription::
+	text "..."
+	prompt
+
+_ThunderBadgeDescription::
+	text "..."
+	prompt
+
+_RainbowBadgeDescription::
+	text "..."
+	prompt
+
+_SoulBadgeDescription::
+	text "..."
+	prompt
+
+_MarshBadgeDescription::
+	text "..."
+	prompt
+
+_VolcanoBadgeDescription::
+	text "..."
+	prompt
+
+_EarthBadgeDescription::
+	text "..."
+	prompt
+
+_EscapeRopeDescription::
+	text "A long and"
+	line "durable rope."
+
+	para "Use it to escape"
+	line "instantly from a"
+	cont "cave or a"
+	cont "dungeon."
+	prompt
+	
+
 
