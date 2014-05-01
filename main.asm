@@ -31543,89 +31543,227 @@ ItemInfoPointers:
 	db "@"
 	TX_FAR _EscapeRopeDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _RepelDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _OldAmberDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _FireStoneDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _ThunderStoneDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _WaterStoneDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _HPUpDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _ProteinDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _IronDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _CarbosDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _CalciumDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _RareCandyDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _DomeFossilDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _HelixFossilDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _SecretKeyDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _ItemStoneDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _BikeVoucherDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _XAccuracyDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _LeafStoneDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _CardKeyDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _NuggetDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _ScouterDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _PokeDollDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _FullHealDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _ReviveDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _MaxReviveDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _GuardSpecDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _SuperRepelDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _MaxRepelDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _DireHitDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _CoinDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _FreshWaterDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _SodaPopDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _LemonadeDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _SSTicketDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _GoldTeethDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _XAttackDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _XDefendDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _XSpeedDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _XSpecialDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _CoinCaseDescription
 	db "@"
-	TX_FAR _CannotUseItemsHereText
+	TX_FAR _OaksParcelDescription
 	db "@"
-
+	TX_FAR _ItemFinderDescription
+	db "@"
+	TX_FAR _SilphScopeDescription
+	db "@"
+	TX_FAR _PokeFluteDescription
+	db "@"
+	TX_FAR _LiftKeyDescription
+	db "@"
+	TX_FAR _EXPAllDescription
+	db "@"
+	TX_FAR _OldRodDescription
+	db "@"
+	TX_FAR _GoodRodDescription
+	db "@"
+	TX_FAR _SuperRodDescription
+	db "@"
+	TX_FAR _PPUpDescription
+	db "@"
+	TX_FAR _EtherDescription
+	db "@"
+	TX_FAR _MaxEtherDescription
+	db "@"
+	TX_FAR _ElixerDescription
+	db "@"
+	TX_FAR _MaxElixerDescription
+	db "@"
+	TX_FAR _HM01Description
+	db "@"
+	TX_FAR _HM02Description
+	db "@"
+	TX_FAR _HM03Description
+	db "@"
+	TX_FAR _HM04Description
+	db "@"
+	TX_FAR _HM05Description
+	db "@"
+	TX_FAR _TM01Description
+	db "@"
+	TX_FAR _TM02Description
+	db "@"
+	TX_FAR _TM03Description
+	db "@"
+	TX_FAR _TM04Description
+	db "@"
+	TX_FAR _TM05Description
+	db "@"
+	TX_FAR _TM06Description
+	db "@"
+	TX_FAR _TM07Description
+	db "@"
+	TX_FAR _TM08Description
+	db "@"
+	TX_FAR _TM09Description
+	db "@"
+	TX_FAR _TM10Description
+	db "@"
+	TX_FAR _TM11Description
+	db "@"
+	TX_FAR _TM12Description
+	db "@"
+	TX_FAR _TM13Description
+	db "@"
+	TX_FAR _TM14Description
+	db "@"
+	TX_FAR _TM15Description
+	db "@"
+	TX_FAR _TM16Description
+	db "@"
+	TX_FAR _TM17Description
+	db "@"
+	TX_FAR _TM18Description
+	db "@"
+	TX_FAR _TM19Description
+	db "@"
+	TX_FAR _TM20Description
+	db "@"
+	TX_FAR _TM21Description
+	db "@"
+	TX_FAR _TM22Description
+	db "@"
+	TX_FAR _TM23Description
+	db "@"
+	TX_FAR _TM24Description
+	db "@"
+	TX_FAR _TM25Description
+	db "@"
+	TX_FAR _TM26Description
+	db "@"
+	TX_FAR _TM27Description
+	db "@"
+	TX_FAR _TM28Description
+	db "@"
+	TX_FAR _TM29Description
+	db "@"
+	TX_FAR _TM30Description
+	db "@"
+	TX_FAR _TM31Description
+	db "@"
+	TX_FAR _TM32Description
+	db "@"
+	TX_FAR _TM33Description
+	db "@"
+	TX_FAR _TM34Description
+	db "@"
+	TX_FAR _TM35Description
+	db "@"
+	TX_FAR _TM36Description
+	db "@"
+	TX_FAR _TM37Description
+	db "@"
+	TX_FAR _TM38Description
+	db "@"
+	TX_FAR _TM39Description
+	db "@"
+	TX_FAR _TM40Description
+	db "@"
+	TX_FAR _TM41Description
+	db "@"
+	TX_FAR _TM42Description
+	db "@"
+	TX_FAR _TM43Description
+	db "@"
+	TX_FAR _TM44Description
+	db "@"
+	TX_FAR _TM45Description
+	db "@"
+	TX_FAR _TM46Description
+	db "@"
+	TX_FAR _TM47Description
+	db "@"
+	TX_FAR _TM48Description
+	db "@"
+	TX_FAR _TM49Description
+	db "@"
+	TX_FAR _TM50Description
+	db "@"
+	TX_FAR _DVBallDescription
+	db "@"
+	
 
 CannotUseItemsHereText: ; 1342a (4:742a)
 	TX_FAR _CannotUseItemsHereText
@@ -117463,17 +117601,17 @@ _MaxPotionDescription::
 
 _HyperPotionDescription::
 	text "Heals a #MON"
-	line "by 200HP.
+	line "by 200 HP.
 	prompt
 
 _SuperPotionDescription::
 	text "Heals a #MON"
-	line "by 50HP.
+	line "by 50 HP.
 	prompt
 
 _PotionDescription::
 	text "Heals a #MON"
-	line "by 20HP.
+	line "by 20 HP.
 	prompt
 
 _BoulderBadgeDescription::
@@ -117518,5 +117656,615 @@ _EscapeRopeDescription::
 	cont "dungeon."
 	prompt
 	
+_RepelDescription::
+	text "Repels weak wild"
+	line "#MON for 100"
+	cont "steps."
+	prompt
 
+_OldAmberDescription::
+	text "A stone"
+	line "containing the"
+	cont "genes of an"
+	cont "ancient #MON."
+	prompt
 
+_FireStoneDescription::
+	text "A peculiar stone"
+	line "that makes"
+	cont "certain #MON"
+	cont "evolve."
+
+	para "The stone has a"
+	line "fiery orange"
+	cont "heart."
+	prompt
+
+_ThunderStoneDescription::
+	text "A peculiar stone"
+	line "that makes"
+	cont "certain #MON"
+	cont "evolve."
+
+	para "It has a distinct"
+	line "thunderbolt"
+	cont "pattern."
+	prompt
+
+_WaterStoneDescription::
+	text "A peculiar stone"
+	line "that makes"
+	cont "certain #MON"
+	cont "evolve."
+
+	para "It is a clear"
+	line "light blue."
+	prompt
+
+_HPUpDescription::
+	text "Raises the base"
+	line "HP stat of a"
+	cont "#MON."
+	prompt
+
+_ProteinDescription::
+	text "Raises the base"
+	line "ATTACK stat of a"
+	cont "#MON."
+	prompt
+
+_IronDescription::
+	text "Raises the base"
+	line "DEFENSE stat of a"
+	cont "#MON."
+	prompt
+
+_CarbosDescription::
+	text "Raises the base"
+	line "SPEED stat of a"
+	cont "#MON."
+	prompt
+
+_CalciumDescription::
+	text "Raises the base"
+	line "SPECIAL stat of a"
+	cont "#MON."
+	prompt
+
+_RareCandyDescription::
+	text "A candy that is"
+	line "packed with"
+	cont "energy."
+
+	para "Raises the level"
+	line "of a #MON by"
+	cont "one."
+	prompt
+
+_DomeFossilDescription::
+	text "A fossil of an"
+	line "ancient, seafloor"
+	cont "dwelling #MON."
+
+	para "It appears to be"
+	line "part of a shell."
+	prompt
+
+_HelixFossilDescription::
+	text "A fossil of an"
+	line "ancient, seafloor"
+	cont "dwelling #MON."
+
+	para "It appears to be"
+	line "part of a"
+	cont "seashell."
+	prompt
+
+_SecretKeyDescription::
+	text "Unlocks something"
+	line
+	prompt
+
+_ItemStoneDescription::
+	text "A peculiar stone"
+	line "that makes"
+	cont "certain #MON"
+	cont "evolve."
+
+	para "It's infused with"
+	line "potent items."
+	prompt
+
+_BikeVoucherDescription::
+	text "Can be redeemed"
+	line "for a free HM01."
+	prompt
+
+_XAccuracyDescription::
+	text "Raises accuracy"
+	line "of attacks during"
+	cont "battle."
+	prompt
+
+_LeafStoneDescription::
+	text "A peculiar stone"
+	line "that makes"
+	cont "certain #MON"
+	cont "evolve."
+
+	para "It has a leaf"
+	line "pattern."
+	prompt
+
+_CardKeyDescription::
+	text "Opens something."
+	prompt
+
+_NuggetDescription::
+	text "A chunk of pure"
+	line "gold."
+
+	para "Sell this at a"
+	line "MART for lots of"
+	cont "money."
+	prompt
+
+_ScouterDescription::
+	text "When placed at"
+	line "the top of your"
+	cont "inventory, it"
+	cont "will beep when"
+	cont "you encounter a"
+	cont "wild #MON with"
+	cont "exceptional DVs."
+
+	para "High DVs means"
+	line "the #MON is"
+	cont "strong."
+	prompt
+
+_PokeDollDescription::
+	text "Use to escape"
+	line "from a wild"
+	cont "#MON."
+	prompt
+
+_FullHealDescription::
+	text "Eliminates all"
+	line "status ailments."
+	prompt
+
+_ReviveDescription::
+	text "Revives a fainted"
+	line "#MON to half"
+	cont "of its max HP."
+	prompt
+
+_MaxReviveDescription::
+	text "Revives a fainted"
+	line "#MON to its"
+	cont "maximum HP."
+	prompt
+
+_GuardSpecDescription::
+	text "Prevents stat"
+	line "reduction during"
+	cont "battle."
+	prompt
+
+_SuperRepelDescription::
+	text "Repels weak wild"
+	line "#MON for 200"
+	cont "steps."
+	prompt
+
+_MaxRepelDescription::
+	text "Repels weak wild"
+	line "#MON for 250"
+	cont "steps."
+	prompt
+
+_DireHitDescription::
+	text "Raises critical"
+	line "hit ratio during"
+	cont "battle."
+	prompt
+
+_CoinDescription::
+	text "..."
+	prompt
+
+_FreshWaterDescription::
+	text "Heals a #MON"
+	line "by 50 HP."
+	prompt
+
+_SodaPopDescription::
+	text "Heals a #MON"
+	line "by 60 HP."
+	prompt
+
+_LemonadeDescription::
+	text "Heals a #MON"
+	line "by 80 HP."
+	prompt
+
+_SSTicketDescription::
+	text "A ticket."
+	prompt
+
+_GoldTeethDescription::
+	text "Some teeth."
+	prompt
+
+_XAttackDescription::
+	text "Raises ATTACK"
+	line "stat during"
+	cont "battle."
+	prompt
+
+_XDefendDescription::
+	text "Raises DEFENSE"
+	line "stat during"
+	cont "battle."
+	prompt
+
+_XSpeedDescription::
+	text "Raises SPEED"
+	line "stat during"
+	cont "battle."
+	prompt
+
+_XSpecialDescription::
+	text "Raises SPECIAL"
+	line "stat during"
+	cont "battle."
+	prompt
+
+_CoinCaseDescription::
+	text "A case that holds"
+	line "up to 9,999"
+	cont "COINs."
+	prompt
+
+_OaksParcelDescription::
+	text "Medicine that"
+	line "helps old people"
+	cont "get back on their"
+	cont "feet."
+	prompt
+
+_ItemFinderDescription::
+	text "Helps locate"
+	line "hidden items on"
+	cont "the ground."
+	prompt
+
+_SilphScopeDescription::
+	text "Reveals ghosts?"
+	prompt
+
+_PokeFluteDescription::
+	text "A sweet souding"
+	line "flute that wakes"
+	cont "any sleeping"
+	cont "#MON."
+	prompt
+
+_LiftKeyDescription::
+	text "Does something."
+	prompt
+
+_EXPAllDescription::
+	text "Shares battle EXP"
+	line "points among all"
+	cont "#MON in the"
+	cont "party."
+	prompt
+
+_OldRodDescription::
+	text "An old, beat-up"
+	line "fishing rod."
+
+	para "Use by water to"
+	line "fish for #MON."
+	prompt
+
+_GoodRodDescription::
+	text "A new, good-"
+	line "quality fishing"
+	cont "rod."
+
+	para "Use by water to"
+	line "fish for #MON."
+	prompt
+
+_SuperRodDescription::
+	text "An awesome, high-"
+	line "tech fishing rod."
+
+	para "Use by water to"
+	line "fish for #MON."
+	prompt
+
+_PPUpDescription::
+	text "Raises max PP of"
+	line "a selected move."
+	prompt
+
+_EtherDescription::
+	text "Restores 10 PP"
+	line "of one move."
+	prompt
+
+_MaxEtherDescription::
+	text "Fully restores PP"
+	line "a one move."
+	prompt
+
+_ElixerDescription::
+	text "Restores 10 PP to"
+	line "all moves of one"
+	cont "#MON."
+	prompt
+
+_MaxElixerDescription::
+	text "Fully restores PP"
+	line "of all moves of"
+	cont "one #MON."
+	prompt
+
+_HM01Description::
+	text "HM01 - CUT"
+	line "Use out of battle"
+	cont "to hack away at"
+	cont "small bushes."
+	prompt
+
+_HM02Description::
+	text "HM02 - FLY"
+	line "Use out of battle"
+	cont "to fly between"
+	cont "towns."
+	prompt
+
+_HM03Description::
+	text "HM03 - SURF"
+	line "Use out of battle"
+	cont "to move on water."
+	prompt
+
+_HM04Description::
+	text "HM04 - STRENGTH"
+	line "Use out of battle"
+	cont "to move boulders."
+	prompt
+
+_HM05Description::
+	text "HM05 - FLASH"
+	line "Use out of battle"
+	cont "to illuminate"
+	cont "dark areas."
+	prompt
+
+_TM01Description::
+	text "TM01 - MEGA PUNCH"
+	prompt
+
+_TM02Description::
+	text "TM02 - RAZOR WIND"
+	prompt
+
+_TM03Description::
+	text "TM03 -"
+	line "SWORDS DANCE"
+	prompt
+
+_TM04Description::
+	text "TM04 - WHIRLWIND"
+	prompt
+
+_TM05Description::
+	text "TM05 - MEGA KICK"
+	prompt
+
+_TM06Description::
+	text "TM06 - TOXIC"
+	prompt
+
+_TM07Description::
+	text "TM07 - HORN DRILL"
+	prompt
+
+_TM08Description::
+	text "TM08 - BODY SLAM"
+	prompt
+
+_TM09Description::
+	text "TM09 - TAKE DOWN"
+	prompt
+
+_TM10Description::
+	text "TM10 - "
+	line "DOUBLE EDGE"
+	prompt
+
+_TM11Description::
+	text "TM11 - BUBBLEBEAM"
+	prompt
+
+_TM12Description::
+	text "TM12 - WATER GUN"
+	prompt
+
+_TM13Description::
+	text "TM13 - ICE BEAM"
+	prompt
+
+_TM14Description::
+	text "TM14 - BLIZZARD"
+	prompt
+
+_TM15Description::
+	text "TM15 - HYPER BEAM"
+	prompt
+
+_TM16Description::
+	text "TM16 - PAY DAY"
+	prompt
+
+_TM17Description::
+	text "TM17 - SUBMISSION"
+	prompt
+
+_TM18Description::
+	text "TM18 - COUNTER"
+	prompt
+
+_TM19Description::
+	text "TM19 -"
+	line "SEISMIC TOSS"
+	prompt
+
+_TM20Description::
+	text "TM20 - RAGE"
+	prompt
+
+_TM21Description::
+	text "TM21 - MEGA DRAIN"
+	prompt
+
+_TM22Description::
+	text "TM22 - SOLARBEAM"
+	prompt
+
+_TM23Description::
+	text "TM23 -"
+	line "DRAGON RAGE"
+	prompt
+
+_TM24Description::
+	text "TM24 -"
+	line "THUNDERBOLT"
+	prompt
+
+_TM25Description::
+	text "TM25 - THUNDER"
+	prompt
+
+_TM26Description::
+	text "TM26 - EARTHQUAKE"
+	prompt
+
+_TM27Description::
+	text "TM27 - FISSURE"
+	prompt
+
+_TM28Description::
+	text "TM28 - DIG"
+	prompt
+
+_TM29Description::
+	text "TM29 - PSYCHIC"
+	prompt
+
+_TM30Description::
+	text "TM30 - TELEPORT"
+	prompt
+
+_TM31Description::
+	text "TM31 - MIMIC"
+	prompt
+
+_TM32Description::
+	text "TM32 -"
+	line "DOUBLE TEAM"
+	prompt
+
+_TM33Description::
+	text "TM33 - REFLECT"
+	prompt
+
+_TM34Description::
+	text "TM34 - BIDE"
+	prompt
+
+_TM35Description::
+	text "TM35 - METRONOME"
+	prompt
+
+_TM36Description::
+	text "TM36 -"
+	line "SELFDESTRUCT"
+	prompt
+
+_TM37Description::
+	text "TM37 - EGG BOMB"
+	prompt
+
+_TM38Description::
+	text "TM38 - FIRE BLAST"
+	prompt
+
+_TM39Description::
+	text "TM39 - SWIFT"
+	prompt
+
+_TM40Description::
+	text "TM40 - SKULL BASH"
+	prompt
+
+_TM41Description::
+	text "TM41 - SOFTBOILED"
+	prompt
+
+_TM42Description::
+	text "TM42 -"
+	line "DREAM EATER"
+	prompt
+
+_TM43Description::
+	text "TM43 - SKY ATTACK"
+	prompt
+
+_TM44Description::
+	text "TM44 - REST"
+	prompt
+
+_TM45Description::
+	text "TM45 -"
+	line "THUNDER WAVE"
+	prompt
+
+_TM46Description::
+	text "TM46 - PSYWAVE"
+	prompt
+
+_TM47Description::
+	text "TM47 - EXPLOSION"
+	prompt
+
+_TM48Description::
+	text "TM48 - ROCK SLIDE"
+	prompt
+
+_TM49Description::
+	text "TM49 - TRI ATTACK"
+	prompt
+
+_TM50Description::
+	text "TM50 - SUBSTITUTE"
+	prompt
+
+_DVBallDescription::
+	text "A rare #BALL"
+	line "that converts a"
+	cont "captured #MON"
+	cont "to its full"
+	cont "potential by"
+	cont "settings its DVs"
+	cont "to maximum."
+
+	para "However, it has"
+	line "a low catch rate."
+	prompt
