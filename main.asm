@@ -11638,7 +11638,7 @@ ItemNames: ; 472b (1:472b)
 	db "10F@"
 	db "11F@"
 	db "B4F@"
-	db "X@"
+	db "FOCUS RING@"
 	db "X@"
 	db "X@"
 	db "X@"
@@ -24727,6 +24727,21 @@ ItemUsePtrTable: ; d5e1 (3:55e1)
 	dw ItemUsePPRestore  ; MAX_ETHER
 	dw ItemUsePPRestore  ; ELIXER
 	dw ItemUsePPRestore  ; MAX_ELIXER
+	dw UnusableItem      ; B2F
+	dw UnusableItem      ; B1F
+	dw UnusableItem      ; 1F
+	dw UnusableItem      ; 2F
+	dw UnusableItem      ; 3F
+	dw UnusableItem      ; 4F
+	dw UnusableItem      ; 5F
+	dw UnusableItem      ; 6F
+	dw UnusableItem      ; 7F
+	dw UnusableItem      ; 8F
+	dw UnusableItem      ; 9F
+	dw UnusableItem      ; 10F
+	dw UnusableItem      ; 11F
+	dw UnusableItem      ; B4F
+	dw UnusableItem      ; FOCUS_RING
 
 ExtraItemUsePtrTable:
 	dw ItemUseBall       ; DV_BALL
@@ -27275,6 +27290,8 @@ KeyItemBitfield: ; e799 (3:6799)
 	db %11110000 ; 41-48
 	db %00111011 ; 49-50
 	db %00000000 ; 51-58
+	db %00000000 ; 59-60
+	db %00000010 ; 61-68
 
 Func_e7a4: ; e7a4 (3:67a4)
 	ld de, W_NUMINBOX ; $da80
@@ -31484,9 +31501,15 @@ StartMenu_Item: ; 13302 (4:7302)
 DisplayItemInfo:
 ; a = item id
 	dec a
-	cp a, HM_01
+	cp a, MAX_ELIXER
 	jr c, .ready
-	sub $70 ; HM_01's id is now $54
+
+	cp a, HM_01
+	jr nc, .TMHM
+	sub $e ; FOCUS_RING's id is now $54
+	jr .ready
+.TMHM
+	sub $70 + 1 ; HM_01's id is now $54 + 1 ; CHANGE THIS EVERY TIME YOU ADD A NEW ITEM AFTER ID $62
 .ready
 	ld hl,ItemInfoPointers
 	ld bc, 5
@@ -31666,6 +31689,8 @@ ItemInfoPointers:
 	TX_FAR _ElixerDescription
 	db "@"
 	TX_FAR _MaxElixerDescription
+	db "@"
+	TX_FAR _FocusRingDescription
 	db "@"
 	TX_FAR _HM01Description
 	db "@"
@@ -38506,7 +38531,7 @@ Route1Text1: ; 1cab8 (7:4ab8)
 	jr nz, .asm_02840 ; 0x1cac0
 	ld hl, Route1ViridianMartSampleText
 	call PrintText 
-	ld bc, (HEALING_RING << 8) | 1
+	ld bc, (POTION << 8) | 1
 	call GiveItem
 	jr nc, .BagFull
 	ld hl, UnnamedText_1cae8 ; $4ae8
@@ -58684,6 +58709,7 @@ HandlePlayerMonFainted: ; 3c700 (f:4700)
 	jp MainInBattleLoop
 
 Func_3c741: ; 3c741 (f:4741)
+; player's mon is fainting
 	ld a, [wPlayerMonNumber] ; $cc2f
 	ld c, a
 	ld hl, W_PLAYERMONSALIVEFLAGS ; clear fainted mon's alive flag
@@ -62605,7 +62631,7 @@ ApplyDamageToPlayerPokemon: ; 3e200 (f:6200)
 	ld b,a
 	ld a,[hl]
 	or b
-	jr z,ApplyAttackToPlayerPokemonDone ; we're done if damage is 0
+	jp z,ApplyAttackToPlayerPokemonDone ; we're done if damage is 0
 	ld a,[W_PLAYERBATTSTATUS2]
 	bit 4,a ; does the player have a substitute?
 	jp nz,AttackSubstitute
@@ -62622,11 +62648,50 @@ ApplyDamageToPlayerPokemon: ; 3e200 (f:6200)
 	ld a,[W_PLAYERMONCURHP]
 	ld [wHPBarOldHP+1],a
 	sbc b
+	jr c, .oneHP
+	jr nz, .normalStuff
+.oneHP
+	push hl
+	push af
+	; check for FOCUS_RING
+	ld hl, wBagItems
+	ld a, [hl]
+	cp FOCUS_RING
+	jr nz, .preNormalStuff
+
+	; only works 25% of the time
+	call GenRandomInBattle
+	and 3
+	jr nz, .preNormalStuff
+
+	pop af
+
+	xor a
+	ld hl, W_PLAYERMONCURHP
+	ld [hli], a
+	ld a, 1
+	ld [hl], a
+
+	ld hl, wHPBarNewHP
+	ld [hli], a
+	xor a
+	ld [hli], a
+
+	ld hl, FocusRingHeldOnText
+	call PrintText
+
+	pop hl
+	jr .animateHpBar
+.preNormalStuff
+	pop af
+	pop hl
+.normalStuff
 	ld [W_PLAYERMONCURHP],a
 	ld [wHPBarNewHP+1],a
 	jr nc,.animateHpBar
 ; if more damage was done than the current HP, zero the HP and set the damage
 ; equal to how much HP the pokemon had before the attack
+.zeroHP
 	ld a,[wHPBarOldHP+1]
 	ld [hli],a
 	ld a,[wHPBarOldHP]
@@ -62751,6 +62816,10 @@ HandleBuildingRage: ; 3e2b6 (f:62b6)
 	xor a,$01 ; flip turn back to the way it was
 	ld [H_WHOSETURN],a
 	ret
+
+FocusRingHeldOnText:
+	TX_FAR _FocusRingHeldOnText
+	db "@"
 
 BuildingRageText: ; 3e2f8 (f:62f8)
 	TX_FAR _BuildingRageText
@@ -63378,6 +63447,7 @@ Func_3e687: ; 3e687 (f:6687)
 	ret
 
 Func_3e6bc: ; 3e6bc (f:66bc)
+; execute enemy move on player's mon
 	ld a, [wEnemySelectedMove] ; $ccdd
 	inc a
 	jp z, Func_3e88c
@@ -118364,6 +118434,20 @@ _HealingRingDescription
 	line "slowly heals your"
 	cont "#MON as you"
 	cont "walk around."
+
+	para "Must be in the"
+	line "top item slot of"
+	cont "your inventory to"
+	cont "be in effect."
+	prompt
+
+_FocusRingDescription
+	text "An orange ring"
+	line "that stops your"
+	cont "#MON from"
+	cont "fainting during"
+	cont "battle 1/4 of the"
+	cont "time."
 
 	para "Must be in the"
 	line "top item slot of"

@@ -3159,4 +3159,8 @@ _ScouterText::
 	line "is beeping!"
 	prompt
 
-
+_FocusRingHeldOnText::
+	text "The FOCUS RING"
+	line "helped ", $59
+	cont "hold on!"
+	prompt

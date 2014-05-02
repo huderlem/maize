@@ -82,6 +82,22 @@ ETHER         EQU $50
 MAX_ETHER     EQU $51
 ELIXER        EQU $52
 MAX_ELIXER    EQU $53
+; B2F         EQU $54
+; B1F         EQU $55
+; 1F          EQU $56
+; 2F          EQU $57
+; 3F          EQU $58
+; 4F          EQU $59
+; 5F          EQU $5A
+; 6F          EQU $5B
+; 7F          EQU $5C
+; 8F          EQU $5D
+; 9F          EQU $5E
+; 10F         EQU $5F
+; 11F         EQU $60
+; B4F         EQU $61
+FOCUS_RING    EQU $62
+
 HM_01         EQU $C4
 HM_02         EQU $C5
 HM_03         EQU $C6
