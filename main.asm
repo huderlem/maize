@@ -11787,6 +11787,7 @@ ItemNames: ; 472b (1:472b)
 	db "X@"
 	db "DV BALL@"
 	db "HUSTLE RING@"
+	db "WONDER RING@"
 
 UnusedNames: ; 4a92 (1:4a92)
 	db "かみなりバッヂ@"
@@ -24722,6 +24723,7 @@ ItemUsePtrTable: ; d5e1 (3:55e1)
 ExtraItemUsePtrTable:
 	dw ItemUseBall       ; DV_BALL
 	dw UnusableItem      ; HUSTLE_RING
+	dw UnusableItem      ; WONDER_RING
 
 ItemUseBall: ; d687 (3:5687)
 	ld a,[W_ISINBATTLE]
@@ -31770,7 +31772,8 @@ ItemInfoPointers:
 	db "@"
 	TX_FAR _HustleRingDescription
 	db "@"
-	
+	TX_FAR _WonderRingDescription
+	db "@"
 
 CannotUseItemsHereText: ; 1342a (4:742a)
 	TX_FAR _CannotUseItemsHereText
@@ -38492,7 +38495,7 @@ Route1Text1: ; 1cab8 (7:4ab8)
 	jr nz, .asm_02840 ; 0x1cac0
 	ld hl, Route1ViridianMartSampleText
 	call PrintText 
-	ld bc, (POTION << 8) | 1
+	ld bc, (WONDER_RING << 8) | 1
 	call GiveItem
 	jr nc, .BagFull
 	ld hl, UnnamedText_1cae8 ; $4ae8
@@ -47933,8 +47936,8 @@ GrowlitheBaseStats: ; 38a1a (e:4a1a)
 	; attacks known at lvl 0
 	db TACKLE
 	db GROWL
-	db 0
-	db 0
+	db EARTHQUAKE
+	db SHADOW_PUNCH
 
 	db 3 ; growth rate
 
@@ -62928,6 +62931,16 @@ AdjustDamageForMoveType: ; 3e3a5 (f:63a5)
 	and a,$80
 	ld b,a
 	ld a,[hl] ; a = damage multiplier
+	ld c, a
+
+	; check for WONDER_RING
+	ld hl, wBagItems
+	ld a, [hl]
+	cp a, WONDER_RING
+	ld a, c
+	jr nz, .gotMultiplier
+	ld a, 10
+.gotMultiplier
 	ld [H_MULTIPLIER],a
 	add b
 	ld [$d05b],a
@@ -62999,6 +63012,15 @@ AIGetTypeEffectiveness: ; 3e449 (f:6449)
 	jr .loop
 .done
 	ld a,[hl]
+	ld c, a
+	; check for WONDER_RING
+	ld hl, wBagItems
+	ld a, [hl]
+	cp a, WONDER_RING
+	ld a, c
+	jr nz, .gotMultiplier
+	ld a, 10
+.gotMultiplier
 	ld [$d11e],a           ; store damage multiplier
 	ret
 
@@ -118301,6 +118323,23 @@ _HustleRingDescription::
 	text "A blue ring that"
 	line "boosts the levels"
 	cont "of wild #MON."
+
+	para "Must be in the"
+	line "top item slot of"
+	cont "your inventory to"
+	cont "be in effect."
+	prompt
+
+_WonderRingDescription::
+	text "A black ring that"
+	line "removes any type"
+	cont "immunity from the"
+	cont "enemy #MON."
+
+	para "For example, a"
+	line "GROUND move will"
+	cont "successfully hit"
+	cont "a FLYING #MON."
 
 	para "Must be in the"
 	line "top item slot of"
