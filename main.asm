@@ -749,6 +749,12 @@ OverworldLoopLessDelay:: ; 0402 (0:0402)
 	ld a,[W_ISINBATTLE]
 	and a
 	jp nz,CheckWarpsNoCollision
+
+	; check for HEALING_RING
+	ld a,$63
+	call Predef
+
+	; decrement poisoned pokemon HP
 	ld a,$13
 	call Predef ; decrement HP of poisoned pokemon
 	ld a,[$d12d]
@@ -11788,6 +11794,7 @@ ItemNames: ; 472b (1:472b)
 	db "DV BALL@"
 	db "HUSTLE RING@"
 	db "WONDER RING@"
+	db "HEALING RING@"
 
 UnusedNames: ; 4a92 (1:4a92)
 	db "かみなりバッヂ@"
@@ -19771,7 +19778,7 @@ Func_c69c: ; c69c (3:469c)
 	and a
 	jp z, .asm_c74f
 	call Func_c8de
-	ld a, [$d13b]
+	ld a, [$d13b] ; step counter
 	and $3
 	jp nz, .asm_c74f
 	ld [wWhichPokemon], a ; $cf92
@@ -19783,6 +19790,7 @@ Func_c69c: ; c69c (3:469c)
 	jr z, .asm_c6fd
 	dec hl
 	dec hl
+	; hl now has W_PARTYMON1HP + 1
 	ld a, [hld]
 	ld b, a
 	ld a, [hli]
@@ -24724,6 +24732,7 @@ ExtraItemUsePtrTable:
 	dw ItemUseBall       ; DV_BALL
 	dw UnusableItem      ; HUSTLE_RING
 	dw UnusableItem      ; WONDER_RING
+	dw UnusableItem      ; HEALING_RING
 
 ItemUseBall: ; d687 (3:5687)
 	ld a,[W_ISINBATTLE]
@@ -31774,6 +31783,8 @@ ItemInfoPointers:
 	db "@"
 	TX_FAR _WonderRingDescription
 	db "@"
+	TX_FAR _HealingRingDescription
+	db "@"
 
 CannotUseItemsHereText: ; 1342a (4:742a)
 	TX_FAR _CannotUseItemsHereText
@@ -38495,7 +38506,7 @@ Route1Text1: ; 1cab8 (7:4ab8)
 	jr nz, .asm_02840 ; 0x1cac0
 	ld hl, Route1ViridianMartSampleText
 	call PrintText 
-	ld bc, (WONDER_RING << 8) | 1
+	ld bc, (HEALING_RING << 8) | 1
 	call GiveItem
 	jr nc, .BagFull
 	ld hl, UnnamedText_1cae8 ; $4ae8
@@ -79550,6 +79561,7 @@ DrawHPBarPredef: ; 4ff96 (13:7f96)
 	dbw BANK(Func_128f6),Func_128f6
 	dbw BANK(Func_1c9c6),Func_1c9c6
 	dbw BANK(Func_59035),Func_59035
+	dbw Bank(HealingRing),HealingRing
 
 SECTION "bank14",ROMX,BANK[$14]
 
@@ -118346,3 +118358,95 @@ _WonderRingDescription::
 	cont "your inventory to"
 	cont "be in effect."
 	prompt
+
+_HealingRingDescription
+	text "A pink ring that"
+	line "slowly heals your"
+	cont "#MON as you"
+	cont "walk around."
+
+	para "Must be in the"
+	line "top item slot of"
+	cont "your inventory to"
+	cont "be in effect."
+	prompt
+
+SECTION "New Functions", ROMX, BANK[$34]
+
+HealingRing:
+; try and heal pokemon in party
+; using the HEALING_RING effect
+	ld a, [$d13b] ; step counter
+	and $1f ; every 32 steps
+	jp nz, .done
+	
+	; check for HEALING_RING
+	ld hl, wBagItems
+	ld a, [hl]
+	cp HEALING_RING
+	jr nz, .done
+
+	; heal each pokemon by 1 HP if they don't have full HP
+	ld a, [W_NUMINPARTY]
+	ld e, a
+	dec e
+.loop
+	push de
+
+	ld hl, W_PARTYMON1_HP
+	ld bc, 44 ; each mon's data is 44 bytes in RAM
+	ld a, e
+.getHPHL
+	and a
+	jr z, .gotHPHL
+	add hl, bc
+	dec a
+	jr .getHPHL
+.gotHPHL
+	; hl = MON_HP
+	ld d, [hl]
+	push hl
+
+	ld bc, 33
+	add hl, bc
+
+	; hl = MON_MAXHP
+	ld a, [hl]
+	
+	pop hl ; hl = MON_HP
+
+	cp d
+	jr nz, .healMon
+.compareLo
+	inc hl
+	push hl
+
+	ld d, [hl] ; hl = MON_HP + 1
+	
+	ld bc, 33
+	add hl, bc
+
+	; hl = MON_MAXHP + 1
+	ld a, [hl]
+
+	pop hl
+
+	cp d
+	jr z, .nextMon
+.healMon
+	; heal by 1 HP
+	; hl = MON_HP + 1
+	inc [hl]
+	jr nz, .nextMon
+.carry
+	dec hl
+	inc [hl]
+.nextMon
+	pop de
+	ld a, e
+	and a
+	jr z, .done
+	dec e
+	jr .loop
+.done	
+	ret
