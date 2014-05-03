@@ -11639,8 +11639,8 @@ ItemNames: ; 472b (1:472b)
 	db "11F@"
 	db "B4F@"
 	db "FOCUS RING@"
-	db "X@"
-	db "X@"
+	db "BLUNT RING@"
+	db "WIZARD RING@"
 	db "X@"
 	db "X@"
 	db "X@"
@@ -24742,6 +24742,8 @@ ItemUsePtrTable: ; d5e1 (3:55e1)
 	dw UnusableItem      ; 11F
 	dw UnusableItem      ; B4F
 	dw UnusableItem      ; FOCUS_RING
+	dw UnusableItem      ; BLUNT_RING
+	dw UnusableItem      ; WIZARD_RING
 
 ExtraItemUsePtrTable:
 	dw ItemUseBall       ; DV_BALL
@@ -27291,7 +27293,7 @@ KeyItemBitfield: ; e799 (3:6799)
 	db %00111011 ; 49-50
 	db %00000000 ; 51-58
 	db %00000000 ; 59-60
-	db %00000010 ; 61-68
+	db %00001110 ; 61-68
 
 Func_e7a4: ; e7a4 (3:67a4)
 	ld de, W_NUMINBOX ; $da80
@@ -31509,7 +31511,7 @@ DisplayItemInfo:
 	sub $e ; FOCUS_RING's id is now $54
 	jr .ready
 .TMHM
-	sub $70 + 1 ; HM_01's id is now $54 + 1 ; CHANGE THIS EVERY TIME YOU ADD A NEW ITEM AFTER ID $62
+	sub $70 + 3 ; HM_01's id is now $54 + 3 ; CHANGE THIS EVERY TIME YOU ADD A NEW ITEM AFTER ID $62
 .ready
 	ld hl,ItemInfoPointers
 	ld bc, 5
@@ -31691,6 +31693,10 @@ ItemInfoPointers:
 	TX_FAR _MaxElixerDescription
 	db "@"
 	TX_FAR _FocusRingDescription
+	db "@"
+	TX_FAR _BluntRingDescription
+	db "@"
+	TX_FAR _WizardRingDescription
 	db "@"
 	TX_FAR _HM01Description
 	db "@"
@@ -47972,7 +47978,7 @@ GrowlitheBaseStats: ; 38a1a (e:4a1a)
 	; attacks known at lvl 0
 	db TACKLE
 	db GROWL
-	db EARTHQUAKE
+	db WATER_GUN
 	db SHADOW_PUNCH
 
 	db 3 ; growth rate
@@ -61843,6 +61849,21 @@ CalculateDamage: ; 3ddcf (f:5dcf)
 	call IsMovePhysical
 	jr nz, .specialAttack
 .physicalAttack
+	; check for BLUNT_RING
+	; d contains non-zero attack base power
+	ld hl, wBagItems
+	ld a, [hl]
+	cp BLUNT_RING
+	jr nz, .noBluntRing
+	; multiply register d by 1.125
+	ld a, d
+	; divide by 8, and then add to register a
+	srl a
+	srl a
+	srl a
+	add d
+	ld d, a
+.noBluntRing
 	ld hl, W_ENEMYMONDEFENSE    ;opponent defense
 	ld a, [hli]                 ;*BC = opponent defense used later
 	ld b, a
@@ -61872,6 +61893,21 @@ CalculateDamage: ; 3ddcf (f:5dcf)
 	pop bc
 	jr .next3
 .specialAttack
+	; check for WIZARD_RING
+	; d contains non-zero attack base power
+	ld hl, wBagItems
+	ld a, [hl]
+	cp WIZARD_RING
+	jr nz, .noWizardRing
+	; multiply register d by 1.125
+	ld a, d
+	; divide by 8, and then add to register a
+	srl a
+	srl a
+	srl a
+	add d
+	ld d, a
+.noWizardRing
 	ld hl, W_ENEMYMONSPECIAL    ;opponent special
 	ld a, [hli]                 ;*BC = opponent special defense used later
 	ld b, a
@@ -118429,7 +118465,7 @@ _WonderRingDescription::
 	cont "be in effect."
 	prompt
 
-_HealingRingDescription
+_HealingRingDescription::
 	text "A pink ring that"
 	line "slowly heals your"
 	cont "#MON as you"
@@ -118441,13 +118477,39 @@ _HealingRingDescription
 	cont "be in effect."
 	prompt
 
-_FocusRingDescription
+_FocusRingDescription::
 	text "An orange ring"
 	line "that stops your"
 	cont "#MON from"
 	cont "fainting during"
 	cont "battle 1/4 of the"
 	cont "time."
+
+	para "Must be in the"
+	line "top item slot of"
+	cont "your inventory to"
+	cont "be in effect."
+	prompt
+
+_BluntRingDescription::
+	text "A red ring that"
+	line "boosts the power"
+	cont "of physical"
+	cont "attacks for your"
+	cont "#MON."
+
+	para "Must be in the"
+	line "top item slot of"
+	cont "your inventory to"
+	cont "be in effect."
+	prompt
+
+_WizardRingDescription::
+	text "A purple ring"
+	line "that boosts the"
+	cont "power of special"
+	cont "attacks for your"
+	cont "#MON."
 
 	para "Must be in the"
 	line "top item slot of"

@@ -97,6 +97,8 @@ MAX_ELIXER    EQU $53
 ; 11F         EQU $60
 ; B4F         EQU $61
 FOCUS_RING    EQU $62
+BLUNT_RING    EQU $63
+WIZARD_RING   EQU $64
 
 HM_01         EQU $C4
 HM_02         EQU $C5
