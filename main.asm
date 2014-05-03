@@ -11641,8 +11641,8 @@ ItemNames: ; 472b (1:472b)
 	db "FOCUS RING@"
 	db "BLUNT RING@"
 	db "WIZARD RING@"
-	db "X@"
-	db "X@"
+	db "SHIELD RING@"
+	db "BUBBLE RING@"
 	db "X@"
 	db "X@"
 	db "X@"
@@ -24744,6 +24744,8 @@ ItemUsePtrTable: ; d5e1 (3:55e1)
 	dw UnusableItem      ; FOCUS_RING
 	dw UnusableItem      ; BLUNT_RING
 	dw UnusableItem      ; WIZARD_RING
+	dw UnusableItem      ; SHIELD_RING
+	dw UnusableItem      ; BUBBLE_RING
 
 ExtraItemUsePtrTable:
 	dw ItemUseBall       ; DV_BALL
@@ -27293,7 +27295,7 @@ KeyItemBitfield: ; e799 (3:6799)
 	db %00111011 ; 49-50
 	db %00000000 ; 51-58
 	db %00000000 ; 59-60
-	db %00001110 ; 61-68
+	db %00111110 ; 61-68
 
 Func_e7a4: ; e7a4 (3:67a4)
 	ld de, W_NUMINBOX ; $da80
@@ -31511,7 +31513,7 @@ DisplayItemInfo:
 	sub $e ; FOCUS_RING's id is now $54
 	jr .ready
 .TMHM
-	sub $70 + 3 ; HM_01's id is now $54 + 3 ; CHANGE THIS EVERY TIME YOU ADD A NEW ITEM AFTER ID $62
+	sub $70 + 4 ; HM_01's id is now $54 + 4 ; CHANGE THIS EVERY TIME YOU ADD A NEW ITEM AFTER ID $62
 .ready
 	ld hl,ItemInfoPointers
 	ld bc, 5
@@ -31697,6 +31699,10 @@ ItemInfoPointers:
 	TX_FAR _BluntRingDescription
 	db "@"
 	TX_FAR _WizardRingDescription
+	db "@"
+	TX_FAR _ShieldRingDescription
+	db "@"
+	TX_FAR _BubbleRingDescription
 	db "@"
 	TX_FAR _HM01Description
 	db "@"
@@ -38537,7 +38543,7 @@ Route1Text1: ; 1cab8 (7:4ab8)
 	jr nz, .asm_02840 ; 0x1cac0
 	ld hl, Route1ViridianMartSampleText
 	call PrintText 
-	ld bc, (POTION << 8) | 1
+	ld bc, (BUBBLE_RING << 8) | 1
 	call GiveItem
 	jr nc, .BagFull
 	ld hl, UnnamedText_1cae8 ; $4ae8
@@ -62035,6 +62041,22 @@ Func_3de75: ; 3de75 (f:5e75)
 	ld a, [W_ENEMYMOVENUM]
 	call IsMovePhysical
 	jr nz, .specialAttack
+	
+	; it's a physical move
+	; check for SHIELD_RING
+	ld hl, wBagItems
+	ld a, [hl]
+	cp SHIELD_RING
+	jr nz, .continue
+
+	; reduce move power by 1/8
+	ld a, d
+	srl d
+	srl d
+	srl d
+	sub d
+	ld d, a
+.continue
 	ld hl, W_PLAYERMONDEF
 	ld a, [hli]
 	ld b, a
@@ -62063,6 +62085,20 @@ Func_3de75: ; 3de75 (f:5e75)
 	pop bc
 	jr .asm_3deef
 .specialAttack
+	; check for BUBBLE_RING
+	ld hl, wBagItems
+	ld a, [hl]
+	cp BUBBLE_RING
+	jr nz, .continue
+
+	; reduce move power by 1/8
+	ld a, d
+	srl d
+	srl d
+	srl d
+	sub d
+	ld d, a
+.continueSpecial
 	ld hl, W_PLAYERMONSPECIAL
 	ld a, [hli]
 	ld b, a
@@ -118508,6 +118544,32 @@ _WizardRingDescription::
 	text "A purple ring"
 	line "that boosts the"
 	cont "power of special"
+	cont "attacks for your"
+	cont "#MON."
+
+	para "Must be in the"
+	line "top item slot of"
+	cont "your inventory to"
+	cont "be in effect."
+	prompt
+
+_ShieldRingDescription::
+	text "A silver ring"
+	line "that boosts"
+	cont "defense against"
+	cont "physical attacks"
+	cont "for your #MON."
+
+	para "Must be in the"
+	line "top item slot of"
+	cont "your inventory to"
+	cont "be in effect."
+	prompt
+
+_BubbleRingDescription::
+	text "A teal ring that"
+	line "boosts defense"
+	cont "against special"
 	cont "attacks for your"
 	cont "#MON."
 
