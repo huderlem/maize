@@ -8741,6 +8741,28 @@ Func_3566:: ; 3566 (0:3566)
 	inc de
 	ld a, [hli]
 	ld [de], a
+
+	; check for AMULET_RING
+	push hl
+	ld hl, wBagItems
+	ld a, [hl]
+	cp AMULET_RING
+	pop hl
+	jr nz, .noAmuletRing
+
+	; double the base money
+	ld hl, $d046 + 1
+	ld a, [hl]
+	add [hl]
+	push af
+	daa
+	ld [hld], a
+	pop af
+
+	ld a, [hl]
+	adc a
+	ld [hl], a
+.noAmuletRing
 	jp BankswitchBack
 .asm_3594
 	ld hl, $d033
@@ -11643,7 +11665,7 @@ ItemNames: ; 472b (1:472b)
 	db "WIZARD RING@"
 	db "SHIELD RING@"
 	db "BUBBLE RING@"
-	db "X@"
+	db "AMULET RING@"
 	db "X@"
 	db "X@"
 	db "X@"
@@ -24746,6 +24768,7 @@ ItemUsePtrTable: ; d5e1 (3:55e1)
 	dw UnusableItem      ; WIZARD_RING
 	dw UnusableItem      ; SHIELD_RING
 	dw UnusableItem      ; BUBBLE_RING
+	dw UnusableItem      ; AMULET_RING
 
 ExtraItemUsePtrTable:
 	dw ItemUseBall       ; DV_BALL
@@ -27295,7 +27318,7 @@ KeyItemBitfield: ; e799 (3:6799)
 	db %00111011 ; 49-50
 	db %00000000 ; 51-58
 	db %00000000 ; 59-60
-	db %00111110 ; 61-68
+	db %01111110 ; 61-68
 
 Func_e7a4: ; e7a4 (3:67a4)
 	ld de, W_NUMINBOX ; $da80
@@ -31513,7 +31536,7 @@ DisplayItemInfo:
 	sub $e ; FOCUS_RING's id is now $54
 	jr .ready
 .TMHM
-	sub $70 + 4 ; HM_01's id is now $54 + 4 ; CHANGE THIS EVERY TIME YOU ADD A NEW ITEM AFTER ID $62
+	sub $70 + 5 ; HM_01's id is now $54 + 5 ; CHANGE THIS EVERY TIME YOU ADD A NEW ITEM AFTER ID $62
 .ready
 	ld hl,ItemInfoPointers
 	ld bc, 5
@@ -31703,6 +31726,8 @@ ItemInfoPointers:
 	TX_FAR _ShieldRingDescription
 	db "@"
 	TX_FAR _BubbleRingDescription
+	db "@"
+	TX_FAR _AmuletRingDescription
 	db "@"
 	TX_FAR _HM01Description
 	db "@"
@@ -38543,7 +38568,7 @@ Route1Text1: ; 1cab8 (7:4ab8)
 	jr nz, .asm_02840 ; 0x1cac0
 	ld hl, Route1ViridianMartSampleText
 	call PrintText 
-	ld bc, (BUBBLE_RING << 8) | 1
+	ld bc, (POTION << 8) | 1
 	call GiveItem
 	jr nc, .BagFull
 	ld hl, UnnamedText_1cae8 ; $4ae8
@@ -52563,6 +52588,7 @@ TrainerClassMoveChoiceModifications: ; 3989b (e:589b)
 TrainerPicAndMoneyPointers: ; 39914 (e:5914)
 ; trainer pic pointers and base money.
 ; money received after battle = base money × level of highest-level enemy mon
+; last byte is just padding
 	dw YoungsterPic
 	db 0,$15,0
 
@@ -118572,6 +118598,18 @@ _BubbleRingDescription::
 	cont "against special"
 	cont "attacks for your"
 	cont "#MON."
+
+	para "Must be in the"
+	line "top item slot of"
+	cont "your inventory to"
+	cont "be in effect."
+	prompt
+
+_AmuletRingDescription::
+	text "A gold ring that"
+	line "doubles the money"
+	cont "you receive from"
+	cont "trainers."
 
 	para "Must be in the"
 	line "top item slot of"
