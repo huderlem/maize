@@ -11666,7 +11666,7 @@ ItemNames: ; 472b (1:472b)
 	db "SHIELD RING@"
 	db "BUBBLE RING@"
 	db "AMULET RING@"
-	db "X@"
+	db "BOOSTER RING@"
 	db "X@"
 	db "X@"
 	db "X@"
@@ -24769,6 +24769,7 @@ ItemUsePtrTable: ; d5e1 (3:55e1)
 	dw UnusableItem      ; SHIELD_RING
 	dw UnusableItem      ; BUBBLE_RING
 	dw UnusableItem      ; AMULET_RING
+	dw UnusableItem      ; BOOSTER_RING
 
 ExtraItemUsePtrTable:
 	dw ItemUseBall       ; DV_BALL
@@ -27318,7 +27319,7 @@ KeyItemBitfield: ; e799 (3:6799)
 	db %00111011 ; 49-50
 	db %00000000 ; 51-58
 	db %00000000 ; 59-60
-	db %01111110 ; 61-68
+	db %11111110 ; 61-68
 
 Func_e7a4: ; e7a4 (3:67a4)
 	ld de, W_NUMINBOX ; $da80
@@ -31536,7 +31537,7 @@ DisplayItemInfo:
 	sub $e ; FOCUS_RING's id is now $54
 	jr .ready
 .TMHM
-	sub $70 + 5 ; HM_01's id is now $54 + 5 ; CHANGE THIS EVERY TIME YOU ADD A NEW ITEM AFTER ID $62
+	sub $70 + 6 ; HM_01's id is now $54 + 6 ; CHANGE THIS EVERY TIME YOU ADD A NEW ITEM AFTER ID $62
 .ready
 	ld hl,ItemInfoPointers
 	ld bc, 5
@@ -31728,6 +31729,8 @@ ItemInfoPointers:
 	TX_FAR _BubbleRingDescription
 	db "@"
 	TX_FAR _AmuletRingDescription
+	db "@"
+	TX_FAR _BoosterRingDescription
 	db "@"
 	TX_FAR _HM01Description
 	db "@"
@@ -84354,6 +84357,16 @@ Func_5525f: ; 5525f (15:525f)
 	ld a, [W_ISINBATTLE] ; $d057
 	dec a
 	call nz, Func_5549f
+
+	push hl
+
+	; check for BOOSTER_RING
+	ld hl, wBagItems
+	ld a, [hl]
+	cp BOOSTER_RING
+	call z, Func_5549f ; multiplies exp by 1.5
+	pop hl
+
 	inc hl
 	inc hl
 	inc hl
@@ -118610,6 +118623,18 @@ _AmuletRingDescription::
 	line "doubles the money"
 	cont "you receive from"
 	cont "trainers."
+
+	para "Must be in the"
+	line "top item slot of"
+	cont "your inventory to"
+	cont "be in effect."
+	prompt
+
+_BoosterRingDescription::
+	text "A yellow ring"
+	line "that increases"
+	cont "EXP. gained in"
+	cont "battles."
 
 	para "Must be in the"
 	line "top item slot of"
