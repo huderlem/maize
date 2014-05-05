@@ -39,13 +39,122 @@ _TM34ExplanationText:: ; 980c0 (26:40c0)
 	cont "over this trivial"
 	cont "bit of knowledge."
 
-	para "I have nothing"
-	line "more for you now,"
-	cont "and I'll be sure"
-	cont "to let you know"
-	cont "if I ever win a"
-	cont "battle in these"
-	cont "doldrums."
+	para "..."
+	line "..."
+
+	para "Oh man, I really"
+	line "don't think I'm"
+	cont "cut out for this"
+	cont "GYM LEADER"
+	cont "business."
+
+	para "I have a friend"
+	line "who is much more"
+	cont "qualified than I"
+	cont "am."
+
+	para "The only reason"
+	line "NICKEL CITY didn't"
+	cont "put him in charge"
+	cont "is because he is"
+	cont "rather strange."
+
+	para "He would still"
+	line "make a better GYM"
+	cont "LEADER than me,"
+	cont "though."
+
+	para "I have to stay"
+	line "here, but could I"
+	cont "ask you to go"
+	cont "fetch him for me?"
+
+	para "Last time I heard"
+	line "from him, he was"
+	cont "on his way to"
+	cont "BASALT CAVE."
+
+	para "So, ummm..."
+	line "Thanks."
+	done
+
+_BlandyQuestText1::
+	text "Please go find"
+	line "my friend in"
+	cont "BASALT CAVE."
+
+	para "I'm no good for"
+	line "this GYM."
+	done
+
+_BlandyQuestText2::
+	text "Oh!"
+	line "You found him?"
+
+	para "..."
+
+	para "Really? He needs"
+	line "a REPEL to get"
+	cont "out of BASALT"
+	cont "CAVE?"
+
+	para "Well, you should"
+	line "probably go bring"
+	cont "him a REPEL."
+	done
+
+_BlandyQuestText3::
+	text "Thanks so much"
+	line "for getting NORM"
+	cont "out of BASALT"
+	cont "CAVE."
+
+	para "He's going to take"
+	line "over for me soon."
+
+	para "I want you to have"
+	line "this."
+
+	para "I found it on the"
+	line "ground, but I"
+	cont "don't know what it"
+	cont "does."
+	prompt
+
+_ReceivedLootRingText:: ; 980ad (26:40ad)
+	text $52, " received"
+	line "LOOT RING!@@"
+
+_LootRingNoRoomText::
+	text "You don't have"
+	line "room for this!"
+	done
+
+_BlandyQuestText4::
+	db $0
+	para "NORM will be"
+	line "taking over for"
+	cont "me soon."
+
+	para "I'm not sure"
+	line "where he is"
+	cont "right now."
+
+	para "He better not"
+	line "have ditched me."
+	done
+
+_BlandyQuestText4_2::
+	text "NORM will be"
+	line "taking over for"
+	cont "me soon."
+
+	para "I'm not sure"
+	line "where he is"
+	cont "right now."
+
+	para "He better not"
+	line "have ditched me."
 	done
 
 _TM34NoRoomText:: ; 981ab (26:41ab)

@@ -5973,8 +5973,8 @@ ViridianMartText6:: ; 2442 (0:2442)
 
 ; Pewter
 PewterMartText1:: ; 2449 (0:2449)
-	db $FE,7,POKE_BALL,POTION,ESCAPE_ROPE,ANTIDOTE,BURN_HEAL,AWAKENING
-	db PARLYZ_HEAL,$FF
+	db $FE,8,POKE_BALL,POTION,ESCAPE_ROPE,ANTIDOTE,BURN_HEAL,AWAKENING
+	db PARLYZ_HEAL,REPEL,$FF
 
 ; Cerulean
 CeruleanMartText1:: ; 2453 (0:2453)
@@ -20063,7 +20063,7 @@ MapHSPointers: ; c8f5 (3:48f5)
 	dw MapHSXX
 	dw MapHSXX
 	dw MapHS2D
-	dw MapHSXX
+	dw MapHS2E
 	dw MapHSXX
 	dw MapHSXX
 	dw MapHSXX
@@ -20585,6 +20585,9 @@ MapHSA2: ; cd8d (3:4d8d)
 	db SEAFOAM_ISLANDS_5,$01,Hide
 	db SEAFOAM_ISLANDS_5,$02,Hide
 	db SEAFOAM_ISLANDS_5,$03,Show
+; BASALT CAVE GUY
+MapHS2E:
+	db DIGLETTS_CAVE_EXIT,$01,Show
 
 	db $FF,$01,Show
 
@@ -31537,7 +31540,7 @@ DisplayItemInfo:
 	sub $e ; FOCUS_RING's id is now $54
 	jr .ready
 .TMHM
-	sub $70 + 6 ; HM_01's id is now $54 + 6 ; CHANGE THIS EVERY TIME YOU ADD A NEW ITEM AFTER ID $62
+	sub $70 - 7 ; HM_01's id is now $54 + 7 ; CHANGE THIS EVERY TIME YOU ADD A NEW ITEM AFTER ID $62
 .ready
 	ld hl,ItemInfoPointers
 	ld bc, 5
@@ -41353,7 +41356,75 @@ DiglettsCaveRoute2TextPointers: ; 1deb8 (7:5eb8)
 	dw DiglettsCaveRoute2Text1
 
 DiglettsCaveRoute2Text1: ; 1deba (7:5eba)
+	db $08 ; asm
+	ld a, [W_PEWTERGYMCURSCRIPT]
+	cp $4
+	jr c, .notQuestYet
+	; doing the quest!
+	jr z, .quest1
+	cp $5
+	jr z, .quest2
+.quest1
+	ld hl, NormQuestText1
+	call PrintText
+	ld a, $5
+	ld [W_PEWTERGYMCURSCRIPT], a
+	jr .done
+.quest2
+	ld b, REPEL
+	call IsItemInBag
+	jr z, .noRepel
+	
+	ld a, REPEL
+	ldh [$db], a
+	ld hl, RemoveItemByID
+	ld b, BANK(RemoveItemByID)
+	call Bankswitch
+	ld hl, NormQuestText3
+	call PrintText
+	ld a, $6
+	ld [W_PEWTERGYMCURSCRIPT], a
+	; hide his sprite
+	call GBFadeOut2
+	call ReloadMapData
+	ld a, $e4
+	ld [$cc4d], a
+	ld a, $11
+	call Predef ; indirect jump to RemoveMissableObject (f1d7 (3:71d7))
+	call GBFadeIn2
+	xor a
+	ld [wJoypadForbiddenButtonsMask], a
+	ld hl, NormQuestText4
+	call PrintText
+	jr .done
+.noRepel
+	ld hl, NormQuestText2
+	call PrintText
+	jr .done
+.notQuestYet
+	ld hl, NormText1
+	call PrintText
+.done
+	jp TextScriptEnd
+
+NormText1:
 	TX_FAR _DiglettsCaveRoute2Text1
+	db "@"
+
+NormQuestText1:
+	TX_FAR _NormQuestText1
+	db "@"
+
+NormQuestText2:
+	TX_FAR _NormQuestText2
+	db "@"
+
+NormQuestText3:
+	TX_FAR _NormQuestText3
+	db "@"
+
+NormQuestText4:
+	TX_FAR _NormQuestText4
 	db "@"
 
 DiglettsCaveRoute2Object: ; 0x1debf (size=34)
@@ -92764,6 +92835,10 @@ PewterGymScriptPointers: ; 5c3ca (17:43ca)
 	dw Func_324c
 	dw EndTrainerBattle
 	dw PewterGymScript3
+	dw PewterGymScript4
+	dw PewterGymScript4
+	dw PewterGymScript4
+	dw PewterGymScript4
 
 PewterGymScript3: ; 5c3d2 (17:43d2)
 	ld a, [W_ISINBATTLE] ; $d057
@@ -92809,7 +92884,15 @@ Func_5c3df: ; 5c3df (17:43df)
 	res 7, [hl]
 	ld hl, $d755
 	set 2, [hl]
-	jp Func_5c3bf
+	xor a
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, 4
+	ld [W_PEWTERGYMCURSCRIPT], a
+	ld [W_CURMAPSCRIPT], a
+	ret
+
+PewterGymScript4:
+	ret
 
 PewterGymTextPointers: ; 5c435 (17:4435)
 	dw PewterGymText1
@@ -92842,8 +92925,16 @@ PewterGymText1: ; 5c44e (17:444e)
 	call DisableWaitingAfterTextDisplay
 	jr .asm_e0ffb ; 0x5c460
 .asm_ff7d0 ; 0x5c462
-	ld hl, UnnamedText_5c4a3
-	call PrintText
+	; which part of quest are we on?
+	ld a, [W_PEWTERGYMCURSCRIPT]
+	cp $4
+	jr z, .quest1
+	cp $5
+	jr z, .quest2
+	cp $6
+	jr z, .quest3
+	cp $7
+	jr z, .quest4
 	jr .asm_e0ffb ; 0x5c468
 .asm_4a735 ; 0x5c46a
 	ld hl, UnnamedText_5c49e
@@ -92867,6 +92958,57 @@ PewterGymText1: ; 5c44e (17:444e)
 	ld [W_CURMAPSCRIPT], a
 .asm_e0ffb ; 0x5c49b
 	jp TextScriptEnd
+.quest1
+	ld hl, BlandyQuestText1
+	call PrintText
+	jr .asm_e0ffb
+.quest2
+	ld hl, BlandyQuestText2
+	call PrintText
+	jr .asm_e0ffb
+.quest3
+	ld hl, BlandyQuestText3
+	call PrintText
+	ld bc, (HUSTLE_RING << 8) | 1
+	call GiveItem
+	jr nc, .quest3BagFull
+	ld hl, ReceivedLootRingText
+	call PrintText
+	ld a, $7
+	ld [W_PEWTERGYMCURSCRIPT], a
+	ld [W_CURMAPSCRIPT], a
+	jr .asm_e0ffb
+.quest3BagFull
+	ld hl, PewterGymText6
+	call PrintText
+	jr .asm_e0ffb
+.quest4
+	ld hl, BlandyQuestText4_2
+	call PrintText
+	jr .asm_e0ffb
+
+BlandyQuestText1:
+	TX_FAR _BlandyQuestText1
+	db "@"
+
+BlandyQuestText2:
+	TX_FAR _BlandyQuestText2
+	db "@"
+
+BlandyQuestText3:
+	TX_FAR _BlandyQuestText3
+	db "@"
+
+ReceivedLootRingText:
+	TX_FAR _ReceivedLootRingText
+	db $0B
+BlandyQuestText4:
+	TX_FAR _BlandyQuestText4
+	db "@"
+
+BlandyQuestText4_2:
+	TX_FAR _BlandyQuestText4_2
+	db "@"
 
 UnnamedText_5c49e: ; 5c49e (17:449e)
 	TX_FAR _UnnamedText_5c49e
