@@ -151,7 +151,6 @@ _Route25AfterBattleText9:: ; 945a2 (25:45a2)
 	done
 
 _Route25Text11:: ; 945d3 (25:45d3)
-	text "SEA COTTAGE"
-	line "BILL lives here!"
+	text "CARL's House"
 	done
 

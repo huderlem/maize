@@ -625,9 +625,9 @@ _UnnamedText_1eb69:: ; 889a1 (22:49a1)
 	done
 
 _BillsHouseMonitorText:: ; 889cf (22:49cf)
-	text "TELEPORTER is"
+	text "#MON BROWN is"
 	line "displayed on the"
-	cont "PC monitor."
+	cont "monitor."
 	done
 
 _BillsHouseInitiatedText:: ; 889fb (22:49fb)
@@ -1576,7 +1576,7 @@ _UnnamedText_17f23:: ; 89efe (22:5efe)
 	prompt
 
 _UnnamedText_17f28:: ; 89f13 (22:5f13)
-	text "Accessed BILL's"
+	text "Accessed CARL's"
 	line "PC."
 
 	para "Accessed #MON"

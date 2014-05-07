@@ -34166,8 +34166,8 @@ BillsPC: ; 17ee4 (5:7ee4)
 	ld a, $9B
 	call PlaySound    ;XXX: play sound or stop music
 	call WaitForSoundToFinish    ;XXX: wait for sound to be done
-	ld a, [$D7F1] ;has to do with having met Bill
-	bit 0, a
+	ld a, [$D7F2] ;has to do with having met Bill
+	bit 4, a
 	jr nz, .billsPC ;if you've met bill, use that bill's instead of someone's
 	ld hl, UnnamedText_17f2d ;accessed someone's pc
 	jr .printText
@@ -42576,45 +42576,12 @@ BillsHouseText4: ; 1e83c (7:683c)
 
 BillsHouseText1: ; 1e83d (7:683d)
 	db $8
-	ld hl, UnnamedText_1e865
-	call PrintText
-	call YesNoChoice
-	ld a, [$cc26]
-	and a
-	jr nz, asm_6b196 ; 0x1e84b $d
-asm_4d03c: ; 1e84d (7:684d)
-	ld hl, UnnamedText_1e86a
-	call PrintText
-	ld a, $1
-	ld [W_BILLSHOUSECURSCRIPT], a
-	jr asm_fd4e2 ; 0x1e858 $8
-asm_6b196: ; 1e85a (7:685a)
-	ld hl, UnnamedText_1e86f
-	call PrintText
-	jr asm_4d03c ; 0x1e860 $eb
-asm_fd4e2 ; 0x1e862
-	jp TextScriptEnd
-
-UnnamedText_1e865: ; 1e865 (7:6865)
-	TX_FAR _UnnamedText_1e865 ; 0x8d267
-	db "@"
-
-UnnamedText_1e86a: ; 1e86a (7:686a)
-	TX_FAR _UnnamedText_1e86a ; 0x8d345
-	db "@"
-
-UnnamedText_1e86f: ; 1e86f (7:686f)
-	TX_FAR _UnnamedText_1e86f ; 0x8d391
-	db "@"
-
-BillsHouseText2: ; 1e874 (7:6874)
-	db $08 ; asm
 	ld a, [$d7f2]
 	bit 4, a
-	jr nz, .asm_5491f ; 0x1e87a
-	ld hl, BillThankYouText
+	jr nz, .end
+	ld hl, UnnamedText_1e865
 	call PrintText
-	ld bc, (S_S__TICKET << 8) | 1
+	ld bc, (BICYCLE << 8) | 1
 	call GiveItem
 	jr nc, .BagFull
 	ld hl, SSTicketReceivedText
@@ -42629,19 +42596,23 @@ BillsHouseText2: ; 1e874 (7:6874)
 	ld [$cc4d], a
 	ld a, $11
 	call Predef
-.asm_5491f ; 0x1e8a9
+.end
 	ld hl, UnnamedText_1e8cb
 	call PrintText
-	jr .asm_bd408 ; 0x1e8af
+	jr .done
 .BagFull
 	ld hl, SSTicketNoRoomText
 	call PrintText
-.asm_bd408 ; 0x1e8b7
+.done
 	jp TextScriptEnd
 
-BillThankYouText: ; 1e8ba (7:68ba)
-	TX_FAR _BillThankYouText
+UnnamedText_1e865: ; 1e865 (7:6865)
+	TX_FAR _UnnamedText_1e865 ; 0x8d267
 	db "@"
+
+BillsHouseText2: ; 1e874 (7:6874)
+	db $08 ; asm
+	jp TextScriptEnd
 
 SSTicketReceivedText: ; 1e8bf (7:68bf)
 	TX_FAR _SSTicketReceivedText ; 0x8d499
@@ -42675,7 +42646,7 @@ BillsHouseObject: ; 0x1e8df (size=38)
 	db $0 ; signs
 
 	db $3 ; people
-	db SPRITE_SLOWBRO, $5 + 4, $6 + 4, $ff, $ff, $1 ; person
+	db SPRITE_BLACK_HAIR_BOY_2, $5 + 4, $6 + 4, $ff, $ff, $1 ; person
 	db SPRITE_BLACK_HAIR_BOY_2, $4 + 4, $4 + 4, $ff, $ff, $2 ; person
 	db SPRITE_BLACK_HAIR_BOY_2, $5 + 4, $6 + 4, $ff, $ff, $3 ; person
 

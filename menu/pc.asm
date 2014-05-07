@@ -30,8 +30,8 @@ Func_213c8:: ; 213c8 (8:53c8)
 	call UpdateSprites
 	ld a, $3
 	ld [wMaxMenuItem], a ; $cc28
-	ld a, [$d7f1]
-	bit 0, a
+	ld a, [$d7f2]
+	bit 4, a
 	jr nz, .asm_21414
 	FuncCoord 2, 2 ; $c3ca
 	ld hl, Coord
@@ -101,13 +101,13 @@ SomeonesPCText: ; 2148b (8:548b)
 	db "SOMEONE's PC@"
 
 BillsPCText: ; 21497 (8:5497)
-	db "BILL's PC@"
+	db "CARL's PC@"
 
 PlayersPCText: ; 214a0 (8:54a0)
 	db "'s PC@"
 
 OaksPCText: ; 214a5 (8:54a5)
-	db "PROF.OAK's PC@"
+	db "CEDAR's PC@"
 
 PKMNLeaguePCText: ; 214b2 (8:54b2)
 	db $4a,"LEAGUE@"
