@@ -11607,7 +11607,7 @@ ItemNames: ; 472b (1:472b)
 	db "HELIX FOSSIL@"
 	db "SECRET KEY@"
 	db "ITEM STONE@"
-	db "BIKE VOUCHER@"
+	db "HM01 COUPON@"
 	db "X ACCURACY@"
 	db "LEAF STONE@"
 	db "CARD KEY@"
@@ -24713,7 +24713,7 @@ ItemUsePtrTable: ; d5e1 (3:55e1)
 	dw UnusableItem      ; HELIX_FOSSIL
 	dw UnusableItem      ; SECRET_KEY
 	dw ItemUseEvoStone   ; ITEM_STONE
-	dw UnusableItem      ; BIKE_VOUCHER
+	dw UnusableItem      ; HM01_COUPON
 	dw ItemUseXAccuracy  ; X_ACCURACY
 	dw ItemUseEvoStone   ; LEAF_STONE
 	dw ItemUseCardKey    ; CARD_KEY
@@ -31535,7 +31535,7 @@ DisplayItemInfo:
 	cp a, MAX_ELIXER
 	jr c, .ready
 
-	cp a, HM_01
+	cp a, HM_01 - 1
 	jr nc, .TMHM
 	sub $e ; FOCUS_RING's id is now $54
 	jr .ready
@@ -35741,12 +35741,12 @@ CeruleanCityScript1: ; 19567 (6:5567)
 
 	; select which team to use during the encounter
 	ld a, [W_RIVALSTARTER]
-	cp SQUIRTLE
+	cp STARYU
 	jr nz, .NotSquirtle ; 0x19592 $4
 	ld a, $7
 	jr .done
 .NotSquirtle
-	cp BULBASAUR
+	cp EXEGGCUTE
 	jr nz, .Charmander ; 0x1959a $4
 	ld a, $8
 	jr .done
@@ -35893,7 +35893,7 @@ CeruleanCityText2: ; 1967c (6:567c)
 .asm_4ca20 ; 0x196ad
 	ld hl, UnnamedText_196f3
 	call PrintText
-	ld bc, $e401
+	ld bc, (HM01_COUPON << 8) | 1
 	call GiveItem
 	jr c, .Success
 	ld hl, TM28NoRoomText
@@ -35946,8 +35946,25 @@ CeruleanCityText5: ; 19702 (6:5702)
 
 CeruleanCityText11: ; 19707 (6:5707)
 CeruleanCityText6: ; 19707 (6:5707)
+	db $08 ; asm
+	ld a, [$d75a]
+	bit 0, a ; is rival battle over?
+	jr nz, .rivalBattleOver
+	ld hl, CeruleanCityText6_1
+	jr .done
+.rivalBattleOver
+	ld hl, CeruleanCityText6_2
+.done
+	call PrintText
+	jp TextScriptEnd
+
+CeruleanCityText6_1::
 	TX_FAR _CeruleanCityText6
 	db "@"
+
+CeruleanCityText6_2::
+	TX_FAR _CeruleanCityText6_2
+	db "@"	
 
 CeruleanCityText7: ; 1970c (6:570c)
 	db $08 ; asm
@@ -36024,7 +36041,68 @@ UnnamedText_1977e: ; 1977e (6:577e)
 	db "@"
 
 CeruleanCityText9: ; 19783 (6:5783)
+	db $08 ; asm
+	ld a, [$d75b]
+	bit 7, a ; have you beaten the coupon stealer?
+	jr z, .notBeaten
+	ld a, [$d75f]
+	bit 0, a
+	jr nz, .notInBag  ; have you received HM01 from the shop?
+	ld a, [W_VERMILIONGYMCURSCRIPT] ; borrow vermilion gym's script for a temporary flag
+	and a
+	jr nz, .notInBag
+	ld b, HM01_COUPON
+	call IsItemInBag ; is the coupon in your inventory?
+	jr z, .notInBag
+	; return coupon to girl
+	ld hl, GiveCouponBackText
+	call PrintText
+	ld bc, (DV_BALL << 8) | 1
+	call GiveItem
+	jr c, .Success
+	ld hl, DVBallNoRoomText
+	call PrintText
+	jr .done
+.Success
+	ld hl, DVBallReceivedText
+	call PrintText
+	ld hl, PostDVBallReceivedText
+	call PrintText
+	ld a, 1
+	ld [W_VERMILIONGYMCURSCRIPT], a
+	jr .done
+.notInBag
+	ld hl, CeruleanCityText9_2
+	call PrintText
+	jr .done
+.notBeaten
+	ld hl, CeruleanCityText9_1
+	call PrintText
+.done
+	jp TextScriptEnd
+
+CeruleanCityText9_1:
 	TX_FAR _CeruleanCityText9
+	db "@"
+
+GiveCouponBackText:
+	TX_FAR _GiveCouponBackText
+	db "@"
+
+DVBallReceivedText:
+	TX_FAR _DVBallReceivedText
+	db $0B, "@"
+
+PostDVBallReceivedText:
+	TX_FAR _PostDVBallReceivedText
+	db "@"
+
+DVBallNoRoomText:
+	TX_FAR _DVBallNoRoomText
+	db "@"
+
+CeruleanCityText9_2:
+	TX_FAR _CeruleanCityText9_2
 	db "@"
 
 CeruleanCityText10: ; 19788 (6:5788)
@@ -40342,15 +40420,15 @@ BikeShopText1: ; 1d745 (7:5745)
 	call PrintText
 	jp .Done
 .asm_260d4 ; 0x1d756
-	ld b, BIKE_VOUCHER
+	ld b, HM01_COUPON
 	call IsItemInBag
 	jr z, .asm_41190 ; 0x1d75b
 	ld hl, UnnamedText_1d81f
 	call PrintText
-	ld bc, (BICYCLE << 8) | 1
+	ld bc, (HM_01 << 8) | 1
 	call GiveItem
 	jr nc, .BagFull
-	ld a, BIKE_VOUCHER
+	ld a, HM01_COUPON
 	ldh [$db], a
 	ld b, BANK(RemoveItemByID)
 	ld hl, RemoveItemByID
@@ -40359,6 +40437,10 @@ BikeShopText1: ; 1d745 (7:5745)
 	set 0, [hl]
 	ld hl, UnnamedText_1d824
 	call PrintText
+
+	xor a
+	ld [W_VERMILIONGYMCURSCRIPT], a ; reset the temporary flag
+
 	jr .Done
 .BagFull
 	ld hl, UnnamedText_1d834
@@ -40452,12 +40534,24 @@ UnnamedText_1d834: ; 1d834 (7:5834)
 
 BikeShopText2: ; 1d839 (7:5839)
 	db $08 ; asm
-	ld hl, UnnamedText_1d843
+	ld b, BICYCLE
+	call IsItemInBag
+	jr z, .noBike
+	ld hl, HasBike
 	call PrintText
+	jr .done
+.noBike
+	ld hl, NoBike
+	call PrintText
+.done
 	jp TextScriptEnd
 
-UnnamedText_1d843: ; 1d843 (7:5843)
+NoBike: ; 1d843 (7:5843)
 	TX_FAR _UnnamedText_1d843
+	db "@"
+
+HasBike: ; 1d843 (7:5843)
+	TX_FAR _HasBike
 	db "@"
 
 BikeShopText3: ; 1d848 (7:5848)
@@ -43498,7 +43592,7 @@ ChiefName: ; 27f55 (9:7f55)
 ScientistName: ; 27f5b (9:7f5b)
 	db "SCIENTIST@"
 RocketName: ; 27f65 (9:7f65)
-	db "ROCKET@"
+	db "QUARRY@"
 CooltrainerMName: ; 27f6c (9:7f6c)
 	db "COOLTRAINER♂@"
 CooltrainerFName: ; 27f79 (9:7f79)
@@ -53673,9 +53767,9 @@ else
 	db $FF,9,PIDGEY,8,SQUIRTLE,0
 	db $FF,9,PIDGEY,8,BULBASAUR,0
 	db $FF,9,PIDGEY,8,CHARMANDER,0
-	db $FF,18,PIDGEOTTO,15,ABRA,15,RATTATA,17,SQUIRTLE,0
-	db $FF,18,PIDGEOTTO,15,ABRA,15,RATTATA,17,BULBASAUR,0
-	db $FF,18,PIDGEOTTO,15,ABRA,15,RATTATA,17,CHARMANDER,0
+	db $FF,17,GASTLY,18,POLIWAG,18,ONIX,19,STARYU,0
+	db $FF,17,GASTLY,18,POLIWAG,18,ONIX,19,EXEGGCUTE,0
+	db $FF,17,GASTLY,18,POLIWAG,18,ONIX,19,GROWLITHE,0
 endc
 ProfOakData: ; 3a21d (e:621d)
 	db $FF,66,TAUROS,67,EXEGGUTOR,68,ARCANINE,69,BLASTOISE,70,GYARADOS,0
@@ -53717,7 +53811,7 @@ RocketData: ; 3a29c (e:629c)
 	db 11,ONIX,GEODUDE,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
 	db 12,RATTATA,MACHOP,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
 	db 11,DIGLETT,GEODUDE,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
-	db 20,GRIMER,KOFFING,KOFFING,0
+	db 17,NIDORINO,KOFFING,CUBONE,0 ; Agate City coupon guy
 	db 19,RATTATA,RATICATE,RATICATE,RATTATA,0
 	db 22,GRIMER,KOFFING,0
 	db 17,ZUBAT,KOFFING,GRIMER,ZUBAT,RATICATE,0
@@ -53843,9 +53937,9 @@ if _YELLOW
 	db $FF,47,SANDSLASH,45,EXEGGCUTE,45,CLOYSTER,47,MAGNETON,50,KADABRA,53,FLAREON,0
 	db $FF,47,SANDSLASH,45,EXEGGCUTE,45,MAGNETON,47,NINETALES,50,KADABRA,53,VAPOREON,0
 else
-	db $FF,19,PIDGEOTTO,16,RATICATE,18,KADABRA,20,WARTORTLE,0
-	db $FF,19,PIDGEOTTO,16,RATICATE,18,KADABRA,20,IVYSAUR,0
-	db $FF,19,PIDGEOTTO,16,RATICATE,18,KADABRA,20,CHARMELEON,0
+	db $FF,17,PIDGEOTTO,16,RATICATE,18,KADABRA,20,WARTORTLE,0
+	db $FF,17,PIDGEOTTO,16,RATICATE,18,KADABRA,20,IVYSAUR,0
+	db $FF,17,PIDGEOTTO,16,RATICATE,18,KADABRA,20,CHARMELEON,0
 	db $FF,25,PIDGEOTTO,23,GROWLITHE,22,EXEGGCUTE,20,KADABRA,25,WARTORTLE,0
 	db $FF,25,PIDGEOTTO,23,GYARADOS,22,GROWLITHE,20,KADABRA,25,IVYSAUR,0
 	db $FF,25,PIDGEOTTO,23,EXEGGCUTE,22,GYARADOS,20,KADABRA,25,CHARMELEON,0
@@ -91059,7 +91153,7 @@ FanClubText5: ; 59c1c (16:5c1c)
 	jr nz, asm_2c8d7 ; 0x59c2f
 	ld hl, UnnamedText_59c6a
 	call PrintText
-	ld bc, (BIKE_VOUCHER << 8) | 1
+	ld bc, (HM01_COUPON << 8) | 1
 	call GiveItem
 	jr nc, .BagFull
 	ld hl, ReceivedBikeVoucherText

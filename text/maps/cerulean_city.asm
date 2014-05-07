@@ -1,81 +1,81 @@
 _UnnamedText_19668:: ; a4d2b (29:4d2b)
-	text $53, ": Yo!"
-	line $52, "!"
+	text $53, ": Creep!"
+	line "I didn't think"
+	cont "you would make it"
+	cont "here!"
 
-	para "You're still"
-	line "struggling along"
-	cont "back here?"
+	para "Did you meet any"
+	line "of those guys on"
+	cont "TEAM QUARRY?"
 
-	para "I'm doing great!"
-	line "I caught a bunch"
-	cont "of strong and"
-	cont "smart #MON!"
+	para "They're so smart,"
+	line "strong, and"
+	cont "especially witty!"
 
-	para "Here, let me see"
-	line "what you caught,"
-	cont $52, "!"
+	para "..."
+
+	para "Hey! You just"
+	line "looked at me"
+	cont "funny!"
+
+	para "Let me teach you"
+	line "what funny really"
+	cont "is!"
 	done
 
 _UnnamedText_1966d:: ; a4dbe (29:4dbe)
-	text "Hey!"
-	line "Take it easy!"
-	cont "You won already!"
+	text "Ah!"
+	line "I had something"
+	cont "in my eye!"
 	prompt
 
 _UnnamedText_19672:: ; a4de3 (29:4de3)
-	text "Heh!"
-	line "You're no match"
-	cont "for my genius!"
+	text "That"
+	line "was hilarious!"
+
+	para "Get out of here!"
 	prompt
 
 _UnnamedText_19677:: ; a4e07 (29:4e07)
-	text $53, ": Hey,"
-	line "guess what?"
+	text $53, ": GRRR,"
+	line "I feel another"
+	cont "mental breakdown"
+	cont "coming on!"
 
-	para "I went to BILL's"
-	line "and got him to"
-	cont "show me his rare"
-	cont "#MON!"
+	para "I'm just going to"
+	line "go get some more"
+	cont "GYM badges to"
+	cont "erase this from"
+	cont "my memory!"
 
-	para "That added a lot"
-	line "of pages to my"
-	cont "#DEX!"
+	para "Maybe I'll some"
+	line "cool TEAM QUARRY"
+	cont "members to hang"
+	cont "out with, too."
 
-	para "After all, BILL's"
-	line "world famous as a"
-	cont "#MANIAC!"
-
-	para "He invented the"
-	line "#MON Storage"
-	cont "System on PC!"
-
-	para "Since you're using"
-	line "his system, go"
-	cont "thank him!"
-
-	para "Well, I better"
-	line "get rolling!"
-	cont "Smell ya later!"
+	para "Crush ya later,"
+	line "..."
+	cont "..."
+	cont "CREEP!"
 	done
 
 _UnnamedText_196d9:: ; a4f27 (29:4f27)
-	text "Hey! Stay out!"
-	line "It's not your"
-	cont "yard! Huh? Me?"
+	text "Who, me?"
 
-	para "I'm an innocent"
-	line "bystander! Don't"
-	cont "you believe me?"
+	para "Why would I do"
+	line "such a thing?"
+
+	para "Ack! Don't attack"
+	line "me!"
 	done
 
 _ReceivedTM28Text:: ; a4f82 (29:4f82)
-	text $52, " recovered"
-	line "TM28!@@"
+	text $52, " took"
+	line "the HM01 COUPON!@@"
 
 _ReceivedTM28Text2:: ; a4f96 (29:4f96)
 	db $0
-	para "I better get"
-	line "moving! Bye!@@"
+	para "Hey, what's that?@@"
 
 _TM28NoRoomText:: ; a4fb3 (29:4fb3)
 	text "Make room for"
@@ -86,14 +86,15 @@ _TM28NoRoomText:: ; a4fb3 (29:4fb3)
 	done
 
 _UnnamedText_196ee:: ; a4feb (29:4feb)
-	text "Stop!"
-	line "I give up! I'll"
-	cont "leave quietly!"
+	text "Ok."
+	line "I deserved that."
 	prompt
 
 _UnnamedText_196f3:: ; a5010 (29:5010)
-	text "OK! I'll return"
-	line "the TM I stole!"
+	text "How did you know"
+	line "I stole this from"
+	cont "that girl over"
+	cont "there?"
 	prompt
 
 _CeruleanCityText3:: ; a5030 (29:5030)
@@ -168,12 +169,11 @@ _UnnamedText_1977e:: ; a52bb (29:52bb)
 	done
 
 _CeruleanCityText9:: ; a52d6 (29:52d6)
-	text "I want a bright"
-	line "red BICYCLE!"
+	text "Some guy stole my"
+	line "coupon!"
 
-	para "I'll keep it at"
-	line "home, so it won't"
-	cont "get dirty!"
+	para "How will I go"
+	line "shopping now?"
 	done
 
 _CeruleanCityText10:: ; a531f (29:531f)
@@ -194,12 +194,8 @@ _CeruleanCityText12:: ; a539a (29:539a)
 	done
 
 _CeruleanCityText13:: ; a53ce (29:53ce)
-	text "TRAINER TIPS"
-
-	para "Pressing B Button"
-	line "during evolution"
-	cont "cancels the whole"
-	cont "process."
+	text "AGATE CITY"
+	line "OUTPOST"
 	done
 
 _CeruleanCityText16:: ; a541a (29:541a)
@@ -216,3 +212,54 @@ _CeruleanCityText17:: ; a5445 (29:5445)
 	line "force!"
 	done
 
+_CeruleanCityText6_2::
+	text "Thanks for making"
+	line "that annoying kid"
+	cont "go away."
+
+	para "I should go and"
+	line "find something"
+	cont "important to do."
+	done
+
+_GiveCouponBackText::
+	text "Hey! You found my"
+	line "HM01 COUPON!"
+
+	para "How can I ever"
+	line "repay you?"
+
+	para "I guess I could"
+	line "give you this as"
+	cont "a token of"
+	cont "appreciation."
+	prompt
+
+_DVBallNoRoomText::
+	text "Oh, you don't"
+	line "have room for"
+	cont "it!"
+	done
+
+_DVBallReceivedText::
+	text $52, " received"
+	line "@"
+	TX_RAM $cf4b
+	text "!@@"
+
+_PostDVBallReceivedText::
+	text "On second thought,"
+	line "you can keep the"
+	cont "HM01 COUPON."
+
+	para "I shop too much"
+	line "anyway."
+	done
+
+_CeruleanCityText9_2::
+	text "I want to go"
+	line "shopping!"
+
+	para "Too bad there is"
+	line "no mall here."
+	done
