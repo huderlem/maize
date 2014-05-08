@@ -3032,13 +3032,16 @@ _UnnamedText_71da8:: ; a8162 (2a:4162)
 	done
 
 _UnnamedText_71dad:: ; a817c (2a:417c)
-	text "Hello there! Do"
-	line "you want to trade"
+	text "Help me!"
+	line "This ABRA is"
+	cont "invading my mind!"
 
-	para "your @"
+	para "Would you trade"
+
+	line "me your @"
 	TX_RAM $cd13
 	db $0
-	line "for @"
+	cont "for @"
 	TX_RAM $cd1e
 	text "?"
 	done

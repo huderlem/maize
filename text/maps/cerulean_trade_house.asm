@@ -1,10 +1,5 @@
 _CeruleanHouseText1:: ; 9888c (26:488c)
-	text "My husband likes"
-	line "trading #MON."
-
-	para "If you are a"
-	line "collector, would"
-	cont "you please trade"
-	cont "with him?"
+	text "My wife is such a" 
+    line "drama queen."
 	done
 
