@@ -53427,9 +53427,9 @@ TrainerDataPointers: ; 39d3b (e:5d3b)
 YoungsterData: ; 39d99 (e:5d99)
 	db 6,WEEDLE,RATTATA,0 ; trainer house (Nickel City)
 	db 8,PSYDUCK,RATTATA,RATTATA,0 ; Route 3
-	db 10,RATTATA,RATTATA,ZUBAT,0 ; Route 4 (south of Agate)
-	db 14,RATTATA,EKANS,ZUBAT,0 ; Route 4 (south of Agate)
-	db 15,RATTATA,SPEAROW,0 ; Route 4 (south of Agate)
+	db 13,NIDORAN_M,NIDORAN_F,RATTATA,0 ; Route 4 (south of Agate)
+	db 14,DIGLETT,DIGLETT,0 ; Route 4 (south of Agate)
+	db 16,RATTATA,0 ; Route 4 (south of Agate)
 	db 17,SLOWPOKE,0
 	db 14,EKANS,SANDSHREW,0
 	db 21,NIDORAN_M,0
@@ -53452,7 +53452,7 @@ else
 	db 10,CATERPIE,WEEDLE,BUTTERFREE,0 ; Route 3
 endc
 	db 12,PARAS,METAPOD,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
-	db 9,WEEDLE,KAKUNA,CATERPIE,0 ; Route 4 (south of Agate)
+	db 12,KAKUNA,KAKUNA,BEEDRILL,0 ; Route 4 (south of Agate)
 	db 11,CATERPIE,METAPOD,0
 	db 11,WEEDLE,KAKUNA,0
 	db 10,CATERPIE,METAPOD,CATERPIE,0
@@ -53470,8 +53470,8 @@ LassData: ; 39e0c (e:5e0c)
 	db 10,CLEFAIRY,SPEAROW,0 ; Blandy's gym
 	db 10,VULPIX,JIGGLYPUFF,0 ; Route 3
 	db 11,NIDORAN_F,PIKACHU,0 ; Route 3
-	db 11,ODDISH,BELLSPROUT,0 ; Route 4 (south of Agate)
-	db 14,CLEFAIRY,0 ; Route 4 (south of Agate)
+	db 14,GRIMER,GRIMER,GRIMER,0 ; Route 4 (south of Agate)
+	db 14,JIGGLYPUFF,CLEFAIRY,0 ; Route 4 (south of Agate)
 	db 16,PIDGEY,NIDORAN_F,0
 	db 14,PIDGEY,NIDORAN_F,0
 	db 15,NIDORAN_M,NIDORAN_F,0
@@ -53516,7 +53516,7 @@ else
 endc
 	db 100,PIDGEY,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 14,PIDGEY,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
-	db 20,SQUIRTLE,0 ; Route 4 (south of Agate)
+	db 17,SANDSHREW,0 ; Route 4 (south of Agate)
 	db 16,SPEAROW,RATICATE,0
 	db 18,DIGLETT,DIGLETT,SANDSHREW,0
 	db 21,GROWLITHE,CHARMANDER,0
@@ -53588,8 +53588,8 @@ SuperNerdData: ; 39f26 (e:5f26)
 	db 37,GROWLITHE,VULPIX,0
 HikerData: ; 39f5e (e:5f5e)
 	db 10,GEODUDE,ONIX,GEODUDE,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
-	db 15,MACHOP,GEODUDE,0 ; Route 4 (south of Agate)
-	db 13,GEODUDE,GEODUDE,MACHOP,GEODUDE,0 ; Route 4 (south of Agate)
+	db 14,GEODUDE,GEODUDE,MACHOP,ONIX,0 ; Route 4 (south of Agate)
+	db 15,MACHOP,0 ; Route 4 (south of Agate)
 	db 17,ONIX,0
 	db 21,GEODUDE,ONIX,0
 	db 20,GEODUDE,MACHOP,GEODUDE,0
