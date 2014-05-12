@@ -53453,7 +53453,7 @@ else
 endc
 	db 12,PARAS,METAPOD,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 12,KAKUNA,KAKUNA,BEEDRILL,0 ; Route 4 (south of Agate)
-	db 11,CATERPIE,METAPOD,0
+	db 11,CATERPIE,METAPOD,0 ; Route 5 (east of Copper Town)
 	db 11,WEEDLE,KAKUNA,0
 	db 10,CATERPIE,METAPOD,CATERPIE,0
 	db 14,CATERPIE,WEEDLE,0
@@ -53472,8 +53472,8 @@ LassData: ; 39e0c (e:5e0c)
 	db 11,NIDORAN_F,PIKACHU,0 ; Route 3
 	db 14,GRIMER,GRIMER,GRIMER,0 ; Route 4 (south of Agate)
 	db 14,JIGGLYPUFF,CLEFAIRY,0 ; Route 4 (south of Agate)
-	db 16,PIDGEY,NIDORAN_F,0
-	db 14,PIDGEY,NIDORAN_F,0
+	db 16,PIDGEY,NIDORAN_F,0 ; Route 5 (east of Copper Town)
+	db 14,PIDGEY,NIDORAN_F,0 ; Route 5 (east of Copper Town)
 	db 15,NIDORAN_M,NIDORAN_F,0
 	db 13,ODDISH,PIDGEY,ODDISH,0
 	db 18,PIDGEY,NIDORAN_F,0
@@ -53514,11 +53514,11 @@ if _YELLOW
 else
 	db 11,MACHOP,EKANS,0 ; Route 3
 endc
-	db 100,PIDGEY,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
+	db 13,PIDGEY,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 14,PIDGEY,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 17,SANDSHREW,0 ; Route 4 (south of Agate)
-	db 16,SPEAROW,RATICATE,0
-	db 18,DIGLETT,DIGLETT,SANDSHREW,0
+	db 16,SPEAROW,RATICATE,0 ; Route 5 (east of Copper Town)
+	db 18,DIGLETT,DIGLETT,SANDSHREW,0 ; Route 5 (east of Copper Town)
 	db 21,GROWLITHE,CHARMANDER,0
 	db 19,RATTATA,DIGLETT,EKANS,SANDSHREW,0
 	db 29,NIDORAN_M,NIDORINO,0
@@ -53567,7 +53567,7 @@ if _YELLOW
 endc
 PokemaniacData: ; 39f09 (e:5f09)
 	db 12,ODDISH,BELLSPROUT,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
-	db 20,CUBONE,SLOWPOKE,0
+	db 20,CUBONE,SLOWPOKE,0 ; Route 5 (east of Copper Town)
 	db 20,SLOWPOKE,SLOWPOKE,SLOWPOKE,0
 	db 22,CHARMANDER,CUBONE,0
 	db 25,SLOWPOKE,0
@@ -79994,14 +79994,14 @@ Route24Object: ; 0x506a4 (size=67)
 	db $0 ; signs
 
 	db $8 ; people
-	db SPRITE_BLACK_HAIR_BOY_1, $f + 4, $b + 4, $ff, $d2, $41, ROCKET + $C8, $6 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_1, $14 + 4, $5 + 4, $ff, $d1, $42, JR__TRAINER_M + $C8, $2 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_1, $13 + 4, $b + 4, $ff, $d2, $43, JR__TRAINER_M + $C8, $3 ; trainer
-	db SPRITE_LASS, $16 + 4, $a + 4, $ff, $d3, $44, LASS + $C8, $7 ; trainer
-	db SPRITE_BUG_CATCHER, $19 + 4, $b + 4, $ff, $d2, $45, YOUNGSTER + $C8, $4 ; trainer
-	db SPRITE_LASS, $1c + 4, $a + 4, $ff, $d3, $46, LASS + $C8, $8 ; trainer
-	db SPRITE_BUG_CATCHER, $1f + 4, $b + 4, $ff, $d2, $47, BUG_CATCHER + $C8, $9 ; trainer
-	db SPRITE_BALL, $5 + 4, $a + 4, $ff, $ff, $88, TM_45 ; item
+	db SPRITE_SLOWBRO, $8 + 4, $19 + 4, $ff, $d0, $41, CHARMANDER, $5 ; wild mon
+	db SPRITE_BLACK_HAIR_BOY_1, $3 + 4, $e + 4, $ff, $d1, $42, JR__TRAINER_M + $C8, $5 ; trainer
+	db SPRITE_BLACK_HAIR_BOY_1, $8 + 4, $c + 4, $ff, $d2, $43, JR__TRAINER_M + $C8, $6 ; trainer
+	db SPRITE_LASS, $2 + 4, $9 + 4, $ff, $d0, $44, LASS + $C8, $7 ; trainer
+	db SPRITE_BUG_CATCHER, $b + 4, $19 + 4, $ff, $d1, $45, POKEMANIAC + $C8, $2 ; trainer
+	db SPRITE_LASS, $a + 4, $21 + 4, $ff, $d3, $46, LASS + $C8, $8 ; trainer
+	db SPRITE_BUG_CATCHER, $c + 4, $14 + 4, $ff, $d1, $47, BUG_CATCHER + $C8, $6 ; trainer
+	db SPRITE_BALL, $2 + 4, $20 + 4, $ff, $ff, $88, TM_20 ; item
 
 Route24Blocks: ; 506e7 (14:46e7)
 	INCBIN "maps/route24.blk"
