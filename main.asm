@@ -30930,7 +30930,11 @@ RedrawPartyMenu_:
 	ld a,1
 	ld [H_AUTOBGTRANSFERENABLED],a
 	call Delay3
-	jp GBPalNormal
+	ld a,%11100100
+	ld [rBGP],a
+	ld a,%11100100
+	ld [rOBP0],a
+	ret
 .printItemUseMessage
 	and a,$0F
 	ld hl,PartyMenuItemUseMessagePointers
@@ -104920,7 +104924,7 @@ PalPacket_72428: ; 72428 (1c:6428)
 	db $51,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00,$00 
 
 PalPacket_72438: ; 72438 (1c:6438)
-	db $51,$10,$00,$1F,$00,$20,$00,$21,$00,$00,$00,$00,$00,$00,$00,$00
+	db $51,PAL_PARTYMENU,$00,$1F,$00,$20,$00,$21,$00,$00,$00,$00,$00,$00,$00,$00
 
 PalPacket_72448: ; 72448 (1c:6448)
 	db $51,$1E,$00,$1E,$00,$1E,$00,$1E,$00,$00,$00,$00,$00,$00,$00,$00
@@ -105328,6 +105332,10 @@ ENDC
 	RGB 31,28,14
 	RGB 24,20,10
 	RGB 3,2,2
+	RGB 31, 31, 31 ; PAL_PARTYMENU
+ 	RGB 31, 25, 19
+ 	RGB 30, 16, 12
+    RGB 00, 00, 00
 
 BorderPalettes: ; 72788 (1c:6788)
 IF _RED
