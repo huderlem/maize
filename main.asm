@@ -30932,8 +30932,9 @@ RedrawPartyMenu_:
 	call Delay3
 	ld a,%11100100
 	ld [rBGP],a
-	ld a,%11100100
 	ld [rOBP0],a
+	ld a,%11111111
+	ld [rOBP1], a
 	ret
 .printItemUseMessage
 	and a,$0F
@@ -103031,7 +103032,27 @@ Func_712a6: ; 712a6 (1c:52a6)
 	ld [hli], a ; X position
 	ld a, [$cd5b]
 	ld [hli], a ; tile number
-	ld a, [$cd5c]
+	; check to see if mon is fainted
+	push bc
+	push hl
+	ld a, [H_DOWNARROWBLINKCNT2] ; party mon index
+	ld hl, W_PARTYMON1_HP
+	ld bc, 44
+	call AddNTimes ; hl contains pointer to mon's HP
+	ld a, [hli]
+	and a
+	jr nz, .zeroA
+	ld a, [hl]
+	and a
+	jr nz, .zeroA
+	; HP is 0
+	ld a, $10
+	jr .fillAttributeByte
+.zeroA
+	xor a
+.fillAttributeByte
+	pop hl
+	pop bc
 	ld [hli], a ; attribute byte
 	inc d
 	ld a, $8
