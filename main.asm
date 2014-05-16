@@ -15601,6 +15601,9 @@ Func_6596: ; 6596 (1:6596)
 .asm_65ed
 	call Func_676f
 	call GBPalNormal
+	ld a,%11100100
+	ld [rBGP],a
+	ld [rOBP0], a
 .asm_65f3
 	ld a, [$ceea]
 	and a
@@ -103018,9 +103021,6 @@ Func_712a6: ; 712a6 (1c:52a6)
 	jr .partyLoop
 .donePartyLoop
 	ld [$cd5b], a
-
-	xor a
-	ld [$cd5c], a
 	ld de, $0202 ; mini sprites are 2x2 tiles
 .outerLoop
 	push de
@@ -103032,9 +103032,13 @@ Func_712a6: ; 712a6 (1c:52a6)
 	ld [hli], a ; X position
 	ld a, [$cd5b]
 	ld [hli], a ; tile number
-	; check to see if mon is fainted
 	push bc
 	push hl
+	; check for nickname screen
+	ld a, [$d07d]
+	cp 2
+	jr z, .zeroA
+	; check to see if mon is fainted
 	ld a, [H_DOWNARROWBLINKCNT2] ; party mon index
 	ld hl, W_PARTYMON1_HP
 	ld bc, 44
