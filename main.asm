@@ -15572,9 +15572,9 @@ Func_6596: ; 6596 (1:6596)
 	call GoPAL_SET
 	call LoadHpBarAndStatusTilePatterns
 	call Func_675b
-	ld b, BANK(Func_7176c)
-	ld hl, Func_7176c
-	call Bankswitch ; indirect jump to Func_7176c (7176c (1c:576c))
+	ld b, BANK(LoadMonNicknameSprite)
+	ld hl, LoadMonNicknameSprite
+	call Bankswitch ; indirect jump to LoadMonNicknameSprite (7176c (1c:576c)) ; load mini sprite stuff into VRAM
 	FuncCoord 0, 4 ; $c3f0
 	ld hl, Coord
 	ld b, $9
@@ -103469,6 +103469,33 @@ Func_71771: ; 71771 (1c:5771)
 	dec a
 	jr nz, .asm_71774
 	ret
+
+LoadMonNicknameSprite:
+	call DisableLCD
+	ld a, [$cf91] ; a contains mon id
+	ld [$d11e], a
+	ld a, $3a
+	call Predef ; indirect jump to IndexToPokedex (41010 (10:5010))
+	ld a, [$d11e] ; a contains dex id
+	dec a
+	cp a, 50
+	jr nc, .everythingElse
+.first50
+	ld hl, MiniSprites1
+	ld bc, $80
+	call AddNTimes ; hl now contains pointer to mon's mini sprite
+	ld a, Bank(MiniSprites1)
+	jr .afterMiniSprite
+.everythingElse
+	sub 50
+	ld hl, MiniSprites2
+	ld bc, $80
+	call AddNTimes ; hl now contains pointer to mon's mini sprite
+	ld a, Bank(MiniSprites2)
+.afterMiniSprite
+	ld de, $8000
+	call FarCopyData2
+	jp EnableLCD
 
 LoadMonMiniSprites: ; 71791 (1c:5791)
 	call DisableLCD
