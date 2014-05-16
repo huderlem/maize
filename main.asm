@@ -9784,8 +9784,8 @@ HandleMenuInputPokemonSelection:: ; 3ac2 (0:3ac2)
 	ld a,[$d09b]
 	and a ; is it a pokemon selection menu?
 	jr z,.getJoypadState
-	ld b, BANK(Func_716ff)
-	ld hl, Func_716ff ; shake mini sprite of selected pokemon
+	ld b, BANK(ShakeMiniSprite)
+	ld hl, ShakeMiniSprite ; shake mini sprite of selected pokemon
 	call Bankswitch
 .getJoypadState
 	pop hl
@@ -15561,6 +15561,7 @@ Func_655c: ; 655c (1:655c)
 	ret
 
 Func_6596: ; 6596 (1:6596)
+; do nickname screen stuff
 	push hl
 	ld hl, $d730
 	set 6, [hl]
@@ -30726,11 +30727,12 @@ DrawPartyMenu_: ; 12cd2 (4:6cd2)
 	ld [H_AUTOBGTRANSFERENABLED],a
 	call ClearScreen
 	call UpdateSprites ; move sprites
-	ld b, BANK(Func_71791)
-	ld hl, Func_71791
-	call Bankswitch ; load pokemon icon graphics
 
-RedrawPartyMenu_: ; 12ce3 (4:6ce3)
+RedrawPartyMenu__:
+	ld b, BANK(LoadMonMiniSprites)
+	ld hl, LoadMonMiniSprites
+	call Bankswitch ; load pokemon icon graphics
+RedrawPartyMenu_:
 	ld a,[$D07D]
 	cp a,$04
 	jp z,.printMessage
@@ -30758,8 +30760,8 @@ RedrawPartyMenu_: ; 12ce3 (4:6ce3)
 	call GetPartyMonName
 	pop hl
 	call PlaceString ; print the pokemon's name
-	ld b, BANK(Func_71868)
-	ld hl, Func_71868
+	ld b, BANK(PlaceMiniSpritePartyMenu)
+	ld hl, PlaceMiniSpritePartyMenu
 	call Bankswitch ; place the appropriate pokemon icon
 	ld a,[$FF8C] ; loop counter
 	ld [wWhichPokemon],a
@@ -32142,7 +32144,7 @@ Func_13613: ; 13613 (4:7613)
 	call Func_13625
 	ld a, [wCurrentMenuItem] ; $cc26
 	call Func_13625
-	jp RedrawPartyMenu_
+	jp RedrawPartyMenu__
 
 Func_13625: ; 13625 (4:7625)
 	push af
@@ -102968,72 +102970,82 @@ Func_71279: ; 71279 (1c:5279)
 	pop hl
 
 Func_71281: ; 71281 (1c:5281)
-	ld de, $202
-.asm_71284
+	ld de, $0202 ; mini sprites are 2x2 tiles
+.outerLoop
 	push de
 	push bc
-.asm_71286
+.innerLoop
 	ld a, b
-	ld [hli], a
+	ld [hli], a ; Y position
 	ld a, c
-	ld [hli], a
+	ld [hli], a ; X position
 	ld a, [$cd5b]
-	ld [hli], a
-	inc a
+	ld [hli], a ; tile number
+	inc a ; increment tile number
 	ld [$cd5b], a
 	xor a
-	ld [hli], a
+	ld [hli], a ; attribute byte
 	inc d
 	ld a, $8
-	add c
+	add c ; add 8 to X position
 	ld c, a
 	dec e
-	jr nz, .asm_71286
+	jr nz, .innerLoop
 	pop bc
 	pop de
 	ld a, $8
-	add b
+	add b ; add 8 to Y position
 	ld b, a
 	dec d
-	jr nz, .asm_71284
+	jr nz, .outerLoop
 	ret
 
 Func_712a6: ; 712a6 (1c:52a6)
+	; get tile number
+	ld a, [H_DOWNARROWBLINKCNT2] ; a contains mon's party index
+	add 1
+	ld d, a
+	xor a
+.partyLoop
+	dec d
+	jr z, .donePartyLoop
+	add 8
+	jr .partyLoop
+.donePartyLoop
+	ld [$cd5b], a
+
 	xor a
 	ld [$cd5c], a
-	ld de, $202
-.asm_712ad
+	ld de, $0202 ; mini sprites are 2x2 tiles
+.outerLoop
 	push de
 	push bc
-.asm_712af
+.innerLoop
 	ld a, b
-	ld [hli], a
+	ld [hli], a ; Y position
 	ld a, c
-	ld [hli], a
+	ld [hli], a ; X position
 	ld a, [$cd5b]
-	ld [hli], a
+	ld [hli], a ; tile number
 	ld a, [$cd5c]
-	ld [hli], a
-	xor $20
-	ld [$cd5c], a
+	ld [hli], a ; attribute byte
 	inc d
 	ld a, $8
-	add c
+	add c ; add 8 to X position on screen
 	ld c, a
-	dec e
-	jr nz, .asm_712af
-	pop bc
-	pop de
 	push hl
 	ld hl, $cd5b
 	inc [hl]
-	inc [hl]
 	pop hl
+	dec e
+	jr nz, .innerLoop
+	pop bc
+	pop de
 	ld a, $8
-	add b
+	add b ; add 8 to Y position on screen
 	ld b, a
 	dec d
-	jr nz, .asm_712ad
+	jr nz, .outerLoop
 	ret
 
 Func_712d9: ; 712d9 (1c:52d9)
@@ -103333,7 +103345,7 @@ Func_716f7: ; 716f7 (1c:56f7)
 	inc a
 	jr asm_7170a
 
-Func_716ff: ; 716ff (1c:56ff)
+ShakeMiniSprite: ; 716ff (1c:56ff)
 	ld hl, $cf1f
 	ld a, [wCurrentMenuItem] ; $cc26
 	ld c, a
@@ -103373,31 +103385,47 @@ asm_7170a: ; 7170a (1c:570a)
 	xor a
 	jr .asm_71721
 .asm_7173d
+	; update tiles to animation tiles! Woot
 	push bc
 	ld hl, $c302
 	ld bc, $10
 	ld a, [wCurrentMenuItem] ; $cc26
 	call AddNTimes
-	ld c, $40
-	ld a, [hl]
-	cp $4
-	jr z, .asm_71755
-	cp $8
-	jr nz, .asm_71759
-.asm_71755
-	dec hl
-	dec hl
-	ld c, $1
-.asm_71759
-	ld b, $4
-	ld de, $4
-.asm_7175e
-	ld a, [hl]
-	add c
+	ld a, [hl] ; a contains tile number
+	ld b, a
+	and $0f
+	; 0 - 3 means first frame
+	cp 4
+	jr c, .firstFrame
+	; 4 - 7 means second frame
+	cp 8
+	jr c, .secondFrame
+	; 8 - 11 means first frame
+	cp 12
+	jr c, .firstFrame
+	jr .secondFrame
+.firstFrame
+	; change to second frame tiles
+	ld a, b
+	add 4
+	jr .updateTiles
+.secondFrame
+	; change to first frame tiles
+	ld a, b
+	sub 4
+.updateTiles
+	ld bc, $4
 	ld [hl], a
-	add hl, de
-	dec b
-	jr nz, .asm_7175e
+	add hl, bc
+	inc a
+	ld [hl], a
+	add hl, bc
+	inc a
+	ld [hl], a
+	add hl, bc
+	inc a
+	ld [hl], a
+.done
 	pop bc
 	ld a, c
 	jr .asm_71721
@@ -103407,7 +103435,7 @@ DataTable_71769: ; 71769 (1c:5769)
 
 Func_7176c: ; 7176c (1c:576c)
 	ld hl, MonOverworldSpritePointers ; $57c0
-	ld a, $1c
+	ld a, $1c ; num entries in MonOverworldSpritePointers
 
 Func_71771: ; 71771 (1c:5771)
 	ld bc, $0
@@ -103420,17 +103448,21 @@ Func_71771: ; 71771 (1c:5771)
 	ld e, a
 	ld a, [hli]
 	ld d, a
+	; de contains pointer to sprite gfx
 	ld a, [hli]
 	ld c, a
 	ld a, [hli]
 	ld b, a
+	; b contains bank of sprite gfx
+	; c contains number of bytes / $10
 	ld a, [hli]
 	ld h, [hl]
 	ld l, a
+	; hl contains destination address in VRAM
 	call CopyVideoData
 	pop hl
 	pop bc
-	ld a, $6
+	ld a, $6 ; num bytes in each entry of MonOverworldSpritePointers
 	add c
 	ld c, a
 	pop af
@@ -103438,39 +103470,74 @@ Func_71771: ; 71771 (1c:5771)
 	jr nz, .asm_71774
 	ret
 
-Func_71791: ; 71791 (1c:5791)
+LoadMonMiniSprites: ; 71791 (1c:5791)
 	call DisableLCD
-	ld hl, MonOverworldSpritePointers ; $57c0
-	ld a, $1c
-	ld bc, $0
-.asm_7179c
+	xor a
 	push af
-	push bc
+	ld hl, W_PARTYMON1
+.loop
+	; load the correct mon's mini sprite into each subsequent OAM slot
+	ld a, [hli] ; a contains mon id
 	push hl
-	add hl, bc
-	ld a, [hli]
-	ld e, a
-	ld a, [hli]
-	ld d, a
-	push de
-	ld a, [hli]
-	ld c, a
-	swap c
-	ld b, $0
-	ld a, [hli]
-	ld e, [hl]
-	inc hl
-	ld d, [hl]
+
+	ld [$d11e], a
+	ld a, $3a
+	call Predef ; indirect jump to IndexToPokedex (41010 (10:5010))
+	ld a, [$d11e] ; a contains dex id
+	dec a
+	cp a, 50
+	jr nc, .everythingElse
+.first50
+	ld hl, MiniSprites1
+	ld bc, $80
+	call AddNTimes ; hl now contains pointer to mon's mini sprite
+	ld d, h
+	ld e, l
+	jr .afterMiniSprite
+.everythingElse
+	sub 50
+	ld hl, MiniSprites2
+	ld bc, $80
+	call AddNTimes ; hl now contains pointer to mon's mini sprite
+	ld d, h
+	ld e, l
+.afterMiniSprite
+	pop hl ; this is the mon id adress
+	pop af
+	push af
+	push hl
+	ld h, d
+	ld l, e ; hl now contains pointer to mon's mini sprite
+	push hl
+
+	; calculate address in VRAM for the tiles
+	ld hl, $8000
+	ld bc, $80
+	call AddNTimes
+	ld d, h
+	ld e, l ; de now contains address in VRAM for the tiles
+	
+	ld a, [$d11e]
+	cp 50
+	jr c, .firstBank
+	ld a, Bank(MiniSprites2)
+	jr .gotBank
+.firstBank
+	ld a, Bank(MiniSprites1)
+.gotBank
+	ld bc, $80 ; length of two frames in the mini sprite
 	pop hl
 	call FarCopyData2
 	pop hl
-	pop bc
-	ld a, $6
-	add c
-	ld c, a
+	ld a, [W_NUMINPARTY]
+	ld b, a
 	pop af
-	dec a
-	jr nz, .asm_7179c
+	inc a
+	cp b
+	jr z, .done
+	push af
+	jr .loop
+.done
 	jp EnableLCD
 
 MonOverworldSpritePointers: ; 717c0 (1c:57c0)
@@ -103614,7 +103681,7 @@ MonOverworldSpritePointers: ; 717c0 (1c:57c0)
 	db BANK(MonOverworldSprites)
 	dw $8780
 
-Func_71868: ; 71868 (1c:5868)
+PlaceMiniSpritePartyMenu: ; 71868 (1c:5868)
 	push hl
 	push de
 	push bc
@@ -103622,8 +103689,8 @@ Func_71868: ; 71868 (1c:5868)
 	ld hl, W_PARTYMON1 ; $d164
 	ld e, a
 	ld d, $0
-	add hl, de
-	ld a, [hl]
+	add hl, de ; hl now contains pointer to the mon id
+	ld a, [hl] ; a contains mon id
 	call Func_718e9
 	ld [$cd5b], a
 	call Func_718c3
@@ -103684,12 +103751,10 @@ Func_718c3: ; 718c3 (1c:58c3)
 	add $10
 	ld b, a
 	pop af
-	cp $8
-	jr z, .asm_718da
 	call Func_712a6
 	jr .asm_718dd
 .asm_718da
-	call Func_71281
+	call Func_71281 ;unused now...
 .asm_718dd
 	ld hl, wOAMBuffer
 	ld de, $cc5b
@@ -103701,13 +103766,13 @@ Func_718e9: ; 718e9 (1c:58e9)
 	ld a, $3a
 	call Predef ; indirect jump to IndexToPokedex (41010 (10:5010))
 	ld a, [$d11e]
-	ld c, a
+	ld c, a ; c contains dex id
 	dec a
-	srl a
+	srl a ; a contains byte offset of MonOverworldData
 	ld hl, MonOverworldData ; $590d
 	ld e, a
 	ld d, $0
-	add hl, de
+	add hl, de ; hl contains pointer to correct byte for MonOverworldData
 	ld a, [hl]
 	bit 0, c
 	jr nz, .asm_71906
@@ -117831,6 +117896,9 @@ ScizorPicFront:
 ScizorPicBack:
 	INCBIN "pic/monback/scizorb.pic"
 
+MiniSprites1: ; mons 1-50
+	INCBIN "gfx/mini_sprites/mini_sprites.2bpp"
+
 Tset0C_GFX:
 	INCBIN "gfx/tilesets/0c.2bpp"
 Tset0C_Block:
@@ -118837,3 +118905,8 @@ HealingRing:
 	jr .loop
 .done	
 	ret
+
+SECTION "MiniSprites 2", ROMX, BANK[$35]
+
+MiniSprites2: ; mons 51-170
+	INCBIN "gfx/mini_sprites/mini_sprites_2.2bpp"
