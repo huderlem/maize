@@ -708,13 +708,18 @@ OverworldLoopLessDelay:: ; 0402 (0:0402)
 .moveAhead2
 	ld hl,wFlags_0xcd60
 	res 2,[hl]
-	ld a,[$d700]
-	dec a ; riding a bike?
+	; pressing B?
+	ld a,[H_CURRENTPRESSEDBUTTONS] ; current joypad state
+	and a,%00000010 ; bit mask for B button
+	jr z,.normalPlayerSpriteAdvancement
+	; has running shoes?
+	ld a, [W_BILLSHOUSECURSCRIPT] ; 1 = have running shoes
+	cp 1
 	jr nz,.normalPlayerSpriteAdvancement
 	ld a,[$d736]
 	bit 6,a ; jumping a ledge?
 	jr nz,.normalPlayerSpriteAdvancement
-	call BikeSpeedup ; if riding a bike and not jumping a ledge
+	call BikeSpeedup ; if using running shoes and not jumping a ledge
 .normalPlayerSpriteAdvancement
 	call AdvancePlayerSprite
 	ld a,[wWalkCounter]
@@ -42569,104 +42574,9 @@ BillsHouseScript: ; 1e76a (7:676a)
 BillsHouseScriptPointers: ; 1e776 (7:6776)
 	dw BillsHouseScript0
 	dw BillsHouseScript1
-	dw BillsHouseScript2
-	dw BillsHouseScript3
-	dw BillsHouseScript4
-	dw BillsHouseScript5
 
 BillsHouseScript0: ; 1e782 (7:6782)
-	ret
-
 BillsHouseScript1: ; 1e783 (7:6783)
-	ld a, [$c109]
-	and a
-	ld de, MovementData_1e79c
-	jr nz, .asm_1e78f ; 0x1e78a $3
-	ld de, MovementData_1e7a0
-.asm_1e78f
-	ld a, $1
-	ld [$ff00+$8c], a
-	call MoveSprite
-	ld a, $2
-	ld [W_BILLSHOUSECURSCRIPT], a
-	ret
-
-MovementData_1e79c: ; 1e79c (7:679c)
-	db $40,$40,$40,$FF
-
-MovementData_1e7a0: ; 1e7a0 (7:67a0)
-	db $C0,$40,$40,$80,$40,$FF
-
-BillsHouseScript2: ; 1e7a6 (7:67a6)
-	ld a, [$d730]
-	bit 0, a
-	ret nz
-	ld a, $61
-	ld [$cc4d], a
-	ld a, $11
-	call Predef
-	ld hl, $d7f2
-	set 6, [hl]
-	xor a
-	ld [wJoypadForbiddenButtonsMask], a
-	ld a, $3
-	ld [W_BILLSHOUSECURSCRIPT], a
-	ret
-
-BillsHouseScript3: ; 1e7c5 (7:67c5)
-	ld a, [$d7f2]
-	bit 3, a
-	ret z
-	ld a, $f0
-	ld [wJoypadForbiddenButtonsMask], a
-	ld a, $2
-	ld [$cf13], a
-	ld a, $c
-	ld [$ff00+$eb], a
-	ld a, $40
-	ld [$ff00+$ec], a
-	ld a, $6
-	ld [$ff00+$ed], a
-	ld a, $5
-	ld [$ff00+$ee], a
-	call Func_32f9
-	ld a, $62
-	ld [$cc4d], a
-	ld a, $15
-	call Predef
-	ld c, $8
-	call DelayFrames
-	ld a, $2
-	ld [$ff00+$8c], a
-	ld de, MovementData_1e807
-	call MoveSprite
-	ld a, $4
-	ld [W_BILLSHOUSECURSCRIPT], a
-	ret
-
-MovementData_1e807: ; 1e807 (7:6807)
-	db $00,$C0,$C0,$C0,$00,$FF
-
-BillsHouseScript4: ; 1e80d (7:680d)
-	ld a, [$d730]
-	bit 0, a
-	ret nz
-	xor a
-	ld [wJoypadForbiddenButtonsMask], a
-	ld hl, $d7f2
-	set 5, [hl]
-	ld hl, $d7f1
-	set 0, [hl]
-	ld a, $0
-	ld [W_BILLSHOUSECURSCRIPT], a
-	ret
-
-BillsHouseScript5: ; 1e827 (7:6827)
-	ld a, $4
-	ld [$ff00+$8c], a
-	call DisplayTextID
-	ld a, $0
-	ld [W_BILLSHOUSECURSCRIPT], a
 	ret
 
 BillsHouseTextPointers: ; 1e834 (7:6834)
@@ -42685,7 +42595,7 @@ BillsHouseText1: ; 1e83d (7:683d)
 	jr nz, .end
 	ld hl, UnnamedText_1e865
 	call PrintText
-	ld bc, (BICYCLE << 8) | 1
+	ld bc, (GREAT_BALL << 8) | 1
 	call GiveItem
 	jr nc, .BagFull
 	ld hl, SSTicketReceivedText
@@ -107477,9 +107387,23 @@ CeruleanHouse2TextPointers: ; 74e13 (1d:4e13)
 
 CeruleanHouse2Text1: ; 74e15 (1d:4e15)
 	db $8
+	ld a, [W_BILLSHOUSECURSCRIPT]
+	and a ; does player have running shoes already?
+	jr nz, .alreadyOwnRunningShoes
+	ld hl, GiveShoesText
+	call PrintText
+	ld a, 1
+	ld [W_BILLSHOUSECURSCRIPT], a
+	jr .done
+.alreadyOwnRunningShoes
 	ld hl, UnnamedText_74e77
 	call PrintText
+.done
 	jp TextScriptEnd
+
+GiveShoesText:
+	TX_FAR _GiveShoesText
+	db "@"
 
 UnnamedText_74e77: ; 74e77 (1d:4e77)
 	TX_FAR _UnnamedText_74e77

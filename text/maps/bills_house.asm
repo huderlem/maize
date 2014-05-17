@@ -36,9 +36,22 @@ _UnnamedText_1e865:: ; 8d267 (23:5267)
 	cont "out of BIKEs with"
 	cont "zero profit?!"
 
-	para "I never leave"
-	line "this room, so you"
-	cont "can have my BIKE!"
+	para "I wish I could"
+	line "help you get a"
+	cont "BIKE, but I never"
+	cont "leave this room!"
+
+	para "My friend who"
+	line "works in the"
+	cont "OUTPOST in AGATE"
+	cont "CITY might be"
+	cont "able to help."
+
+	para "All I have is"
+	line "this super fancy"
+	cont "high-tech item"
+	cont "called a"
+	cont "GREAT BALL!"
 	prompt
 
 _SSTicketReceivedText:: ; 8d499 (23:5499)
