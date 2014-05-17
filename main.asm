@@ -53373,7 +53373,7 @@ else
 endc
 	db 12,PARAS,METAPOD,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 12,KAKUNA,KAKUNA,BEEDRILL,0 ; Route 4 (south of Agate)
-	db 11,CATERPIE,METAPOD,0 ; Route 5 (east of Copper Town)
+	db 16,BUTTERFREE,BEEDRILL,0 ; Route 5 (east of Copper Town)
 	db 11,WEEDLE,KAKUNA,0
 	db 10,CATERPIE,METAPOD,CATERPIE,0
 	db 14,CATERPIE,WEEDLE,0
@@ -53392,8 +53392,8 @@ LassData: ; 39e0c (e:5e0c)
 	db 11,NIDORAN_F,PIKACHU,0 ; Route 3
 	db 14,GRIMER,GRIMER,GRIMER,0 ; Route 4 (south of Agate)
 	db 14,JIGGLYPUFF,CLEFAIRY,0 ; Route 4 (south of Agate)
-	db 16,PIDGEY,NIDORAN_F,0 ; Route 5 (east of Copper Town)
-	db 14,PIDGEY,NIDORAN_F,0 ; Route 5 (east of Copper Town)
+	db 16,NIDORAN_F,NIDORINA,0 ; Route 5 (east of Copper Town)
+	db 15,POLIWAG,0 ; Route 5 (east of Copper Town)
 	db 15,NIDORAN_M,NIDORAN_F,0
 	db 13,ODDISH,PIDGEY,ODDISH,0
 	db 18,PIDGEY,NIDORAN_F,0
@@ -53437,8 +53437,8 @@ endc
 	db 13,PIDGEY,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 14,PIDGEY,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 17,SANDSHREW,0 ; Route 4 (south of Agate)
-	db 16,SPEAROW,RATICATE,0 ; Route 5 (east of Copper Town)
-	db 18,DIGLETT,DIGLETT,SANDSHREW,0 ; Route 5 (east of Copper Town)
+	db 16,MACHOP,FLAAFFY,0 ; Route 5 (east of Copper Town)
+	db 17,BELLSPROUT,VULPIX,0 ; Route 5 (east of Copper Town)
 	db 21,GROWLITHE,CHARMANDER,0
 	db 19,RATTATA,DIGLETT,EKANS,SANDSHREW,0
 	db 29,NIDORAN_M,NIDORINO,0
@@ -53487,7 +53487,7 @@ if _YELLOW
 endc
 PokemaniacData: ; 39f09 (e:5f09)
 	db 12,ODDISH,BELLSPROUT,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
-	db 20,CUBONE,SLOWPOKE,0 ; Route 5 (east of Copper Town)
+	db 16,DIGLETT,SANDSHREW,0 ; Route 5 (east of Copper Town)
 	db 20,SLOWPOKE,SLOWPOKE,SLOWPOKE,0
 	db 22,CHARMANDER,CUBONE,0
 	db 25,SLOWPOKE,0
@@ -81336,7 +81336,7 @@ Route24TrainerHeader2: ; 51467 (14:5467)
 
 Route24TrainerHeader3: ; 51473 (14:5473)
 	db $4 ; flag's bit
-	db ($1 << 4) ; trainer's view range
+	db ($2 << 4) ; trainer's view range
 	dw $d7ef ; flag's byte
 	dw Route24BattleText3 ; 0x558f TextBeforeBattle
 	dw Route24AfterBattleText3 ; 0x5599 TextAfterBattle
@@ -81363,7 +81363,7 @@ Route24TrainerHeader5: ; 5148b (14:548b)
 
 Route24TrainerHeader6: ; 51497 (14:5497)
 	db $7 ; flag's bit
-	db ($1 << 4) ; trainer's view range
+	db ($2 << 4) ; trainer's view range
 	dw $d7ef ; flag's byte
 	dw Route24BattleText6 ; 0x55bc TextBeforeBattle
 	dw Route24AfterBattleText6 ; 0x55c6 TextAfterBattle
@@ -81379,16 +81379,29 @@ Route24Text1: ; 514a4 (14:54a4)
 	ld a, [$d7ef]
 	bit 0, a
 	jr nz, .asm_a03f5 ; 0x514af $48
+	; check for starter type
+	ld a, [W_PLAYERSTARTER]
+	cp STARYU
+	jr z, .staryu
+	cp GROWLITHE
+	jr z, .growlithe
+	ld bc, (LEAF_STONE << 8) | 1
+	jr .loadedStone
+.staryu
+	ld bc, (WATER_STONE << 8) | 1
+	jr .loadedStone
+.growlithe
+	ld bc, (FIRE_STONE << 8) | 1
+.loadedStone
+	call GiveItem
+	push af
 	ld hl, UnnamedText_51510
 	call PrintText
-	ld bc, (NUGGET << 8) | 1
-	call GiveItem
+	pop af
 	jr nc, .BagFull
 	ld hl, $d7ef
 	set 0, [hl]
-	ld hl, UnnamedText_5151a
-	call PrintText
-	ld hl, UnnamedText_51526
+	ld hl, UnnamedText_51510_2
 	call PrintText
 	ld hl, $d72d
 	set 6, [hl]
@@ -81419,20 +81432,14 @@ Route24Text1: ; 514a4 (14:54a4)
 
 UnnamedText_51510: ; 51510 (14:5510)
 	TX_FAR _UnnamedText_51510 ; 0x92721
-	db $0B
-	TX_FAR _UnnamedText_51515 ; 0x92755
 	db "@"
 
-UnnamedText_5151a: ; 5151a (14:551a)
-	TX_FAR _UnnamedText_5151a ; 0x92779
+UnnamedText_51510_2: ; 5151a (14:551a)
+	TX_FAR _UnnamedText_51510_2 ; 0x92779
 	db $0B, $6, "@"
 
 UnnamedText_51521: ; 51521 (14:5521)
 	TX_FAR _UnnamedText_51521
-	db "@"
-
-UnnamedText_51526: ; 51526 (14:5526)
-	TX_FAR _UnnamedText_51526
 	db "@"
 
 UnnamedText_5152b: ; 5152b (14:552b)

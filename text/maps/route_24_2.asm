@@ -1,91 +1,103 @@
 _Route24EndBattleText1:: ; 94000 (25:4000)
-	text "I"
-	line "thought not!"
+	text "The"
+	line "cave..."
 	prompt
 
 _Route24AfterBattleText1:: ; 94010 (25:4010)
-	text "I hid because the"
-	line "people on the"
-	cont "bridge scared me!"
+	text "They closed off"
+	line "this entrance to"
+	cont "stop weak things"
+	cont "from entering."
+
+	para "Like you."
 	done
 
 _Route24BattleText2:: ; 94043 (25:4043)
-	text "OK! I'm No. 5!"
-	line "I'll stomp you!"
+	text "I take pride in"
+	line "guarding this"
+	cont "ledge thing."
 	done
 
 _Route24EndBattleText2:: ; 94061 (25:4061)
-	text "Whoa!"
-	line "Too much!"
+	text "..."
 	prompt
 
 _Route24AfterBattleText2:: ; 94072 (25:4072)
-	text "I did my best, I"
-	line "have no regrets!"
+	text "Nobody uses this"
+	line "ledge thing"
+	cont "without speaking"
+	cont "to me first."
 	done
 
 _Route24BattleText3:: ; 94095 (25:4095)
-	text "I'm No. 4!"
-	line "Getting tired?"
+	text "AwooOOoogah!"
+
+	para "Trainer spotted!"
 	done
 
 _Route24EndBattleText3:: ; 940af (25:40af)
-	text "I lost"
-	line "too!"
+	text "Beep."
 	prompt
 
 _Route24AfterBattleText3:: ; 940bc (25:40bc)
-	text "I did my best, so"
-	line "I've no regrets!"
+	text "Android SB-129"
+	line "functioning."
 	done
 
 _Route24BattleText4:: ; 940df (25:40df)
-	text "Here's No. 3!"
-	line "I won't be easy!"
+	text "Look!"
+
+	para "A momma"
+	line "CHARMANDER and"
+	cont "a baby"
+	cont "CHARMANDER!"
+
+	para "I want to catch"
+	line "one!"
 	done
 
 _Route24EndBattleText4:: ; 940fd (25:40fd)
-	text "Ow!"
-	line "Stomped flat!"
+	text "I want"
+	line "one!"
 	prompt
 
 _Route24AfterBattleText4:: ; 94110 (25:4110)
-	text "I did my best, I"
-	line "have no regrets!"
+	text "I bet the mother"
+	line "is very"
+	cont "protective."
 	done
 
 _Route24BattleText5:: ; 94133 (25:4133)
-	text "I'm second!"
-	line "Now it's serious!"
+	text "Standing between"
+	line "fences and rocks"
+	cont "is fun!"
 	done
 
 _Route24EndBattleText5:: ; 94150 (25:4150)
-	text "How could I"
-	line "lose?"
+	text "I rock"
+	line "at fencing."
 	prompt
 
 _Route24AfterBattleText5:: ; 94163 (25:4163)
-	text "I did my best, I"
-	line "have no regrets!"
+	text "Maybe I should"
+	line "pick up rock"
+	cont "climbing."
 	done
 
 _Route24BattleText6:: ; 94186 (25:4186)
-	text "This is NUGGET"
-	line "BRIDGE! Beat us 5"
-	cont "trainers and win"
-	cont "a fabulous prize!"
+	text "Go, BUTTERBEE!"
 
-	para "Think you got"
-	line "what it takes?"
+	para "Or was it"
+	line "FREEDRILL?"
 	done
 
 _Route24EndBattleText6:: ; 941e8 (25:41e8)
-	text "Whoo!"
-	line "Good stuff!"
+	text "Not"
+	line "BUTTERDRILL!"
 	prompt
 
 _Route24AfterBattleText6:: ; 941fb (25:41fb)
-	text "I did my best, I"
-	line "have no regrets!"
+	text "I can never keep"
+	line "names straight."
 	done
 

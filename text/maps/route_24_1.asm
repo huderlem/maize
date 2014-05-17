@@ -1,49 +1,33 @@
 _UnnamedText_51510:: ; 92721 (24:6721)
-	text "Congratulations!"
-	line "You beat our 5"
-	cont "contest trainers!@@"
+	text "The momma"
+	line "CHARMANDER is"
+	cont "eyeing you."
 
-_UnnamedText_51515:: ; 92755 (24:6755)
-	db $0
-	para "You just earned a"
-	line "fabulous prize!"
+	para "She looks rather"
+	line "sick."
+
+	para "YUCK!"
+
+	para "She just"
+	line "conveniently spit"
+	cont "up a slimy"
+	cont "@"
+	TX_RAM $cf4b
+	text "!"
 	prompt
 
-_UnnamedText_5151a:: ; 92779 (24:6779)
-	text $52, " received"
-	line "a @"
-	TX_RAM $cf4b
-	text "!@@"
+_UnnamedText_51510_2::
+	text "A baby CHARMANDER"
+	line "dramatically"
+	cont "popped out from"
+	cont "behind the momma"
+	cont "to protect her"
+	cont "from you!"
+	done
 
 _UnnamedText_51521:: ; 9278f (24:678f)
 	text "You don't have"
-	line "any room!"
-	done
-
-_UnnamedText_51526:: ; 927a8 (24:67a8)
-	text "By the way, would"
-	line "you like to join"
-	cont "TEAM ROCKET?"
-
-	para "We're a group"
-	line "dedicated to evil"
-	cont "using #MON!"
-
-	para "Want to join?"
-
-	para "Are you sure?"
-
-	para "Come on, join us!"
-
-	para "I'm telling you"
-	line "to join!"
-
-	para "OK, you need"
-	line "convincing!"
-
-	para "I'll make you an"
-	line "offer you can't"
-	cont "refuse!"
+	line "room for it!"
 	done
 
 _UnnamedText_5152b:: ; 9288a (24:688a)
@@ -52,14 +36,22 @@ _UnnamedText_5152b:: ; 9288a (24:688a)
 	prompt
 
 _UnnamedText_51530:: ; 928a0 (24:68a0)
-	text "With your ability,"
-	line "you could become"
-	cont "a top leader in"
-	cont "TEAM ROCKET!"
+	text "The momma"
+	line "CHARMANDER is"
+	cont "looking down in"
+	cont "sadness."
+
+	para "You took away the"
+	line "one thing she"
+	cont "loved."
 	done
 
 _Route24BattleText1:: ; 928e2 (24:68e2)
-	text "I saw your feat"
-	line "from the grass!"
+	text "This cave..."
+
+	para "It's part of a"
+	line "perilous system"
+	cont "called the MACER"
+	cont "TUNNELS."
 	done
 
