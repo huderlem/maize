@@ -108,7 +108,7 @@ _OaksLabAroundWorldText:: ; 95045 (25:5045)
 	done
 
 _OaksLabGivePokeballsText1:: ; 9506d (25:506d)
-	text "OAK: You can't get"
+	text "You can't get"
 	line "detailed data on"
 	cont "#MON by just"
 	cont "seeing them."
@@ -140,7 +140,7 @@ _OaksLabGivePokeballsText2:: ; 950f2 (25:50f2)
 	done
 
 _OaksLabPleaseVisitText:: ; 9519e (25:519e)
-	text "OAK: Come see me"
+	text "Come see me"
 	line "sometimes."
 
 	para "I want to know how"
@@ -149,7 +149,7 @@ _OaksLabPleaseVisitText:: ; 9519e (25:519e)
 	done
 
 _UnnamedText_1d31d:: ; 951e9 (25:51e9)
-	text "OAK: Good to see "
+	text "Good to see "
 	line "you! How is your "
 	cont "#DEX coming? "
 	cont "Here, let me take"

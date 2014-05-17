@@ -1795,11 +1795,11 @@ _UnnamedText_1e93b:: ; 8a35d (22:635d)
 
 _UnnamedText_1e940:: ; 8a37b (22:637b)
 	text "Closed link to"
-	line "PROF.OAK's PC.@@"
+	line "PROF.CEDAR's PC.@@"
 
 _UnnamedText_1e946:: ; 8a39a (22:639a)
 	text "Accessed PROF."
-	line "OAK's PC."
+	line "CEDAR's PC."
 
 	para "Accessed #DEX"
 	line "Rating System."
@@ -2882,7 +2882,7 @@ _MonCannotLearnMachineMoveText:: ; a6a6e (29:6a6e)
 	prompt
 
 _ItemUseNotTimeText:: ; a6aa6 (29:6aa6)
-	text "OAK: ", $52, "!"
+	text "CEDAR: ", $52, "!"
 	line "This isn't the"
 	cont "time to use that! "
 	prompt
