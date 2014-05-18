@@ -1,24 +1,15 @@
 _VermilionMartText2:: ; 9a9c1 (26:69c1)
-	text "There are evil"
-	line "people who will"
-	cont "use #MON for"
-	cont "criminal acts."
-
-	para "TEAM ROCKET"
-	line "traffics in rare"
-	cont "#MON."
-
-	para "They also abandon"
-	line "#MON that they"
-	cont "consider not to"
-	cont "be popular or"
-	cont "useful."
+	text "TEAM QUARRY is"
+	line "full of ignorant"
+	cont "twats who blindly"
+	cont "follow a crazed"
+	cont "man."
 	done
 
 _VermilionMartText3:: ; 9aa67 (26:6a67)
-	text "I think #MON"
-	line "can be good or"
-	cont "evil. It depends"
-	cont "on the trainer."
+	text "I heard there is"
+	line "a secret tunnel"
+	cont "somewhere in"
+	cont "COPPER TOWN."
 	done
 

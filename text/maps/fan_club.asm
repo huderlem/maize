@@ -1,37 +1,27 @@
-_UnnamedText_59bb7:: ; 9a572 (26:6572)
-	text "Won't you admire"
-	line "my PIKACHU's"
-	cont "adorable tail?"
-	done
-
 _UnnamedText_59bbc:: ; 9a59e (26:659e)
-	text "Humph! My PIKACHU"
-	line "is twice as cute"
-	cont "as that one!"
+	text "We love playing"
+	line "#MON ROM"
+	cont "hacks!"
 	done
 
 _UnnamedText_59be4:: ; 9a5cf (26:65cf)
-	text "I just love my"
-	line "SEEL!"
-
-	para "It squeals when I"
-	line "hug it!"
-	done
-
-_UnnamedText_59be9:: ; 9a5ff (26:65ff)
-	text "Oh dear!"
-
-	para "My SEEL is far"
-	line "more attractive!"
+	text "I wish there were"
+	line "more hacks of"
+	cont "#MON Red..."
 	done
 
 _UnnamedText_59c00:: ; 9a629 (26:6629)
-	text "PIKACHU: Chu!"
-	line "Pikachu!"
+	text "I'm playing"
+	line "#MON Prism!"
+
+	para "I'm blown away."
 	done
 
 _UnnamedText_59c17:: ; 9a641 (26:6641)
-	text "SEEL: Kyuoo!"
+	text "I'm a fan of the"
+	line "flashy graphics"
+	cont "of the Gen 3"
+	cont "hacks!"
 	done
 
 _UnnamedText_59c65:: ; 9a64f (26:664f)
@@ -126,19 +116,25 @@ _UnnamedText_59c83:: ; 9a933 (26:6933)
 	done
 
 _FanClubText6:: ; 9a948 (26:6948)
-	text "Our Chairman is"
-	line "very vocal about"
-	cont "#MON."
+	text "Our kids never"
+	line "stop playing"
+	cont "games."
+
+	para "However, our"
+	line "eldest daughter"
+	cont "is COPPER TOWN's"
+	cont "GYM Leader."
 	done
 
 _FanClubText7:: ; 9a970 (26:6970)
-	text "Let's all listen"
-	line "politely to other"
-	cont "trainers!"
+	text "#MON Prototype"
+	line "is displayed on"
+	cont "the screen."
 	done
 
 _FanClubText8:: ; 9a99d (26:699d)
-	text "If someone brags,"
-	line "brag right back!"
+	text "#MON Prism"
+	line "is displayed on"
+	cont "the screen."
 	done
 

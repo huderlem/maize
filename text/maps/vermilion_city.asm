@@ -1,16 +1,27 @@
 _VermilionCityText1:: ; a5668 (29:5668)
-	text "We're careful"
-	line "about pollution!"
+	text "The guards in the"
+	line "buildings that"
+	cont "surround this"
+	cont "town are very"
+	cont "suspicious of new"
+	cont "faces."
 
-	para "We've heard GRIMER"
-	line "multiplies in"
-	cont "toxic sludge!"
+	para "They're trying to"
+	line "keep out people"
+	cont "from PYRITE CITY."
 	done
 
 _UnnamedText_198a7:: ; a56b5 (29:56b5)
-	text "Did you see S.S."
-	line "ANNE moored in"
-	cont "the harbor?"
+	text "I can't figure"
+	line "out how to get in"
+	cont "the GYM!"
+
+	para "If only I could"
+	line "jump as high as"
+	cont "LeBron James..."
+
+	para "Then I could get"
+	line "over this wall!"
 	done
 
 _UnnamedText_198ac:: ; a56e2 (29:56e2)
@@ -58,70 +69,61 @@ _SSAnneNotHereText:: ; a57f1 (29:57f1)
 	done
 
 _VermilionCityText4:: ; a5805 (29:5805)
-	text "I'm putting up a"
-	line "building on this"
-	cont "plot of land."
+	text "I'm such a rebel."
 
-	para "My #MON is"
-	line "tamping the land."
+	para "Take that, sign!"
 	done
 
 _VermilionCityText5:: ; a5852 (29:5852)
-	text "MACHOP: Guoh!"
-	line "Gogogoh!@@"
-
-_VermilionCityText14:: ; a586b (29:586b)
-	db $0
-	para "A MACHOP is"
-	line "stomping the land"
-	cont "flat."
+	text "I'm practicing my"
+	line "silly walk"
+	cont "because I failed"
+	cont "to jump over the"
+	cont "matchboxes."
 	done
 
 _VermilionCityText6:: ; a5891 (29:5891)
-	text "S.S.ANNE is a"
-	line "famous luxury"
-	cont "cruise ship."
+	text "ROCKY POINT is"
+	line "one of the few"
+	cont "places left"
+	cont "untouched by"
+	cont "humans."
 
-	para "We visit VERMILION"
-	line "once a year."
+	para "It would be a"
+	line "terrible thing if"
+	cont "that land were"
+	cont "disturbed."
 	done
 
 _VermilionCityText7:: ; a58db (29:58db)
-	text "VERMILION CITY"
-	line "The Port of"
-	cont "Exquisite Sunsets"
+	text "COPPER TOWN"
+	line "Worth more than a"
+	cont "penny!"
 	done
 
 _VermilionCityText8:: ; a5909 (29:5909)
-	text "NOTICE!"
-
-	para "ROUTE 12 may be"
-	line "blocked off by a"
-	cont "sleeping #MON."
-
-	para "Detour through"
-	line "ROCK TUNNEL to"
-	cont "LAVENDER TOWN."
-
-	para "VERMILION POLICE"
+	text "CLOSED until"
+	line "further notice--"
+	cont "Ministry of"
+	cont "Silly Walks"
 	done
 
 _VermilionCityText11:: ; a5980 (29:5980)
-	text "#MON FAN CLUB"
-	line "All #MON fans"
-	cont "welcome!"
+	text "COPPER TOWN"
+	line "OUTPOST"
 	done
 
 _VermilionCityText12:: ; a59a6 (29:59a6)
-	text "VERMILION CITY"
+	text "COPPER TOWN"
 	line "#MON GYM"
-	cont "LEADER: LT.SURGE"
+	cont "LEADER: ELDA"
 
-	para "The Lightning "
-	line "American!"
+	para "The fiery-eyed"
+	line "woman!"
 	done
 
 _VermilionCityText13:: ; a59e9 (29:59e9)
-	text "VERMILION HARBOR"
+	text "NO WALKING ON THE"
+	line "RECTANGULAR PATH!"
 	done
 

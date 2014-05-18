@@ -453,19 +453,12 @@ _UnnamedText_624cb:: ; 88460 (22:4460)
 	done
 
 _VermilionPokecenterGuyText:: ; 8848e (22:448e)
-	text "It is true that a"
-	line "higher level"
-	cont "#MON will be"
-	cont "more powerful..."
+	text "Elda..."
+	line "She burned me."
 
-	para "But, all #MON"
-	line "will have weak"
-	cont "points against"
-	cont "specific types."
-
-	para "So, there is no"
-	line "universally"
-	cont "strong #MON."
+	para "Her CHARMELEON"
+	line "scorched my"
+	cont "ODDISH."
 	done
 
 _CeladonCityPokecenterGuyText:: ; 88531 (22:4531)

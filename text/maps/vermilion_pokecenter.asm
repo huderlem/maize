@@ -1,21 +1,32 @@
 _VermilionPokecenterText2:: ; 9a4b2 (26:64b2)
 _VermilionPokecenterText1:: ; 9a4b2 (26:64b2)
-	text "Even if they are"
-	line "the same level,"
-	cont "#MON can have"
-	cont "very different"
-	cont "abilities."
+	text "The DVs of my"
+	line "RATTATA are off"
+	cont "the charts!"
 
-	para "A #MON raised"
-	line "by a trainer is"
-	cont "stronger than one"
-	cont "in the wild."
+	para "There is a man in"
+	line "PYRITE CITY who"
+	cont "can tell you the"
+	cont "DVs of your"
+	cont "#MON."
+
+	para "Pretty cool, huh?"
 	done
 
 _VermilionPokecenterText3:: ; 9a539 (26:6539)
-	text "My #MON was"
-	line "poisoned! It"
-	cont "fainted while we"
-	cont "were walking!"
-	done
+	text "My MACHOP just"
+	line "learned how to"
+	cont "use DRAIN PUNCH!"
 
+	para "I didn't even"
+	line "know that move"
+	cont "was in this game!"
+
+	para "Err..."
+	line "I mean..."
+
+	para "I didn't even"
+	line "know that move"
+	cont "was in this"
+	cont "region!"
+	done

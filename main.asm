@@ -36213,7 +36213,7 @@ VermilionCityScript0: ; 197e6 (6:57e6)
 	ret
 
 CoordsData_19823: ; 19823 (6:5823)
-	db $1e,$12
+	db $0,$0
 	db $ff
 
 VermilionCityScript4: ; 19826 (6:5826)
@@ -36369,15 +36369,6 @@ VermilionCityText4: ; 1991d (6:591d)
 
 VermilionCityText5: ; 19922 (6:5922)
 	TX_FAR _VermilionCityText5
-	db $08 ; asm
-	ld a, MACHOP
-	call PlayCry
-	call WaitForSoundToFinish
-	ld hl, VermilionCityText14 ; $5933
-	ret
-
-VermilionCityText14: ; 19933 (6:5933)
-	TX_FAR _VermilionCityText14
 	db "@"
 
 VermilionCityText6: ; 19938 (6:5938)
@@ -36845,7 +36836,7 @@ VermilionHouse3Object: ; 0x19c25 (size=26)
 	db $0 ; signs
 
 	db $1 ; people
-	db SPRITE_LITTLE_GIRL, $5 + 4, $3 + 4, $ff, $d1, $1 ; person
+	db SPRITE_LITTLE_GIRL, $6 + 4, $7 + 4, $ff, $d0, $1 ; person
 
 	; warp-to
 	EVENT_DISP VERMILION_HOUSE_3_WIDTH, $7, $2
@@ -40991,7 +40982,7 @@ VermilionHouse1Object: ; 0x1db20 (size=38)
 
 	db $3 ; people
 	db SPRITE_BUG_CATCHER, $3 + 4, $5 + 4, $ff, $d2, $1 ; person
-	db SPRITE_BIRD, $5 + 4, $3 + 4, $fe, $2, $2 ; person
+	db SPRITE_BIRD, $2 + 4, $3 + 4, $fe, $2, $2 ; person
 	db SPRITE_PAPER_SHEET, $3 + 4, $4 + 4, $ff, $ff, $3 ; person
 
 	; warp-to
@@ -90991,25 +90982,11 @@ FanClubTextPointers: ; 59b84 (16:5b84)
 	dw FanClubText8
 
 FanClubText1: ; 59b94 (16:5b94)
-	db $08 ; asm
-	ld a, [$d771]
-	bit 7, a
-	jr nz, asm_67b22 ; 0x59b9a
-	ld hl, UnnamedText_59bb7
-	call PrintText
-	ld hl, $d771
-	set 6, [hl]
-	jr asm_64f01 ; 0x59ba7
-asm_67b22 ; 0x59ba9
-	ld hl, UnnamedText_59bbc
-	call PrintText
-	ld hl, $d771
-	res 7, [hl]
-asm_64f01 ; 0x59bb4
-	jp TextScriptEnd
+	TX_FAR _UnnamedText_59bbc
+	db "@"
 
 UnnamedText_59bb7: ; 59bb7 (16:5bb7)
-	TX_FAR _UnnamedText_59bb7
+	TX_FAR _UnnamedText_59bbc
 	db "@"
 
 UnnamedText_59bbc: ; 59bbc (16:5bbc)
@@ -91017,39 +90994,16 @@ UnnamedText_59bbc: ; 59bbc (16:5bbc)
 	db "@"
 
 FanClubText2: ; 59bc1 (16:5bc1)
-	db $08 ; asm
-	ld a, [$d771]
-	bit 6, a
-	jr nz, asm_5cd59 ; 0x59bc7
-	ld hl, UnnamedText_59be4
-	call PrintText
-	ld hl, $d771
-	set 7, [hl]
-	jr asm_59625 ; 0x59bd4
-asm_5cd59 ; 0x59bd6
-	ld hl, UnnamedText_59be9
-	call PrintText
-	ld hl, $d771
-	res 6, [hl]
-asm_59625 ; 0x59be1
-	jp TextScriptEnd
+	TX_FAR _UnnamedText_59be4
+	db "@"
 
 UnnamedText_59be4: ; 59be4 (16:5be4)
 	TX_FAR _UnnamedText_59be4
 	db "@"
 
-UnnamedText_59be9: ; 59be9 (16:5be9)
-	TX_FAR _UnnamedText_59be9
-	db "@"
-
 FanClubText3: ; 59bee (16:5bee)
-	db $8
-	ld hl, UnnamedText_59c00
-	call PrintText
-	ld a, PIKACHU
-	call PlayCry
-	call WaitForSoundToFinish
-	jp TextScriptEnd
+	TX_FAR _UnnamedText_59c00
+	db "@"
 
 UnnamedText_59c00: ; 59c00 (16:5c00)
 	TX_FAR _UnnamedText_59c00
@@ -91143,25 +91097,27 @@ FanClubText8: ; 59c92 (16:5c92)
 FanClubObject: ; 0x59c97 (size=62)
 	db $d ; border tile
 
-	db $2 ; warps
-	db $7, $2, $1, $ff
-	db $7, $3, $1, $ff
+	db $3 ; warps
+	db $7, $2, $5, $ff
+	db $7, $3, $5, $ff
+	db $0, $3, $1, VERMILION_CITY
 
 	db $2 ; signs
-	db $0, $1, $7 ; FanClubText7
-	db $0, $6, $8 ; FanClubText8
+	db $2, $2, $7 ; FanClubText7
+	db $4, $7, $8 ; FanClubText8
 
 	db $6 ; people
-	db SPRITE_FISHER2, $3 + 4, $6 + 4, $ff, $d2, $1 ; person
-	db SPRITE_GIRL, $3 + 4, $1 + 4, $ff, $d3, $2 ; person
-	db SPRITE_CLEFAIRY, $4 + 4, $6 + 4, $ff, $d2, $3 ; person
-	db SPRITE_SEEL, $4 + 4, $1 + 4, $ff, $d3, $4 ; person
-	db SPRITE_GENTLEMAN, $1 + 4, $3 + 4, $ff, $d0, $5 ; person
-	db SPRITE_CABLE_CLUB_WOMAN, $1 + 4, $5 + 4, $ff, $d0, $6 ; person
+	db SPRITE_LITTLE_GIRL, $5 + 4, $6 + 4, $ff, $d1, $1 ; person
+	db SPRITE_LITTLE_GIRL, $3 + 4, $2 + 4, $ff, $d1, $2 ; person
+	db SPRITE_BLACK_HAIR_BOY_1, $5 + 4, $7 + 4, $ff, $d1, $3 ; person
+	db SPRITE_BUG_CATCHER, $3 + 4, $1 + 4, $ff, $d1, $4 ; person
+	db SPRITE_GENTLEMAN, $1 + 4, $5 + 4, $ff, $d0, $5 ; person
+	db SPRITE_CABLE_CLUB_WOMAN, $3 + 4, $4 + 4, $ff, $d0, $6 ; person
 
 	; warp-to
 	EVENT_DISP $4, $7, $2
 	EVENT_DISP $4, $7, $3
+	EVENT_DISP $4, $0, $3
 
 FanClubBlocks: ; 59cd5 (16:5cd5)
 	INCBIN "maps/fanclub.blk"
@@ -93671,8 +93627,8 @@ VermilionPokecenterObject: ; 0x5c9a9 (size=44)
 
 	db $4 ; people
 	db SPRITE_NURSE, $1 + 4, $3 + 4, $ff, $d0, $1 ; person
-	db SPRITE_FISHER, $5 + 4, $a + 4, $ff, $ff, $2 ; person
-	db SPRITE_SAILOR, $4 + 4, $5 + 4, $ff, $ff, $3 ; person
+	db SPRITE_FISHER, $3 + 4, $6 + 4, $ff, $d0, $2 ; person
+	db SPRITE_SAILOR, $3 + 4, $5 + 4, $ff, $d0, $3 ; person
 	db SPRITE_CABLE_CLUB_WOMAN, $2 + 4, $b + 4, $ff, $d0, $4 ; person
 
 	; warp-to
@@ -103937,7 +103893,7 @@ TradeMons: ; 71b7b (1c:5b7b)
 	db ABRA,      MR_MIME,   0,"MARCEL@@@@@"
 	db BUTTERFREE,BEEDRILL,  2,"CHIKUCHIKU@"
 	db PONYTA,    SEEL,      0,"SAILOR@@@@@"
-	db SPEAROW,   FARFETCH_D,2,"DUX@@@@@@@@"
+	db PSYDUCK,   GASTLY,    2,"NIGHT FURY@"
 	db SLOWBRO,   LICKITUNG, 0,"MARC@@@@@@@"
 	db PIKACHU,   ABRA,      1,"SPOONY@@@@@"
 	db RAICHU,    ELECTRODE, 1,"DORIS@@@@@@"
