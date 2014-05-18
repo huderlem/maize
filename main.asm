@@ -34516,50 +34516,50 @@ VermilionCity_h: ; 0x18998 to 0x189ba (34 bytes) (bank=6) (id=5)
 	dw VermilionCityBlocks, VermilionCityTextPointers, VermilionCityScript ; blocks, texts, scripts
 	db NORTH | EAST ; connections
 	NORTH_MAP_CONNECTION ROUTE_6, ROUTE_6_WIDTH, ROUTE_6_HEIGHT, 5, 0, ROUTE_6_WIDTH, Route6Blocks
-	EAST_MAP_CONNECTION ROUTE_11, ROUTE_11_WIDTH, 4, 0, ROUTE_11_HEIGHT, Route11Blocks, VERMILION_CITY_WIDTH
+	EAST_MAP_CONNECTION ROUTE_24, ROUTE_24_WIDTH, 5, 0, ROUTE_24_HEIGHT, Route24Blocks, VERMILION_CITY_WIDTH
 	dw VermilionCityObject ; objects
 
 VermilionCityObject: ; 0x189ba (size=133)
-	db $43 ; border tile
+	db $f ; border tile
 
 	db $9 ; warps
-	db $3, $b, $0, VERMILION_POKECENTER
+	db $f, $1d, $0, VERMILION_POKECENTER
+	db $9, $9, $2, POKEMON_FAN_CLUB
+	db $f, $19, $0, VERMILION_MART
+	db $5, $a, $0, VERMILION_GYM
+	db $1b, $7, $0, VERMILION_HOUSE_1
 	db $d, $9, $0, POKEMON_FAN_CLUB
-	db $d, $17, $0, VERMILION_MART
-	db $13, $c, $0, VERMILION_GYM
-	db $13, $17, $0, VERMILION_HOUSE_1
-	db $1f, $12, $0, VERMILION_DOCK
-	db $1f, $13, $0, VERMILION_DOCK
-	db $d, $f, $0, VERMILION_HOUSE_3
-	db $3, $7, $0, VERMILION_HOUSE_2
+	db $0, $1, $0, VERMILION_DOCK
+	db $17, $20, $0, VERMILION_HOUSE_3
+	db $5, $1f, $0, PATH_ENTRANCE_ROUTE_5
 
 	db $7 ; signs
-	db $3, $1b, $7 ; VermilionCityText7
-	db $d, $25, $8 ; VermilionCityText8
-	db $d, $18, $9 ; MartSignText
-	db $3, $c, $a ; PokeCenterSignText
-	db $d, $7, $b ; VermilionCityText11
-	db $13, $7, $c ; VermilionCityText12
-	db $f, $1d, $d ; VermilionCityText13
+	db $11, $19, $7 ; VermilionCityText7
+	db $15, $7, $8 ; VermilionCityText8
+	db $f, $1a, $9 ; MartSignText
+	db $f, $1e, $a ; PokeCenterSignText
+	db $7, $21, $b ; VermilionCityText11
+	db $7, $f, $c ; VermilionCityText12
+	db $7, $19, $d ; VermilionCityText13
 
 	db $6 ; people
-	db SPRITE_FOULARD_WOMAN, $7 + 4, $13 + 4, $fe, $2, $1 ; person
+	db SPRITE_FOULARD_WOMAN, $d + 4, $13 + 4, $fe, $2, $1 ; person
 	db SPRITE_GAMBLER, $6 + 4, $e + 4, $ff, $ff, $2 ; person
-	db SPRITE_SAILOR, $1e + 4, $13 + 4, $ff, $d1, $3 ; person
-	db SPRITE_GAMBLER, $7 + 4, $1e + 4, $ff, $ff, $4 ; person
-	db SPRITE_SLOWBRO, $9 + 4, $1d + 4, $fe, $1, $5 ; person
-	db SPRITE_SAILOR, $1b + 4, $19 + 4, $fe, $2, $6 ; person
+	db SPRITE_SAILOR, $0 + 4, $0 + 4, $ff, $d1, $3 ; person
+	db SPRITE_BLACK_HAIR_BOY_2, $8 + 4, $1a + 4, $ff, $ff, $4 ; person
+	db SPRITE_LYING_OLD_MAN, $17 + 4, $b + 4, $fe, $1, $5 ; person
+	db SPRITE_LASS, $19 + 4, $1b + 4, $fe, $2, $6 ; person
 
 	; warp-to
-	EVENT_DISP $14, $3, $b ; VERMILION_POKECENTER
-	EVENT_DISP $14, $d, $9 ; POKEMON_FAN_CLUB
-	EVENT_DISP $14, $d, $17 ; VERMILION_MART
-	EVENT_DISP $14, $13, $c ; VERMILION_GYM
-	EVENT_DISP $14, $13, $17 ; VERMILION_HOUSE_1
-	EVENT_DISP $14, $1f, $12 ; VERMILION_DOCK
-	EVENT_DISP $14, $1f, $13 ; VERMILION_DOCK
-	EVENT_DISP $14, $d, $f ; VERMILION_HOUSE_3
-	EVENT_DISP $14, $3, $7 ; VERMILION_HOUSE_2
+	EVENT_DISP $14, $f, $1d ; VERMILION_POKECENTER
+	EVENT_DISP $14, $9, $9 ; POKEMON_FAN_CLUB
+	EVENT_DISP $14, $f, $19 ; VERMILION_MART
+	EVENT_DISP $14, $5, $a ; VERMILION_GYM
+	EVENT_DISP $14, $1b, $7 ; VERMILION_HOUSE_1
+	EVENT_DISP $14, $d, $9 ; VERMILION_DOCK
+	EVENT_DISP $14, $0, $1 ; VERMILION_DOCK
+	EVENT_DISP $14, $17, $20 ; VERMILION_HOUSE_3
+	EVENT_DISP $14, $5, $1f ; VERMILION_HOUSE_2
 
 VermilionCityBlocks: ; 18a3f (6:4a3f)
 	INCBIN "maps/vermilioncity.blk"
@@ -79902,7 +79902,8 @@ Route24_h: ; 0x50682 to 0x506a4 (34 bytes) (id=35)
 	db $00 ; tileset
 	db ROUTE_24_HEIGHT, ROUTE_24_WIDTH ; dimensions (y, x)
 	dw Route24Blocks, Route24TextPointers, Route24Script ; blocks, texts, scripts
-	db EAST ; connections
+	db WEST | EAST ; connections
+	WEST_MAP_CONNECTION VERMILION_CITY, VERMILION_CITY_WIDTH, -5, 0, VERMILION_CITY_HEIGHT, VermilionCityBlocks, ROUTE_24_WIDTH
 	EAST_MAP_CONNECTION ROUTE_25, ROUTE_25_WIDTH, -4, 20, $c, Route25Blocks, ROUTE_24_WIDTH
 	dw Route24Object ; objects
 
