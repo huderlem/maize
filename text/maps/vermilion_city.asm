@@ -127,3 +127,23 @@ _VermilionCityText13:: ; a59e9 (29:59e9)
 	line "RECTANGULAR PATH!"
 	done
 
+_CopperTownOutpostText1::
+	text "I may look small,"
+	line "but I'm in charge"
+	cont "of this OUTPOST."
+
+	para "Here, let me"
+	line "help you out."
+
+	para "I dug a tunnel"
+	line "under the city,"
+	cont "so people like"
+	cont "you can get past"
+	cont "those stupid new"
+	cont "guards."
+	prompt
+
+_CopperTownOutpostText2::
+	text "You can thank me"
+	line "later."
+	done

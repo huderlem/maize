@@ -95249,7 +95249,7 @@ UndergroundTunnelEntranceRoute5_h: ; 0x5d69d to 0x5d6a9 (12 bytes) (id=71)
 	dw UndergroundTunnelEntranceRoute5Object ; objects
 
 UndergroundTunnelEntranceRoute5Script: ; 5d6a9 (17:56a9)
-	ld a, $10
+	ld a, VERMILION_CITY
 	ld [$d365], a
 	ret
 
@@ -95261,30 +95261,45 @@ UndergroundTunnelEntranceRoute5TextPointers: ; 5d6b0 (17:56b0)
 
 UndergroundTunnelEntranceRoute5Text1: ; 5d6b2 (17:56b2)
 	db $08 ; asm
-	ld a, $9
-	ld [wWhichTrade], a
-	ld a, $54
+	ld hl, CopperTownOutpostText1
+	call PrintText
+	; reveal the stairs
+	ld a, $39
+	ld [$d09f], a
+	ld bc, $0103
+	ld a, $17
 	call Predef
-	ld hl, UndergroundTunnelEntranceRoute5_5d6af
-	ret
+	ld a, $ad
+	call PlaySound
+	ld hl, CopperTownOutpostText2
+	call PrintText
+	jp TextScriptEnd
+	
+CopperTownOutpostText1:
+	TX_FAR _CopperTownOutpostText1
+	db "@"
+
+CopperTownOutpostText2:
+	TX_FAR _CopperTownOutpostText2
+	db "@"
 
 UndergroundTunnelEntranceRoute5Object: ; 0x5d6c1 (size=34)
 	db $a ; border tile
 
 	db $3 ; warps
-	db $7, $3, $3, $ff
-	db $7, $4, $3, $ff
-	db $4, $4, $0, UNDERGROUND_PATH_NS
+	db $7, $2, $8, VERMILION_CITY
+	db $7, $3, $8, VERMILION_CITY
+	db $3, $7, $0, UNDERGROUND_PATH_NS
 
 	db $0 ; signs
 
 	db $1 ; people
-	db SPRITE_LITTLE_GIRL, $3 + 4, $2 + 4, $ff, $ff, $1 ; person
+	db SPRITE_LITTLE_GIRL, $3 + 4, $4 + 4, $ff, $d0, $1 ; person
 
 	; warp-to
+	EVENT_DISP $4, $7, $2
 	EVENT_DISP $4, $7, $3
-	EVENT_DISP $4, $7, $4
-	EVENT_DISP $4, $4, $4 ; UNDERGROUND_PATH_NS
+	EVENT_DISP $4, $3, $7 ; UNDERGROUND_PATH_NS
 
 UndergroundTunnelEntranceRoute6_h: ; 0x5d6e3 to 0x5d6ef (12 bytes) (id=74)
 	db $09 ; tileset
