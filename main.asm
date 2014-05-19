@@ -34256,65 +34256,65 @@ CeladonCity_h: ; 18000 (6:4000)
 	db $00 ; tileset
 	db CELADON_CITY_HEIGHT, CELADON_CITY_WIDTH ; dimensions (y, x)
 	dw CeladonCityBlocks, CeladonCityTextPointers, CeladonCityScript ; blocks, texts, scripts
-	db WEST | EAST ; connections
-	WEST_MAP_CONNECTION ROUTE_16, ROUTE_16_WIDTH, 4, 0, ROUTE_16_HEIGHT, Route16Blocks, CELADON_CITY_WIDTH
-	EAST_MAP_CONNECTION ROUTE_7, ROUTE_7_WIDTH, 4, 0, ROUTE_7_HEIGHT, Route7Blocks, CELADON_CITY_WIDTH
+	db NORTH | EAST ; connections
+	NORTH_MAP_CONNECTION ROUTE_6, ROUTE_6_WIDTH, ROUTE_6_HEIGHT, 11, 0, ROUTE_6_WIDTH, Route6Blocks
+	EAST_MAP_CONNECTION ROUTE_4, ROUTE_4_WIDTH, 0, 0, ROUTE_4_HEIGHT, Route4Blocks, CELADON_CITY_WIDTH
 	dw CeladonCityObject ; objects
 
 CeladonCityObject: ; 0x18022 (size=189)
 	db $f ; border tile
 
 	db $d ; warps
-	db $d, $8, $0, CELADON_MART_1
-	db $d, $a, $2, CELADON_MART_1
-	db $9, $18, $0, CELADON_MANSION_1
-	db $3, $18, $2, CELADON_MANSION_1
-	db $3, $19, $2, CELADON_MANSION_1
+	db $2, $8, $0, CELADON_MART_1
+	db $7, $19, $2, CELADON_MART_1
+	db $15, $d, $0, CELADON_HOTEL
+	db $7, $c, $0, MUSEUM_1F
+	db $13, $2b, $0, SAFFRON_HOUSE_2
 	db $9, $29, $0, CELADON_POKECENTER
-	db $1b, $c, $0, CELADON_GYM
-	db $13, $1c, $0, GAME_CORNER
-	db $13, $27, $0, CELADON_MART_5 ; beta warp! no longer used
-	db $13, $21, $0, CELADONPRIZE_ROOM
-	db $1b, $1f, $0, CELADON_DINER
-	db $1b, $23, $0, CELADON_HOUSE
-	db $1b, $2b, $0, CELADON_HOTEL
+	db $17, $20, $0, CELADON_GYM
+	db $19, $13, $0, CELADON_MANSION_1
+	db $2, $6, $0, CELADON_MART_5 ; beta warp! no longer used
+	db $1f, $25, $0, CELADON_HOUSE
+	db $2, $4, $0, CELADON_DINER
+	db $2, $5, $0, CELADON_HOUSE
+	db $17, $2b, $0, CELADON_HOTEL
 
 	db $9 ; signs
-	db $f, $1b, $a ; CeladonCityText10
-	db $f, $13, $b ; CeladonCityText11
+	db $d, $1b, $a ; CeladonCityText10
+	db $3, $2b, $b ; CeladonCityText11
 	db $9, $2a, $c ; PokeCenterSignText
-	db $1d, $d, $d ; CeladonCityText13
-	db $9, $15, $e ; CeladonCityText14
-	db $d, $c, $f ; CeladonCityText15
-	db $15, $27, $10 ; CeladonCityText16
-	db $15, $21, $11 ; CeladonCityText17
-	db $15, $1b, $12 ; CeladonCityText18
+	db $17, $23, $d ; CeladonCityText13
+	db $5, $27, $e ; CeladonCityText14
+	db $19, $11, $f ; CeladonCityText15
+	db $1f, $23, $10 ; CeladonCityText16
+	db $d, $25, $11 ; CeladonCityText17
+	db $1f, $2, $12 ; CeladonCityText18
 
 	db $9 ; people
-	db SPRITE_LITTLE_GIRL, $11 + 4, $8 + 4, $fe, $0, $1 ; person
-	db SPRITE_OLD_PERSON, $1c + 4, $b + 4, $ff, $d1, $2 ; person
-	db SPRITE_GIRL, $13 + 4, $e + 4, $fe, $1, $3 ; person
-	db SPRITE_OLD_PERSON, $16 + 4, $19 + 4, $ff, $d0, $4 ; person
-	db SPRITE_OLD_PERSON, $10 + 4, $16 + 4, $ff, $d0, $5 ; person
-	db SPRITE_FISHER2, $c + 4, $20 + 4, $ff, $d2, $6 ; person
-	db SPRITE_SLOWBRO, $c + 4, $1e + 4, $ff, $d3, $7 ; person
-	db SPRITE_ROCKET, $1d + 4, $20 + 4, $fe, $2, $8 ; person
-	db SPRITE_ROCKET, $e + 4, $2a + 4, $fe, $2, $9 ; person
+	db SPRITE_LITTLE_GIRL, $b + 4, $6 + 4, $fe, $0, $1 ; person
+	db SPRITE_OLD_PERSON, $18 + 4, $9 + 4, $ff, $d1, $2 ; person
+	db SPRITE_GIRL, $10 + 4, $10 + 4, $fe, $1, $3 ; person
+	db SPRITE_OLD_PERSON, $1a + 4, $21 + 4, $ff, $d0, $4 ; person
+	db SPRITE_OLD_PERSON, $1a + 4, $17 + 4, $ff, $d0, $5 ; person
+	db SPRITE_FISHER2, $f + 4, $1e + 4, $ff, $d2, $6 ; person
+	db SPRITE_SLOWBRO, $f + 4, $1c + 4, $ff, $d3, $7 ; person
+	db SPRITE_OLD_PERSON, $20 + 4, $1b + 4, $ff, $ff, $8 ; person
+	db SPRITE_ROCKET, $f + 4, $2b + 4, $ff, $ff, $9 ; person
 
 	; warp-to
-	EVENT_DISP $19, $d, $8 ; CELADON_MART_1
-	EVENT_DISP $19, $d, $a ; CELADON_MART_1
-	EVENT_DISP $19, $9, $18 ; CELADON_MANSION_1
-	EVENT_DISP $19, $3, $18 ; CELADON_MANSION_1
-	EVENT_DISP $19, $3, $19 ; CELADON_MANSION_1
+	EVENT_DISP $19, $2, $8 ; CELADON_MART_1
+	EVENT_DISP $19, $7, $19 ; CELADON_MART_1
+	EVENT_DISP $19, $15, $d ; CELADON_MANSION_1
+	EVENT_DISP $19, $7, $c ; CELADON_MANSION_1
+	EVENT_DISP $19, $13, $2b ; CELADON_MANSION_1
 	EVENT_DISP $19, $9, $29 ; CELADON_POKECENTER
-	EVENT_DISP $19, $1b, $c ; CELADON_GYM
-	EVENT_DISP $19, $13, $1c ; GAME_CORNER
-	EVENT_DISP $19, $13, $27 ; CELADON_MART_5
-	EVENT_DISP $19, $13, $21 ; CELADONPRIZE_ROOM
-	EVENT_DISP $19, $1b, $1f ; CELADON_DINER
-	EVENT_DISP $19, $1b, $23 ; CELADON_HOUSE
-	EVENT_DISP $19, $1b, $2b ; CELADON_HOTEL
+	EVENT_DISP $19, $17, $20 ; CELADON_GYM
+	EVENT_DISP $19, $19, $13 ; GAME_CORNER
+	EVENT_DISP $19, $2, $6 ; CELADON_MART_5
+	EVENT_DISP $19, $1f, $25 ; CELADONPRIZE_ROOM
+	EVENT_DISP $19, $2, $4 ; CELADON_DINER
+	EVENT_DISP $19, $2, $5 ; CELADON_HOUSE
+	EVENT_DISP $19, $17, $2b ; CELADON_HOTEL
 
 CeladonCityBlocks: ; 180df (6:40df)
 	INCBIN "maps/celadoncity.blk"
@@ -79795,18 +79795,20 @@ Route22_h: ; 0x50000 to 0x50022 (34 bytes) (id=33)
 Route22Object: ; 0x50022 (size=27)
 	db $2c ; border tile
 
-	db $1 ; warps
-	db $5, $8, $0, ROUTE_22_GATE
+	db $2 ; warps
+	db $3, $20, $7, MT_MOON_2
+	db $b, $8, $0, MT_MOON_1
 
 	db $1 ; signs
-	db $b, $7, $3 ; Route22Text3
+	db $d, $9, $3 ; Route22Text3
 
 	db $2 ; people
 	db SPRITE_BLUE, $5 + 4, $19 + 4, $ff, $ff, $1 ; person
 	db SPRITE_BLUE, $5 + 4, $19 + 4, $ff, $ff, $2 ; person
 
 	; warp-to
-	EVENT_DISP $14, $5, $8 ; ROUTE_22_GATE
+	EVENT_DISP $14, $3, $20 ; MT_MOON_2
+	EVENT_DISP $14, $b, $8 ; MT_MOON_1
 
 Route22Blocks: ; 5003d (14:403d)
 	INCBIN "maps/route22.blk"
@@ -80530,10 +80532,11 @@ Route20Text11: ; 50ead (14:4ead)
 	db "@"
 
 Route22Script: ; 50eb2 (14:4eb2)
-	call EnableAutoTextBoxDrawing
-	ld hl, Route22ScriptPointers
-	ld a, [W_ROUTE22CURSCRIPT]
-	jp CallFunctionInTable
+	ret
+	; call EnableAutoTextBoxDrawing
+	; ld hl, Route22ScriptPointers
+	; ld a, [W_ROUTE22CURSCRIPT]
+	; jp CallFunctionInTable
 
 Route22ScriptPointers: ; 50ebe (14:4ebe)
 	dw Route22Script0
@@ -82170,6 +82173,7 @@ MtMoon2Script: ; 51a42 (14:5a42)
 
 MtMoon2TextPointers: ; 51a46 (14:5a46)
 	dw MtMoonText1
+	dw RockyPoint2Text1
 
 MtMoonText1: ; 51a48 (14:5a48)
 	TX_FAR _UnnamedText_51a48
@@ -82179,28 +82183,33 @@ MtMoon2Object: ; 0x51a4d (size=68)
 	db $3 ; border tile
 
 	db $8 ; warps
-	db $5, $5, $2, MT_MOON_1
-	db $b, $11, $0, MT_MOON_3
-	db $9, $19, $3, MT_MOON_1
-	db $f, $19, $4, MT_MOON_1
-	db $11, $15, $1, MT_MOON_3
-	db $1b, $d, $2, MT_MOON_3
+	db $7, $b, $1, MT_MOON_2
+	db $13, $5, $0, MT_MOON_2
+	db $13, $f, $4, MT_MOON_2
+	db $14, $13, $3, MT_MOON_3
+	db $14, $3, $2, MT_MOON_2
+	db $1b, $1, $1, ROUTE_4
 	db $3, $17, $3, MT_MOON_3
-	db $3, $1b, $2, $ff
+	db $2, $1a, $0, ROUTE_22
 
 	db $0 ; signs
 
-	db $0 ; people
+	db $1 ; people
+	db SPRITE_BLACK_HAIR_BOY_2, $4 + 4, $7 + 4, $ff, $d1, $2
 
 	; warp-to
-	EVENT_DISP $e, $5, $5 ; MT_MOON_1
-	EVENT_DISP $e, $b, $11 ; MT_MOON_3
-	EVENT_DISP $e, $9, $19 ; MT_MOON_1
-	EVENT_DISP $e, $f, $19 ; MT_MOON_1
-	EVENT_DISP $e, $11, $15 ; MT_MOON_3
-	EVENT_DISP $e, $1b, $d ; MT_MOON_3
+	EVENT_DISP $e, $7, $b ; MT_MOON_1
+	EVENT_DISP $e, $13, $5 ; MT_MOON_3
+	EVENT_DISP $e, $13, $f ; MT_MOON_1
+	EVENT_DISP $e, $14, $13 ; MT_MOON_1
+	EVENT_DISP $e, $14, $3 ; MT_MOON_3
+	EVENT_DISP $e, $1b, $1 ; MT_MOON_3
 	EVENT_DISP $e, $3, $17 ; MT_MOON_3
-	EVENT_DISP $e, $3, $1b
+	EVENT_DISP $e, $2, $1a
+
+RockyPoint2Text1:
+	db $08 ; asm
+	jp TextScriptEnd
 
 MtMoon2Blocks: ; 51a91 (14:5a91)
 	INCBIN "maps/mtmoon2.blk"
@@ -84052,33 +84061,32 @@ Route4_h: ; 0x54390 to 0x543b2 (34 bytes) (id=15)
 	db $00 ; tileset
 	db ROUTE_4_HEIGHT, ROUTE_4_WIDTH ; dimensions (y, x)
 	dw Route4Blocks, Route4TextPointers, Route4Script; blocks, texts, scripts
-	db SOUTH | EAST ; connections
-	SOUTH_MAP_CONNECTION ROUTE_3, ROUTE_3_WIDTH, -3, 22, ROUTE_3_WIDTH - 22, Route3Blocks, ROUTE_4_WIDTH, ROUTE_4_HEIGHT
-	EAST_MAP_CONNECTION CERULEAN_CITY, CERULEAN_CITY_WIDTH, -3, 1, CERULEAN_CITY_HEIGHT - 3, CeruleanCityBlocks, ROUTE_4_WIDTH
+	db WEST ; connections
+	WEST_MAP_CONNECTION CELADON_CITY, CELADON_CITY_WIDTH, 0, 0, $10, CeladonCityBlocks, ROUTE_4_WIDTH
 	dw Route4Object ; objects
 
 Route4Object: ; 0x543b2 (size=58)
 	db $2c ; border tile
 
 	db $3 ; warps
-	db $5, $b, $0, MT_MOON_POKECENTER
-	db $5, $12, $0, MT_MOON_1
-	db $5, $18, $7, MT_MOON_2
+	db $2, $b, $0, MT_MOON_POKECENTER
+	db $5, $1e, $5, MT_MOON_2
+	db $2, $10, $7, MT_MOON_2
 
 	db $3 ; signs
-	db $5, $c, $4 ; PokeCenterSignText
-	db $7, $11, $5 ; Route4Text5
-	db $7, $1b, $6 ; Route4Text6
+	db $3, $d, $4 ; PokeCenterSignText
+	db $9, $f, $5 ; Route4Text5
+	db $7, $1f, $6 ; Route4Text6
 
-	db $3 ; people
-	db SPRITE_LASS, $8 + 4, $9 + 4, $fe, $0, $1 ; person
-	db SPRITE_LASS, $3 + 4, $3f + 4, $ff, $d3, $42, LASS + $C8, $4 ; trainer
-	db SPRITE_BALL, $3 + 4, $39 + 4, $ff, $ff, $83, TM_04 ; item
+	db $1 ; people
+	db SPRITE_LASS, $d + 4, $10 + 4, $fe, $0, $1 ; person
+	; db SPRITE_LASS, $3 + 4, $3f + 4, $ff, $d3, $42, LASS + $C8, $4 ; trainer
+	; db SPRITE_BALL, $3 + 4, $39 + 4, $ff, $ff, $83, TM_04 ; item
 
 	; warp-to
-	EVENT_DISP $2d, $5, $b ; MT_MOON_POKECENTER
-	EVENT_DISP $2d, $5, $12 ; MT_MOON_1
-	EVENT_DISP $2d, $5, $18 ; MT_MOON_2
+	EVENT_DISP $2d, $2, $b ; MT_MOON_POKECENTER
+	EVENT_DISP $2d, $5, $1e ; MT_MOON_1
+	EVENT_DISP $2d, $2, $10 ; MT_MOON_2
 
 Route4Blocks: ; 543ec (15:43ec)
 	INCBIN "maps/route4.blk"
@@ -88180,8 +88188,9 @@ Route6_h: ; 0x58000 to 0x58022 (34 bytes) (id=17)
 	db $00 ; tileset
 	db ROUTE_6_HEIGHT, ROUTE_6_WIDTH ; dimensions (y, x)
 	dw Route6Blocks, Route6TextPointers, Route6Script ; blocks, texts, scripts
-	db NORTH ; connections
+	db NORTH | SOUTH ; connections
 	NORTH_MAP_CONNECTION VERMILION_CITY, VERMILION_CITY_WIDTH, VERMILION_CITY_HEIGHT, -4, 0, VERMILION_CITY_WIDTH, VermilionCityBlocks
+	SOUTH_MAP_CONNECTION CELADON_CITY, CELADON_CITY_WIDTH, 0,11, $10, CeladonCityBlocks, ROUTE_6_WIDTH, ROUTE_6_HEIGHT
 	dw Route6Object ; objects
 
 Route6Object: ; 0x58022 (size=87)
