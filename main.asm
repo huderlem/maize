@@ -34514,8 +34514,8 @@ VermilionCity_h: ; 0x18998 to 0x189ba (34 bytes) (bank=6) (id=5)
 	db $00 ; tileset
 	db VERMILION_CITY_HEIGHT, VERMILION_CITY_WIDTH ; dimensions (y, x)
 	dw VermilionCityBlocks, VermilionCityTextPointers, VermilionCityScript ; blocks, texts, scripts
-	db NORTH | EAST ; connections
-	NORTH_MAP_CONNECTION ROUTE_6, ROUTE_6_WIDTH, ROUTE_6_HEIGHT, 5, 0, ROUTE_6_WIDTH, Route6Blocks
+	db SOUTH | EAST ; connections
+	SOUTH_MAP_CONNECTION ROUTE_6, ROUTE_6_WIDTH, 4, 0, ROUTE_6_WIDTH, Route6Blocks, VERMILION_CITY_WIDTH, VERMILION_CITY_HEIGHT
 	EAST_MAP_CONNECTION ROUTE_24, ROUTE_24_WIDTH, 5, 0, ROUTE_24_HEIGHT, Route24Blocks, VERMILION_CITY_WIDTH
 	dw VermilionCityObject ; objects
 
@@ -53365,8 +53365,8 @@ endc
 	db 12,PARAS,METAPOD,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 12,KAKUNA,KAKUNA,BEEDRILL,0 ; Route 4 (south of Agate)
 	db 16,BUTTERFREE,BEEDRILL,0 ; Route 5 (east of Copper Town)
-	db 11,WEEDLE,KAKUNA,0
-	db 10,CATERPIE,METAPOD,CATERPIE,0
+	db 11,WEEDLE,KAKUNA,0 ; Route 6 (south of Copper Town)
+	db 10,CATERPIE,METAPOD,CATERPIE,0 ; Route 6 (south of Copper Town)
 	db 14,CATERPIE,WEEDLE,0
 	db 16,WEEDLE,CATERPIE,WEEDLE,0
 	db 20,BUTTERFREE,0
@@ -53430,8 +53430,8 @@ endc
 	db 17,SANDSHREW,0 ; Route 4 (south of Agate)
 	db 16,MACHOP,FLAAFFY,0 ; Route 5 (east of Copper Town)
 	db 17,BELLSPROUT,VULPIX,0 ; Route 5 (east of Copper Town)
-	db 21,GROWLITHE,CHARMANDER,0
-	db 19,RATTATA,DIGLETT,EKANS,SANDSHREW,0
+	db 21,GROWLITHE,CHARMANDER,0 ; Route 6 (south of Copper Town)
+	db 19,RATTATA,DIGLETT,EKANS,SANDSHREW,0 ; Route 6 (south of Copper Town)
 	db 29,NIDORAN_M,NIDORINO,0
 if _YELLOW
 	db 16,WEEPINBELL,0
@@ -53439,8 +53439,8 @@ endc
 JrTrainerFData: ; 39e9d (e:5e9d)
 	db 14,VULPIX,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 16,SANDSHREW,DIGLETT,0 ; Agate City Gym
-	db 16,PIDGEY,PIDGEY,PIDGEY,0
-	db 22,BULBASAUR,0
+	db 16,PIDGEY,PIDGEY,PIDGEY,0 ; Route 6 (south of Copper Town)
+	db 22,BULBASAUR,0 ; Route 6 (south of Copper Town)
 	db 18,ODDISH,BELLSPROUT,ODDISH,BELLSPROUT,0
 	db 23,MEOWTH,0
 if _YELLOW
@@ -75033,9 +75033,9 @@ Route17HiddenObjects: ; 4704f (11:704f)
 	dbw BANK(HiddenItems),HiddenItems
 	db $FF
 UndergroundPathNsHiddenObjects: ; 4706e (11:706e)
-	db $04,$03,FULL_RESTORE
+	db $02,$03,RARE_CANDY
 	dbw BANK(HiddenItems),HiddenItems
-	db $22,$04,X_SPECIAL
+	db $1e,$03,SUPER_POTION
 	dbw BANK(HiddenItems),HiddenItems
 	db $FF
 UndergroundPathWeHiddenObjects: ; 4707b (11:707b)
@@ -88180,36 +88180,35 @@ Route6_h: ; 0x58000 to 0x58022 (34 bytes) (id=17)
 	db $00 ; tileset
 	db ROUTE_6_HEIGHT, ROUTE_6_WIDTH ; dimensions (y, x)
 	dw Route6Blocks, Route6TextPointers, Route6Script ; blocks, texts, scripts
-	db NORTH | SOUTH ; connections
-	NORTH_MAP_CONNECTION SAFFRON_CITY, SAFFRON_CITY_WIDTH, SAFFRON_CITY_HEIGHT, -3, 2, SAFFRON_CITY_WIDTH - 4, SaffronCityBlocks
-	SOUTH_MAP_CONNECTION VERMILION_CITY, VERMILION_CITY_WIDTH, -3, 2, VERMILION_CITY_WIDTH - 4, VermilionCityBlocks, ROUTE_6_WIDTH, ROUTE_6_HEIGHT
+	db NORTH ; connections
+	NORTH_MAP_CONNECTION VERMILION_CITY, VERMILION_CITY_WIDTH, VERMILION_CITY_HEIGHT, -4, 0, VERMILION_CITY_WIDTH, VermilionCityBlocks
 	dw Route6Object ; objects
 
 Route6Object: ; 0x58022 (size=87)
 	db $f ; border tile
 
 	db $4 ; warps
-	db $1, $9, $2, ROUTE_6_GATE
 	db $1, $a, $2, ROUTE_6_GATE
+	db $1, $b, $2, ROUTE_6_GATE
 	db $7, $a, $0, ROUTE_6_GATE
-	db $d, $11, $0, PATH_ENTRANCE_ROUTE_6
+	db $1d, $c, $1, UNDERGROUND_PATH_NS
 
 	db $1 ; signs
-	db $f, $13, $7 ; Route6Text7
+	db $11, $13, $7 ; Route6Text7
 
 	db $6 ; people
-	db SPRITE_BLACK_HAIR_BOY_1, $15 + 4, $a + 4, $ff, $d3, $41, JR__TRAINER_M + $C8, $4 ; trainer
-	db SPRITE_LASS, $15 + 4, $b + 4, $ff, $d2, $42, JR__TRAINER_F + $C8, $2 ; trainer
-	db SPRITE_BUG_CATCHER, $f + 4, $0 + 4, $ff, $d3, $43, BUG_CATCHER + $C8, $a ; trainer
-	db SPRITE_BLACK_HAIR_BOY_1, $1f + 4, $b + 4, $ff, $d2, $44, JR__TRAINER_M + $C8, $5 ; trainer
-	db SPRITE_LASS, $1e + 4, $b + 4, $ff, $d2, $45, JR__TRAINER_F + $C8, $3 ; trainer
-	db SPRITE_BUG_CATCHER, $1a + 4, $13 + 4, $ff, $d2, $46, BUG_CATCHER + $C8, $b ; trainer
+	db SPRITE_BLACK_HAIR_BOY_1, $c + 4, $b + 4, $ff, $d3, $41, JR__TRAINER_M + $C8, $7 ; trainer
+	db SPRITE_LASS, $c + 4, $c + 4, $ff, $d2, $42, JR__TRAINER_F + $C8, $3 ; trainer
+	db SPRITE_BUG_CATCHER, $12 + 4, $6 + 4, $ff, $d3, $43, BUG_CATCHER + $C8, $7 ; trainer
+	db SPRITE_BLACK_HAIR_BOY_1, $1d + 4, $8 + 4, $ff, $d2, $44, JR__TRAINER_M + $C8, $8 ; trainer
+	db SPRITE_LASS, $1c + 4, $8 + 4, $ff, $d2, $45, JR__TRAINER_F + $C8, $4 ; trainer
+	db SPRITE_BUG_CATCHER, $13 + 4, $13 + 4, $ff, $d2, $46, BUG_CATCHER + $C8, $8 ; trainer
 
 	; warp-to
-	EVENT_DISP $a, $1, $9 ; ROUTE_6_GATE
 	EVENT_DISP $a, $1, $a ; ROUTE_6_GATE
+	EVENT_DISP $a, $1, $b ; ROUTE_6_GATE
 	EVENT_DISP $a, $7, $a ; ROUTE_6_GATE
-	EVENT_DISP $a, $d, $11 ; PATH_ENTRANCE_ROUTE_6
+	EVENT_DISP $a, $1d, $c ; PATH_ENTRANCE_ROUTE_6
 
 Route6Blocks: ; 58079 (16:4079)
 	INCBIN "maps/route6.blk"
@@ -88346,10 +88345,7 @@ Route12_h: ; 0x5866d to 0x5869a (45 bytes) (id=23)
 	db $00 ; tileset
 	db ROUTE_12_HEIGHT, ROUTE_12_WIDTH ; dimensions (y, x)
 	dw Route12Blocks, Route12TextPointers, Route12Script ; blocks, texts, scripts
-	db NORTH | SOUTH | WEST ; connections
-	NORTH_MAP_CONNECTION LAVENDER_TOWN, LAVENDER_TOWN_WIDTH, LAVENDER_TOWN_HEIGHT, 0, 0, LAVENDER_TOWN_WIDTH, LavenderTownBlocks
-	SOUTH_MAP_CONNECTION ROUTE_13, ROUTE_13_WIDTH, -3, 17, ROUTE_13_WIDTH - 17, Route13Blocks, ROUTE_12_WIDTH, ROUTE_12_HEIGHT
-	WEST_MAP_CONNECTION ROUTE_11, ROUTE_11_WIDTH, 27, 0, ROUTE_11_HEIGHT, Route11Blocks, ROUTE_12_WIDTH
+	db $00 ; connections
 	dw Route12Object ; objects
 
 Route12Object: ; 0x5869a (size=118)
@@ -99470,7 +99466,7 @@ SSAnne10Object: ; 0x61e75 (size=165)
 	EVENT_DISP $c, $f, $d ; SS_ANNE_4
 
 UndergroundPathNS_h: ; 0x61f1a to 0x61f26 (12 bytes) (id=119)
-	db $0b ; tileset
+	db $11 ; tileset
 	db UNDERGROUND_PATH_NS_HEIGHT, UNDERGROUND_PATH_NS_WIDTH ; dimensions (y, x)
 	dw UndergroundPathNSBlocks, UndergroundPathNSTextPointers, UndergroundPathNSScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -99480,22 +99476,27 @@ UndergroundPathNSScript: ; 61f26 (18:5f26)
 	jp EnableAutoTextBoxDrawing
 
 UndergroundPathNSTextPointers: ; 61f29 (18:5f29)
+	dw UndergroundPathNSText1
+
+UndergroundPathNSText1:
+	TX_FAR _UndergroundPathNSText1
 	db "@"
 
 UndergroundPathNSObject: ; 0x61f2a (size=20)
-	db $1 ; border tile
+	db $19 ; border tile
 
 	db $2 ; warps
-	db $4, $5, $2, PATH_ENTRANCE_ROUTE_5
-	db $29, $2, $2, PATH_ENTRANCE_ROUTE_6
+	db $7, $3, $2, PATH_ENTRANCE_ROUTE_5
+	db $27, $3, $3, ROUTE_6
 
-	db $0 ; signs
+	db $1 ; signs
+	db $9, $5, $1
 
 	db $0 ; people
 
 	; warp-to
-	EVENT_DISP $4, $4, $5 ; PATH_ENTRANCE_ROUTE_5
-	EVENT_DISP $4, $29, $2 ; PATH_ENTRANCE_ROUTE_6
+	EVENT_DISP $4, $7, $3 ; PATH_ENTRANCE_ROUTE_5
+	EVENT_DISP $4, $27, $3 ; PATH_ENTRANCE_ROUTE_6
 
 UndergroundPathWE_h: ; 0x61f3e to 0x61f4a (12 bytes) (id=121)
 	db $0b ; tileset
@@ -110634,8 +110635,8 @@ HiddenItemCoords: ; 766b8 (1d:66b8)
 	db ROUTE_17,$48,$11
 	db ROUTE_17,$5b,$04
 	db ROUTE_17,$79,$08
-	db UNDERGROUND_PATH_NS,$04,$03
-	db UNDERGROUND_PATH_NS,$22,$04
+	db UNDERGROUND_PATH_NS,$02,$05
+	db UNDERGROUND_PATH_NS,$1e,$03
 	db UNDERGROUND_PATH_WE,$02,$0c
 	db UNDERGROUND_PATH_WE,$05,$15
 	db CELADON_CITY,$0f,$30

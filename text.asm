@@ -3120,6 +3120,18 @@ _UsedCutText:: ; a8315 (2a:4315)
 	line "away with CUT!"
 	prompt
 
+_UndergroundPathNSText1::
+	text "Secret tunnel!"
+	line "Secret tunnel!"
+	cont "Through the"
+	cont "mountain!"
+	cont "Secret secret"
+	cont "secret secret"
+	cont "tunnel!"
+
+	para "Yeah!"
+	done
+
 
 SECTION "Pokedex Text", ROMX, BANK[POKEDEX_TEXT]
 
