@@ -53501,7 +53501,7 @@ HikerData: ; 39f5e (e:5f5e)
 	db 10,GEODUDE,ONIX,GEODUDE,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 14,GEODUDE,GEODUDE,MACHOP,ONIX,0 ; Route 4 (south of Agate)
 	db 15,MACHOP,0 ; Route 4 (south of Agate)
-	db 17,ONIX,0
+	db 17,ONIX,0 ; Rocky Point 1 (MT_MOON_1)
 	db 21,GEODUDE,ONIX,0
 	db 20,GEODUDE,MACHOP,GEODUDE,0
 	db 21,GEODUDE,ONIX,0
@@ -53723,17 +53723,17 @@ RocketData: ; 3a29c (e:629c)
 	db 12,RATTATA,MACHOP,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
 	db 11,DIGLETT,GEODUDE,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
 	db 17,NIDORINO,KOFFING,CUBONE,0 ; Agate City coupon guy
-	db 19,RATTATA,RATICATE,RATICATE,RATTATA,0
-	db 22,GRIMER,KOFFING,0
-	db 17,ZUBAT,KOFFING,GRIMER,ZUBAT,RATICATE,0
-	db 20,RATTATA,RATICATE,DROWZEE,0
-	db 21,MACHOP,MACHOP,0
-	db 23,SANDSHREW,EKANS,0
-	db 23,EKANS,SANDSHREW,ARBOK,0
-	db 21,KOFFING,ZUBAT,0
-	db 25,ZUBAT,ZUBAT,GOLBAT,0
-	db 26,KOFFING,DROWZEE,0
-	db 23,ZUBAT,RATTATA,RATICATE,ZUBAT,0
+	db 19,RATTATA,RATICATE,RATICATE,RATTATA,0 ; Rocky Point 1 (MT_MOON_1)
+	db 22,GRIMER,KOFFING,0 ; Rocky Point 1 (MT_MOON_1)
+	db 17,ZUBAT,KOFFING,GRIMER,ZUBAT,RATICATE,0 ; Rocky Point 1 (MT_MOON_1)
+	db 20,RATTATA,RATICATE,DROWZEE,0 ; Rocky Point 1 (MT_MOON_1)
+	db 21,MACHOP,MACHOP,0 ; Rocky Point 1 (MT_MOON_1)
+	db 23,SANDSHREW,EKANS,0 ; Rocky Point 1 (MT_MOON_1)
+	db 23,EKANS,SANDSHREW,ARBOK,0 ; Rocky Point 2 (MT_MOON_3)
+	db 21,KOFFING,ZUBAT,0 ; Rocky Point 2 (MT_MOON_3)
+	db 25,ZUBAT,ZUBAT,GOLBAT,0 ; Rocky Point 2 (MT_MOON_3)
+	db 26,KOFFING,DROWZEE,0 ; Rocky Point 2 (MT_MOON_3)
+	db 23,ZUBAT,RATTATA,RATICATE,ZUBAT,0 ; Rocky Point 2 (MT_MOON_3)
 	db 26,DROWZEE,KOFFING,0
 	db 29,CUBONE,ZUBAT,0
 	db 25,GOLBAT,ZUBAT,ZUBAT,RATICATE,ZUBAT,0
@@ -78699,36 +78699,36 @@ MtMoon1Object: ; 0x49b06 (size=145)
 	db $3 ; border tile
 
 	db $5 ; warps
-	db $23, $e, $1, $ff
-	db $23, $f, $1, $ff
-	db $5, $5, $0, MT_MOON_2
-	db $b, $11, $2, MT_MOON_2
-	db $f, $19, $3, MT_MOON_2
+	db $23, $2, $1, ROUTE_22
+	db $23, $3, $1, ROUTE_22
+	db $1b, $9, $2, MT_MOON_3
+	db $5, $23, $0, MT_MOON_3
+	db $11, $13, $1, MT_MOON_3
 
 	db $1 ; signs
-	db $17, $f, $e ; MtMoon1Text14
+	db $1d, $3, $e ; MtMoon1Text14
 
 	db $d ; people
-	db SPRITE_HIKER, $6 + 4, $5 + 4, $ff, $d0, $41, HIKER + $C8, $1 ; trainer
-	db SPRITE_BUG_CATCHER, $10 + 4, $c + 4, $ff, $d3, $42, YOUNGSTER + $C8, $3 ; trainer
-	db SPRITE_LASS, $4 + 4, $1e + 4, $ff, $d0, $43, LASS + $C8, $5 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_2, $1f + 4, $18 + 4, $ff, $d1, $44, SUPER_NERD + $C8, $1 ; trainer
-	db SPRITE_LASS, $17 + 4, $10 + 4, $ff, $d0, $45, LASS + $C8, $6 ; trainer
-	db SPRITE_BUG_CATCHER, $16 + 4, $7 + 4, $ff, $d0, $46, BUG_CATCHER + $C8, $7 ; trainer
-	db SPRITE_BUG_CATCHER, $1b + 4, $1e + 4, $ff, $d3, $47, BUG_CATCHER + $C8, $8 ; trainer
-	db SPRITE_BALL, $14 + 4, $2 + 4, $ff, $ff, $88, POTION ; item
-	db SPRITE_BALL, $2 + 4, $2 + 4, $ff, $ff, $89, MOON_STONE ; item
-	db SPRITE_BALL, $1f + 4, $23 + 4, $ff, $ff, $8a, RARE_CANDY ; item
-	db SPRITE_BALL, $17 + 4, $24 + 4, $ff, $ff, $8b, ESCAPE_ROPE ; item
-	db SPRITE_BALL, $21 + 4, $14 + 4, $ff, $ff, $8c, POTION ; item
-	db SPRITE_BALL, $20 + 4, $5 + 4, $ff, $ff, $8d, TM_12 ; item
+	db SPRITE_ROCKET, $12 + 4, $7 + 4, $ff, $d2, $41, ROCKET + $C8, $b ; trainer
+	db SPRITE_ROCKET, $4 + 4, $15 + 4, $ff, $d1, $42, ROCKET + $C8, $c ; trainer
+	db SPRITE_ROCKET, $d + 4, $1e + 4, $ff, $d1, $43, ROCKET + $C8, $d ; trainer
+	db SPRITE_ROCKET, $1f + 4, $1f + 4, $ff, $d3, $44, ROCKET + $C8, $e ; trainer
+	db SPRITE_ROCKET, $c + 4, $12 + 4, $ff, $d2, $45, ROCKET + $C8, $f ; trainer
+	db SPRITE_HIKER, $20 + 4, $c + 4, $ff, $d1, $46, HIKER + $C8, $4 ; trainer
+	db SPRITE_ROCKET, $17 + 4, $1e + 4, $ff, $d2, $47, ROCKET + $C8, $10 ; trainer
+	db SPRITE_BALL, $14 + 4, $b + 4, $ff, $ff, $88, SUPER_POTION ; item
+	db SPRITE_BALL, $1b + 4, $20 + 4, $ff, $ff, $89, RARE_CANDY ; item
+	db SPRITE_BALL, $b + 4, $23 + 4, $ff, $ff, $8a, TM_19 ; item
+	db SPRITE_BALL, $14 + 4, $16 + 4, $ff, $ff, $8b, ITEM_STONE ; item
+	db SPRITE_BALL, $21 + 4, $16 + 4, $ff, $ff, $8c, GREAT_BALL ; item
+	db SPRITE_BALL, $19 + 4, $13 + 4, $ff, $ff, $8d, ESCAPE_ROPE ; item
 
 	; warp-to
-	EVENT_DISP $14, $23, $e
-	EVENT_DISP $14, $23, $f
-	EVENT_DISP $14, $5, $5 ; MT_MOON_2
-	EVENT_DISP $14, $b, $11 ; MT_MOON_2
-	EVENT_DISP $14, $f, $19 ; MT_MOON_2
+	EVENT_DISP $14, $23, $2
+	EVENT_DISP $14, $23, $3
+	EVENT_DISP $14, $1b, $9 ; MT_MOON_2
+	EVENT_DISP $14, $5, $23 ; MT_MOON_2
+	EVENT_DISP $14, $11, $13 ; MT_MOON_2
 
 MtMoon1Blocks: ; 49b97 (12:5b97)
 	INCBIN "maps/mtmoon1.blk"
@@ -79159,29 +79159,29 @@ MtMoon3Object: ; 0x49fdb (size=102)
 	db $3 ; border tile
 
 	db $4 ; warps
-	db $9, $19, $1, MT_MOON_2
-	db $11, $15, $4, MT_MOON_2
-	db $1b, $f, $5, MT_MOON_2
-	db $7, $5, $6, MT_MOON_2
+	db $5, $23, $3, MT_MOON_1
+	db $10, $12, $4, MT_MOON_1
+	db $1b, $9, $2, MT_MOON_1
+	db $1f, $23, $3, MT_MOON_2
 
 	db $0 ; signs
 
 	db $9 ; people
-	db SPRITE_BLACK_HAIR_BOY_2, $8 + 4, $c + 4, $ff, $d3, $41, SUPER_NERD + $C8, $2 ; trainer
-	db SPRITE_ROCKET, $10 + 4, $b + 4, $ff, $d0, $42, ROCKET + $C8, $1 ; trainer
-	db SPRITE_ROCKET, $16 + 4, $f + 4, $ff, $d0, $43, ROCKET + $C8, $2 ; trainer
-	db SPRITE_ROCKET, $b + 4, $1d + 4, $ff, $d1, $44, ROCKET + $C8, $3 ; trainer
-	db SPRITE_ROCKET, $11 + 4, $1d + 4, $ff, $d2, $45, ROCKET + $C8, $4 ; trainer
-	db SPRITE_OMANYTE, $6 + 4, $c + 4, $ff, $ff, $6 ; person
-	db SPRITE_OMANYTE, $6 + 4, $d + 4, $ff, $ff, $7 ; person
-	db SPRITE_BALL, $15 + 4, $19 + 4, $ff, $ff, $88, HP_UP ; item
-	db SPRITE_BALL, $5 + 4, $1d + 4, $ff, $ff, $89, TM_01 ; item
+	db SPRITE_BLACK_HAIR_BOY_2, $8 + 4, $c + 4, $ff, $d3, $41, ROCKET + $C8, $11 ; trainer
+	db SPRITE_ROCKET, $13 + 4, $3 + 4, $ff, $d0, $42, ROCKET + $C8, $12 ; trainer
+	db SPRITE_ROCKET, $13 + 4, $f + 4, $ff, $d0, $43, ROCKET + $C8, $13 ; trainer
+	db SPRITE_ROCKET, $5 + 4, $13 + 4, $ff, $d1, $44, ROCKET + $C8, $14 ; trainer
+	db SPRITE_ROCKET, $20 + 4, $23 + 4, $ff, $d3, $45, ROCKET + $C8, $15 ; trainer
+	db SPRITE_BOOK_MAP_DEX, $6 + 4, $c + 4, $ff, $ff, $6 ; person
+	db SPRITE_BOOK_MAP_DEX, $6 + 4, $d + 4, $ff, $ff, $7 ; person
+	db SPRITE_BALL, $20 + 4, $1b + 4, $ff, $ff, $88, PP_UP ; item
+	db SPRITE_BALL, $7 + 4, $26 + 4, $ff, $ff, $89, TM_34 ; item
 
 	; warp-to
-	EVENT_DISP $14, $9, $19 ; MT_MOON_2
-	EVENT_DISP $14, $11, $15 ; MT_MOON_2
-	EVENT_DISP $14, $1b, $f ; MT_MOON_2
-	EVENT_DISP $14, $7, $5 ; MT_MOON_2
+	EVENT_DISP $14, $5, $23 ; MT_MOON_2
+	EVENT_DISP $14, $10, $12 ; MT_MOON_2
+	EVENT_DISP $14, $1b, $9 ; MT_MOON_2
+	EVENT_DISP $14, $1f, $23 ; MT_MOON_2
 
 MtMoon3Blocks: ; 4a041 (12:6041)
 	INCBIN "maps/mtmoon3.blk"
