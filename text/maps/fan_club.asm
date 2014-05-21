@@ -25,94 +25,78 @@ _UnnamedText_59c17:: ; 9a641 (26:6641)
 	done
 
 _UnnamedText_59c65:: ; 9a64f (26:664f)
-	text "I chair the"
-	line "#MON Fan Club!"
+	text "Secret door?"
 
-	para "I have collected"
-	line "over 100 #MON!"
+	para "Yes, I have one"
+	line "of those."
 
-	para "I'm very fussy"
-	line "when it comes to"
-	cont "#MON!"
+	para "It leads to the"
+	line "GYM!"
 
-	para "So..."
+	para "I'll let you use"
+	line "it if you help"
+	cont "me out."
 
-	para "Did you come"
-	line "visit to hear"
-	cont "about my #MON?"
-	done
+	para "As you might know"
+	line "already, PYRITE"
+	cont "CITY despises"
+	cont "COPPER TOWN folk,"
+	cont "so they blocked"
+	cont "off the path"
+	cont "south of here"
+	cont "that leads into"
+	cont "the city."
 
-_UnnamedText_59c6a:: ; 9a6e0 (26:66e0)
-	text "Good!"
-	line "Then listen up!"
+	para "The only easy way"
+	line "for us to get"
+	cont "there is to fly"
+	cont "in from above!"
 
-	para "My favorite"
-	line "RAPIDASH..."
+	para "If you can teach"
+	line "me how to fly, I"
+	cont "will let you use"
+	cont "my secret door."
 
-	para "It...cute..."
-	line "lovely...smart..."
-	cont "plus...amazing..."
-	cont "you think so?..."
-	cont "oh yes...it..."
-	cont "stunning..."
-	cont "kindly..."
-	cont "love it!"
-
-	para "Hug it...when..."
-	cont "sleeping...warm"
-	cont "and cuddly..."
-	cont "spectacular..."
-	cont "ravishing..."
-	cont "...Oops! Look at"
-	cont "the time! I kept"
-	cont "you too long!"
-
-	para "Thanks for hearing"
-	line "me out! I want"
-	cont "you to have this!"
+	para "Perhaps bringing"
+	line "me an HM02 will"
+	cont "do the trick."
 	prompt
 
-_ReceivedBikeVoucherText:: ; 9a82e (26:682e)
-	text $52, " received"
-	line "a @"
-	TX_RAM $cf4b
-	text "!@@"
+_CopperSecretDoorGuyText2::
+	text "Aha!"
 
-_UnnamedText_59c74:: ; 9a844 (26:6844)
-	db $0
-	para "Exchange that for"
-	line "a BICYCLE!"
+	para "I see you have"
+	line "an HM02 in your"
+	cont "bag!"
 
-	para "Don't worry, my"
-	line "FEAROW will FLY"
-	cont "me anywhere!"
+	para "Let me see it."
 
-	para "So, I don't need a"
-	line "BICYCLE!"
+	para "..."
+	line "..."
+	cont "..."
 
-	para "I hope you like"
-	line "cycling!"
-	done
+	para "(He's trying to"
+	line "figure out how"
+	cont "to work it.)"
 
-_UnnamedText_59c79:: ; 9a8c3 (26:68c3)
-	text "Oh. Come back"
-	line "when you want to"
-	cont "hear my story!"
-	done
+	para "AHA! "
+	line "I've done it!"
 
-_UnnamedText_59c7e:: ; 9a8f2 (26:68f2)
-	text "Hello, ", $52, "!"
+	para "I CAN FLY!!!"
 
-	para "Did you come see"
-	line "me about my"
-	cont "#MON again?"
+	para "There's no"
+	line "stopping me now!"
+	prompt
 
-	para "No? Too bad!"
-	done
+_CopperSecretDoorGuyText3::
+	text "You can use my"
+	line "secret door,"
+	cont "since you taught"
+	cont "me how to fly."
+	prompt
 
-_UnnamedText_59c83:: ; 9a933 (26:6933)
-	text "Make room for"
-	line "this!"
+_CopperSecretDoorGuyText4::
+	text "Move along now."
 	done
 
 _FanClubText6:: ; 9a948 (26:6948)

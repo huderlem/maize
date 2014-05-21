@@ -15425,7 +15425,7 @@ Map03FlyWarp: ; 648e (1:648e)
 Map04FlyWarp: ; 6494 (1:6494)
 	FLYWARP_DATA 10,6,3
 Map05FlyWarp: ; 649a (1:649a)
-	FLYWARP_DATA 20,4,11
+	FLYWARP_DATA 20,8,11
 Map06FlyWarp: ; 64a0 (1:64a0)
 	FLYWARP_DATA 25,10,41
 Map07FlyWarp: ; 64a6 (1:64a6)
@@ -20903,7 +20903,7 @@ WildDataPointers: ; ceeb (3:4eeb)
 	dw NoMons
 	dw NoMons
 	dw MoonMons1
-	dw MoonMonsB1
+	dw NoMons
 	dw MoonMonsB2
 	dw NoMons
 	dw NoMons
@@ -21142,16 +21142,16 @@ Route2Mons: ; d0f5 (3:50f5)
 
 Route22Mons: ; d10b (3:510b)
 	db $19
-	db 3,RATTATA
-	db 3,NIDORAN_M
-	db 4,RATTATA
-	db 4,NIDORAN_M
-	db 2,RATTATA
-	db 2,NIDORAN_M
-	db 3,SPEAROW
-	db 5,SPEAROW
-	db 3,NIDORAN_F
-	db 4,NIDORAN_F
+	db 15,GLIGAR
+	db 16,SPEAROW
+	db 15,SPEAROW
+	db 15,CLEFAIRY
+	db 15,NIDORAN_M
+	db 15,NIDORAN_F
+	db 14,GEODUDE
+	db 16,GLIGAR
+	db 15,GEODUDE
+	db 13,GEODUDE
 
 	db $00
 
@@ -21187,16 +21187,16 @@ Route3Mons: ; d137 (3:5137)
 
 MoonMons1: ; d14d (3:514d)
 	db $0A
-	db 8,ZUBAT
-	db 7,ZUBAT
-	db 9,ZUBAT
-	db 8,GEODUDE
-	db 6,ZUBAT
-	db 10,ZUBAT
-	db 10,GEODUDE
-	db 8,PARAS
-	db 11,ZUBAT
-	db 8,CLEFAIRY
+	db 16,SANDSHREW
+	db 16,ZUBAT
+	db 17,DIGLETT
+	db 16,GEODUDE
+	db 17,SANDSHREW
+	db 15,ZUBAT
+	db 13,DRILBUR
+	db 15,GEODUDE
+	db 12,DRILBUR
+	db 17,GEODUDE
 
 	db $00
 
@@ -53486,7 +53486,7 @@ PokemaniacData: ; 39f09 (e:5f09)
 	db 23,CUBONE,SLOWPOKE,0
 SuperNerdData: ; 39f26 (e:5f26)
 	db 12,KOFFING,GRIMER,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
-	db 12,GRIMER,VOLTORB,KOFFING,0
+	db 19,FLAAFFY,GLIGAR,PARAS,0 ; Rocky Point 2 (MT_MOON_3)
 	db 20,VOLTORB,KOFFING,VOLTORB,MAGNEMITE,0
 	db 22,GRIMER,MUK,GRIMER,0
 	db 26,KOFFING,0
@@ -53501,7 +53501,7 @@ HikerData: ; 39f5e (e:5f5e)
 	db 10,GEODUDE,ONIX,GEODUDE,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 14,GEODUDE,GEODUDE,MACHOP,ONIX,0 ; Route 4 (south of Agate)
 	db 15,MACHOP,0 ; Route 4 (south of Agate)
-	db 17,ONIX,0 ; Rocky Point 1 (MT_MOON_1)
+	db 18,MACHOP,ZUBAT,0 ; Rocky Point 1 (MT_MOON_1)
 	db 21,GEODUDE,ONIX,0
 	db 20,GEODUDE,MACHOP,GEODUDE,0
 	db 21,GEODUDE,ONIX,0
@@ -53723,18 +53723,18 @@ RocketData: ; 3a29c (e:629c)
 	db 12,RATTATA,MACHOP,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
 	db 11,DIGLETT,GEODUDE,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
 	db 17,NIDORINO,KOFFING,CUBONE,0 ; Agate City coupon guy
-	db 19,RATTATA,RATICATE,RATICATE,RATTATA,0 ; Rocky Point 1 (MT_MOON_1)
-	db 22,GRIMER,KOFFING,0 ; Rocky Point 1 (MT_MOON_1)
-	db 17,ZUBAT,KOFFING,GRIMER,ZUBAT,RATICATE,0 ; Rocky Point 1 (MT_MOON_1)
-	db 20,RATTATA,RATICATE,DROWZEE,0 ; Rocky Point 1 (MT_MOON_1)
-	db 21,MACHOP,MACHOP,0 ; Rocky Point 1 (MT_MOON_1)
-	db 23,SANDSHREW,EKANS,0 ; Rocky Point 1 (MT_MOON_1)
-	db 23,EKANS,SANDSHREW,ARBOK,0 ; Rocky Point 2 (MT_MOON_3)
-	db 21,KOFFING,ZUBAT,0 ; Rocky Point 2 (MT_MOON_3)
-	db 25,ZUBAT,ZUBAT,GOLBAT,0 ; Rocky Point 2 (MT_MOON_3)
-	db 26,KOFFING,DROWZEE,0 ; Rocky Point 2 (MT_MOON_3)
-	db 23,ZUBAT,RATTATA,RATICATE,ZUBAT,0 ; Rocky Point 2 (MT_MOON_3)
-	db 26,DROWZEE,KOFFING,0
+	db 18,SANDSHREW,SANDSHREW,MACHOP,SANDSHREW,0 ; Rocky Point 1 (MT_MOON_1)
+	db 19,DIGLETT,DRILBUR,0 ; Rocky Point 1 (MT_MOON_1)
+	db 18,GEODUDE,GEODUDE,SANDSHREW,SANDSHREW,RATICATE,0 ; Rocky Point 1 (MT_MOON_1)
+	db 19,RATTATA,RATICATE,CUBONE,0 ; Rocky Point 1 (MT_MOON_1)
+	db 20,DRILBUR,SANDSHREW,0 ; Rocky Point 1 (MT_MOON_1)
+	db 19,DIGLETT,DIGLETT,MACHOP,0 ; Rocky Point 1 (MT_MOON_1)
+	db 23,EKANS,SANDSHREW,ARBOK,0 ; GO BACK TO THIS ONE!!!
+	db 18,CLEFAIRY,JIGGLYPUFF,0 ; Rocky Point 2 (MT_MOON_3)
+	db 19,DIGLETT,DIGLETT,SANDSHREW,0 ; Rocky Point 2 (MT_MOON_3)
+	db 19,DRILBUR,MACHOP,0 ; Rocky Point 2 (MT_MOON_3)
+	db 19,ONIX,ONIX,GEODUDE,DRILBUR,0 ; Rocky Point 2 (MT_MOON_3)
+	db 26,DROWZEE,KOFFING,0 ; GO BACK LIKE 6 FROM HERE!!!!
 	db 29,CUBONE,ZUBAT,0
 	db 25,GOLBAT,ZUBAT,ZUBAT,RATICATE,ZUBAT,0
 	db 28,RATICATE,HYPNO,RATICATE,0
@@ -78502,7 +78502,7 @@ MtMoon1TextPointers: ; 499e1 (12:59e1)
 MtMoon1TrainerHeaders: ; 499fd (12:59fd)
 MtMoon1TrainerHeader0: ; 499fd (12:59fd)
 	db $1 ; flag's bit
-	db ($2 << 4) ; trainer's view range
+	db ($3 << 4) ; trainer's view range
 	dw $d7f5 ; flag's byte
 	dw MtMoon1BattleText2 ; 0x5a98 TextBeforeBattle
 	dw MtMoon1AfterBattleText2 ; 0x5aa2 TextAfterBattle
@@ -79020,7 +79020,7 @@ MtMoon3Text6: ; 49ee9 (12:5ee9)
 	ld a, [$cc26]
 	and a
 	jr nz, .asm_1fa5e ; 0x49efc
-	ld bc,(DOME_FOSSIL << 8) | 1
+	ld bc,(TOWN_MAP << 8) | 1
 	call GiveItem
 	jp nc, Func_49f76
 	call Func_49f69
@@ -79044,13 +79044,13 @@ MtMoon3Text7: ; 49f29 (12:5f29)
 	db $08 ; asm
 	ld a, $1
 	ld [$cc3c], a
-	ld hl, UnnamedText_49f64
+	ld hl, UnnamedText_49f24
 	call PrintText
 	call YesNoChoice
 	ld a, [$cc26]
 	and a
 	jr nz, .asm_8e988 ; 0x49f3c
-	ld bc, (HELIX_FOSSIL << 8) | 1
+	ld bc, (TOWN_MAP << 8) | 1
 	call GiveItem
 	jp nc, Func_49f76
 	call Func_49f69
@@ -79065,10 +79065,6 @@ MtMoon3Text7: ; 49f29 (12:5f29)
 	ld [W_CURMAPSCRIPT], a
 .asm_8e988 ; 0x49f61
 	jp TextScriptEnd
-
-UnnamedText_49f64: ; 49f64 (12:5f64)
-	TX_FAR _UnnamedText_49f64
-	db "@"
 
 Func_49f69: ; 49f69 (12:5f69)
 	ld hl, UnnamedText_49f6f
@@ -79167,7 +79163,7 @@ MtMoon3Object: ; 0x49fdb (size=102)
 	db $0 ; signs
 
 	db $9 ; people
-	db SPRITE_BLACK_HAIR_BOY_2, $8 + 4, $c + 4, $ff, $d3, $41, ROCKET + $C8, $11 ; trainer
+	db SPRITE_BLACK_HAIR_BOY_2, $8 + 4, $c + 4, $ff, $d3, $41, SUPER_NERD + $C8, $2 ; trainer
 	db SPRITE_ROCKET, $13 + 4, $3 + 4, $ff, $d0, $42, ROCKET + $C8, $12 ; trainer
 	db SPRITE_ROCKET, $13 + 4, $f + 4, $ff, $d0, $43, ROCKET + $C8, $13 ; trainer
 	db SPRITE_ROCKET, $5 + 4, $13 + 4, $ff, $d1, $44, ROCKET + $C8, $14 ; trainer
@@ -82209,7 +82205,49 @@ MtMoon2Object: ; 0x51a4d (size=68)
 
 RockyPoint2Text1:
 	db $08 ; asm
+	; has player beaten the third gym?
+	ld a, [W_OBTAINEDBADGES]
+	and %00000100
+	jr nz,.alreadyTalked
+	; has player already talked to the guy before beating the third gym?
+	ld a, [W_CELADONGYMCURSCRIPT]
+	and a
+	jr nz, .alreadyTalked
+	ld hl, RockyPointFlyGuyText1
+	call PrintText
+	ld bc, (HM_02 << 8) | 1
+	call GiveItem
+	jr nc, .BagFull
+	ld hl, RockyPointFlyGuyHM02
+	call PrintText
+	ld a, 1
+	ld [W_CELADONGYMCURSCRIPT], a
+	jr .done
+.alreadyTalked
+	ld hl, RockyPointFlyGuyText2
+	call PrintText
+	jr .done
+.BagFull
+	ld hl, RockyPointFlyGuyBagFull
+	call PrintText
+.done
 	jp TextScriptEnd
+
+RockyPointFlyGuyText1:
+	TX_FAR _RockyPointFlyGuyText1
+	db "@"
+
+RockyPointFlyGuyHM02:
+	TX_FAR _RockyPointFlyGuyHM02
+	db "@"
+
+RockyPointFlyGuyText2:
+	TX_FAR _RockyPointFlyGuyText2
+	db "@"
+
+RockyPointFlyGuyBagFull:
+	TX_FAR _RockyPointFlyGuyBagFull
+	db "@"
 
 MtMoon2Blocks: ; 51a91 (14:5a91)
 	INCBIN "maps/mtmoon2.blk"
@@ -90966,16 +91004,6 @@ FanClub_h: ; 0x59b64 to 0x59b70 (12 bytes) (id=90)
 FanClubScript: ; 59b70 (16:5b70)
 	jp EnableAutoTextBoxDrawing
 
-Func_59b73: ; 59b73 (16:5b73)
-	ld a, [$d771]
-	bit 1, a
-	ret nz
-	ld b, $6
-	call IsItemInBag
-	ret nz
-	ld b, $2d
-	jp IsItemInBag
-
 FanClubTextPointers: ; 59b84 (16:5b84)
 	dw FanClubText1
 	dw FanClubText2
@@ -91029,62 +91057,48 @@ UnnamedText_59c17: ; 59c17 (16:5c17)
 
 FanClubText5: ; 59c1c (16:5c1c)
 	db $08 ; asm
-	call Func_59b73
-	jr nz, asm_38bb3 ; 0x59c20
+	; Has player already taught him FLY?
+	ld hl, $d771
+	bit 1, [hl]
+	jr nz,.alreadyTaught
 	ld hl, UnnamedText_59c65
 	call PrintText
-	call YesNoChoice
-	ld a, [$cc26]
-	and a
-	jr nz, asm_2c8d7 ; 0x59c2f
-	ld hl, UnnamedText_59c6a
-	call PrintText
-	ld bc, (HM01_COUPON << 8) | 1
-	call GiveItem
-	jr nc, .BagFull
-	ld hl, ReceivedBikeVoucherText
+	; Does player have HM02 in bag?
+	ld b, HM_02
+	call IsItemInBag
+	jr z,.done	
+	ld hl, CopperSecretDoorGuyText2
 	call PrintText
 	ld hl, $d771
 	set 1, [hl]
-	jr asm_d3c26 ; 0x59c4a
-.BagFull
-	ld hl, UnnamedText_59c83
+.alreadyTaught
+	ld hl, CopperSecretDoorGuyText3
 	call PrintText
-	jr asm_d3c26 ; 0x59c52
-asm_2c8d7 ; 0x59c54
-	ld hl, UnnamedText_59c79
+	; change to door
+	ld a, $1d
+	ld [$d09f], a
+	ld bc, $0001
+	ld a, $17
+	call Predef
+	ld hl, CopperSecretDoorGuyText4
 	call PrintText
-	jr asm_d3c26 ; 0x59c5a
-asm_38bb3 ; 0x59c5c
-	ld hl, UnnamedText_59c7e
-	call PrintText
-asm_d3c26 ; 0x59c62
+.done
 	jp TextScriptEnd
+
+CopperSecretDoorGuyText2:
+	TX_FAR _CopperSecretDoorGuyText2
+	db "@"
+
+CopperSecretDoorGuyText3:
+	TX_FAR _CopperSecretDoorGuyText3
+	db "@"
+
+CopperSecretDoorGuyText4:
+	TX_FAR _CopperSecretDoorGuyText4
+	db "@"
 
 UnnamedText_59c65: ; 59c65 (16:5c65)
 	TX_FAR _UnnamedText_59c65
-	db "@"
-
-UnnamedText_59c6a: ; 59c6a (16:5c6a)
-	TX_FAR _UnnamedText_59c6a
-	db "@"
-
-ReceivedBikeVoucherText: ; 59c6f (16:5c6f)
-	TX_FAR _ReceivedBikeVoucherText ; 0x9a82e
-	db $11
-	TX_FAR _UnnamedText_59c74 ; 0x9a844
-	db "@"
-
-UnnamedText_59c79: ; 59c79 (16:5c79)
-	TX_FAR _UnnamedText_59c79
-	db "@"
-
-UnnamedText_59c7e: ; 59c7e (16:5c7e)
-	TX_FAR _UnnamedText_59c7e
-	db "@"
-
-UnnamedText_59c83: ; 59c83 (16:5c83)
-	TX_FAR _UnnamedText_59c83
 	db "@"
 
 FanClubText6: ; 59c88 (16:5c88)
@@ -91116,7 +91130,7 @@ FanClubObject: ; 0x59c97 (size=62)
 	db SPRITE_LITTLE_GIRL, $3 + 4, $2 + 4, $ff, $d1, $2 ; person
 	db SPRITE_BLACK_HAIR_BOY_1, $5 + 4, $7 + 4, $ff, $d1, $3 ; person
 	db SPRITE_BUG_CATCHER, $3 + 4, $1 + 4, $ff, $d1, $4 ; person
-	db SPRITE_GENTLEMAN, $1 + 4, $5 + 4, $ff, $d0, $5 ; person
+	db SPRITE_GENTLEMAN, $1 + 4, $4 + 4, $ff, $d0, $5 ; person
 	db SPRITE_CABLE_CLUB_WOMAN, $3 + 4, $4 + 4, $ff, $d0, $6 ; person
 
 	; warp-to
@@ -93773,6 +93787,10 @@ Func_5caaa: ; 5caaa (17:4aaa)
 	ld [H_DOWNARROWBLINKCNT2], a ; $FF00+$8c
 	call DisplayTextID
 .asm_5cad3
+	; reset 4th gym script (borrowed for the HM02 guy at Rocky Point)
+	xor a
+	ld [W_CELADONGYMCURSCRIPT], a
+
 	ld hl, W_OBTAINEDBADGES ; $d356
 	set 2, [hl]
 	ld hl, $d72a
@@ -117892,6 +117910,79 @@ TitleScreenBlink2Pic:
 
 
 SECTION "New Text", ROMX, BANK[$33]
+
+_RockyPointFlyGuyText1::
+	text "What is the world"
+	line "coming to?"
+
+	para "ROCKY POINT was"
+	line "the last part of"
+	cont "our world left"
+	cont "untouched by the"
+	cont "human hand."
+
+	para "Now those QUARRY"
+	line "scum have"
+	cont "violated it!"
+
+	para "Their reason for"
+	line "doing so doesn't"
+	cont "even add up."
+
+	para "I sense that"
+	line "their vision for"
+	cont "a grand city is"
+	cont "merely a facade"
+	cont "for a more"
+	cont "sinister plot."
+
+	para "..."
+
+	para "I didn't mean to"
+	line "scare you."
+
+	para "My name is Jet."
+
+	para "I often come to"
+	line "this peak because"
+	cont "it calms me and"
+	cont "allows be to gain"
+	cont "an outside look"
+	cont "on our world."
+
+	para "We are above the"
+	line "clouds up here,"
+	cont "after all."
+
+	para "Oh?"
+
+	para "You didn't notice?"
+
+	para "Look around you."
+
+	para "What do you see?"
+
+	para "Here, take this."
+
+	para "Maybe someday"
+	line "you'll be lucky"
+	cont "enough to play"
+	cont "in the clouds."
+	prompt
+
+_RockyPointFlyGuyHM02::
+	text $52, " received"
+	line "HM02!"
+	done
+
+_RockyPointFlyGuyBagFull::
+	text "You need to make"
+	line "room for this."
+	done
+
+_RockyPointFlyGuyText2::
+	text "..."
+	done
 
 _MasterBallDescription::
 	text "A #BALL that"

@@ -101,9 +101,10 @@ _CeladonCityText10:: ; a5c82 (29:5c82)
 	done
 
 _CeladonCityText11:: ; a5d18 (29:5d18)
-	text "CELADON CITY"
-	line "The City of"
-	cont "Rainbow Dreams"
+	text "Nice job finding"
+	line "the super secret"
+	cont "tunnel."
+	cont "- Jet"
 	done
 
 _CeladonCityText13:: ; a5d41 (29:5d41)
@@ -116,7 +117,9 @@ _CeladonCityText13:: ; a5d41 (29:5d41)
 	done
 
 _CeladonCityText14:: ; a5d82 (29:5d82)
-	text "CELADON MANSION"
+	text "JUMPING OVER"
+	line "FENCES IS"
+	cont "PROHIBITED."
 	done
 
 _CeladonCityText15:: ; a5d93 (29:5d93)

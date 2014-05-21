@@ -99,7 +99,6 @@ _UnnamedText_511d0:: ; 925a0 (24:65a0)
 	prompt
 
 _Route22Text3:: ; 92606 (24:6606)
-	text "#MON LEAGUE"
-	line "Front Gate"
+	text "ROCKY POINT"
 	done
 
