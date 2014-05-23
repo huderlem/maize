@@ -1,26 +1,32 @@
 _UnnamedText_5cb72:: ; 9c000 (27:4000)
-	text "A little word of"
-	line "advice, kid!"
-
-	para "Electricity is"
-	line "sure powerful!"
-
-	para "But, it's useless"
-	line "against ground-"
-	cont "type #MON!"
+	text "I'll try and whip"
+	line "my siblings into"
+	cont "battling shape!"
 	done
 
 _UnnamedText_5cb77:: ; 9c069 (27:4069)
-	text "The THUNDERBADGE"
-	line "cranks up your"
-	cont "#MON's SPEED!"
+	text "Get it?"
 
-	para "It also lets your"
-	line "#MON FLY any"
-	cont "time, kid!"
+	para "DIN, from ZELDA?"
 
-	para "You're special,"
-	line "kid! Take this!"
+	para "Never mind..."
+
+	para "Your #MON"
+	line "can now use FLY"
+	cont "at any time."
+
+	para "It would probably"
+	line "be useful for"
+	cont "gaining entrance"
+	cont "into PYRITE CITY."
+
+	para "Last I checked,"
+	line "the guards are"
+	cont "still on"
+	cont "lockdown."
+
+	para "Take this with"
+	line "you, too."
 	done
 
 _ReceivedTM24Text:: ; 9c0e0 (27:40e0)
@@ -31,55 +37,70 @@ _ReceivedTM24Text:: ; 9c0e0 (27:40e0)
 
 _TM24ExplanationText:: ; 9c0f5 (27:40f5)
 	db $0
-	para "TM24 contains"
-	line "THUNDERBOLT!"
+	para "TM38 teaches"
+	line "FIRE BLAST!"
 
-	para "Teach it to an"
-	line "electric #MON!"
+	para "WOWZA!""
 	done
 
 _TM24NoRoomText:: ; 9c130 (27:4130)
-	text "Yo kid, make room"
-	line "in your pack!"
+	text "HOW AM I SUPPOSED"
+	line "TO GIVE THIS TO"
+	cont "YOU WHEN YOUR BAG"
+	cont "IS FULL?"
 	done
 
 _ReceivedThunderbadgeText:: ; 9c151 (27:4151)
-	text "Whoa!"
+	text " "
+	line "WHOOOOOP!"
 
-	para "You're the real"
-	line "deal, kid!"
+	para "We were burning"
+	line "down the house"
+	cont "with that one!"
 
-	para "Fine then, take"
-	line "the THUNDERBADGE!"
+	para "You've earned the"
+	line "DINBADGE!"
 	prompt
 
 _VermilionGymBattleText1:: ; 9c194 (27:4194)
-	text "When I was in the"
-	line "Army, LT.SURGE"
-	cont "was my strict CO!"
+	text "Oh ho!"
+
+	para "We got ourselves"
+	line "a hothead!"
+
+	para "I'll have to cool"
+	line "you off!"
+
+	para "If you beat me,"
+	line "I'll let you cross"
+	cont "the lava."
+
+	para "And yes, this is"
+	line "definitely lava,"
+	cont "not water."
 	done
 
 _VermilionGymEndBattleText1:: ; 9c1c8 (27:41c8)
-	text "Stop!"
-	line "You're very good!"
+	text "Darn."
+	line "Talk to me, so I"
+	cont "can let you cross"
+	cont "the lava."
 	prompt
 
 _VermilionGymAfterBattleText1:: ; 9c1e0 (27:41e0)
-	text "The door won't"
-	line "open?"
-
-	para "LT.SURGE always"
-	line "was cautious!"
-	done
+	text "The floor is"
+	line "raised."
+	prompt
 
 _VermilionGymBattleText2:: ; 9c213 (27:4213)
-	text "I'm a lightweight,"
-	line "but I'm good with"
-	cont "electricity!"
+	text "I'M SWIMMING IN"
+	line "LAVAAAAA!"
 	done
 
 _VermilionGymEndBattleText2:: ; 9c244 (27:4244)
-	text "Fried!"
+	text "I'm"
+	line "wearing a very"
+	cont "protective suit."
 	prompt
 
 _VermilionGymAfterBattleText2:: ; 9c24c (27:424c)
@@ -91,13 +112,17 @@ _VermilionGymAfterBattleText2:: ; 9c24c (27:424c)
 	done
 
 _VermilionGymBattleText3:: ; 9c290 (27:4290)
-	text "This is no place"
-	line "for kids!"
+	text "I'm not even"
+	line "breaking a sweat"
+	cont "right now!"
+
+	para "ELDA has trained"
+	line "me well!"
 	done
 
 _VermilionGymEndBattleText3:: ; 9c2ac (27:42ac)
-	text "Wow!"
-	line "Surprised me!"
+	text "Phew!"
+	line "I need a towel."
 	prompt
 
 _VermilionGymAfterBattleText3:: ; 9c2c0 (27:42c0)

@@ -10622,7 +10622,7 @@ PointerTable_3f22:: ; 3f22 (0:3f22)
 	dw Unknown_21878                        ; id = 23
 	dw FoundHiddenItemText                  ; id = 24
 	dw HiddenItemBagFullText                ; id = 25
-	dw VermilionGymTrashText                ; id = 26
+	dw HiddenItemBagFullText                ; id = 26 TODO: Used to be vermilion trash can
 	dw IndigoPlateauHQText                  ; id = 27
 	dw GameCornerOutOfOrderText             ; id = 28
 	dw GameCornerOutToLunchText             ; id = 29
@@ -10643,8 +10643,8 @@ PointerTable_3f22:: ; 3f22 (0:3f22)
 	dw UnnamedText_52a1d                    ; id = 38
 	dw NewBicycleText                       ; id = 39
 	dw IndigoPlateauStatues                 ; id = 3A
-	dw VermilionGymTrashSuccesText1         ; id = 3B
-	dw VermilionGymTrashSuccesText2         ; id = 3C
+	dw IndigoPlateauStatues                 ; id = 3B TODO: Used to be vermilion trash can
+	dw IndigoPlateauStatues                 ; id = 3C TODO: Used to be vermilion trash can
 	dw VermilionGymTrashSuccesText3         ; id = 3D
 	dw VermilionGymTrashFailText            ; id = 3E
 	dw TownMapText                          ; id = 3F
@@ -15358,8 +15358,8 @@ DungeonWarpData: ; 63d8 (1:63d8)
 ;	FLYWARP_DATA [Map Width][Y-pos][X-pos]
 ;	db Tileset_id
 FirstMapSpec: ; 6420 (1:6420)
-	db REDS_HOUSE_2F
-	FLYWARP_DATA REDS_HOUSE_2F_WIDTH,0,0
+	db VERMILION_GYM
+	FLYWARP_DATA VERMILION_GYM_WIDTH,0,0
 	db $0C
 
 BattleCenterSpec1: ; 6428 (1:6428)
@@ -52820,7 +52820,7 @@ TrainerNames: ; 399ff (e:59ff)
 	db "BLANDY@"
 	db "TARA@"
 	db "LT.SURGE@"
-	db "ERIKA@"
+	db "ELDA@"
 	db "KOGA@"
 	db "BLAINE@"
 	db "SABRINA@"
@@ -53130,7 +53130,7 @@ LoneMoves: ; 39d22 (e:5d22)
 ; unterminated
 	db 1,SWIFT
 	db 1,DIG
-	db 2,THUNDERBOLT
+	db 2,FIRE_BLAST
 	db 2,MEGA_DRAIN
 	db 3,TOXIC
 	db 3,PSYWAVE
@@ -53557,8 +53557,8 @@ FisherData: ; 3a013 (e:6013)
 	db 33,SEAKING,GOLDEEN,0
 	db 24,MAGIKARP,MAGIKARP,0
 SwimmerData: ; 3a049 (e:6049)
-	db 16,HORSEA,SHELLDER,0
-	db 30,TENTACOOL,SHELLDER,0
+	db 21,GROWLITHE,HOUNDOUR,GROWLITHE,0 ; Copper Town Gym
+	db 23,MAGMAR,0 ; Copper Town Gym
 	db 29,GOLDEEN,HORSEA,STARYU,0
 	db 30,POLIWAG,POLIWHIRL,0
 	db 27,HORSEA,TENTACOOL,TENTACOOL,GOLDEEN,0
@@ -53573,7 +53573,7 @@ SwimmerData: ; 3a049 (e:6049)
 	db 33,STARYU,WARTORTLE,0
 	db 32,POLIWHIRL,TENTACOOL,SEADRA,0
 CueBallData: ; 3a08d (e:608d)
-	db 28,MACHOP,MANKEY,MACHOP,0
+	db 21,PONYTA,CHARMANDER,CHARMELEON,0 ; Copper Town Gym
 	db 29,MANKEY,MACHOP,0
 	db 33,MACHOP,0
 	db 29,MANKEY,PRIMEAPE,0
@@ -53802,11 +53802,7 @@ else
 	db $FF,21,VOLTORB,18,PIKACHU,24,RAICHU,0
 endc
 ErikaData: ; 3a3c9 (e:63c9)
-if _YELLOW
-	db $FF,30,TANGELA,32,WEEPINBELL,32,GLOOM,0
-else
-	db $FF,29,VICTREEBEL,24,TANGELA,29,VILEPLUME,0
-endc
+	db $FF,22,HOUNDOUR,22,PONYTA,26,CHARMELEON,0
 KogaData: ; 3a3d1 (e:63d1)
 if _YELLOW
 	db $FF,44,VENONAT,46,VENONAT,48,VENONAT,50,VENOMOTH,0
@@ -57365,8 +57361,9 @@ Mon005_EvosMoves: ; 3b95a (e:795a)
 	db 0
 ;Learnset
 	db 9,EMBER
+	db 13,METAL_CLAW
 	db 15,LEER
-	db 24,RAGE
+	db 27,RAGE
 	db 33,SLASH
 	db 37,CRUNCH
 	db 42,FLAMETHROWER
@@ -57392,6 +57389,7 @@ Mon006_EvosMoves: ; 3b97c (e:797c)
 ;Learnset
 	db 9,EMBER
 	db 15,LEER
+	db 20,METAL_CLAW
 	db 24,RAGE
 	db 36,SLASH
 	db 46,FLAMETHROWER
@@ -74569,36 +74567,6 @@ VermilionGymHiddenObjects: ; 46c18 (11:6c18)
 	dbw BANK(GymStatues), GymStatues
 	db $01,$06,$00 ; XXX, y, x
 	dbw Bank(Func_5ddef), Func_5ddef
-	db $07,$01,$00 ; XXX, y, x
-	dbw Bank(GymTrashScript), GymTrashScript
-	db $09,$01,$01 ; XXX, y, x
-	dbw Bank(GymTrashScript), GymTrashScript
-	db $0b,$01,$02 ; XXX, y, x
-	dbw Bank(GymTrashScript), GymTrashScript
-	db $07,$03,$03 ; XXX, y, x
-	dbw Bank(GymTrashScript), GymTrashScript
-	db $09,$03,$04 ; XXX, y, x
-	dbw Bank(GymTrashScript), GymTrashScript
-	db $0b,$03,$05 ; XXX, y, x
-	dbw Bank(GymTrashScript), GymTrashScript
-	db $07,$05,$06 ; XXX, y, x
-	dbw Bank(GymTrashScript), GymTrashScript
-	db $09,$05,$07 ; XXX, y, x
-	dbw Bank(GymTrashScript), GymTrashScript
-	db $0b,$05,$08 ; XXX, y, x
-	dbw Bank(GymTrashScript), GymTrashScript
-	db $07,$07,$09 ; XXX, y, x
-	dbw Bank(GymTrashScript), GymTrashScript
-	db $09,$07,$0a ; XXX, y, x
-	dbw Bank(GymTrashScript), GymTrashScript
-	db $0b,$07,$0b ; XXX, y, x
-	dbw Bank(GymTrashScript), GymTrashScript
-	db $07,$09,$0c ; XXX, y, x
-	dbw Bank(GymTrashScript), GymTrashScript
-	db $09,$09,$0d ; XXX, y, x
-	dbw Bank(GymTrashScript), GymTrashScript
-	db $0b,$09,$0e ; XXX, y, x
-	dbw Bank(GymTrashScript), GymTrashScript
 	db $FF
 CeladonMansion2HiddenObjects: ; 46c85 (11:6c85)
 	db $05,$00,$04 ; XXX, y, x
@@ -93706,12 +93674,7 @@ VermilionGymScript: ; 5ca26 (17:4a26)
 	ld hl, $d126
 	bit 5, [hl]
 	res 5, [hl]
-	push hl
 	call nz, VermilionGymScript_5ca4c
-	pop hl
-	bit 6, [hl]
-	res 6, [hl]
-	call nz, VermilionGymScript_5ca6d
 	call EnableAutoTextBoxDrawing
 	ld hl, VermilionGymTrainerHeader0
 	ld de, VermilionGymScriptPointers
@@ -93726,26 +93689,10 @@ VermilionGymScript_5ca4c: ; 5ca4c (17:4a4c)
 	jp LoadGymLeaderAndCityName
 
 Gym3CityName: ; 5ca55 (17:4a55)
-	db "VERMILION CITY@"
+	db "COPPER TOWN@"
 
 Gym3LeaderName: ; 5ca64 (17:4a64)
-	db "LT.SURGE@"
-
-VermilionGymScript_5ca6d: ; 5ca6d (17:4a6d)
-	ld a, [$d773]
-	bit 0, a
-	jr nz, .asm_5ca78
-	ld a, $24
-	jr .asm_5ca7f
-.asm_5ca78
-	ld a, $ad
-	call PlaySound
-	ld a, $5
-.asm_5ca7f
-	ld [$d09f], a
-	ld bc, $202
-	ld a, $17
-	jp Predef ; indirect jump to Func_ee9e (ee9e (3:6e9e))
+	db "ELDA@"
 
 VermilionGymScript_5ca8a: ; 5ca8a (17:4a8a)
 	xor a
@@ -93773,7 +93720,7 @@ Func_5caaa: ; 5caaa (17:4aaa)
 	call DisplayTextID
 	ld hl, $d773
 	set 7, [hl]
-	ld bc, (TM_24 << 8) | 1
+	ld bc, (TM_38 << 8) | 1
 	call GiveItem
 	jr nc, .BagFull
 	ld a, $7
@@ -93798,6 +93745,22 @@ Func_5caaa: ; 5caaa (17:4aaa)
 	ld a, [$d773]
 	or $1c
 	ld [$d773], a
+	; raise floor again
+	ld a, $18
+	ld [$d09f], a
+	ld bc, $0101
+	ld a, $17
+	call Predef
+	ld a, $18
+	ld [$d09f], a
+	ld bc, $0301
+	ld a, $17
+	call Predef
+	ld a, $18
+	ld [$d09f], a
+	ld bc, $0402
+	ld a, $17
+	call Predef
 	jp VermilionGymScript_5ca8a
 
 VermilionGymTextPointers: ; 5cae8 (17:4ae8)
@@ -93813,7 +93776,7 @@ VermilionGymTextPointers: ; 5cae8 (17:4ae8)
 VermilionGymTrainerHeaders: ; 5caf8 (17:4af8)
 VermilionGymTrainerHeader0: ; 5caf8 (17:4af8)
 	db $2 ; flag's bit
-	db ($3 << 4) ; trainer's view range
+	db ($1 << 4) ; trainer's view range
 	dw $d773 ; flag's byte
 	dw VermilionGymBattleText1 ; 0x4b9a TextBeforeBattle
 	dw VermilionGymAfterBattleText1 ; 0x4ba4 TextAfterBattle
@@ -93822,7 +93785,7 @@ VermilionGymTrainerHeader0: ; 5caf8 (17:4af8)
 
 VermilionGymTrainerHeader1: ; 5cb04 (17:4b04)
 	db $3 ; flag's bit
-	db ($2 << 4) ; trainer's view range
+	db ($1 << 4) ; trainer's view range
 	dw $d773 ; flag's byte
 	dw VermilionGymBattleText2 ; 0x4bb3 TextBeforeBattle
 	dw VermilionGymAfterBattleText2 ; 0x4bbd TextAfterBattle
@@ -93831,7 +93794,7 @@ VermilionGymTrainerHeader1: ; 5cb04 (17:4b04)
 
 VermilionGymTrainerHeader2: ; 5cb10 (17:4b10)
 	db $4 ; flag's bit
-	db ($3 << 4) ; trainer's view range
+	db ($1 << 4) ; trainer's view range
 	dw $d773 ; flag's byte
 	dw VermilionGymBattleText3 ; 0x4bcc TextBeforeBattle
 	dw VermilionGymAfterBattleText3 ; 0x4bd6 TextAfterBattle
@@ -93851,6 +93814,22 @@ VermilionGymText1: ; 5cb1d (17:4b1d)
 	call DisableWaitingAfterTextDisplay
 	jr .asm_23621 ; 0x5cb2f
 .asm_41203 ; 0x5cb31
+	; raise floor again
+	ld a, $18
+	ld [$d09f], a
+	ld bc, $0101
+	ld a, $17
+	call Predef
+	ld a, $18
+	ld [$d09f], a
+	ld bc, $0301
+	ld a, $17
+	call Predef
+	ld a, $18
+	ld [$d09f], a
+	ld bc, $0402
+	ld a, $17
+	call Predef
 	ld hl, UnnamedText_5cb72
 	call PrintText
 	jr .asm_23621 ; 0x5cb37
@@ -93918,7 +93897,28 @@ VermilionGymEndBattleText1: ; 5cb9f (17:4b9f)
 	db "@"
 
 VermilionGymAfterBattleText1: ; 5cba4 (17:4ba4)
+	; change the floor tile
+	db $08 ; asm
+	ld hl, __VermilionGymAfterBattleText1
+	call PrintText
+	ld a, $18
+	ld [$d09f], a
+	ld bc, $0402
+	ld a, $17
+	call Predef
+	ld a, $ad
+	call PlaySound
+	call WaitForSoundToFinish
+	ld hl, VermilionGymAfterBattleStep1
+	call PrintText
+	jp TextScriptEnd
+
+__VermilionGymAfterBattleText1:
 	TX_FAR _VermilionGymAfterBattleText1
+	db "@"
+
+VermilionGymAfterBattleStep1:
+	TX_FAR _VermilionGymAfterBattleStep1
 	db "@"
 
 VermilionGymText3: ; 5cba9 (17:4ba9)
@@ -93936,8 +93936,29 @@ VermilionGymEndBattleText2: ; 5cbb8 (17:4bb8)
 	db "@"
 
 VermilionGymAfterBattleText2: ; 5cbbd (17:4bbd)
-	TX_FAR _VermilionGymAfterBattleText2
-	db "@"
+	; change the floor tile
+	db $08 ; asm
+	ld hl, __VermilionGymAfterBattleText1
+	call PrintText
+	ld a, $18
+	ld [$d09f], a
+	ld bc, $0301
+	ld a, $17
+	call Predef
+	ld a, $ad
+	call PlaySound
+	call WaitForSoundToFinish
+	ld a, $18
+	ld [$d09f], a
+	ld bc, $0402
+	ld a, $17
+	call Predef
+	ld a, $ad
+	call PlaySound
+	call WaitForSoundToFinish
+	ld hl, VermilionGymAfterBattleStep1
+	call PrintText
+	jp TextScriptEnd
 
 VermilionGymText4: ; 5cbc2 (17:4bc2)
 	db $08 ; asm
@@ -93954,8 +93975,29 @@ VermilionGymEndBattleText3: ; 5cbd1 (17:4bd1)
 	db "@"
 
 VermilionGymAfterBattleText3: ; 5cbd6 (17:4bd6)
-	TX_FAR _VermilionGymAfterBattleText3
-	db "@"
+	; change the floor tile
+	db $08 ; asm
+	ld hl, __VermilionGymAfterBattleText1
+	call PrintText
+	ld a, $18
+	ld [$d09f], a
+	ld bc, $0101
+	ld a, $17
+	call Predef
+	ld a, $ad
+	call PlaySound
+	call WaitForSoundToFinish
+	ld a, $18
+	ld [$d09f], a
+	ld bc, $0301
+	ld a, $17
+	call Predef
+	ld a, $ad
+	call PlaySound
+	call WaitForSoundToFinish
+	ld hl, VermilionGymAfterBattleStep1
+	call PrintText
+	jp TextScriptEnd
 
 VermilionGymText5: ; 5cbdb (17:4bdb)
 	db $08 ; asm
@@ -93989,10 +94031,10 @@ VermilionGymObject: ; 0x5cbfe (size=58)
 	db $0 ; signs
 
 	db $5 ; people
-	db SPRITE_ROCKER, $1 + 4, $5 + 4, $ff, $d0, $41, LT__SURGE + $C8, $1 ; trainer
-	db SPRITE_GENTLEMAN, $6 + 4, $9 + 4, $ff, $d2, $42, GENTLEMAN + $C8, $3 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_2, $8 + 4, $3 + 4, $ff, $d2, $43, ROCKER + $C8, $1 ; trainer
-	db SPRITE_SAILOR, $a + 4, $0 + 4, $ff, $d3, $44, SAILOR + $C8, $8 ; trainer
+	db SPRITE_ERIKA, $1 + 4, $4 + 4, $ff, $d0, $41, ERIKA + $C8, $1 ; trainer
+	db SPRITE_GAMBLER, $a + 4, $5 + 4, $ff, $d2, $42, CUE_BALL + $C8, $1 ; trainer
+	db SPRITE_SWIMMER, $7 + 4, $6 + 4, $ff, $d2, $43, SWIMMER + $C8, $1 ; trainer
+	db SPRITE_SWIMMER, $5 + 4, $1 + 4, $ff, $d3, $44, SWIMMER + $C8, $2 ; trainer
 	db SPRITE_GYM_HELPER, $e + 4, $4 + 4, $ff, $d0, $5 ; person
 
 	; warp-to
@@ -96204,143 +96246,6 @@ Func_5ddef: ; 5ddef (17:5def)
 	call EnableAutoTextBoxDrawing
 	ld a, $26
 	jp Func_3ef5
-
-VermilionGymTrashText: ; 5ddf7 (17:5df7)
-	TX_FAR _VermilionGymTrashText
-	db "@"
-
-GymTrashScript: ; 5ddfc (17:5dfc)
-	call EnableAutoTextBoxDrawing
-	ld a, [wWhichTrade] ; $cd3d
-	ld [$cd5b], a
-
-; Don't do the trash can puzzle if it's already been done.
-	ld a, [$d773]
-	bit 0, a
-	jr z, .ok
-
-	ld a, $26 ; DisplayTextID $26 = VermilionGymTrashText (nothing in the trash)
-	jp Func_3ef5
-
-.ok
-	bit 1, a
-	jr nz, .trySecondLock
-
-	ld a, [$d743]
-	ld b, a
-	ld a, [$cd5b]
-	cp b
-	jr z, .openFirstLock
-
-	ld a, $26 ; DisplayTextID $26 = VermilionGymTrashText (nothing in the trash)
-	jr .done
-
-.openFirstLock
-; Next can is trying for the second switch.
-	ld hl, $d773
-	set 1, [hl]
-
-	ld hl, GymTrashCans ; $5e7d
-	ld a, [$cd5b]
-	; * 5
-	ld b, a
-	add a
-	add a
-	add b
-
-	ld d, 0
-	ld e, a
-	add hl, de
-	ld a, [hli]
-
-	ld [$FF00+$db], a
-	push hl
-	call GenRandom
-	swap a
-	ld b, a
-	ld a, [$FF00+$db]
-	and b
-	dec a
-	pop hl
-
-	ld d, 0
-	ld e, a
-	add hl, de
-	ld a, [hl]
-	and $f
-	ld [$d744], a
-
-	ld a, $3b ; DisplayTextID $3b = VermilionGymTrashSuccesText1 (first lock opened!)
-	jr .done
-
-.trySecondLock
-	ld a, [$d744]
-	ld b, a
-	ld a, [$cd5b]
-	cp b
-	jr z, .openSecondLock
-
-; Reset the cans.
-	ld hl, $d773
-	res 1, [hl]
-	call GenRandom
-
-	and $e
-	ld [$d743], a
-
-	ld a, $3e ; DisplayTextID $3e = VermilionGymTrashFailText (locks reset!)
-	jr .done
-
-.openSecondLock
-; Completed the trash can puzzle.
-	ld hl, $d773
-	set 0, [hl]
-	ld hl, $d126
-	set 6, [hl]
-
-	ld a, $3d ; DisplayTextID $3d = VermilionGymTrashSuccesText3 (2nd lock opened!)
-
-.done
-	jp Func_3ef5
-
-GymTrashCans: ; 5de7d (17:5e7d)
-	db 2,  1,  3,  0,  0 ; 0
-	db 3,  0,  2,  4,  0 ; 1
-	db 2,  1,  5,  0,  0 ; 2
-	db 3,  0,  4,  6,  0 ; 3
-	db 4,  1,  3,  5,  7 ; 4
-	db 3,  2,  4,  8,  0 ; 5
-	db 3,  3,  7,  9,  0 ; 6
-	db 4,  4,  6,  8, 10 ; 7
-	db 3,  5,  7, 11,  0 ; 8
-	db 3,  6, 10, 12,  0 ; 9
-	db 4,  7,  9, 11, 13 ; 10
-	db 3,  8, 10, 14,  0 ; 11
-	db 2,  9, 13,  0,  0 ; 12
-	db 3, 10, 12, 14,  0 ; 13
-	db 2, 11, 13,  0,  0 ; 14
-; 5dec8
-
-VermilionGymTrashSuccesText1: ; 5dec8 (17:5ec8)
-	TX_FAR _VermilionGymTrashSuccesText1
-	db $08 ; asm
-	call WaitForSoundToFinish
-	ld a, $9d
-	call PlaySound
-	call WaitForSoundToFinish
-	jp TextScriptEnd
-
-VermilionGymTrashSuccesText2: ; 5dedb (17:5edb)
-	TX_FAR _VermilionGymTrashSuccesText2
-	db "@"
-
-UnnamedText_5dee0: ; 5dee0 (17:5ee0)
-	db $08 ; asm
-	call WaitForSoundToFinish
-	ld a, $9d
-	call PlaySound
-	call WaitForSoundToFinish
-	jp TextScriptEnd
 
 VermilionGymTrashSuccesText3: ; 5deef (17:5eef)
 	TX_FAR _VermilionGymTrashSuccesText3
@@ -105135,8 +105040,8 @@ SuperPalettes: ; 72660 (1c:6660)
 	RGB 20,26,31
 	RGB 3,2,2
 	RGB 31,29,31 ; PAL_VERMILION
-	RGB 30,18,0
-	RGB 20,26,31
+	RGB 18,23,21
+	RGB 20,14,8
 	RGB 3,2,2
 	RGB 31,29,31 ; PAL_CELADON
 	RGB 16,30,22
@@ -117910,6 +117815,10 @@ TitleScreenBlink2Pic:
 
 
 SECTION "New Text", ROMX, BANK[$33]
+
+_VermilionGymAfterBattleStep1::
+	text "Watch your step."
+	done
 
 _RockyPointFlyGuyText1::
 	text "What is the world"
