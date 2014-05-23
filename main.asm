@@ -22114,16 +22114,16 @@ Route4Mons: ; d18f (3:518f)
 
 Route24Mons: ; d1a5 (3:51a5)
 	db $19
-	db 7,CATERPIE
-	db 8,METAPOD
+	db 12,EKANS
+	db 12,HOUNDOUR
+	db 11,HOUNDOUR
 	db 12,PIDGEY
-	db 12,BELLSPROUT
-	db 13,BELLSPROUT
-	db 10,ABRA
-	db 14,BELLSPROUT
 	db 13,PIDGEY
-	db 8,ABRA
-	db 12,ABRA
+	db 12,GEODUDE
+	db 14,POLIWAG
+	db 14,BELLSPROUT
+	db 13,HOUNDOUR
+	db 13,BELLSPROUT
 
 	db $00
 
@@ -22921,16 +22921,16 @@ Route3Mons: ; d137 (3:5137)
 
 MoonMons1: ; d14d (3:514d)
 	db $0A
-	db 8,ZUBAT
-	db 7,ZUBAT
-	db 9,ZUBAT
-	db 8,GEODUDE
-	db 6,ZUBAT
-	db 10,ZUBAT
-	db 10,GEODUDE
-	db 8,PARAS
-	db 11,ZUBAT
-	db 8,CLEFAIRY
+	db 16,SANDSHREW
+	db 16,ZUBAT
+	db 16,DIGLETT
+	db 15,GEODUDE
+	db 15,SANDSHREW
+	db 15,ZUBAT
+	db 13,DRILBUR
+	db 15,GEODUDE
+	db 12,DRILBUR
+	db 16,GEODUDE
 
 	db $00
 
@@ -22951,16 +22951,16 @@ MoonMonsB1: ; d163 (3:5163)
 
 MoonMonsB2: ; d179 (3:5179)
 	db $0A
-	db 9,ZUBAT
-	db 9,GEODUDE
-	db 10,ZUBAT
-	db 10,GEODUDE
-	db 11,ZUBAT
-	db 10,PARAS
-	db 12,PARAS
-	db 10,CLEFAIRY
-	db 12,ZUBAT
-	db 12,CLEFAIRY
+	db 16,SANDSHREW
+	db 16,ZUBAT
+	db 17,DIGLETT
+	db 16,GEODUDE
+	db 16,ONIX
+	db 15,ZUBAT
+	db 13,DRILBUR
+	db 15,ONIX
+	db 12,ONIX
+	db 17,ONIX
 
 	db $00
 
@@ -88203,9 +88203,9 @@ Route6Object: ; 0x58022 (size=87)
 	db $f ; border tile
 
 	db $4 ; warps
-	db $1, $a, $2, ROUTE_6_GATE
-	db $1, $b, $2, ROUTE_6_GATE
-	db $7, $a, $0, ROUTE_6_GATE
+	db $1, $a, $2, ROUTE_5_GATE
+	db $1, $b, $2, ROUTE_5_GATE
+	db $7, $a, $0, ROUTE_5_GATE
 	db $1d, $c, $1, UNDERGROUND_PATH_NS
 
 	db $1 ; signs
