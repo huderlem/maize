@@ -21189,14 +21189,14 @@ MoonMons1: ; d14d (3:514d)
 	db $0A
 	db 16,SANDSHREW
 	db 16,ZUBAT
-	db 17,DIGLETT
-	db 16,GEODUDE
-	db 17,SANDSHREW
+	db 16,DIGLETT
+	db 15,GEODUDE
+	db 15,SANDSHREW
 	db 15,ZUBAT
 	db 13,DRILBUR
 	db 15,GEODUDE
 	db 12,DRILBUR
-	db 17,GEODUDE
+	db 16,GEODUDE
 
 	db $00
 
@@ -21217,16 +21217,16 @@ MoonMonsB1: ; d163 (3:5163)
 
 MoonMonsB2: ; d179 (3:5179)
 	db $0A
-	db 9,ZUBAT
-	db 9,GEODUDE
-	db 10,ZUBAT
-	db 10,GEODUDE
-	db 11,ZUBAT
-	db 10,PARAS
-	db 12,PARAS
-	db 10,CLEFAIRY
-	db 12,ZUBAT
-	db 12,CLEFAIRY
+	db 16,SANDSHREW
+	db 16,ZUBAT
+	db 17,DIGLETT
+	db 16,GEODUDE
+	db 16,ONIX
+	db 15,ZUBAT
+	db 13,DRILBUR
+	db 15,ONIX
+	db 12,ONIX
+	db 17,ONIX
 
 	db $00
 
@@ -21247,16 +21247,16 @@ Route4Mons: ; d18f (3:518f)
 
 Route24Mons: ; d1a5 (3:51a5)
 	db $19
-	db 7,WEEDLE
-	db 8,KAKUNA
+	db 12,EKANS
+	db 12,HOUNDOUR
+	db 11,HOUNDOUR
 	db 12,PIDGEY
-	db 12,ODDISH
-	db 13,ODDISH
-	db 10,ABRA
-	db 14,ODDISH
 	db 13,PIDGEY
-	db 8,ABRA
-	db 12,ABRA
+	db 12,GEODUDE
+	db 14,POLIWAG
+	db 14,BELLSPROUT
+	db 13,HOUNDOUR
+	db 13,BELLSPROUT
 
 	db $00
 
