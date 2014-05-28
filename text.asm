@@ -462,9 +462,17 @@ _VermilionPokecenterGuyText:: ; 8848e (22:448e)
 	done
 
 _CeladonCityPokecenterGuyText:: ; 88531 (22:4531)
-	text "If I had a BIKE,"
-	line "I would go to"
-	cont "CYCLING ROAD!"
+	text "I love my"
+	line "SCOUTER RING!"
+
+	para "I can't afford"
+	line "DV BALLs, so I"
+	cont "rely on the"
+	cont "SCOUTER RING to"
+	cont "tell me when I"
+	cont "run into strong"
+	cont "#MON in the"
+	cont "wild."
 	done
 
 _FuchsiaCityPokecenterGuyText:: ; 8855f (22:455f)

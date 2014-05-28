@@ -1,16 +1,21 @@
 _CeladonCityText1:: ; a59fb (29:59fb)
-	text "I got my KOFFING"
-	line "in CINNABAR!"
+	text "DV's are what make"
+	line "your #MON"
+	cont "strong or weak."
 
-	para "It's nice, but it"
-	line "breathes poison"
-	cont "when it's angry!"
+	para "0 is the worst,"
+	line "and 15 is the"
+	cont "best!"
 	done
 
 _CeladonCityText2:: ; a5a4b (29:5a4b)
-	text "Heheh! This GYM"
-	line "is great! It's"
-	cont "full of women!"
+	text "This city is"
+	line "occasionally"
+	cont "flooded due to"
+	cont "massive tidal"
+	cont "waves from the"
+	cont "ocean east of"
+	cont "here."
 	done
 
 _CeladonCityText3:: ; a5a79 (29:5a79)
@@ -20,84 +25,60 @@ _CeladonCityText3:: ; a5a79 (29:5a79)
 	done
 
 _CeladonCityText4:: ; a5aa6 (29:5aa6)
-	text "Moan! I blew it"
-	line "all at the slots!"
-
-	para "I knew I should"
-	line "have cashed in my"
-	cont "coins for prizes!"
+	text "I'm trying to bend"
+	line "bend this fence"
+	cont "with my mind!"
 	done
 
 _TM41PreText:: ; a5afd (29:5afd)
-	text "Hello, there!"
+	text "Why, hello there."
 
-	para "I've seen you,"
-	line "but I never had a"
-	cont "chance to talk!"
+	para "I was the lead"
+	line "architect on"
+	cont "this house."
 
-	para "Here's a gift for"
-	line "dropping by!"
-	prompt
+	para "It's not really"
+	line "a house, though."
 
-_ReceivedTM41Text:: ; a5b5a (29:5b5a)
-	text $52, " received"
-	line "@"
-	TX_RAM $cf4b
-	text "!@@"
-
-_TM41ExplanationText:: ; a5b6e (29:5b6e)
-	text "TM41 teaches"
-	line "SOFTBOILED!"
-
-	para "Only one #MON"
-	line "can use it!"
-
-	para "That #MON is"
-	line "CHANSEY!"
-	done
-
-_TM41NoRoomText:: ; a5bb8 (29:5bb8)
-	text "Oh, your pack is"
-	line "full of items!"
+	para "Right now, I'm"
+	line "just admiring it."
 	done
 
 _CeladonCityText6:: ; a5bd9 (29:5bd9)
-	text "This is my trusted"
-	line "pal, POLIWRATH!"
+	text "Meet COOLDUDE,"
+	line "my SCIZOR!"
 
-	para "It evolved from"
-	line "POLIWHIRL when I"
-	cont "used WATER STONE!"
+	para "He evolved from a"
+	line "SCYTHER when I"
+	cont "used an"
+	cont "ITEM STONE!"
 	done
 
 _CeladonCityText7:: ; a5c30 (29:5c30)
-	text "POLIWRATH: Ribi"
-	line "ribit!@@"
+	text "COOLDUDE: Siiiii!@@"
 
 _CeladonCityText8:: ; a5c49 (29:5c49)
-	text "What are you"
-	line "staring at?"
+	text "The people here"
+	line "drive me crazy."
+
+	para "Maybe someday I"
+	line "will just leave."
 	done
 
 _CeladonCityText9:: ; a5c63 (29:5c63)
-	text "Keep out of TEAM"
-	line "ROCKET's way!"
+	text "You better not be"
+	line "from COPPER TOWN!"
 	done
 
 _CeladonCityText10:: ; a5c82 (29:5c82)
-	text "TRAINER TIPS"
+	text "I'm not a talking"
+	line "rock, but I still"
+	cont "work."
 
-	para "X ACCURACY boosts"
-	line "the accuracy of"
-	cont "techniques!"
-
-	para "DIRE HIT jacks up"
-	line "the likelihood of"
-	cont "critical hits!"
-
-	para "Get your items at"
-	line "CELADON DEPT."
-	cont "STORE!"
+	para "Shouldn't you be"
+	line "sweeping some"
+	cont "dust with that"
+	cont "broom of yours?"
 	done
 
 _CeladonCityText11:: ; a5d18 (29:5d18)
@@ -108,12 +89,15 @@ _CeladonCityText11:: ; a5d18 (29:5d18)
 	done
 
 _CeladonCityText13:: ; a5d41 (29:5d41)
-	text "CELADON CITY"
+	text "PYRITE CITY"
 	line "#MON GYM"
-	cont "LEADER: ERIKA"
+	cont "LEADER: STELLA"
 
-	para "The Nature Loving"
-	line "Princess!"
+	para "The metal-bending"
+	line "scourge!"
+
+	para "Ok, she's not a"
+	line "metal bender..."
 	done
 
 _CeladonCityText14:: ; a5d82 (29:5d82)
@@ -123,34 +107,24 @@ _CeladonCityText14:: ; a5d82 (29:5d82)
 	done
 
 _CeladonCityText15:: ; a5d93 (29:5d93)
-	text "Find what you"
-	line "need at CELADON"
-	cont "DEPT. STORE!"
+	text "Ma(i)ze House"
 	done
 
 _CeladonCityText16:: ; a5dbf (29:5dbf)
-	text "TRAINER TIPS"
-
-	para "GUARD SPEC."
-	line "protects #MON"
-	cont "against SPECIAL"
-	cont "attacks such as"
-	cont "fire and water!"
-
-	para "Get your items at"
-	line "CELADON DEPT."
-	cont "STORE!"
+	text "PYRITE CITY"
+	line "OUTPOST"
 	done
 
 _CeladonCityText17:: ; a5e3e (29:5e3e)
-	text "Coins exchanged"
-	line "for prizes!"
-	cont "PRIZE EXCHANGE"
+	text "PYRITE CITY"
+	line "A place fools"
+	cont "search for gold."
 	done
 
 _CeladonCityText18:: ; a5e6a (29:5e6a)
-	text "ROCKET GAME CORNER"
-	line "The playground"
-	cont "for grown-ups!"
+	text "I'm a talking"
+	line "bush!"
+
+	para "Talk talk talk."
 	done
 

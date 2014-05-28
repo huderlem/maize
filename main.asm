@@ -3692,7 +3692,6 @@ Tset16_Coll:: ; 17dd (0:17dd)
 	INCBIN "gfx/tilesets/16.tilecoll"
 Tset17_Coll:: ; 17f0 (0:17f0)
 	INCBIN "gfx/tilesets/17.tilecoll"
-;Tile Collision ends 0x17f7
 
 ; does the same thing as FarCopyData at 009D
 ; only difference is that it uses [$ff8b] instead of [$cee9] for a temp value
@@ -10652,6 +10651,9 @@ PointerTable_3f22:: ; 3f22 (0:3f22)
 	dw ElevatorText                         ; id = 41
 	dw PokemonStuffText                     ; id = 42
 
+Tset0C_Coll:
+	INCBIN "gfx/tilesets/0c.tilecoll"
+
 SECTION "bank1",ROMX,BANK[$1]
 
 SpriteFacingAndAnimationTable: ; 4000 (1:4000)
@@ -15425,7 +15427,7 @@ Map03FlyWarp: ; 648e (1:648e)
 Map04FlyWarp: ; 6494 (1:6494)
 	FLYWARP_DATA 10,6,3
 Map05FlyWarp: ; 649a (1:649a)
-	FLYWARP_DATA 20,8,11
+	FLYWARP_DATA 20,16,29
 Map06FlyWarp: ; 64a0 (1:64a0)
 	FLYWARP_DATA 25,10,41
 Map07FlyWarp: ; 64a6 (1:64a6)
@@ -34292,14 +34294,14 @@ CeladonCityObject: ; 0x18022 (size=189)
 
 	db $9 ; people
 	db SPRITE_LITTLE_GIRL, $b + 4, $6 + 4, $fe, $0, $1 ; person
-	db SPRITE_OLD_PERSON, $18 + 4, $9 + 4, $ff, $d1, $2 ; person
-	db SPRITE_GIRL, $10 + 4, $10 + 4, $fe, $1, $3 ; person
+	db SPRITE_OLD_PERSON, $18 + 4, $9 + 4, $ff, $ff, $2 ; person
+	db SPRITE_GIRL, $10 + 4, $10 + 4, $ff, $ff, $3 ; person
 	db SPRITE_OLD_PERSON, $1a + 4, $21 + 4, $ff, $d0, $4 ; person
-	db SPRITE_OLD_PERSON, $1a + 4, $17 + 4, $ff, $d0, $5 ; person
+	db SPRITE_FISHER2, $1a + 4, $15 + 4, $ff, $d1, $5 ; person
 	db SPRITE_FISHER2, $f + 4, $1e + 4, $ff, $d2, $6 ; person
 	db SPRITE_SLOWBRO, $f + 4, $1c + 4, $ff, $d3, $7 ; person
 	db SPRITE_OLD_PERSON, $20 + 4, $1b + 4, $ff, $ff, $8 ; person
-	db SPRITE_ROCKET, $f + 4, $2b + 4, $ff, $ff, $9 ; person
+	db SPRITE_OLD_PERSON, $f + 4, $2b + 4, $ff, $ff, $9 ; person
 
 	; warp-to
 	EVENT_DISP $19, $2, $8 ; CELADON_MART_1
@@ -36441,44 +36443,7 @@ CeladonCityText4: ; 19999 (6:5999)
 	db "@"
 
 CeladonCityText5: ; 1999e (6:599e)
-	db $08 ; asm
-	ld a, [$d777]
-	bit 0, a
-	jr nz, .asm_7053f ; 0x199a4
-	ld hl, TM41PreText
-	call PrintText
-	ld bc, (TM_41 << 8) | 1
-	call GiveItem
-	jr c, .Success
-	ld hl, TM41NoRoomText
-	call PrintText
-	jr .Done
-.Success
-	ld hl, ReceivedTM41Text
-	call PrintText
-	ld hl, $d777
-	set 0, [hl]
-	jr .Done
-.asm_7053f ; 0x199c9
-	ld hl, TM41ExplanationText
-	call PrintText
-.Done
-	jp TextScriptEnd
-
-TM41PreText: ; 199d2 (6:59d2)
 	TX_FAR _TM41PreText
-	db "@"
-
-ReceivedTM41Text: ; 199d7 (6:59d7)
-	TX_FAR _ReceivedTM41Text ; 0xa5b5a
-	db $0B, "@"
-
-TM41ExplanationText: ; 199dd (6:59dd)
-	TX_FAR _TM41ExplanationText
-	db "@"
-
-TM41NoRoomText: ; 199e2 (6:59e2)
-	TX_FAR _TM41NoRoomText
 	db "@"
 
 CeladonCityText6: ; 199e7 (6:59e7)
@@ -36488,7 +36453,7 @@ CeladonCityText6: ; 199e7 (6:59e7)
 CeladonCityText7: ; 199ec (6:59ec)
 	TX_FAR _CeladonCityText7
 	db $08 ; asm
-	ld a, POLIWRATH
+	ld a, SCIZOR
 	call PlayCry
 	jp TextScriptEnd
 
@@ -92374,291 +92339,89 @@ Func_5c0dc: ; 5c0dc (17:40dc)
 	ret
 
 MuseumF1_h: ; 0x5c0eb to 0x5c0f7 (12 bytes) (id=52)
-	db $0a ; tileset
+	db $0c ; tileset
 	db MUSEUM_1F_HEIGHT, MUSEUM_1F_WIDTH ; dimensions (y, x)
 	dw MuseumF1Blocks, MuseumF1TextPointers, MuseumF1Script ; blocks, texts, scripts
 	db $00 ; connections
 	dw MuseumF1Object ; objects
 
 MuseumF1Script: ; 5c0f7 (17:40f7)
-	ld a, $1
-	ld [$cf0c], a
-	xor a
-	ld [$cc3c], a
-	ld hl, MuseumF1ScriptPointers
-	ld a, [W_MUSEUMF1CURSCRIPT]
-	jp CallFunctionInTable
-
-MuseumF1ScriptPointers: ; 5c109 (17:4109)
-	dw MuseumF1Script0
-	dw MuseumF1Script1
-
-MuseumF1Script0: ; 5c10d (17:410d)
-	ld a, [$d361]
-	cp $4
-	ret nz
-	ld a, [$d362]
-	cp $9
-	jr z, .asm_5c120 ; 0x5c118 $6
-	ld a, [$d362]
-	cp $a
-	ret nz
-.asm_5c120
-	xor a
-	ld [H_CURRENTPRESSEDBUTTONS], a
-	ld a, $1
-	ld [$ff00+$8c], a
-	jp DisplayTextID
-
-MuseumF1Script1: ; 5c12a (17:412a)
 	ret
 
 MuseumF1TextPointers: ; 5c12b (17:412b)
-	dw MuseumF1Text1
-	dw MuseumF1Text2
-	dw MuseumF1Text3
-	dw MuseumF1Text4
-	dw MuseumF1Text5
+	dw NostalgiaHouseText1
+	dw NostalgiaHouseText2
+	dw NostalgiaHouseText3
+	dw NostalgiaHouseText4
+	dw NostalgiaHouseText5
+	dw NostalgiaHouseText6
+	dw NostalgiaHouseText7
+	dw NostalgiaHouseText8
 
-MuseumF1Text1: ; 5c135 (17:4135)
-	db $8
-	ld a, [$d361]
-	cp $4
-	jr nz, asm_8774b ; 0x5c13b $a
-	ld a, [$d362]
-	cp $d
-	jp z, Func_5c1f9
-	jr asm_b8709 ; 0x5c145 $1c
-asm_8774b: ; 5c147 (17:4147)
-	cp $3
-	jr nz, asm_d49e7 ; 0x5c149 $8
-	ld a, [$d362]
-	cp $c
-	jp z, Func_5c1f9
-asm_d49e7: ; 5c153 (17:4153)
-	ld a, [$d754]
-	bit 0, a
-	jr nz, asm_31a16 ; 0x5c158 $10
-	ld hl, UnnamedText_5c23d
-	call PrintText
-	jp asm_d1145
-asm_b8709: ; 5c163 (17:4163)
-	ld a, [$d754]
-	bit 0, a
-	jr z, asm_3ded4 ; 0x5c168 $9
-asm_31a16: ; 5c16a (17:416a)
-	ld hl, UnnamedText_5c242
-	call PrintText
-	jp asm_d1145
-asm_3ded4: ; 5c173 (17:4173)
-	ld a, $13
-	ld [$d125], a
-	call DisplayTextBoxID
-	xor a
-	ld [H_CURRENTPRESSEDBUTTONS], a
-	ld hl, UnnamedText_5c21f
-	call PrintText
-	call YesNoChoice
-	ld a, [$cc26]
-	and a
-	jr nz, asm_de133 ; 0x5c18b $4d
-	xor a
-	ld [$ff00+$9f], a
-	ld [$ff00+$a0], a
-	ld a, $50
-	ld [$ff00+$a1], a
-	call HasEnoughMoney
-	jr nc, asm_0f3e3 ; 0x5c199 $9
-	ld hl, UnnamedText_5c229
-	call PrintText
-	jp asm_de133
-asm_0f3e3: ; 5c1a4 (17:41a4)
-	ld hl, UnnamedText_5c224
-	call PrintText
-	ld hl, $d754
-	set 0, [hl]
-	xor a
-	ld [$cd3d], a
-	ld [$cd3e], a
-	ld a, $50
-	ld [$cd3f], a
-	ld hl, $cd3f
-	ld de, $d349
-	ld c, $3
-	ld a, $c
-	call Predef
-	ld a, $13
-	ld [$d125], a
-	call DisplayTextBoxID
-	ld a, $b2
-	call PlaySoundWaitForCurrent
-	call WaitForSoundToFinish
-	jr asm_0b094 ; 0x5c1d8 $18
-asm_de133: ; 5c1da (17:41da)
-	ld hl, UnnamedText_5c21a ; $421a
-	call PrintText
-	ld a, $1
-	ld [$cd38], a
-	ld a, $80
-	ld [$ccd3], a
-	call Func_3486
-	call UpdateSprites
-	jr asm_d1145 ; 0x5c1f0 $25
-asm_0b094: ; 5c1f2 (17:41f2)
-	ld a, $1
-	ld [W_MUSEUMF1CURSCRIPT], a
-	jr asm_d1145 ; 0x5c1f7 $1e
-
-Func_5c1f9: ; 5c1f9 (17:41f9)
-	ld hl, UnnamedText_5c22e
-	call PrintText
-	call YesNoChoice
-	ld a, [$cc26]
-	cp $0
-	jr nz, asm_d1144
-	ld hl, UnnamedText_5c233
-	call PrintText
-	jr asm_d1145 ; 0x5c20f $6
-asm_d1144: ; 5c211 (17:4211)
-	ld hl, UnnamedText_5c238
-	call PrintText
-asm_d1145: ; 5c217 (17:4217)
-	jp TextScriptEnd
-
-UnnamedText_5c21a: ; 5c21a (17:421a)
-	TX_FAR _UnnamedText_5c21a
+NostalgiaHouseText1: ; 5c135 (17:4135)
+	TX_FAR _NostalgiaHouseText1
 	db "@"
 
-UnnamedText_5c21f: ; 5c21f (17:421f)
-	TX_FAR _UnnamedText_5c21f
+NostalgiaHouseText2:
+	TX_FAR _NostalgiaHouseText2
 	db "@"
 
-UnnamedText_5c224: ; 5c224 (17:4224)
-	TX_FAR _UnnamedText_5c224
+NostalgiaHouseText3:
+	TX_FAR _NostalgiaHouseText3
 	db "@"
 
-UnnamedText_5c229: ; 5c229 (17:4229)
-	TX_FAR _UnnamedText_5c229
+NostalgiaHouseText4:
+	TX_FAR _NostalgiaHouseText4
 	db "@"
 
-UnnamedText_5c22e: ; 5c22e (17:422e)
-	TX_FAR _UnnamedText_5c22e
+NostalgiaHouseText5:
+	TX_FAR _NostalgiaHouseText5
 	db "@"
 
-UnnamedText_5c233: ; 5c233 (17:4233)
-	TX_FAR _UnnamedText_5c233
+NostalgiaHouseText6:
+	TX_FAR _NostalgiaHouseText6
 	db "@"
 
-UnnamedText_5c238: ; 5c238 (17:4238)
-	TX_FAR _UnnamedText_5c238
+NostalgiaHouseText7:
+	TX_FAR _NostalgiaHouseText7
 	db "@"
 
-UnnamedText_5c23d: ; 5c23d (17:423d)
-	TX_FAR _UnnamedText_5c23d
-	db "@"
-
-UnnamedText_5c242: ; 5c242 (17:4242)
-	TX_FAR _UnnamedText_5c242
-	db "@"
-
-MuseumF1Text2: ; 5c247 (17:4247)
-	db $08 ; asm
-	ld hl, UnnamedText_5c251
-	call PrintText
-	jp TextScriptEnd
-
-UnnamedText_5c251: ; 5c251 (17:4251)
-	TX_FAR _UnnamedText_5c251
-	db "@"
-
-MuseumF1Text3: ; 5c256 (17:4256)
-	db $08 ; asm
-	ld a, [$d754]
-	bit 1, a
-	jr nz, .asm_16599 ; 0x5c25c
-	ld hl, UnnamedText_5c28e
-	call PrintText
-	ld bc, (OLD_AMBER << 8) | 1
-	call GiveItem
-	jr nc, .BagFull
-	ld hl, $d754
-	set 1, [hl]
-	ld a, $34
-	ld [$cc4d], a
-	ld a, $11
-	call Predef
-	ld hl, ReceivedOldAmberText
-	jr .asm_52e0f ; 0x5c27e
-.BagFull
-	ld hl, UnnamedText_5c29e
-	jr .asm_52e0f ; 0x5c283
-.asm_16599 ; 0x5c285
-	ld hl, UnnamedText_5c299
-.asm_52e0f ; 0x5c288
-	call PrintText
-	jp TextScriptEnd
-
-UnnamedText_5c28e: ; 5c28e (17:428e)
-	TX_FAR _UnnamedText_5c28e
-	db "@"
-
-ReceivedOldAmberText: ; 5c293 (17:4293)
-	TX_FAR _ReceivedOldAmberText ; 0x96790
-	db $0B, "@"
-
-UnnamedText_5c299: ; 5c299 (17:4299)
-	TX_FAR _UnnamedText_5c299
-	db "@"
-
-UnnamedText_5c29e: ; 5c29e (17:429e)
-	TX_FAR _UnnamedText_5c29e
-	db "@"
-
-MuseumF1Text4: ; 5c2a3 (17:42a3)
-	db $08 ; asm
-	ld hl, UnnamedText_5c2ad
-	call PrintText
-	jp TextScriptEnd
-
-UnnamedText_5c2ad: ; 5c2ad (17:42ad)
-	TX_FAR _UnnamedText_5c2ad
-	db "@"
-
-MuseumF1Text5: ; 5c2b2 (17:42b2)
-	db $08 ; asm
-	ld hl, UnnamedText_5c2bc
-	call PrintText
-	jp TextScriptEnd
-
-UnnamedText_5c2bc: ; 5c2bc (17:42bc)
-	TX_FAR _UnnamedText_5c2bc
+NostalgiaHouseText8:
+	TX_FAR _NostalgiaHouseText8
 	db "@"
 
 MuseumF1Object: ; 0x5c2c1 (size=74)
-	db $a ; border tile
+	db $14 ; border tile
 
-	db $5 ; warps
-	db $7, $a, $0, $ff
-	db $7, $b, $0, $ff
-	db $7, $10, $1, $ff
-	db $7, $11, $1, $ff
-	db $7, $7, $0, MUSEUM_2F
+	db $4 ; warps
+	db $d, $2, $3, CELADON_CITY
+	db $d, $3, $3, CELADON_CITY
+	db $d, $e, $3, CELADON_CITY
+	db $d, $f, $3, CELADON_CITY
 
-	db $0 ; signs
+	db $a ; signs
+	db $9, $2, $5
+	db $9, $3, $5
+	db $8, $3, $5
+	db $3, $4, $6
+	db $3, $5, $6
+	db $3, $c, $7
+	db $3, $d, $7
+	db $8, $e, $8
+	db $9, $e, $8
+	db $9, $f, $8
 
-	db $5 ; people
-	db SPRITE_OAK_AIDE, $4 + 4, $c + 4, $ff, $d2, $1 ; person
-	db SPRITE_GAMBLER, $4 + 4, $1 + 4, $ff, $ff, $2 ; person
-	db SPRITE_OAK_AIDE, $2 + 4, $f + 4, $ff, $d0, $3 ; person
-	db SPRITE_OAK_AIDE, $4 + 4, $11 + 4, $ff, $ff, $4 ; person
-	db SPRITE_OLD_AMBER, $2 + 4, $10 + 4, $ff, $ff, $5 ; person
+	db $4 ; people
+	db SPRITE_BLACK_HAIR_BOY_1, $4 + 4, $6 + 4, $ff, $ff, $1 ; person
+	db SPRITE_GAMBLER, $7 + 4, $7 + 4, $ff, $d3, $2 ; person
+	db SPRITE_GAMBLER, $8 + 4, $a + 4, $ff, $d2, $3 ; person
+	db SPRITE_GAMBLER, $a + 4, $e + 4, $ff, $d1, $4 ; person
 
 	; warp-to
-	EVENT_DISP $a, $7, $a
-	EVENT_DISP $a, $7, $b
-	EVENT_DISP $a, $7, $10
-	EVENT_DISP $a, $7, $11
-	EVENT_DISP $a, $7, $7 ; MUSEUM_2F
+	EVENT_DISP MUSEUM_1F_WIDTH, $d, $2
+	EVENT_DISP MUSEUM_1F_WIDTH, $d, $3
+	EVENT_DISP MUSEUM_1F_WIDTH, $d, $e
+	EVENT_DISP MUSEUM_1F_WIDTH, $d, $f
 
 MuseumF2_h: ; 0x5c30b to 0x5c317 (12 bytes) (id=53)
 	db $0a ; tileset
@@ -117799,8 +117562,6 @@ Tset0C_GFX:
 	INCBIN "gfx/tilesets/0c.2bpp"
 Tset0C_Block:
 	INCBIN "gfx/blocksets/0c.bst"
-Tset0C_Coll:
-	INCBIN "gfx/tilesets/0c.tilecoll"
 
 
 SECTION "New Titlescreen", ROMX, BANK[$32]
