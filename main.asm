@@ -15358,8 +15358,8 @@ DungeonWarpData: ; 63d8 (1:63d8)
 ;	FLYWARP_DATA [Map Width][Y-pos][X-pos]
 ;	db Tileset_id
 FirstMapSpec: ; 6420 (1:6420)
-	db VERMILION_GYM
-	FLYWARP_DATA VERMILION_GYM_WIDTH,0,0
+	db REDS_HOUSE_2F
+	FLYWARP_DATA REDS_HOUSE_2F_WIDTH,0,0
 	db $0C
 
 BattleCenterSpec1: ; 6428 (1:6428)
