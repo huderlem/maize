@@ -1,26 +1,47 @@
-_TM29PreReceiveText:: ; a24fe (28:64fe)
-	text "...Wait! Don't"
-	line "say a word!"
+_DVReaderText1::
+	text "Hiya!"
 
-	para "You wanted this!"
+	para "Do you want me to"
+	line "check the DVs of"
+	cont "your #MON?"
+	done
+
+_DVReaderText2::
+	text "Thanks for"
+	line "stopping by!"
+	done
+
+_DVReaderText3::
+	text "Which #MON"
+	line "should I check?"
 	prompt
 
-_ReceivedTM29Text:: ; a252a (28:652a)
-	text $52, " received"
-	line "@"
-	TX_RAM $cf4b
-	text "!@@"
+_DVReaderHPText::
+	text "HP: ", $50
+	TX_NUM $cf4b, 1, 3
+	db $0
+	prompt
 
-_TM29ExplanationText:: ; a253e (28:653e)
-	text "TM29 is PSYCHIC!"
+_DVReaderATTText::
+	text "ATTACK: ", $50
+	TX_NUM $cf4b, 1, 3
+	db $0
+	prompt
 
-	para "It can lower the"
-	line "target's SPECIAL"
-	cont "abilities."
-	done
+_DVReaderDEFText::
+	text "DEFENSE: ", $50
+	TX_NUM $cf4b, 1, 3
+	db $0
+	prompt
 
-_TM29NoRoomText:: ; a257c (28:657c)
-	text "Where do you plan"
-	line "to put this?"
-	done
+_DVReaderSPEEDText::
+	text "SPEED: ", $50
+	TX_NUM $cf4b, 1, 3
+	db $0
+	prompt
 
+_DVReaderSPECIALText::
+	text "SPECIAL: ", $50
+	TX_NUM $cf4b, 1, 3
+	db $0
+	prompt

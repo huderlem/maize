@@ -41350,43 +41350,191 @@ SaffronHouse2TextPointers: ; 1de3f (7:5e3f)
 
 SaffronHouse2Text1: ; 1de41 (7:5e41)
 	db $08 ; asm
-	ld a, [$d7bd]
-	bit 0, a
-	jr nz, .asm_9e72b ; 0x1de47
-	ld hl, TM29PreReceiveText
+	call SaveScreenTilesToBuffer2
+	ld hl, DVReaderText1
 	call PrintText
-	ld bc,(TM_29 << 8) | 1
-	call GiveItem
-	jr nc, .BagFull
-	ld hl, ReceivedTM29Text
+	call YesNoChoice
+	ld a, [wCurrentMenuItem] ; $cc26
+	and a
+	jr nz, .byebye
+.chooseMon
+	ld hl, DVReaderText3
 	call PrintText
-	ld hl, $d7bd
-	set 0, [hl]
-	jr .asm_fe4e1 ; 0x1de62
-.BagFull
-	ld hl, TM29NoRoomText
+	call SaveScreenTilesToBuffer2
+	xor a
+	ld [$d07d], a
+	ld [$cfcb], a
+	ld [$cc35], a
+	call DisplayPartyMenu
+	push af
+	call GBPalWhiteOutWithDelay3
+	call Func_3dbe
+	call LoadGBPal
+	call LoadScreenTilesFromBuffer2
+	pop af
+	jr c, .byebye
+	ld a,[$cf92] ; index within party
+	ld d, a      ; d contains mon index in party
+	push de
+	ld e, 1  ; hp IV
+	call GetStatIV  ; a contains IV
+	ld [$CF4B], a
+	ld hl, DVReaderHPText
 	call PrintText
-	jr .asm_fe4e1 ; 0x1de6a
-.asm_9e72b ; 0x1de6c
-	ld hl, TM29ExplanationText
+	pop de
+	push de
+	ld e, 2  ; att IV
+	call GetStatIV  ; a contains IV
+	ld [$CF4B], a
+	ld hl, DVReaderATTText
 	call PrintText
-.asm_fe4e1 ; 0x1de72
+	pop de
+	push de
+	ld e, 3  ; def IV
+	call GetStatIV  ; a contains IV
+	ld [$CF4B], a
+	ld hl, DVReaderDEFText
+	call PrintText
+	pop de
+	push de
+	ld e, 4  ; Speed IV
+	call GetStatIV  ; a contains IV
+	ld [$CF4B], a
+	ld hl, DVReaderSPEEDText
+	call PrintText
+	pop de
+	ld e, 5  ; Special IV
+	call GetStatIV  ; a contains IV
+	ld [$CF4B], a
+	ld hl, DVReaderSPECIALText
+	call PrintText
+	jr .chooseMon
+.byebye
+	ld hl, DVReaderText2
+	call PrintText
+.done
 	jp TextScriptEnd
 
-TM29PreReceiveText: ; 1de75 (7:5e75)
-	TX_FAR _TM29PreReceiveText
+; d = party index for Mon
+; e = stat to get IV for
+; 	1: HP
+;	2: ATT
+;	3: DEF
+;	4: SPEED
+;	5: SPECIAL
+; + 27 = attack/def
+; returns IV value in register a
+GetStatIV
+	ld a, d
+	ld hl, $D16B  ; First Pokemon in party
+	ld bc, $2C
+	call AddNTimes  ; hl contains RAM location of mon data
+	ld a, e
+	cp 1
+	jp z, .getHP
+	cp 2
+	jp z, .getATT
+	cp 3
+	jp z, .getDEF
+	cp 4
+	jp z, .getSPEED
+	jp .getSPECIAL
+
+.getHP
+	ld e, 0
+	ld bc, $001B
+	add hl, bc   ; hl now contains RAM loc of att/def IV
+	ld d, [hl]
+	ld a, $10
+	and d
+	srl a
+	add e
+	ld e, a
+	ld a, $1
+	and d
+	sla a
+	sla a
+	add e
+	ld e, a
+	ld bc, $0001
+	add hl, bc   ; hl now contains RAM loc of speed/special IV
+	ld d, [hl]
+	ld a, $10
+	and d
+	srl a
+	srl a
+	srl a
+	add e
+	ld e, a
+	ld a, $1
+	and d
+	add e
+	ret
+
+.getATT
+	ld bc, $001B
+	add hl, bc ; hl now contains RAM loc of att/def IV
+	ld a, [hl]
+	srl a
+	srl a
+	srl a
+	srl a
+	ret
+
+.getDEF
+	ld bc, $001B
+	add hl, bc ; hl now contains RAM loc of att/def IV
+	ld a, [hl]
+	and $0F
+	ret
+
+.getSPEED
+	ld bc, $001C
+	add hl, bc ; hl now contains RAM loc of speed/special IV
+	ld a, [hl]
+	srl a
+	srl a
+	srl a
+	srl a
+	ret
+
+.getSPECIAL
+	ld bc, $001C
+	add hl, bc ; hl now contains RAM loc of speed/special IV
+	ld a, [hl]
+	and $0F
+	ret
+
+DVReaderText1:
+	TX_FAR _DVReaderText1
 	db "@"
 
-ReceivedTM29Text: ; 1de7a (7:5e7a)
-	TX_FAR _ReceivedTM29Text ; 0xa252a
-	db $0B, "@"
-
-TM29ExplanationText: ; 1de80 (7:5e80)
-	TX_FAR _TM29ExplanationText
+DVReaderText2:
+	TX_FAR _DVReaderText2
 	db "@"
 
-TM29NoRoomText: ; 1de85 (7:5e85)
-	TX_FAR _TM29NoRoomText
+DVReaderText3:
+	TX_FAR _DVReaderText3
+	db "@"
+
+DVReaderHPText:
+	TX_FAR _DVReaderHPText
+	db "@"
+
+DVReaderATTText:
+	TX_FAR _DVReaderATTText
+	db "@"
+
+DVReaderDEFText:
+	TX_FAR _DVReaderDEFText
+	db "@"
+
+DVReaderSPEEDText:
+	TX_FAR _DVReaderSPEEDText
+	db "@"
+
+DVReaderSPECIALText:
+	TX_FAR _DVReaderSPECIALText
 	db "@"
 
 SaffronHouse2Object: ; 0x1de8a (size=26)
@@ -41399,7 +41547,7 @@ SaffronHouse2Object: ; 0x1de8a (size=26)
 	db $0 ; signs
 
 	db $1 ; people
-	db SPRITE_FISHER, $3 + 4, $5 + 4, $ff, $d2, $1 ; person
+	db SPRITE_FISHER, $3 + 4, $2 + 4, $ff, $d3, $1 ; person
 
 	; warp-to
 	EVENT_DISP $4, $7, $2
