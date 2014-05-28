@@ -41541,8 +41541,8 @@ SaffronHouse2Object: ; 0x1de8a (size=26)
 	db $a ; border tile
 
 	db $2 ; warps
-	db $7, $2, $7, $ff
-	db $7, $3, $7, $ff
+	db $7, $2, $4, $ff
+	db $7, $3, $4, $ff
 
 	db $0 ; signs
 
@@ -104954,9 +104954,9 @@ SuperPalettes: ; 72660 (1c:6660)
 	RGB 18,23,21
 	RGB 20,14,8
 	RGB 3,2,2
-	RGB 31,29,31 ; PAL_CELADON
-	RGB 16,30,22
-	RGB 20,26,31
+	RGB 31,29,31 ; PAL_CELADON  1A 2B 36 05 43 08 
+	RGB 26,24,10
+	RGB 22,9,1
 	RGB 3,2,2
 	RGB 31,29,31 ; PAL_FUCHSIA
 	RGB 31,15,22
