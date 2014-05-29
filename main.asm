@@ -38223,7 +38223,7 @@ ViridianHouseBlocks: ; 0x1c1de 41DE size=16
 
 CeladonMansion5Blocks: ; 1c1ee (7:41ee)
 SchoolBlocks: ; 0x1c1ee 41EE size=16
-	INCBIN "maps/school.blk"
+	INCBIN "maps/celadonmansion5.blk"
 
 CeruleanHouseTrashedBlocks: ; 0x1c1fe size=16
 	INCBIN "maps/ceruleanhousetrashed.blk"
@@ -41210,32 +41210,65 @@ CeladonMansion5Text1: ; 1dd41 (7:5d41)
 
 CeladonMansion5Text2: ; 1dd46 (7:5d46)
 	db $08 ; asm
-	ld bc,(EEVEE << 8) | 25
+	ld hl, MaizeHouseSquirtleText1
+	call PrintText
+	call YesNoChoice
+	ld a, [wCurrentMenuItem] ; $cc26
+	and a
+	jr nz, .saidNo
+	; remove all money
+	xor a
+	ld [wPlayerMoney], a
+	ld [wPlayerMoney+1], a
+	ld [wPlayerMoney+2], a
+	; give squirtle
+	ld bc,(SQUIRTLE << 8) | 5
 	call GivePokemon
-	jr nc, .asm_24365 ; 0x1dd4d
+	jr nc, .done ; 0x49324
+	ld hl, MaizeHouseSquirtleText3
+	call PrintText
+	call GBFadeOut2
 	ld a, $45
 	ld [$cc4d], a
 	ld a, $11
 	call Predef
-.asm_24365 ; 0x1dd59
+	call GBFadeIn2
+	jr .done
+.saidNo
+	ld hl, MaizeHouseSquirtleText2
+	call PrintText
+.done
 	jp TextScriptEnd
+
+
+MaizeHouseSquirtleText1:
+	TX_FAR _MaizeHouseSquirtleText1
+	db "@"
+
+MaizeHouseSquirtleText2:
+	TX_FAR _MaizeHouseSquirtleText2
+	db "@"
+
+MaizeHouseSquirtleText3:
+	TX_FAR _MaizeHouseSquirtleText3
+	db "@"
 
 CeladonMansion5Object: ; 0x1dd5c (size=32)
 	db $a ; border tile
 
 	db $2 ; warps
-	db $7, $2, $2, CELADON_MANSION_4
-	db $7, $3, $2, CELADON_MANSION_4
+	db $7, $2, $0, CELADON_MANSION_4
+	db $7, $3, $0, CELADON_MANSION_4
 
 	db $0 ; signs
 
 	db $2 ; people
-	db SPRITE_HIKER, $2 + 4, $2 + 4, $ff, $d0, $1 ; person
-	db SPRITE_BALL, $3 + 4, $4 + 4, $ff, $ff, $2 ; person
+	db SPRITE_HIKER, $4 + 4, $5 + 4, $ff, $d0, $1 ; person
+	db SPRITE_HIKER, $4 + 4, $4 + 4, $ff, $d0, $2 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2 ; CELADON_MANSION_4
-	EVENT_DISP $4, $7, $3 ; CELADON_MANSION_4
+	EVENT_DISP CELADON_MANSION_5_WIDTH, $7, $2 ; CELADON_MANSION_4
+	EVENT_DISP CELADON_MANSION_5_WIDTH, $7, $3 ; CELADON_MANSION_4
 
 FuchsiaMart_h: ; 0x1dd7c to 0x1dd88 (12 bytes) (bank=7) (id=152)
 	db $02 ; tileset
@@ -75985,15 +76018,9 @@ CeladonMansion1TextPointers: ; 48697 (12:4697)
 	dw CeladonMansion1Text4
 	dw CeladonMansion1Text5
 
-Func_486a1: ; 486a1 (12:46a1)
-	call PlayCry
-	jp TextScriptEnd
-
 CeladonMansion1Text1: ; 486a7 (12:46a7)
 	TX_FAR _CeladonMansion1Text1
-	db $08 ; asm
-	ld a, $4d
-	jp Func_486a1
+	db "@"
 
 CeladonMansion1Text2: ; 486b1 (12:46b1)
 	TX_FAR _CeladonMansion1Text2
@@ -76001,15 +76028,11 @@ CeladonMansion1Text2: ; 486b1 (12:46b1)
 
 CeladonMansion1Text3: ; 486b6 (12:46b6)
 	TX_FAR _CeladonMansion1Text3
-	db $8
-	ld a, $4
-	jp Func_486a1
+	db "@"
 
 CeladonMansion1Text4: ; 486c0 (12:46c0)
 	TX_FAR _CeladonMansion1Text4
-	db $8
-	ld a, $f
-	jp Func_486a1
+	db "@"
 
 CeladonMansion1Text5: ; 486ca (12:46ca)
 	TX_FAR _CeladonMansion1Text5
@@ -76019,33 +76042,33 @@ CeladonMansion1Object: ; 0x486cf (size=71)
 	db $f ; border tile
 
 	db $5 ; warps
-	db $b, $4, $2, $ff
-	db $b, $5, $2, $ff
-	db $0, $4, $4, $ff
-	db $1, $7, $1, CELADON_MANSION_2
-	db $1, $2, $2, CELADON_MANSION_2
+	db $f, $4, $7, CELADON_CITY
+	db $f, $5, $7, CELADON_CITY
+	db $1, $e, $1, CELADON_MANSION_2
+	db $b, $e, $0, CELADON_MANSION_2
+	db $b, $c, $1, CELADON_MANSION_4
 
 	db $1 ; signs
-	db $9, $4, $5 ; CeladonMansion1Text5
+	db $9, $0, $5 ; CeladonMansion1Text5
 
 	db $4 ; people
-	db SPRITE_SLOWBRO, $5 + 4, $0 + 4, $ff, $d3, $1 ; person
-	db SPRITE_OLD_MEDIUM_WOMAN, $5 + 4, $1 + 4, $ff, $d0, $2 ; person
-	db SPRITE_CLEFAIRY, $8 + 4, $1 + 4, $fe, $2, $3 ; person
-	db SPRITE_SLOWBRO, $4 + 4, $4 + 4, $fe, $1, $4 ; person
+	db SPRITE_BIKE_SHOP_GUY, $2 + 4, $0 + 4, $ff, $d3, $1 ; person
+	db SPRITE_MART_GUY, $8 + 4, $d + 4, $ff, $d0, $2 ; person
+	db SPRITE_BLACK_HAIR_BOY_2, $c + 4, $4 + 4, $fe, $2, $3 ; person
+	db SPRITE_MR_FUJI, $2 + 4, $7 + 4, $fe, $1, $4 ; person
 
 	; warp-to
-	EVENT_DISP $4, $b, $4
-	EVENT_DISP $4, $b, $5
-	EVENT_DISP $4, $0, $4
-	EVENT_DISP $4, $1, $7 ; CELADON_MANSION_2
-	EVENT_DISP $4, $1, $2 ; CELADON_MANSION_2
+	EVENT_DISP CELADON_MANSION_1_WIDTH, $f, $4
+	EVENT_DISP CELADON_MANSION_1_WIDTH, $f, $5
+	EVENT_DISP CELADON_MANSION_1_WIDTH, $1, $e
+	EVENT_DISP CELADON_MANSION_1_WIDTH, $b, $e
+	EVENT_DISP CELADON_MANSION_1_WIDTH, $b, $c
 
 CeladonMansion1Blocks: ; 48716 (12:4716)
 	INCBIN "maps/celadonmansion1.blk"
 
 CeladonMansion2_h: ; 0x4872e to 0x4873a (12 bytes) (bank=12) (id=129)
-	db $13 ; tileset
+	db $3 ; tileset
 	db CELADON_MANSION_2_HEIGHT, CELADON_MANSION_2_WIDTH ; dimensions (y, x)
 	dw CeladonMansion2Blocks, CeladonMansion2TextPointers, CeladonMansion2Script ; blocks, texts, scripts
 	db $00 ; connections
@@ -76063,30 +76086,30 @@ CeladonMansion2Text1: ; 48740 (12:4740)
 	db "@"
 
 CeladonMansion2Object: ; 0x48745 (size=39)
-	db $f ; border tile
+	db $3 ; border tile
 
 	db $4 ; warps
-	db $1, $6, $0, CELADON_MANSION_3
-	db $1, $7, $3, CELADON_MANSION_1
-	db $1, $2, $4, CELADON_MANSION_1
-	db $1, $4, $3, CELADON_MANSION_3
+	db $b, $e, $3, CELADON_MANSION_1
+	db $1, $e, $2, CELADON_MANSION_1
+	db $4, $0, $2, CELADON_MANSION_3
+	db $e, $2, $3, CELADON_MANSION_3
 
 	db $1 ; signs
-	db $9, $4, $1 ; CeladonMansion2Text1
+	db $3, $f, $1 ; CeladonMansion2Text1
 
 	db $0 ; people
 
 	; warp-to
-	EVENT_DISP $4, $1, $6 ; CELADON_MANSION_3
-	EVENT_DISP $4, $1, $7 ; CELADON_MANSION_1
-	EVENT_DISP $4, $1, $2 ; CELADON_MANSION_1
-	EVENT_DISP $4, $1, $4 ; CELADON_MANSION_3
+	EVENT_DISP CELADON_MANSION_2_WIDTH, $b, $e
+	EVENT_DISP CELADON_MANSION_2_WIDTH, $1, $e
+	EVENT_DISP CELADON_MANSION_2_WIDTH, $4, $0
+	EVENT_DISP CELADON_MANSION_2_WIDTH, $e, $2
 
 CeladonMansion2Blocks: ; 4876c (12:476c)
 	INCBIN "maps/celadonmansion2.blk"
 
 CeladonMansion3_h: ; 0x48784 to 0x48790 (12 bytes) (bank=12) (id=130)
-	db $13 ; tileset
+	db $11 ; tileset
 	db CELADON_MANSION_3_HEIGHT, CELADON_MANSION_3_WIDTH ; dimensions (y, x)
 	dw CeladonMansion3Blocks, CeladonMansion3TextPointers, CeladonMansion3Script ; blocks, texts, scripts
 	db $00 ; connections
@@ -76167,31 +76190,31 @@ GameFreakSignText: ; 487fa (12:47fa)
 	db "@"
 
 CeladonMansion3Object: ; 0x487ff (size=72)
-	db $f ; border tile
+	db $3 ; border tile
 
 	db $4 ; warps
-	db $1, $6, $0, CELADON_MANSION_2
-	db $1, $7, $0, CELADON_MANSION_4
-	db $1, $2, $1, CELADON_MANSION_4
-	db $1, $4, $3, CELADON_MANSION_2
+	db $0, $0, $0, CELADON_MANSION_2
+	db $0, $0, $0, CELADON_MANSION_4
+	db $4, $0, $2, CELADON_MANSION_2
+	db $e, $2, $3, CELADON_MANSION_2
 
 	db $4 ; signs
-	db $3, $1, $5 ; CeladonMansion3Text5
-	db $3, $4, $6 ; CeladonMansion3Text6
-	db $6, $1, $7 ; CeladonMansion3Text7
-	db $9, $4, $8 ; CeladonMansion3Text8
+	db $5, $d, $5 ; CeladonMansion3Text5
+	db $3, $7, $6 ; CeladonMansion3Text6
+	db $9, $d, $7 ; CeladonMansion3Text7
+	db $b, $1, $8 ; CeladonMansion3Text8
 
 	db $4 ; people
-	db SPRITE_BIKE_SHOP_GUY, $4 + 4, $0 + 4, $ff, $d1, $1 ; person
-	db SPRITE_MART_GUY, $4 + 4, $3 + 4, $ff, $d1, $2 ; person
-	db SPRITE_BLACK_HAIR_BOY_2, $7 + 4, $0 + 4, $ff, $d1, $3 ; person
-	db SPRITE_LAPRAS_GIVER, $3 + 4, $2 + 4, $ff, $ff, $4 ; person
+	db SPRITE_BLACK_HAIR_BOY_2, $8 + 4, $3 + 4, $ff, $d3, $1 ; person
+	db SPRITE_MR_FUJI, $7 + 4, $b + 4, $ff, $ff, $2 ; person
+	db SPRITE_BLACK_HAIR_BOY_2, $a + 4, $d + 4, $ff, $d1, $3 ; person
+	db SPRITE_LAPRAS_GIVER, $1 + 4, $a + 4, $ff, $ff, $4 ; person
 
 	; warp-to
-	EVENT_DISP $4, $1, $6 ; CELADON_MANSION_2
-	EVENT_DISP $4, $1, $7 ; CELADON_MANSION_4
-	EVENT_DISP $4, $1, $2 ; CELADON_MANSION_4
-	EVENT_DISP $4, $1, $4 ; CELADON_MANSION_2
+	EVENT_DISP CELADON_MANSION_3_WIDTH, $0, $0
+	EVENT_DISP CELADON_MANSION_3_WIDTH, $0, $0
+	EVENT_DISP CELADON_MANSION_3_WIDTH, $4, $0
+	EVENT_DISP CELADON_MANSION_3_WIDTH, $e, $2
 
 CeladonMansion3Blocks: ; 48847 (12:4847)
 	INCBIN "maps/celadonmansion3.blk"
@@ -76214,22 +76237,22 @@ CeladonMansion4Text1: ; 48870 (12:4870)
 	db "@"
 
 CeladonMansion4Object: ; 0x48875 (size=31)
-	db $9 ; border tile
+	db $f ; border tile
 
 	db $3 ; warps
-	db $1, $6, $1, CELADON_MANSION_3
-	db $1, $2, $2, CELADON_MANSION_3
-	db $7, $2, $0, CELADON_MANSION_5
+	db $1, $e, $0, CELADON_MANSION_5
+	db $b, $c, $4, CELADON_MANSION_1
+	db $0, $0, $0, CELADON_MANSION_5
 
 	db $1 ; signs
-	db $7, $3, $1 ; CeladonMansion4Text1
+	db $3, $0, $1 ; CeladonMansion4Text1
 
 	db $0 ; people
 
 	; warp-to
-	EVENT_DISP $4, $1, $6 ; CELADON_MANSION_3
-	EVENT_DISP $4, $1, $2 ; CELADON_MANSION_3
-	EVENT_DISP $4, $7, $2 ; CELADON_MANSION_5
+	EVENT_DISP CELADON_MANSION_4_WIDTH, $1, $e
+	EVENT_DISP CELADON_MANSION_4_WIDTH, $b, $c
+	EVENT_DISP CELADON_MANSION_4_WIDTH, $0, $0
 
 CeladonMansion4Blocks: ; 48894 (12:4894)
 	INCBIN "maps/celadonmansion4.blk"

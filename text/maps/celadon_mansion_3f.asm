@@ -1,37 +1,36 @@
 _ProgrammerText:: ; 9cfa4 (27:4fa4)
-	text "Me? I'm the"
-	line "programmer!"
+	text "I could have been"
+	line "a horrible person"
+	cont "and made this"
+	cont "house a maze."
+
+	para "You can thank me"
+	line "later."
 	done
 
 _GraphicArtistText:: ; 9cfbc (27:4fbc)
-	text "I'm the graphic"
-	line "artist!"
-	cont "I drew you!"
+	text "You gotta watch"
+	line "out for corn."
+
+	para "It's been plotting"
+	line "against humans"
+	cont "and #MON for"
+	cont "quite some time."
 	done
 
 _WriterText:: ; 9cfe0 (27:4fe0)
-	text "I wrote the story!"
-	line "Isn't ERIKA cute?"
+	text "Hahahaha!"
 
-	para "I like MISTY a"
-	line "lot too!"
-
-	para "Oh, and SABRINA,"
-	line "I like her!"
+	para "This sign is"
+	line "hilarious!"
 	done
 
 _GameDesignerText:: ; 9d03a (27:503a)
-	text "Is that right?"
+	text "I don't understand"
+	line "the point of this"
+	cont "house."
 
-	para "I'm the game"
-	line "designer!"
-
-	para "Filling up your"
-	line "#DEX is tough,"
-	cont "but don't quit!"
-
-	para "When you finish,"
-	line "come tell me!"
+	para "It's so dirty!"
 	done
 
 _CompletedDexText:: ; 9d0ad (27:50ad)
@@ -42,26 +41,25 @@ _CompletedDexText:: ; 9d0ad (27:50ad)
 	cont "...@@"
 
 _CeladonMansion3Text5:: ; 9d0ed (27:50ed)
-	text "It's the game"
-	line "program! Messing"
-	cont "with it could bug"
-	cont "out the game!"
+	text "Ma(i)ze House"
+	line "Still Floor 3"
 	done
 
 _CeladonMansion3Text6:: ; 9d12c (27:512c)
-	text "Someone's playing"
-	line "a game instead of"
-	cont "working!"
+	text "Ma(i)ze House"
+	line "Floor 3"
 	done
 
 _CeladonMansion3Text7:: ; 9d159 (27:5159)
-	text "It's the script!"
-	line "Better not look"
-	cont "at the ending!"
+	text "Ma(i)ze House"
+	line "Floor 2"
+
+	para "Just kidding."
+
+	para "Still Floor 3"
 	done
 
 _CeladonMansion3Text8:: ; 9d189 (27:5189)
-	text "GAME FREAK"
-	line "Development Room"
+	text "TODO:"
 	done
 
