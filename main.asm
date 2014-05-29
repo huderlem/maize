@@ -76141,24 +76141,6 @@ WriterText: ; 487ad (12:47ad)
 	db "@"
 
 DirectorText: ; 487b2 (12:47b2)
-	db $08 ; asm
-
-	; check pokédex
-	ld hl, wPokedexOwned
-	ld b, wPokedexOwnedEnd - wPokedexOwned
-	call CountSetBits
-	ld a, [$d11e]
-	cp 150
-	jr nc, .CompletedDex
-	ld hl, .GameDesigner
-	jr .done
-.CompletedDex
-	ld hl, .CompletedDexText
-.done
-	call PrintText
-	jp TextScriptEnd
-
-.GameDesigner ; 487d0 (12:47d0)
 	TX_FAR _GameDesignerText
 	db "@"
 
@@ -77482,8 +77464,46 @@ CeladonHouseText1: ; 49218 (12:5218)
 	db "@"
 
 CeladonHouseText2: ; 4921d (12:521d)
+	db $08 ; asm
+	ld a, [$d7bd]
+	bit 0, a
+	jr nz, .alreadyGave ; 0x1de47
+	ld hl, CeladonHouseText22
+	call PrintText
+	ld bc, (MOON_STONE << 8) | 1
+	call GiveItem
+	jr nc, .BagFull
+	ld hl, $d7bd
+	set 0, [hl]
+	ld hl, CeladonHouseText4
+	call PrintText
+	jr .alreadyGave
+.BagFull
+	ld hl, CeladonHouseNoRoomText
+	call PrintText
+	jr .done
+.alreadyGave
+	ld hl, CeladonHouseText5
+	call PrintText
+.done
+	jp TextScriptEnd
+
+CeladonHouseText22:
 	TX_FAR _CeladonHouseText2
 	db "@"
+
+CeladonHouseNoRoomText:
+	TX_FAR _CeladonHouseNoRoomText
+	db "@"
+
+CeladonHouseText4:
+	TX_FAR _CeladonHouseText4
+	db "@"
+
+CeladonHouseText5:
+	TX_FAR _CeladonHouseText5
+	db "@"
+
 
 CeladonHouseText3: ; 49222 (12:5222)
 	TX_FAR _CeladonHouseText3
@@ -77493,19 +77513,19 @@ CeladonHouseObject: ; 0x49227 (size=38)
 	db $f ; border tile
 
 	db $2 ; warps
-	db $7, $2, $b, $ff
-	db $7, $3, $b, $ff
+	db $7, $2, $9, $ff
+	db $7, $3, $9, $ff
 
 	db $0 ; signs
 
 	db $3 ; people
-	db SPRITE_OLD_PERSON, $2 + 4, $4 + 4, $ff, $d0, $1 ; person
-	db SPRITE_ROCKET, $4 + 4, $1 + 4, $fe, $0, $2 ; person
-	db SPRITE_SAILOR, $6 + 4, $5 + 4, $ff, $d2, $3 ; person
+	db SPRITE_OLD_PERSON, $2 + 4, $4 + 4, $ff, $d0, $2 ; person
+	db SPRITE_ROCKET, $3 + 4, $0 + 4, $ff, $d1, $1 ; person
+	db SPRITE_SAILOR, $3 + 4, $6 + 4, $ff, $d1, $3 ; person
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP CELADON_HOUSE_WIDTH, $7, $2
+	EVENT_DISP CELADON_HOUSE_WIDTH, $7, $3
 
 CeladonHouseBlocks: ; 4924d (12:524d)
 	INCBIN "maps/celadonhouse.blk"
@@ -77541,19 +77561,19 @@ CeladonHotelObject: ; 0x49281 (size=38)
 	db $0 ; border tile
 
 	db $2 ; warps
-	db $7, $3, $c, $ff
-	db $7, $4, $c, $ff
+	db $7, $3, $2, $ff
+	db $7, $4, $2, $ff
 
 	db $0 ; signs
 
 	db $3 ; people
-	db SPRITE_OLD_MEDIUM_WOMAN, $1 + 4, $3 + 4, $ff, $d0, $1 ; person
-	db SPRITE_FOULARD_WOMAN, $4 + 4, $2 + 4, $ff, $ff, $2 ; person
-	db SPRITE_BLACK_HAIR_BOY_2, $4 + 4, $8 + 4, $fe, $2, $3 ; person
+	db SPRITE_BLACK_HAIR_BOY_2, $4 + 4, $a + 4, $ff, $d3, $1 ; person
+	db SPRITE_BLACK_HAIR_BOY_2, $5 + 4, $b + 4, $ff, $d1, $2 ; person
+	db SPRITE_BLACK_HAIR_BOY_2, $4 + 4, $c + 4, $ff, $d2, $3 ; person
 
 	; warp-to
-	EVENT_DISP $7, $7, $3
-	EVENT_DISP $7, $7, $4
+	EVENT_DISP CELADONHOTEL_WIDTH, $7, $3
+	EVENT_DISP CELADONHOTEL_WIDTH, $7, $4
 
 CeladonHotelBlocks: ; 492a7 (12:52a7)
 	INCBIN "maps/celadonhotel.blk"

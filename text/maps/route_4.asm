@@ -1,7 +1,6 @@
 _Route4Text1:: ; 8db1e (23:5b1e)
-	text "Ouch! I tripped"
-	line "over a rocky"
-	cont "#MON, GEODUDE!"
+	text "Why is this ledge"
+	line "here...?"
 	done
 
 _Route4BattleText1:: ; 8db4b (23:5b4b)
