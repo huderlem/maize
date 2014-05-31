@@ -34516,9 +34516,10 @@ VermilionCity_h: ; 0x18998 to 0x189ba (34 bytes) (bank=6) (id=5)
 	db $00 ; tileset
 	db VERMILION_CITY_HEIGHT, VERMILION_CITY_WIDTH ; dimensions (y, x)
 	dw VermilionCityBlocks, VermilionCityTextPointers, VermilionCityScript ; blocks, texts, scripts
-	db NORTH | SOUTH | EAST ; connections
+	db NORTH | SOUTH | WEST | EAST ; connections
 	NORTH_MAP_CONNECTION ROUTE_5, ROUTE_5_WIDTH, ROUTE_5_HEIGHT, 4, 0, ROUTE_5_WIDTH, Route5Blocks
 	SOUTH_MAP_CONNECTION ROUTE_6, ROUTE_6_WIDTH, 4, 0, ROUTE_6_WIDTH, Route6Blocks, VERMILION_CITY_WIDTH, VERMILION_CITY_HEIGHT
+	WEST_MAP_CONNECTION ROUTE_8, ROUTE_8_WIDTH, 4, 0, ROUTE_8_HEIGHT, Route8Blocks, VERMILION_CITY_WIDTH
 	EAST_MAP_CONNECTION ROUTE_24, ROUTE_24_WIDTH, 5, 0, ROUTE_24_HEIGHT, Route24Blocks, VERMILION_CITY_WIDTH
 	dw VermilionCityObject ; objects
 
@@ -41760,8 +41761,8 @@ Route5GateScript_1df43: ; 1df43 (7:5f43)
 	jp Func_3486
 
 Route5GateScript0: ; 1df50 (7:5f50)
-	ld a, [$d728]
-	bit 6, a
+	ld a, [W_OBTAINEDBADGES]
+	and %00001000
 	ret nz
 	ld hl, CoordsData_1df8f
 	call ArePlayerCoordsInArray
@@ -41787,8 +41788,6 @@ Route5GateScript0: ; 1df50 (7:5f50)
 	ld a, $3
 	ld [$ff00+$8c], a
 	call DisplayTextID
-	ld hl, $d728
-	set 6, [hl]
 	ret
 
 CoordsData_1df8f: ; 1df8f (7:5f8f)
@@ -41816,28 +41815,15 @@ Route7GateText1: ; 1dfaa (7:5faa)
 Route6GateText1: ; 1dfaa (7:5faa)
 Route5GateText1: ; 1dfaa (7:5faa)
 	db $8
-	ld a, [$d728]
-	bit 6, a
-	jr nz, .asm_88856 ; 0x1dfb0 $2c
-	ld b, BANK(RemoveGuardDrink)
-	ld hl, RemoveGuardDrink
-	call Bankswitch
-	ld a, [$ff00+$db]
-	and a
-	jr nz, .asm_768a2 ; 0x1dfbd $11
+	ld a, [W_OBTAINEDBADGES]
+	and %00001000
+	jr nz, .beatPyriteGym ; 0x1dfb0 $2c
 	ld hl, UnnamedText_1dfe7
 	call PrintText
-	call Route5GateScript_1df43
 	ld a, $1
 	ld [W_ROUTE5GATECURSCRIPT], a
 	jp TextScriptEnd
-.asm_768a2 ; 0x1dfd0
-	ld hl, UnnamedText_1dfec
-	call PrintText
-	ld hl, $d728
-	set 6, [hl]
-	jp TextScriptEnd
-.asm_88856 ; 0x1dfde
+.beatPyriteGym ; 0x1dfde
 	ld hl, UnnamedText_1dff6
 	call PrintText
 	jp TextScriptEnd
@@ -41906,8 +41892,8 @@ Route6GateScriptPointers: ; 1e04a (7:604a)
 	dw Route6GateScript1
 
 Route6GateScript0: ; 1e04e (7:604e)
-	ld a, [$d728]
-	bit 6, a
+	ld a, [W_OBTAINEDBADGES]
+	and %00001000
 	ret nz
 	ld hl, CoordsData_1e08c
 	call ArePlayerCoordsInArray
@@ -41930,8 +41916,6 @@ Route6GateScript0: ; 1e04e (7:604e)
 	ld [W_ROUTE6GATECURSCRIPT], a
 	ret
 .asm_1e080
-	ld hl, $d728
-	set 6, [hl]
 	ld a, $3
 	ld [$ff00+$8c], a
 	jp DisplayTextID
@@ -42021,8 +42005,8 @@ Route7GateScript_1e111: ; 1e111 (7:6111)
 	ret
 
 Route7GateScript0: ; 1e128 (7:6128)
-	ld a, [$d728]
-	bit 6, a
+	ld a, [W_OBTAINEDBADGES]
+	and %00001000
 	ret nz
 	ld hl, CoordsData_1e167
 	call ArePlayerCoordsInArray
@@ -42048,8 +42032,6 @@ Route7GateScript0: ; 1e128 (7:6128)
 	ld a, $3
 	ld [$ff00+$8c], a
 	call DisplayTextID
-	ld hl, $d728
-	set 6, [hl]
 	ret
 
 CoordsData_1e167: ; 1e167 (7:6167)
@@ -42126,8 +42108,8 @@ Route8GateScript_1e1d7: ; 1e1d7 (7:61d7)
 	ret
 
 Route8GateScript0: ; 1e1ee (7:61ee)
-	ld a, [$d728]
-	bit 6, a
+	ld a, [W_OBTAINEDBADGES]
+	and %00001000
 	ret nz
 	ld hl, CoordsData_1e22c
 	call ArePlayerCoordsInArray
@@ -42150,8 +42132,6 @@ Route8GateScript0: ; 1e1ee (7:61ee)
 	ld [W_ROUTE8GATECURSCRIPT], a
 	ret
 .asm_1e220
-	ld hl, $d728
-	set 6, [hl]
 	ld a, $3
 	ld [$ff00+$8c], a
 	jp DisplayTextID
@@ -88531,19 +88511,18 @@ Route8_h: ; 0x5812d to 0x5814f (34 bytes) (id=19)
 	db $00 ; tileset
 	db ROUTE_8_HEIGHT, ROUTE_8_WIDTH ; dimensions (y, x)
 	dw Route8Blocks, Route8TextPointers, Route8Script ; blocks, texts, scripts
-	db WEST | EAST ; connections
-	WEST_MAP_CONNECTION SAFFRON_CITY, SAFFRON_CITY_WIDTH, -3, 1, SAFFRON_CITY_HEIGHT - 3, SaffronCityBlocks, ROUTE_8_WIDTH
-	EAST_MAP_CONNECTION LAVENDER_TOWN, LAVENDER_TOWN_WIDTH, 0, 0, LAVENDER_TOWN_HEIGHT, LavenderTownBlocks, ROUTE_8_WIDTH
+	db EAST ; connections
+	EAST_MAP_CONNECTION VERMILION_CITY, VERMILION_CITY_WIDTH, -4, 0, VERMILION_CITY_HEIGHT, VermilionCityBlocks, ROUTE_8_WIDTH
 	dw Route8Object ; objects
 
 Route8Object: ; 0x5814f (size=119)
 	db $2c ; border tile
 
 	db $5 ; warps
-	db $9, $1, $0, ROUTE_8_GATE
-	db $a, $1, $1, ROUTE_8_GATE
-	db $9, $8, $2, ROUTE_8_GATE
-	db $a, $8, $3, ROUTE_8_GATE
+	db $a, $35, $0, ROUTE_8_GATE
+	db $b, $35, $1, ROUTE_8_GATE
+	db $a, $3a, $2, ROUTE_8_GATE
+	db $b, $3a, $3, ROUTE_8_GATE
 	db $3, $d, $0, PATH_ENTRANCE_ROUTE_8
 
 	db $1 ; signs
@@ -88561,10 +88540,10 @@ Route8Object: ; 0x5814f (size=119)
 	db SPRITE_LASS, $c + 4, $33 + 4, $ff, $d2, $49, LASS + $C8, $10 ; trainer
 
 	; warp-to
-	EVENT_DISP $1e, $9, $1 ; ROUTE_8_GATE
-	EVENT_DISP $1e, $a, $1 ; ROUTE_8_GATE
-	EVENT_DISP $1e, $9, $8 ; ROUTE_8_GATE
-	EVENT_DISP $1e, $a, $8 ; ROUTE_8_GATE
+	EVENT_DISP $1e, $a, $35 ; ROUTE_8_GATE
+	EVENT_DISP $1e, $b, $35 ; ROUTE_8_GATE
+	EVENT_DISP $1e, $a, $3a ; ROUTE_8_GATE
+	EVENT_DISP $1e, $b, $3a ; ROUTE_8_GATE
 	EVENT_DISP $1e, $3, $d ; PATH_ENTRANCE_ROUTE_8
 
 Route8Blocks: ; 581c6 (16:41c6)
