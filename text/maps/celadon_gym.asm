@@ -1,64 +1,55 @@
 _UnnamedText_48a5e:: ; 9d28f (27:528f)
-	text "Hello. Lovely"
-	line "weather isn't it?"
-	cont "It's so pleasant."
+	text "You've got nerves"
+	line "of STEEL for"
+	cont "challenging me"
+	cont "today!"
 
-	para "...Oh dear..."
-	line "I must have dozed"
-	cont "off. Welcome."
-
-	para "My name is ERIKA."
-	line "I am the LEADER"
-	cont "of CELADON GYM."
-
-	para "I teach the art of"
-	line "flower arranging."
-	cont "My #MON are of"
-	cont "the grass-type."
-
-	para "Oh, I'm sorry, I"
-	line "had no idea that"
-	cont "you wished to"
-	cont "challenge me."
-
-	para "Very well, but I"
-	line "shall not lose."
+	para "They call me"
+	line "STELLA, and I'm"
+	cont "about to see"
+	cont "how flimsy you"
+	cont "are in comparison"
+	cont "to my"
+	cont "impenetrable"
+	cont "team!"
 	done
 
 _UnnamedText_48a63:: ; 9d3c2 (27:53c2)
-	text "Oh!"
-	line "I concede defeat."
+	text "What?!"
 
-	para "You are remarkably"
-	line "strong."
+	para "I'm disappointed"
+	line "in myself."
 
-	para "I must confer you"
-	line "the RAINBOWBADGE."
+	para "Take the"
+	line "STEELBADGE."
 	prompt
 
 _UnnamedText_48a68:: ; 9d418 (27:5418)
-	text "You are cataloging"
-	line "#MON? I must"
-	cont "say I'm impressed."
+	text "This city is"
+	line "flooded right"
+	cont "now."
 
-	para "I would never"
-	line "collect #MON"
-	cont "if they were"
-	cont "unattractive."
+	para "If only someone"
+	line "could restore it"
+	cont "to its former"
+	cont "glory..."
 	done
 
 _UnnamedText_48a6d:: ; 9d481 (27:5481)
-	text "The RAINBOWBADGE"
-	line "will make #MON"
-	cont "up to L50 obey."
+	text "That STEELBADGE"
+	line "will provide you"
+	cont "with sturdiness"
+	cont "as you continue"
+	cont "forward."
 
-	para "It also allows"
-	line "#MON to use"
-	cont "STRENGTH in and"
-	cont "out of battle."
+	para "Use this newfound"
+	line "strength to use"
+	cont "STRENGTH outside"
+	cont "of battle."
 
-	para "Please also take"
-	line "this with you."
+	para "Of course, you're"
+	line "entitled to this"
+	cont "TM, too."
 	done
 
 _ReceivedTM21Text:: ; 9d50c (27:550c)
@@ -69,13 +60,15 @@ _ReceivedTM21Text:: ; 9d50c (27:550c)
 
 _TM21ExplanationText:: ; 9d520 (27:5520)
 	db $0
-	para "TM21 contains"
-	line "MEGA DRAIN."
+	para "TM04 contains"
+	line "IRON TAIL."
 
-	para "Half the damage"
-	line "it inflicts is"
-	cont "drained to heal"
-	cont "your #MON!"
+	para "Crush your"
+	line "opponents with"
+	cont "it."
+
+	para "It misses"
+	line "sometimes..."
 	done
 
 _TM21NoRoomText:: ; 9d576 (27:5576)
@@ -84,136 +77,148 @@ _TM21NoRoomText:: ; 9d576 (27:5576)
 	done
 
 _CeladonGymBattleText2:: ; 9d596 (27:5596)
-	text "Hey!"
-
-	para "You are not"
-	line "allowed in here!"
+	text "SKARMORY looks"
+	line "like a DIGIMON."
 	done
 
 _CeladonGymEndBattleText2:: ; 9d5b9 (27:55b9)
-	text "You're"
-	line "too rough!"
+	text " "
+	line "METALSKARMORYMON!"
 	prompt
 
 _CeladonGymAfterBattleText2:: ; 9d5cb (27:55cb)
-	text "Bleaah!"
-	line "I hope ERIKA"
-	cont "wipes you out!"
+	text "CHARMANDER and"
+	line "AGUMON are the"
+	cont "same thing..."
 	done
 
 _CeladonGymBattleText3:: ; 9d5f0 (27:55f0)
-	text "I was getting"
-	line "bored."
+	text "These doors"
+	line "restrict the"
+	cont "types of #MON"
+	cont "you can fight"
+	cont "with!"
 	done
 
 _CeladonGymEndBattleText3:: ; 9d606 (27:5606)
-	text "My"
-	line "makeup!"
+	text "Clang!"
 	prompt
 
 _CeladonGymAfterBattleText3:: ; 9d612 (27:5612)
-	text "Grass-type #MON"
-	line "are tough against"
-	cont "the water-type!"
-
-	para "They also have an"
-	line "edge on rock and"
-	cont "ground #MON!"
+	text "STELLA will"
+	line "crush you like"
+	cont "an aluminum can!"
 	done
 
 _CeladonGymBattleText4:: ; 9d675 (27:5675)
-	text "Aren't you the"
-	line "peeping Tom?"
+	text "I'll STEEL your"
+	line "heart in this"
+	cont "battle!"
 	done
 
 _CeladonGymEndBattleText4:: ; 9d691 (27:5691)
-	text "I'm"
-	line "in shock!"
+	text " "
+	line "Heartbroken..."
 	prompt
 
 _CeladonGymAfterBattleText4:: ; 9d69f (27:569f)
-	text "Oh, you weren't"
-	line "peeping? We get a"
-	cont "lot of gawkers!"
+	text "Why don't you"
+	line "love me?"
 	done
 
 _CeladonGymBattleText5:: ; 9d6d1 (27:56d1)
-	text "Look at my grass"
-	line "#MON!"
-
-	para "They're so easy"
-	line "to raise!"
+	text "My favorite band"
+	line "is STEELy Dan!"
 	done
 
 _CeladonGymEndBattleText5:: ; 9d702 (27:5702)
-	text "No!"
+	text " "
+	line "Wawah!"
 	prompt
 
 _CeladonGymAfterBattleText5:: ; 9d707 (27:5707)
-	text "We only use grass-"
-	line "type #MON at"
-	cont "our GYM!"
-
-	para "We also use them"
-	line "for making flower"
-	cont "arrangements!"
+	text "I only know"
+	line "Do it Again."
 	done
 
 _CeladonGymBattleText6:: ; 9d762 (27:5762)
-	text "Don't bring any"
-	line "bugs or fire"
-	cont "#MON in here!"
+	text "STEELIX is one"
+	line "mighty snake!"
 	done
 
 _CeladonGymEndBattleText6:: ; 9d78d (27:578d)
-	text "Oh!"
-	line "You!"
+	text "Too"
+	line "bad it blows..."
 	prompt
 
 _CeladonGymAfterBattleText6:: ; 9d797 (27:5797)
-	text "Our LEADER, ERIKA,"
-	line "might be quiet,"
-	cont "but she's also"
-	cont "very skilled!"
+	text "ROOOOAAAR!"
+
+	para "Oh wait, I'm"
+	line "not a STEELIX."
 	done
 
 _CeladonGymBattleText7:: ; 9d7d7 (27:57d7)
-	text "Pleased to meet"
-	line "you. My hobby is"
-	cont "#MON training."
+	text "So many statues!"
 	done
 
 _CeladonGymEndBattleText7:: ; 9d808 (27:5808)
-	text "Oh!"
-	line "Splendid!"
+	text "Ugh."
 	prompt
 
 _CeladonGymAfterBattleText7:: ; 9d817 (27:5817)
-	text "I have a blind"
-	line "date coming up."
-	cont "I have to learn"
-	cont "to be polite."
+	text "There aren't very"
+	line "many STEEL-type"
+	cont "#MON..."
 	done
 
 _CeladonGymBattleText8:: ; 9d855 (27:5855)
-	text "Welcome to"
-	line "CELADON GYM!"
+	text "I see you've"
+	line "gotten through"
+	cont "the doors!"
 
-	para "You better not"
-	line "underestimate"
-	cont "girl power!"
+	para "Your team must"
+	line "be impressive!"
 	done
 
 _CeladonGymEndBattleText8:: ; 9d897 (27:5897)
-	text "Oh!"
-	line "Beaten!"
+	text "Ack!"
 	prompt
 
 _CeladonGymAfterBattleText8:: ; 9d8a4 (27:58a4)
-	text "I didn't bring my"
-	line "best #MON!"
-
-	para "Wait 'til next"
-	line "time!"
+	text "I wish my team"
+	line "was more diverse."
 	done
 
+_FirstDoorText::
+    text "You need a NORMAL"
+    line "type #MON in"
+    cont "your party to"
+    cont "pass this door."
+    done
+
+_SecondDoorText::
+    text "You need a FLYING"
+    line "type #MON in"
+    cont "your party to"
+    cont "pass this door."
+    done
+
+_ThirdDoorText::
+    text "You need a GROUND"
+    line "type #MON in"
+    cont "your party to"
+    cont "pass this door."
+    done
+
+_FourthDoorText::
+    text "You need a POISON"
+    line "type #MON in"
+    cont "your party to"
+    cont "pass this door."
+    done
+
+_GetThroughDoorText::
+    text "You have one!"
+
+    para "Please proceed.@@"

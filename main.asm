@@ -32340,7 +32340,7 @@ TechnicalMachines: ; 13773 (4:7773)
 	db MEGA_PUNCH
 	db RAZOR_WIND
 	db SWORDS_DANCE
-	db WHIRLWIND
+	db IRON_TAIL
 	db MEGA_KICK
 	db TOXIC
 	db HORN_DRILL
@@ -34333,7 +34333,7 @@ PalletTownObject: ; 0x182c3 (size=58)
 	db $f ; border tile
 
 	db $3 ; warps
-	db $d, $3, $0, REDS_HOUSE_1F
+	db $d, $3, $0, CELADON_GYM
 	db $7, $3, $0, BLUES_HOUSE
 	db $b, $c, $1, OAKS_LAB
 
@@ -46213,7 +46213,7 @@ CharmanderBaseStats: ; 38432 (e:4432)
 	db 3 ; growth rate
 
 	; learnset
-	db %10110101
+	db %10111101
 	db %00000011
 	db %01001111
 	db %11001000
@@ -46250,7 +46250,7 @@ CharmeleonBaseStats: ; 3844e (e:444e)
 	db 3 ; growth rate
 
 	; learnset
-	db %10110101
+	db %10111101
 	db %00000011
 	db %01001111
 	db %11001000
@@ -46287,7 +46287,7 @@ CharizardBaseStats: ; 3846a (e:446a)
 	db 3 ; growth rate
 
 	; learnset
-	db %10110101
+	db %10111101
 	db %01000011
 	db %01001111
 	db %11001110
@@ -46324,7 +46324,7 @@ SquirtleBaseStats: ; 38486 (e:4486)
 	db 3 ; growth rate
 
 	; learnset
-	db %10110001
+	db %10111001
 	db %00111111
 	db %00001111
 	db %11001000
@@ -46361,7 +46361,7 @@ WartortleBaseStats: ; 384a2 (e:44a2)
 	db 3 ; growth rate
 
 	; learnset
-	db %10110001
+	db %10111001
 	db %00111111
 	db %00001111
 	db %11001000
@@ -46398,7 +46398,7 @@ BlastoiseBaseStats: ; 384be (e:44be)
 	db 3 ; growth rate
 
 	; learnset
-	db %10110001
+	db %10111001
 	db %01111111
 	db %00001111
 	db %11001110
@@ -46509,7 +46509,7 @@ ButterfreeBaseStats: ; 38512 (e:4512)
 	db 0 ; growth rate
 
 	; learnset
-	db %00101010
+	db %00100010
 	db %01000011
 	db %00111000
 	db %11110000
@@ -46657,7 +46657,7 @@ PidgeyBaseStats: ; 38582 (e:4582)
 	db 3 ; growth rate
 
 	; learnset
-	db %00101010
+	db %00100010
 	db %00000011
 	db %00001000
 	db %11000000
@@ -46694,7 +46694,7 @@ PidgeottoBaseStats: ; 3859e (e:459e)
 	db 3 ; growth rate
 
 	; learnset
-	db %00101010
+	db %00100010
 	db %00000011
 	db %00001000
 	db %11000000
@@ -46731,7 +46731,7 @@ PidgeotBaseStats: ; 385ba (e:45ba)
 	db 3 ; growth rate
 
 	; learnset
-	db %00101010
+	db %00100010
 	db %01000011
 	db %00001000
 	db %11000000
@@ -46768,7 +46768,7 @@ RattataBaseStats: ; 385d6 (e:45d6)
 	db 0 ; growth rate
 
 	; learnset
-	db %10100000
+	db %10101000
 	db %00101111
 	db %10001000
 	db %11001001
@@ -46805,7 +46805,7 @@ RaticateBaseStats: ; 385f2 (e:45f2)
 	db 0 ; growth rate
 
 	; learnset
-	db %10100000
+	db %10101000
 	db %01111111
 	db %10001000
 	db %11001001
@@ -46842,7 +46842,7 @@ SpearowBaseStats: ; 3860e (e:460e)
 	db 0 ; growth rate
 
 	; learnset
-	db %00101010
+	db %00100010
 	db %00000011
 	db %00001000
 	db %11000000
@@ -46879,7 +46879,7 @@ FearowBaseStats: ; 3862a (e:462a)
 	db 0 ; growth rate
 
 	; learnset
-	db %00101010
+	db %00100010
 	db %01000011
 	db %00001000
 	db %11000000
@@ -46916,7 +46916,7 @@ EkansBaseStats: ; 38646 (e:4646)
 	db 0 ; growth rate
 
 	; learnset
-	db %10100000
+	db %10101000
 	db %00000011
 	db %00011000
 	db %11001110
@@ -46953,7 +46953,7 @@ ArbokBaseStats: ; 38662 (e:4662)
 	db 0 ; growth rate
 
 	; learnset
-	db %10100000
+	db %10101000
 	db %01000011
 	db %00011000
 	db %11001110
@@ -46990,7 +46990,7 @@ PikachuBaseStats: ; 3867e (e:467e)
 	db 0 ; growth rate
 
 	; learnset
-	db %10110001
+	db %10111001
 	db %10000011
 	db %10001101
 	db %11000001
@@ -47027,7 +47027,7 @@ RaichuBaseStats: ; 3869a (e:469a)
 	db 0 ; growth rate
 
 	; learnset
-	db %10110001
+	db %10111001
 	db %11000011
 	db %10001101
 	db %11000001
@@ -47064,7 +47064,7 @@ SandshrewBaseStats: ; 386b6 (e:46b6)
 	db 0 ; growth rate
 
 	; learnset
-	db %10100100
+	db %10101100
 	db %00000011
 	db %00001101
 	db %11001110
@@ -47101,7 +47101,7 @@ SandslashBaseStats: ; 386d2 (e:46d2)
 	db 0 ; growth rate
 
 	; learnset
-	db %10100100
+	db %10101100
 	db %01000011
 	db %00001101
 	db %11001110
@@ -47138,7 +47138,7 @@ NidoranFBaseStats: ; 386ee (e:46ee)
 	db 3 ; growth rate
 
 	; learnset
-	db %10100000
+	db %10101000
 	db %00100011
 	db %10001000
 	db %11000001
@@ -47175,7 +47175,7 @@ NidorinaBaseStats: ; 3870a (e:470a)
 	db 3 ; growth rate
 
 	; learnset
-	db %11100000
+	db %11101000
 	db %00111111
 	db %10001000
 	db %11000001
@@ -47212,7 +47212,7 @@ NidoqueenBaseStats: ; 38726 (e:4726)
 	db 3 ; growth rate
 
 	; learnset
-	db %11110001
+	db %11111001
 	db %11111111
 	db %10001111
 	db %11000111
@@ -47249,7 +47249,7 @@ NidoranMBaseStats: ; 38742 (e:4742)
 	db 3 ; growth rate
 
 	; learnset
-	db %11100000
+	db %11101000
 	db %00100011
 	db %10001000
 	db %11000001
@@ -47286,7 +47286,7 @@ NidorinoBaseStats: ; 3875e (e:475e)
 	db 3 ; growth rate
 
 	; learnset
-	db %11100000
+	db %11101000
 	db %00111111
 	db %10001000
 	db %11000001
@@ -47323,7 +47323,7 @@ NidokingBaseStats: ; 3877a (e:477a)
 	db 3 ; growth rate
 
 	; learnset
-	db %11110001
+	db %11111001
 	db %11111111
 	db %10001111
 	db %11000111
@@ -47360,7 +47360,7 @@ ClefairyBaseStats: ; 38796 (e:4796)
 	db 4 ; growth rate
 
 	; learnset
-	db %10110001
+	db %10111001
 	db %00111111
 	db %10101111
 	db %11110001
@@ -47397,7 +47397,7 @@ ClefableBaseStats: ; 387b2 (e:47b2)
 	db 4 ; growth rate
 
 	; learnset
-	db %10110001
+	db %10111001
 	db %01111111
 	db %10101111
 	db %11110001
@@ -47434,7 +47434,7 @@ VulpixBaseStats: ; 387ce (e:47ce)
 	db 0 ; growth rate
 
 	; learnset
-	db %10100000
+	db %10101000
 	db %00000011
 	db %00001000
 	db %11001000
@@ -47471,7 +47471,7 @@ NinetalesBaseStats: ; 387ea (e:47ea)
 	db 0 ; growth rate
 
 	; learnset
-	db %10100000
+	db %10101000
 	db %01000011
 	db %00001000
 	db %11001000
@@ -47582,7 +47582,7 @@ ZubatBaseStats: ; 3883e (e:483e)
 	db 0 ; growth rate
 
 	; learnset
-	db %00101010
+	db %00100010
 	db %00000011
 	db %00011000
 	db %11000000
@@ -47619,7 +47619,7 @@ GolbatBaseStats: ; 3885a (e:485a)
 	db 0 ; growth rate
 
 	; learnset
-	db %00101010
+	db %00100010
 	db %01000011
 	db %00011000
 	db %11000000
@@ -47878,7 +47878,7 @@ VenomothBaseStats: ; 3891e (e:491e)
 	db 0 ; growth rate
 
 	; learnset
-	db %00101010
+	db %00100010
 	db %01000011
 	db %00111000
 	db %11110000
@@ -47989,7 +47989,7 @@ MeowthBaseStats: ; 38972 (e:4972)
 	db 0 ; growth rate
 
 	; learnset
-	db %10100000
+	db %10101000
 	db %10001111
 	db %10001000
 	db %11000001
@@ -48026,7 +48026,7 @@ PersianBaseStats: ; 3898e (e:498e)
 	db 0 ; growth rate
 
 	; learnset
-	db %10100000
+	db %10101000
 	db %11001111
 	db %10001000
 	db %11000001
@@ -48063,7 +48063,7 @@ PsyduckBaseStats: ; 389aa (e:49aa)
 	db 0 ; growth rate
 
 	; learnset
-	db %10110001
+	db %10111001
 	db %10111111
 	db %00001111
 	db %11001000
@@ -48100,7 +48100,7 @@ GolduckBaseStats: ; 389c6 (e:49c6)
 	db 0 ; growth rate
 
 	; learnset
-	db %10110001
+	db %10111001
 	db %11111111
 	db %00001111
 	db %11001000
@@ -48137,7 +48137,7 @@ MankeyBaseStats: ; 389e2 (e:49e2)
 	db 0 ; growth rate
 
 	; learnset
-	db %10110001
+	db %10111001
 	db %10000011
 	db %10001111
 	db %11001001
@@ -48174,7 +48174,7 @@ PrimeapeBaseStats: ; 389fe (e:49fe)
 	db 0 ; growth rate
 
 	; learnset
-	db %10110001
+	db %10111001
 	db %11000011
 	db %10001111
 	db %11001001
@@ -48211,7 +48211,7 @@ GrowlitheBaseStats: ; 38a1a (e:4a1a)
 	db 3 ; growth rate
 
 	; learnset
-	db %10100000
+	db %10101000
 	db %00000011
 	db %01001000
 	db %11001000
@@ -48248,7 +48248,7 @@ ArcanineBaseStats: ; 38a36 (e:4a36)
 	db 5 ; growth rate
 
 	; learnset
-	db %10100000
+	db %10101000
 	db %01000011
 	db %01001000
 	db %11101000
@@ -48396,7 +48396,7 @@ AbraBaseStats: ; 38aa6 (e:4aa6)
 	db 3 ; growth rate
 
 	; learnset
-	db %10110001
+	db %10111001
 	db %00000011
 	db %00001111
 	db %11110000
@@ -48433,7 +48433,7 @@ KadabraBaseStats: ; 38ac2 (e:4ac2)
 	db 3 ; growth rate
 
 	; learnset
-	db %10110001
+	db %10111001
 	db %00000011
 	db %00001111
 	db %11111000
@@ -48470,7 +48470,7 @@ AlakazamBaseStats: ; 38ade (e:4ade)
 	db 3 ; growth rate
 
 	; learnset
-	db %10110001
+	db %10111001
 	db %01000011
 	db %00001111
 	db %11111000
@@ -48914,7 +48914,7 @@ PonytaBaseStats: ; 38c2e (e:4c2e)
 	db 0 ; growth rate
 
 	; learnset
-	db %11100000
+	db %11101000
 	db %00000011
 	db %00001000
 	db %11000000
@@ -48951,7 +48951,7 @@ RapidashBaseStats: ; 38c4a (e:4c4a)
 	db 0 ; growth rate
 
 	; learnset
-	db %11100000
+	db %11101000
 	db %01000011
 	db %00001000
 	db %11000000
@@ -48988,7 +48988,7 @@ SlowpokeBaseStats: ; 38c66 (e:4c66)
 	db 0 ; growth rate
 
 	; learnset
-	db %10100000
+	db %10101000
 	db %10111111
 	db %00001000
 	db %11111110
@@ -49025,7 +49025,7 @@ SlowbroBaseStats: ; 38c82 (e:4c82)
 	db 0 ; growth rate
 
 	; learnset
-	db %10110001
+	db %10111001
 	db %11111111
 	db %00001111
 	db %11111110
@@ -49044,7 +49044,7 @@ MagnemiteBaseStats: ; 38c9e (e:4c9e)
 	db 95 ; base special
 
 	db ELECTRIC ; species type 1
-	db ELECTRIC ; species type 2
+	db STEEL ; species type 2
 
 	db 190 ; catch rate
 	db 89 ; base exp yield
@@ -49081,7 +49081,7 @@ MagnetonBaseStats: ; 38cba (e:4cba)
 	db 120 ; base special
 
 	db ELECTRIC ; species type 1
-	db ELECTRIC ; species type 2
+	db STEEL ; species type 2
 
 	db 60 ; catch rate
 	db 161 ; base exp yield
@@ -49173,7 +49173,7 @@ DoduoBaseStats: ; 38cf2 (e:4cf2)
 	db 0 ; growth rate
 
 	; learnset
-	db %10101000
+	db %10100000
 	db %00000011
 	db %00001000
 	db %11000000
@@ -49210,7 +49210,7 @@ DodrioBaseStats: ; 38d0e (e:4d0e)
 	db 0 ; growth rate
 
 	; learnset
-	db %10101000
+	db %10100000
 	db %01000011
 	db %00001000
 	db %11000000
@@ -49580,7 +49580,7 @@ OnixBaseStats: ; 38e26 (e:4e26)
 	db 0 ; growth rate
 
 	; learnset
-	db %10100000
+	db %10101000
 	db %00000011
 	db %00001000
 	db %11001110
@@ -49913,7 +49913,7 @@ CuboneBaseStats: ; 38f22 (e:4f22)
 	db 0 ; growth rate
 
 	; learnset
-	db %10110001
+	db %10111001
 	db %00111111
 	db %00001111
 	db %11001110
@@ -49950,7 +49950,7 @@ MarowakBaseStats: ; 38f3e (e:4f3e)
 	db 0 ; growth rate
 
 	; learnset
-	db %10110001
+	db %10111001
 	db %01111111
 	db %00001111
 	db %11001110
@@ -50061,7 +50061,7 @@ LickitungBaseStats: ; 38f92 (e:4f92)
 	db 0 ; growth rate
 
 	; learnset
-	db %10110101
+	db %10111101
 	db %01111111
 	db %10001111
 	db %11000111
@@ -50172,7 +50172,7 @@ RhyhornBaseStats: ; 38fe6 (e:4fe6)
 	db 5 ; growth rate
 
 	; learnset
-	db %11100000
+	db %11101000
 	db %00000011
 	db %10001000
 	db %11001111
@@ -50209,7 +50209,7 @@ RhydonBaseStats: ; 39002 (e:5002)
 	db 5 ; growth rate
 
 	; learnset
-	db %11110001
+	db %11111001
 	db %11111111
 	db %10001111
 	db %11001111
@@ -50246,7 +50246,7 @@ ChanseyBaseStats: ; 3901e (e:501e)
 	db 4 ; growth rate
 
 	; learnset
-	db %10110001
+	db %10111001
 	db %01111111
 	db %10101111
 	db %11110001
@@ -50320,7 +50320,7 @@ KangaskhanBaseStats: ; 39056 (e:5056)
 	db 0 ; growth rate
 
 	; learnset
-	db %10110001
+	db %10111001
 	db %01111111
 	db %10001111
 	db %11000111
@@ -50690,7 +50690,7 @@ ElectabuzzBaseStats: ; 3916e (e:516e)
 	db 0 ; growth rate
 
 	; learnset
-	db %10110001
+	db %10111001
 	db %01000011
 	db %10001111
 	db %11110001
@@ -50727,7 +50727,7 @@ MagmarBaseStats: ; 3918a (e:518a)
 	db 0 ; growth rate
 
 	; learnset
-	db %10110001
+	db %10111001
 	db %01000011
 	db %00001111
 	db %11110000
@@ -50801,7 +50801,7 @@ TaurosBaseStats: ; 391c2 (e:51c2)
 	db 5 ; growth rate
 
 	; learnset
-	db %11100000
+	db %11101000
 	db %01110011
 	db %10001000
 	db %11000111
@@ -50912,7 +50912,7 @@ LaprasBaseStats: ; 39216 (e:5216)
 	db 5 ; growth rate
 
 	; learnset
-	db %11100000
+	db %11101000
 	db %01111111
 	db %11101000
 	db %11010001
@@ -50986,7 +50986,7 @@ EeveeBaseStats: ; 3924e (e:524e)
 	db 0 ; growth rate
 
 	; learnset
-	db %10100000
+	db %10101000
 	db %00000011
 	db %00001000
 	db %11000000
@@ -51023,7 +51023,7 @@ VaporeonBaseStats: ; 3926a (e:526a)
 	db 0 ; growth rate
 
 	; learnset
-	db %10100000
+	db %10101000
 	db %01111111
 	db %00001000
 	db %11000000
@@ -51060,7 +51060,7 @@ JolteonBaseStats: ; 39286 (e:5286)
 	db 0 ; growth rate
 
 	; learnset
-	db %10100000
+	db %10101000
 	db %01000011
 	db %10001000
 	db %11000001
@@ -51097,7 +51097,7 @@ FlareonBaseStats: ; 392a2 (e:52a2)
 	db 0 ; growth rate
 
 	; learnset
-	db %10100000
+	db %10101000
 	db %01000011
 	db %00001000
 	db %11000000
@@ -51134,7 +51134,7 @@ PorygonBaseStats: ; 392be (e:52be)
 	db 0 ; growth rate
 
 	; learnset
-	db %00100000
+	db %00101000
 	db %01110011
 	db %10001000
 	db %11110001
@@ -51393,7 +51393,7 @@ ArticunoBaseStats: ; 39382 (e:5382)
 	db 5 ; growth rate
 
 	; learnset
-	db %00101010
+	db %00100010
 	db %01111111
 	db %00001000
 	db %11000000
@@ -51430,7 +51430,7 @@ ZapdosBaseStats: ; 3939e (e:539e)
 	db 5 ; growth rate
 
 	; learnset
-	db %00101010
+	db %00100010
 	db %01000011
 	db %10001000
 	db %11000001
@@ -51467,7 +51467,7 @@ MoltresBaseStats: ; 393ba (e:53ba)
 	db 5 ; growth rate
 
 	; learnset
-	db %00101010
+	db %00100010
 	db %01000011
 	db %00001000
 	db %11000000
@@ -51504,7 +51504,7 @@ DratiniBaseStats: ; 393d6 (e:53d6)
 	db 5 ; growth rate
 
 	; learnset
-	db %10100000
+	db %10101000
 	db %00111111
 	db %11001000
 	db %11000001
@@ -51541,7 +51541,7 @@ DragonairBaseStats: ; 393f2 (e:53f2)
 	db 5 ; growth rate
 
 	; learnset
-	db %11100000
+	db %11101000
 	db %00111111
 	db %11001000
 	db %11000001
@@ -51578,7 +51578,7 @@ DragoniteBaseStats: ; 3940e (e:540e)
 	db 5 ; growth rate
 
 	; learnset
-	db %11100010
+	db %11101010
 	db %01111111
 	db %11001000
 	db %11000001
@@ -51615,7 +51615,7 @@ MewtwoBaseStats: ; 3942a (e:542a)
 	db 5 ; growth rate
 
 	; learnset
-	db %10110001
+	db %10111001
 	db %11111111
 	db %10101111
 	db %11110001
@@ -51659,7 +51659,7 @@ SkarmoryBaseStats:
 	db 4 ; growth rate
 
 	; learnset
-	db %00101110
+	db %00100110
 	db %00000000
 	db %00001000
 	db %11000000
@@ -51696,7 +51696,7 @@ MareepBaseStats:
 	db 3 ; growth rate
 
 	; learnset
-	db %10100001
+	db %10101001
 	db %01000011  
 	db %10001000
 	db %11000001
@@ -51733,7 +51733,7 @@ FlaaffyBaseStats:
 	db 3 ; growth rate
 
 	; learnset
-	db %10100001
+	db %10101001
 	db %01000011  
 	db %10001000
 	db %11000001
@@ -51770,7 +51770,7 @@ AmpharosBaseStats:
 	db 3 ; growth rate
 
 	; learnset
-	db %10100001
+	db %10101001
 	db %01000011  
 	db %10001000
 	db %11000001
@@ -51881,7 +51881,7 @@ SteelixBaseStats:
 	db 0 ; growth rate
 
 	; learnset
-	db %10100000
+	db %10101000
 	db %01000010
 	db %00001000
 	db %11001010
@@ -51918,7 +51918,7 @@ HoundourBaseStats:
 	db 2 ; growth rate
 
 	; learnset
-	db %10100000
+	db %10101000
 	db %00000000
 	db %00001010
 	db %11000000
@@ -51955,7 +51955,7 @@ HoundoomBaseStats:
 	db 2 ; growth rate
 
 	; learnset
-	db %10100000
+	db %10101000
 	db %00000000
 	db %00001010
 	db %11000000
@@ -51992,7 +51992,7 @@ GligarBaseStats:
 	db 0 ; growth rate
 
 	; learnset
-	db %00100110
+	db %00101110
 	db %00000000
 	db %00001000
 	db %11001110
@@ -52029,7 +52029,7 @@ GliscorBaseStats:
 	db 0 ; growth rate
 
 	; learnset
-	db %00100110
+	db %00101110
 	db %00000000
 	db %00001000
 	db %11001110
@@ -52066,7 +52066,7 @@ MurkrowBaseStats:
 	db 0 ; growth rate
 
 	; learnset
-	db %00101010
+	db %00100010
 	db %00000000
 	db %00001000
 	db %11010000
@@ -52103,7 +52103,7 @@ HonchkrowBaseStats:
 	db 0 ; growth rate
 
 	; learnset
-	db %00101010
+	db %00100010
 	db %00000000
 	db %00001000
 	db %11010000
@@ -53277,7 +53277,7 @@ LoneMoves: ; 39d22 (e:5d22)
 	db 1,SWIFT
 	db 1,DIG
 	db 2,FIRE_BLAST
-	db 2,MEGA_DRAIN
+	db 3,IRON_HEAD
 	db 3,TOXIC
 	db 3,PSYWAVE
 	db 3,FIRE_BLAST
@@ -53531,8 +53531,8 @@ LassData: ; 39e0c (e:5e0c)
 	db 14,JIGGLYPUFF,CLEFAIRY,0 ; Route 4 (south of Agate)
 	db 16,NIDORAN_F,NIDORINA,0 ; Route 5 (east of Copper Town)
 	db 15,POLIWAG,0 ; Route 5 (east of Copper Town)
-	db 15,NIDORAN_M,NIDORAN_F,0
-	db 13,ODDISH,PIDGEY,ODDISH,0
+	db 21,SKARMORY,MAGNEMITE,0 ; Pyrite City Gym
+	db 24,MAGNEMITE,MAGNEMITE,0 ; Pyrite City Gym
 	db 18,PIDGEY,NIDORAN_F,0
 if _YELLOW
 	db 20,JIGGLYPUFF,0
@@ -53587,7 +53587,7 @@ JrTrainerFData: ; 39e9d (e:5e9d)
 	db 16,SANDSHREW,DIGLETT,0 ; Agate City Gym
 	db 16,PIDGEY,PIDGEY,PIDGEY,0 ; Route 6 (south of Copper Town)
 	db 22,BULBASAUR,0 ; Route 6 (south of Copper Town)
-	db 18,ODDISH,BELLSPROUT,ODDISH,BELLSPROUT,0
+	db 26,STEELIX,0 ; Pyrite City Gym
 	db 23,MEOWTH,0
 if _YELLOW
 	db 20,JIGGLYPUFF,CLEFAIRY,0
@@ -53738,12 +53738,12 @@ GamblerData: ; 3a0b3 (e:60b3)
 	db 24,GROWLITHE,VULPIX,0
 BeautyData: ; 3a0d1 (e:60d1)
 	db 4,NIDORAN_M,NIDORAN_F,SPEAROW,SPEAROW,0 ; trainer house (Nickel city)
-	db 24,BELLSPROUT,BELLSPROUT,0
-	db 26,EXEGGCUTE,0
+	db 25,STEELIX,0 ; Pyrite City Gym
+	db 23,DRILBUR,DRILBUR,0 ; Pyrite City Gym
 if _YELLOW
 	db 27,RATTATA,VULPIX,RATTATA,0
 else
-	db 27,RATTATA,PIKACHU,RATTATA,0
+	db 23,MAGNEMITE,MAGNEMITE,DRILBUR,0 ; Pyrite City Gym
 endc
 	db 29,CLEFAIRY,MEOWTH,0
 	db 35,SEAKING,0
@@ -53924,7 +53924,7 @@ CooltrainerMData: ; 3a35a (e:635a)
 	db 43,RHYHORN,0
 CooltrainerFData: ; 3a385 (e:6385)
 	db 16,CUBONE,GEODUDE,CUBONE,0 ; Agate City Gym
-	db 43,BELLSPROUT,WEEPINBELL,VICTREEBEL,0
+	db 24,ONIX,MAGNEMITE,STEELIX,0 ; Pyrite City Gym
 	db 43,PARASECT,DEWGONG,CHANSEY,0
 	db 46,VILEPLUME,BUTTERFREE,0
 	db 44,PERSIAN,NINETALES,0
@@ -53965,7 +53965,7 @@ SabrinaData: ; 3a3e5 (e:63e5)
 if _YELLOW
 	db $FF,50,ABRA,50,KADABRA,50,ALAKAZAM,0
 else
-	db $FF,38,KADABRA,37,MR_MIME,38,VENOMOTH,43,ALAKAZAM,0
+	db $FF,24,MAGNEMITE,27,STEELIX,28,EXCADRILL,29,SCIZOR,0
 endc
 GentlemanData: ; 3a3ef (e:63ef)
 	db 7,MANKEY,GEODUDE,0 ; trainer house (Nickel City)
@@ -76315,10 +76315,10 @@ CeladonGymScript_48927: ; 48927 (12:4927)
 	jp LoadGymLeaderAndCityName
 
 Gym4CityName: ; 48930 (12:4930)
-	db "CELADON CITY@"
+	db "PYRITE CITY@"
 
 Gym4LeaderName: ; 4893d (12:493d)
-	db "ERIKA@"
+	db "STELLA@"
 
 Func_48943: ; 48943 (12:4943)
 	xor a
@@ -76346,7 +76346,7 @@ Func_48963: ; 48963 (12:4963)
 	call DisplayTextID
 	ld hl, $d77c
 	set 1, [hl]
-	ld bc, (TM_21 << 8) | 1
+	ld bc, (TM_04 << 8) | 1
 	call GiveItem
 	jr nc, .BagFull
 	ld a, $a
@@ -76383,11 +76383,15 @@ CeladonGymTextPointers: ; 489a6 (12:49a6)
 	dw CeladonGymText9
 	dw TM21Text
 	dw TM21NoRoomText
+	dw CeladonGymText12
+	dw CeladonGymText13
+	dw CeladonGymText14
+	dw CeladonGymText15
 
 CeladonGymTrainerHeaders: ; 489bc (12:49bc)
 CeladonGymTrainerHeader0: ; 489bc (12:49bc)
 	db $2 ; flag's bit
-	db ($2 << 4) ; trainer's view range
+	db ($1 << 4) ; trainer's view range
 	dw $d77c ; flag's byte
 	dw CeladonGymBattleText2 ; 0x4a8b TextBeforeBattle
 	dw CeladonGymAfterBattleText2 ; 0x4a95 TextAfterBattle
@@ -76396,7 +76400,7 @@ CeladonGymTrainerHeader0: ; 489bc (12:49bc)
 
 CeladonGymTrainerHeader2: ; 489c8 (12:49c8)
 	db $3 ; flag's bit
-	db ($2 << 4) ; trainer's view range
+	db ($1 << 4) ; trainer's view range
 	dw $d77c ; flag's byte
 	dw CeladonGymBattleText3 ; 0x4aa4 TextBeforeBattle
 	dw CeladonGymAfterBattleText3 ; 0x4aae TextAfterBattle
@@ -76405,7 +76409,7 @@ CeladonGymTrainerHeader2: ; 489c8 (12:49c8)
 
 CeladonGymTrainerHeader3: ; 489d4 (12:49d4)
 	db $4 ; flag's bit
-	db ($4 << 4) ; trainer's view range
+	db ($1 << 4) ; trainer's view range
 	dw $d77c ; flag's byte
 	dw CeladonGymBattleText4 ; 0x4abd TextBeforeBattle
 	dw CeladonGymAfterBattleText4 ; 0x4ac7 TextAfterBattle
@@ -76414,7 +76418,7 @@ CeladonGymTrainerHeader3: ; 489d4 (12:49d4)
 
 CeladonGymTrainerHeader4: ; 489e0 (12:49e0)
 	db $5 ; flag's bit
-	db ($4 << 4) ; trainer's view range
+	db ($1 << 4) ; trainer's view range
 	dw $d77c ; flag's byte
 	dw CeladonGymBattleText5 ; 0x4ad6 TextBeforeBattle
 	dw CeladonGymAfterBattleText5 ; 0x4ae0 TextAfterBattle
@@ -76423,7 +76427,7 @@ CeladonGymTrainerHeader4: ; 489e0 (12:49e0)
 
 CeladonGymTrainerHeader5: ; 489ec (12:49ec)
 	db $6 ; flag's bit
-	db ($2 << 4) ; trainer's view range
+	db ($1 << 4) ; trainer's view range
 	dw $d77c ; flag's byte
 	dw CeladonGymBattleText6 ; 0x4aef TextBeforeBattle
 	dw CeladonGymAfterBattleText6 ; 0x4af9 TextAfterBattle
@@ -76432,7 +76436,7 @@ CeladonGymTrainerHeader5: ; 489ec (12:49ec)
 
 CeladonGymTrainerHeader6: ; 489f8 (12:49f8)
 	db $7 ; flag's bit
-	db ($2 << 4) ; trainer's view range
+	db ($1 << 4) ; trainer's view range
 	dw $d77c ; flag's byte
 	dw CeladonGymBattleText7 ; 0x4b08 TextBeforeBattle
 	dw CeladonGymAfterBattleText7 ; 0x4b12 TextAfterBattle
@@ -76441,7 +76445,7 @@ CeladonGymTrainerHeader6: ; 489f8 (12:49f8)
 
 CeladonGymTrainerHeader7: ; 48a04 (12:4a04)
 	db $8 ; flag's bit
-	db ($3 << 4) ; trainer's view range
+	db ($1 << 4) ; trainer's view range
 	dw $d77c ; flag's byte
 	dw CeladonGymBattleText8 ; 0x4b21 TextBeforeBattle
 	dw CeladonGymAfterBattleText8 ; 0x4b2b TextAfterBattle
@@ -76638,24 +76642,163 @@ CeladonGymAfterBattleText8: ; 48b2b (12:4b2b)
 	TX_FAR _CeladonGymAfterBattleText8
 	db "@"
 
+CheckPartyForType:
+; checks the player's party for a pokemon with type in register a
+; sets carry flag if it's there
+    ld d, a
+    ld hl, W_PARTYMON1_TYPE1
+    ld a, [W_NUMINPARTY]
+    ld e, a
+    ld bc, 43
+.loop
+    ld a, [hli] ; a contains type 1
+    cp d
+    jr z, .gotIt
+    ld a, [hl]
+    cp d
+    jr z, .gotIt
+    add hl, bc
+    dec e
+    jr nz, .loop
+    scf
+    ccf
+    ret
+.gotIt
+    scf
+    ret
+
+CeladonGymText12:
+    db $08 ; asm
+    ld hl, FirstDoorText
+    call PrintText
+    ld a, NORMAL
+    call CheckPartyForType
+    jr nc, .done
+    ; change tiles
+    ld a, $31
+    ld [$d09f], a
+    ld bc, $0700
+    ld a, $17
+    call Predef
+    ld a, $32
+    ld [$d09f], a
+    ld bc, $0701
+    ld a, $17
+    call Predef
+    ld hl, GetThroughDoorText
+    call PrintText
+.done
+    jp TextScriptEnd
+
+CeladonGymText13:
+    db $08 ; asm
+    ld hl, SecondDoorText
+    call PrintText
+    ld a, FLYING
+    call CheckPartyForType
+    jr nc, .done
+    ; change tiles
+    ld a, $31
+    ld [$d09f], a
+    ld bc, $0400
+    ld a, $17
+    call Predef
+    ld a, $32
+    ld [$d09f], a
+    ld bc, $0401
+    ld a, $17
+    call Predef
+    ld hl, GetThroughDoorText
+    call PrintText
+.done
+    jp TextScriptEnd
+
+CeladonGymText14:
+    db $08 ; asm
+    ld hl, ThirdDoorText
+    call PrintText
+    ld a, GROUND
+    call CheckPartyForType
+    jr nc, .done
+    ; change tiles
+    ld a, $31
+    ld [$d09f], a
+    ld bc, $0402
+    ld a, $17
+    call Predef
+    ld a, $32
+    ld [$d09f], a
+    ld bc, $0403
+    ld a, $17
+    call Predef
+    ld hl, GetThroughDoorText
+    call PrintText
+.done
+    jp TextScriptEnd
+
+CeladonGymText15:
+    db $08 ; asm
+    ld hl, ThirdDoorText
+    call PrintText
+    ld a, POISON
+    call CheckPartyForType
+    jr nc, .done
+    ; change tiles
+    ld a, $31
+    ld [$d09f], a
+    ld bc, $0404
+    ld a, $17
+    call Predef
+    ld hl, GetThroughDoorText
+    call PrintText
+.done
+    jp TextScriptEnd
+
+FirstDoorText:
+    TX_FAR _FirstDoorText
+    db "@"
+
+SecondDoorText:
+    TX_FAR _SecondDoorText
+    db "@"
+
+ThirdDoorText:
+    TX_FAR _ThirdDoorText
+    db "@"
+
+FourthDoorText:
+    TX_FAR _FourthDoorText
+    db "@"
+
+GetThroughDoorText:
+    TX_FAR _GetThroughDoorText
+    db "@"
+
 CeladonGymObject: ; 0x48b30 (size=84)
 	db $3 ; border tile
 
 	db $2 ; warps
-	db $11, $4, $6, $ff
-	db $11, $5, $6, $ff
+	db $11, $4, $6, CELADON_CITY
+	db $11, $5, $6, CELADON_CITY
 
-	db $0 ; signs
+	db $7 ; signs
+	db $e, $1, $c
+	db $e, $2, $c
+	db $8, $1, $d
+	db $8, $2, $d
+	db $8, $5, $e
+	db $8, $6, $e
+	db $8, $9, $f
 
 	db $8 ; people
-	db SPRITE_ERIKA, $3 + 4, $4 + 4, $ff, $d0, $41, ERIKA + $C8, $1 ; trainer
-	db SPRITE_LASS, $b + 4, $2 + 4, $ff, $d3, $42, LASS + $C8, $11 ; trainer
-	db SPRITE_FOULARD_WOMAN, $a + 4, $7 + 4, $ff, $d2, $43, BEAUTY + $C8, $1 ; trainer
-	db SPRITE_LASS, $5 + 4, $9 + 4, $ff, $d0, $44, JR__TRAINER_F + $C8, $b ; trainer
-	db SPRITE_FOULARD_WOMAN, $5 + 4, $1 + 4, $ff, $d0, $45, BEAUTY + $C8, $2 ; trainer
-	db SPRITE_LASS, $3 + 4, $6 + 4, $ff, $d0, $46, LASS + $C8, $12 ; trainer
-	db SPRITE_FOULARD_WOMAN, $3 + 4, $3 + 4, $ff, $d0, $47, BEAUTY + $C8, $3 ; trainer
-	db SPRITE_LASS, $3 + 4, $5 + 4, $ff, $d0, $48, COOLTRAINER_F + $C8, $1 ; trainer
+	db SPRITE_ERIKA, $2 + 4, $8 + 4, $ff, $d0, $41, SABRINA + $C8, $1 ; trainer
+	db SPRITE_LASS, $c + 4, $1 + 4, $ff, $d3, $42, LASS + $C8, $9 ; trainer
+	db SPRITE_FOULARD_WOMAN, $a + 4, $2 + 4, $ff, $d2, $43, BEAUTY + $C8, $2 ; trainer
+	db SPRITE_FOULARD_WOMAN, $5 + 4, $2 + 4, $ff, $d2, $44, BEAUTY + $C8, $3 ; trainer
+	db SPRITE_LASS, $5 + 4, $4 + 4, $ff, $d3, $45, COOLTRAINER_F + $C8, $2 ; trainer
+	db SPRITE_LASS, $6 + 4, $6 + 4, $ff, $d2, $46, JR__TRAINER_F + $C8, $5 ; trainer
+	db SPRITE_FOULARD_WOMAN, $b + 4, $7 + 4, $ff, $d2, $47, BEAUTY + $C8, $4 ; trainer
+	db SPRITE_LASS, $e + 4, $8 + 4, $ff, $d0, $48, LASS + $C8, $a ; trainer
 
 	; warp-to
 	EVENT_DISP $5, $11, $4
@@ -84243,7 +84386,7 @@ Route4Object: ; 0x543b2 (size=58)
 	db $1 ; people
 	db SPRITE_LASS, $d + 4, $10 + 4, $fe, $0, $1 ; person
 	; db SPRITE_LASS, $3 + 4, $3f + 4, $ff, $d3, $42, LASS + $C8, $4 ; trainer
-	; db SPRITE_BALL, $3 + 4, $39 + 4, $ff, $ff, $83, TM_04 ; item
+	; db SPRITE_BALL, $3 + 4, $39 + 4, $ff, $ff, $83, TM_04 ; item TODO: unused item slot!
 
 	; warp-to
 	EVENT_DISP $2d, $2, $b ; MT_MOON_POKECENTER
@@ -118413,7 +118556,7 @@ _TM03Description::
 	prompt
 
 _TM04Description::
-	text "TM04 - WHIRLWIND"
+	text "TM04 - IRON TAIL"
 	prompt
 
 _TM05Description::
