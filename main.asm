@@ -34516,7 +34516,8 @@ VermilionCity_h: ; 0x18998 to 0x189ba (34 bytes) (bank=6) (id=5)
 	db $00 ; tileset
 	db VERMILION_CITY_HEIGHT, VERMILION_CITY_WIDTH ; dimensions (y, x)
 	dw VermilionCityBlocks, VermilionCityTextPointers, VermilionCityScript ; blocks, texts, scripts
-	db SOUTH | EAST ; connections
+	db NORTH | SOUTH | EAST ; connections
+	NORTH_MAP_CONNECTION ROUTE_5, ROUTE_5_WIDTH, ROUTE_5_HEIGHT, 4, 0, ROUTE_5_WIDTH, Route5Blocks
 	SOUTH_MAP_CONNECTION ROUTE_6, ROUTE_6_WIDTH, 4, 0, ROUTE_6_WIDTH, Route6Blocks, VERMILION_CITY_WIDTH, VERMILION_CITY_HEIGHT
 	EAST_MAP_CONNECTION ROUTE_24, ROUTE_24_WIDTH, 5, 0, ROUTE_24_HEIGHT, Route24Blocks, VERMILION_CITY_WIDTH
 	dw VermilionCityObject ; objects
@@ -84400,32 +84401,31 @@ Route5_h: ; 0x54581 to 0x545a3 (34 bytes) (id=16)
 	db $00 ; tileset
 	db ROUTE_5_HEIGHT, ROUTE_5_WIDTH ; dimensions (y, x)
 	dw Route5Blocks, Route5TextPointers, Route5Script ; blocks, texts, scripts
-	db NORTH | SOUTH ; connections
-	NORTH_MAP_CONNECTION CERULEAN_CITY, CERULEAN_CITY_WIDTH, CERULEAN_CITY_HEIGHT, -3, 2, CERULEAN_CITY_WIDTH - 4, CeruleanCityBlocks
-	SOUTH_MAP_CONNECTION SAFFRON_CITY, SAFFRON_CITY_WIDTH, -3, 2, SAFFRON_CITY_WIDTH - 4, SaffronCityBlocks, ROUTE_5_WIDTH, ROUTE_5_HEIGHT
+	db SOUTH ; connections
+	SOUTH_MAP_CONNECTION VERMILION_CITY, VERMILION_CITY_WIDTH, -4, 0, VERMILION_CITY_WIDTH - 4, VermilionCityBlocks, ROUTE_5_WIDTH, ROUTE_5_HEIGHT
 	dw Route5Object ; objects
 
 Route5Object: ; 0x545a3 (size=47)
 	db $a ; border tile
 
 	db $5 ; warps
-	db $1d, $a, $3, ROUTE_5_GATE
-	db $1d, $9, $2, ROUTE_5_GATE
-	db $21, $a, $0, ROUTE_5_GATE
-	db $1b, $11, $0, PATH_ENTRANCE_ROUTE_5
-	db $15, $a, $0, DAYCAREM
+	db $1d, $c, $3, ROUTE_6_GATE
+	db $1d, $b, $2, ROUTE_6_GATE
+	db $21, $b, $0, ROUTE_6_GATE
+	db $5, $c, $0, PATH_ENTRANCE_ROUTE_5
+	db $9, $3, $0, DAYCAREM
 
 	db $1 ; signs
-	db $1d, $11, $1 ; Route5Text1
+	db $19, $d, $1 ; Route5Text1
 
 	db $0 ; people
 
 	; warp-to
-	EVENT_DISP $a, $1d, $a ; ROUTE_5_GATE
-	EVENT_DISP $a, $1d, $9 ; ROUTE_5_GATE
-	EVENT_DISP $a, $21, $a ; ROUTE_5_GATE
-	EVENT_DISP $a, $1b, $11 ; PATH_ENTRANCE_ROUTE_5
-	EVENT_DISP $a, $15, $a ; DAYCAREM
+	EVENT_DISP $a, $1d, $c
+	EVENT_DISP $a, $1d, $b
+	EVENT_DISP $a, $21, $b
+	EVENT_DISP $a, $5, $c
+	EVENT_DISP $a, $9, $3
 
 Route5Blocks: ; 545d2 (15:45d2)
 	INCBIN "maps/route5.blk"
