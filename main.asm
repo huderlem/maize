@@ -52950,7 +52950,7 @@ TrainerNames: ; 399ff (e:59ff)
 	db "ELDA@"
 	db "KOGA@"
 	db "BLAINE@"
-	db "SABRINA@"
+	db "STELLA@"
 	db "GENTLEMAN@"
 	db "RIVAL2@"
 	db "RIVAL3@"
