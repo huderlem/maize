@@ -102460,7 +102460,7 @@ Func_70e92: ; 70e92 (1c:4e92)
 .asm_70ef2
 	ld a, [wWhichTrade] ; $cd3d
 	inc a
-	cp 19 ; num entries in TownMapOrder
+	cp 20 ; num entries in TownMapOrder
 	jr nz, .asm_70efb
 	xor a
 .asm_70efb
@@ -102471,7 +102471,7 @@ Func_70e92: ; 70e92 (1c:4e92)
 	dec a
 	cp $ff
 	jr nz, .asm_70f0b
-	ld a, 18 ; num entries - 1 in TownMapOrder
+	ld a, 19 ; num entries - 1 in TownMapOrder
 .asm_70f0b
 	ld [wWhichTrade], a ; $cd3d
 	jp Func_70e7e
@@ -102496,6 +102496,7 @@ TownMapOrder: ; 70f11 (1c:4f11)
 	db ROUTE_8
 	db ROUTE_22
 	db MT_MOON_2
+	db ROUTE_21
 
 TownMapCursor: ; 70f40 (1c:4f40)
 	INCBIN "gfx/town_map_cursor.1bpp"
@@ -103030,7 +103031,7 @@ ExternalMapEntries: ; 71313 (1c:5313)
 	EMAP $6,$D,Route18Name
 	EMAP $6,$F,Route19Name
 	EMAP $4,$F,Route20Name
-	EMAP $2,$D,Route21Name
+	EMAP $F,$C,Route21Name
 	EMAP $A,$D,Route22Name
 	EMAP $0,$6,Route23Name
 	EMAP $9,$7,Route24Name
@@ -103163,7 +103164,7 @@ Route19Name: ; 715a3 (1c:55a3)
 Route20Name: ; 715b0 (1c:55b0)
 	db "SEA ROUTE 20@"
 Route21Name: ; 715bd (1c:55bd)
-	db "SEA ROUTE 21@"
+	db "SEA ROUTE 11@"
 Route22Name: ; 715ca (1c:55ca)
 	db "ROUTE 10@"
 Route23Name: ; 715d3 (1c:55d3)
