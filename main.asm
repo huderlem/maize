@@ -34333,7 +34333,7 @@ PalletTownObject: ; 0x182c3 (size=58)
 	db $f ; border tile
 
 	db $3 ; warps
-	db $d, $3, $0, CELADON_GYM
+	db $d, $3, $0, REDS_HOUSE_1F
 	db $7, $3, $0, BLUES_HOUSE
 	db $b, $c, $1, OAKS_LAB
 
@@ -102460,7 +102460,7 @@ Func_70e92: ; 70e92 (1c:4e92)
 .asm_70ef2
 	ld a, [wWhichTrade] ; $cd3d
 	inc a
-	cp $2f
+	cp 19 ; num entries in TownMapOrder
 	jr nz, .asm_70efb
 	xor a
 .asm_70efb
@@ -102471,7 +102471,7 @@ Func_70e92: ; 70e92 (1c:4e92)
 	dec a
 	cp $ff
 	jr nz, .asm_70f0b
-	ld a, $2e
+	ld a, 18 ; num entries - 1 in TownMapOrder
 .asm_70f0b
 	ld [wWhichTrade], a ; $cd3d
 	jp Func_70e7e
@@ -102481,49 +102481,21 @@ TownMapOrder: ; 70f11 (1c:4f11)
 	db ROUTE_1
 	db VIRIDIAN_CITY
 	db ROUTE_2
-	db VIRIDIAN_FOREST
 	db DIGLETTS_CAVE
 	db PEWTER_CITY
 	db ROUTE_3
-	db MT_MOON_1
-	db ROUTE_4
+	db ROCK_TUNNEL_1
 	db CERULEAN_CITY
-	db ROUTE_24
 	db ROUTE_25
-	db BILLS_HOUSE
-	db ROUTE_5
-	db ROUTE_6
+	db ROUTE_24
 	db VERMILION_CITY
-	db SS_ANNE_1
-	db ROUTE_9
-	db ROCK_TUNNEL_POKECENTER
-	db ROUTE_10
-	db LAVENDER_TOWN
-	db POKEMONTOWER_2
-	db ROUTE_8
-	db ROUTE_7
+	db ROUTE_6
 	db CELADON_CITY
-	db SAFFRON_CITY
-	db ROUTE_11
-	db ROUTE_12
-	db ROUTE_13
-	db ROUTE_14
-	db ROUTE_15
-	db ROUTE_16
-	db ROUTE_17
-	db ROUTE_18
-	db FUCHSIA_CITY
-	db SAFARI_ZONE_EAST
-	db ROUTE_19
-	db SEAFOAM_ISLANDS_2
-	db ROUTE_20
-	db CINNABAR_ISLAND
-	db ROUTE_21
+	db ROUTE_4
+	db ROUTE_5
+	db ROUTE_8
 	db ROUTE_22
-	db ROUTE_23
-	db VICTORY_ROAD_3
-	db INDIGO_PLATEAU
-	db POWER_PLANT
+	db MT_MOON_2
 
 TownMapCursor: ; 70f40 (1c:4f40)
 	INCBIN "gfx/town_map_cursor.1bpp"
@@ -103031,8 +103003,8 @@ ExternalMapEntries: ; 71313 (1c:5313)
 	EMAP $E,$3,PewterCityName
 	EMAP $A,$4,CeruleanCityName
 	EMAP $E,$5,LavenderTownName
-	EMAP $A,$9,VermilionCityName
-	EMAP $7,$5,CeladonCityName
+	EMAP $7,$7,VermilionCityName
+	EMAP $7,$F,CeladonCityName
 	EMAP $8,$D,FuchsiaCityName
 	EMAP $2,$F,CinnabarIslandName
 	EMAP $0,$2,IndigoPlateauName
@@ -103040,12 +103012,12 @@ ExternalMapEntries: ; 71313 (1c:5313)
 	EMAP $0,$0,PalletTownName ; unused
 	EMAP $D,$9,Route1Name
 	EMAP $F,$6,Route2Name
-	EMAP $4,$3,Route3Name
-	EMAP $8,$2,Route4Name
-	EMAP $A,$3,Route5Name
-	EMAP $A,$8,Route6Name
+	EMAP $c,$3,Route3Name
+	EMAP $8,$F,Route4Name
+	EMAP $7,$5,Route5Name
+	EMAP $7,$B,Route6Name
 	EMAP $8,$5,Route7Name
-	EMAP $D,$5,Route8Name
+	EMAP $6,$7,Route8Name
 	EMAP $D,$2,Route9Name
 	EMAP $E,$4,Route10Name
 	EMAP $C,$9,Route11Name
@@ -103059,10 +103031,10 @@ ExternalMapEntries: ; 71313 (1c:5313)
 	EMAP $6,$F,Route19Name
 	EMAP $4,$F,Route20Name
 	EMAP $2,$D,Route21Name
-	EMAP $0,$8,Route22Name
+	EMAP $A,$D,Route22Name
 	EMAP $0,$6,Route23Name
-	EMAP $A,$1,Route24Name
-	EMAP $B,$0,Route25Name
+	EMAP $9,$7,Route24Name
+	EMAP $A,$6,Route25Name
 
 InternalMapEntries: ; 71382 (1c:5382)
 	IMAP $29,$C,$A,PalletTownName
@@ -103070,7 +103042,7 @@ InternalMapEntries: ; 71382 (1c:5382)
 	IMAP $33,$F,$6,Route2Name
 	IMAP $34,$2,$4,ViridianForestName
 	IMAP $3B,$E,$3,PewterCityName
-	IMAP $3E,$6,$2,MountMoonName
+	IMAP $3E,$9,$D,MountMoonName
 	IMAP $44,$A,$4,CeruleanCityName
 	IMAP $45,$5,$2,Route4Name
 	IMAP $46,$A,$4,CeruleanCityName
@@ -103078,7 +103050,7 @@ InternalMapEntries: ; 71382 (1c:5382)
 	IMAP $4C,$A,$6,Route6Name
 	IMAP $4F,$9,$5,Route7Name
 	IMAP $51,$B,$5,Route8Name
-	IMAP $53,$E,$3,RockTunnelName
+	IMAP $53,$b,$3,RockTunnelName
 	IMAP $54,$F,$4,PowerPlantName
 	IMAP $57,$D,$9,Route11Name
 	IMAP $58,$E,$7,Route12Name
@@ -103113,7 +103085,7 @@ InternalMapEntries: ; 71382 (1c:5382)
 	IMAP $C3,$0,$4,VictoryRoadName
 	IMAP $C4,$E,$7,Route12Name
 	IMAP $C5,$A,$9,VermilionCityName
-	IMAP $C6,$3,$4,DiglettsCaveName
+	IMAP $C6,$f,$4,DiglettsCaveName
 	IMAP $C7,$0,$4,VictoryRoadName
 	IMAP $CF,$7,$5,RocketHQName
 	IMAP $D6,$A,$5,SilphCoName
@@ -103157,15 +103129,15 @@ Route2Name: ; 71512 (1c:5512)
 Route3Name: ; 7151a (1c:551a)
 	db "ROUTE 3@"
 Route4Name: ; 71522 (1c:5522)
-	db "ROUTE 4@"
+	db "ROUTE 7@"
 Route5Name: ; 7152a (1c:552a)
-	db "ROUTE 5@"
+	db "ROUTE 8@"
 Route6Name: ; 71532 (1c:5532)
 	db "ROUTE 6@"
 Route7Name: ; 7153a (1c:553a)
 	db "ROUTE 7@"
 Route8Name: ; 71542 (1c:5542)
-	db "ROUTE 8@"
+	db "ROUTE 9@"
 Route9Name: ; 7154a (1c:554a)
 	db "ROUTE 9@"
 Route10Name: ; 71552 (1c:5552)
@@ -103193,19 +103165,19 @@ Route20Name: ; 715b0 (1c:55b0)
 Route21Name: ; 715bd (1c:55bd)
 	db "SEA ROUTE 21@"
 Route22Name: ; 715ca (1c:55ca)
-	db "ROUTE 22@"
+	db "ROUTE 10@"
 Route23Name: ; 715d3 (1c:55d3)
 	db "ROUTE 23@"
 Route24Name: ; 715dc (1c:55dc)
-	db "ROUTE 24@"
+	db "ROUTE 5@"
 Route25Name: ; 715e5 (1c:55e5)
-	db "ROUTE 25@"
+	db "ROUTE 4@"
 ViridianForestName: ; 715ee (1c:55ee)
 	db "VIRIDIAN FOREST@"
 MountMoonName: ; 715fe (1c:55fe)
-	db "MT.MOON@"
+	db "ROCKY POINT@"
 RockTunnelName: ; 71606 (1c:5606)
-	db "ROCK TUNNEL@"
+	db "ARBOR HOLLOW@"
 SeaCottageName: ; 71612 (1c:5612)
 	db "SEA COTTAGE@"
 SSAnneName: ; 7161e (1c:561e)
@@ -103221,7 +103193,7 @@ SeafoamIslandsName: ; 7164f (1c:564f)
 VictoryRoadName: ; 7165f (1c:565f)
 	db "VICTORY ROAD@"
 DiglettsCaveName: ; 7166c (1c:566c)
-	db "DIGLETT's CAVE@"
+	db "BASALT CAVE@"
 RocketHQName: ; 7167a (1c:567a)
 	db "ROCKET HQ@"
 SilphCoName: ; 71684 (1c:5684)
