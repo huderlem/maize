@@ -791,6 +791,13 @@ OverworldLoopLessDelay:: ; 0402 (0:0402)
 	ld a,[W_CURMAP]
 	cp a,OAKS_LAB
 	jp z,.noFaintCheck
+	cp a,REDS_HOUSE_2F
+	jr nz,.resume
+	; is this the first battle in the game? just look at badges owned, I guess
+	ld a, [W_OBTAINEDBADGES]
+	and a
+	jr z, .noFaintCheck
+.resume
 	ld hl, AnyPokemonAliveCheck
 	ld b, BANK(AnyPokemonAliveCheck)
 	call Bankswitch ; check if all the player's pokemon fainted
@@ -1220,6 +1227,10 @@ HandleBlackOut:: ; 0931 (0:0931)
 	ld [H_LOADEDROMBANK],a
 	ld [$2000],a
 	call Func_40b0
+	; for some reason the bank was switching to bank 3 here...
+	ld a,Bank(Func_62ce)
+	ld [H_LOADEDROMBANK],a
+	ld [$2000],a
 	call Func_62ce
 	call Func_2312
 	jp Func_5d5f
@@ -34363,7 +34374,7 @@ PalletTownObject: ; 0x182c3 (size=58)
 
 	db $3 ; warps
 	db $d, $3, $0, REDS_HOUSE_1F
-	db $7, $3, $0, BLUES_HOUSE
+	db $7, $3, $1, VERMILION_POKECENTER
 	db $b, $c, $1, OAKS_LAB
 
 	db $4 ; signs
@@ -34562,7 +34573,7 @@ VermilionCityObject: ; 0x189ba (size=133)
 	db $5, $a, $0, VERMILION_GYM
 	db $1b, $7, $0, VERMILION_HOUSE_1
 	db $d, $9, $0, POKEMON_FAN_CLUB
-	db $0, $1, $0, VERMILION_DOCK
+	db $8, $19, $0, REDS_HOUSE_2F
 	db $17, $20, $0, VERMILION_HOUSE_3
 	db $5, $1f, $0, PATH_ENTRANCE_ROUTE_5
 
@@ -34590,7 +34601,7 @@ VermilionCityObject: ; 0x189ba (size=133)
 	EVENT_DISP $14, $5, $a ; VERMILION_GYM
 	EVENT_DISP $14, $1b, $7 ; VERMILION_HOUSE_1
 	EVENT_DISP $14, $d, $9 ; VERMILION_DOCK
-	EVENT_DISP $14, $0, $1 ; VERMILION_DOCK
+	EVENT_DISP $14, $8, $19 ; REDS_HOUSE_2F
 	EVENT_DISP $14, $17, $20 ; VERMILION_HOUSE_3
 	EVENT_DISP $14, $5, $1f ; VERMILION_HOUSE_2
 
@@ -36397,7 +36408,60 @@ SSAnneNotHereText: ; 19918 (6:5918)
 	db "@"
 
 VermilionCityText4: ; 1991d (6:591d)
-	TX_FAR _VermilionCityText4
+	db $08 ; asm
+	; how far is the player in the quest?
+	ld a, [W_NEWFLAGS1]
+	bit 0, a ; has player beaten shadow?
+	jr nz, .beatShadow
+	ld hl, CopperShadowGuyText1
+	call PrintText
+	ld a, $4
+	ld [W_REDSHOUSE2CURSCRIPT], a
+	ld a, 0
+	ld [$d42f],a ; save target warp ID
+	ld a, REDS_HOUSE_2F
+	ld [$ff8b],a ; save target map
+	jp WarpFound2 ; make this call, instead?
+.beatShadow
+	bit 1, a ; has player received BUBBLE_RING?
+	jr nz, .doneWithQuest
+	ld hl, CopperShadowGuyText2
+	call PrintText
+	ld bc, (BUBBLE_RING << 8) | 1
+	call GiveItem
+	jr nc, .BagFull
+	ld hl, CopperShadowGuyText3
+	call PrintText
+	ld hl, W_NEWFLAGS1
+	set 1, [hl]
+	jp TextScriptEnd
+.BagFull
+	ld hl, CopperShadowGuyText4
+	call PrintText
+	jp TextScriptEnd
+.doneWithQuest
+	ld hl, CopperShadowGuyText5
+	call PrintText
+	jp TextScriptEnd
+
+CopperShadowGuyText1:
+	TX_FAR _CopperShadowGuyText1
+	db "@"
+
+CopperShadowGuyText2:
+	TX_FAR _CopperShadowGuyText2
+	db "@"
+
+CopperShadowGuyText3:
+	TX_FAR _CopperShadowGuyText3
+	db "@"
+
+CopperShadowGuyText4:
+	TX_FAR _CopperShadowGuyText4
+	db "@"
+
+CopperShadowGuyText5:
+	TX_FAR _CopperShadowGuyText5
 	db "@"
 
 VermilionCityText5: ; 19922 (6:5922)
@@ -54150,8 +54214,8 @@ AgathaData: ; 3a516 (e:6516)
 LanceData: ; 3a522 (e:6522)
 	db $FF,58,GYARADOS,56,DRAGONAIR,56,DRAGONAIR,60,AERODACTYL,62,DRAGONITE,0
 ShadowData:
-	db $FF, 10,RATTATA,0
 	db $FF,100,SKARMORY,100,DRAGONITE,100,ALAKAZAM,0
+	db $FF,2,RATTATA,0
 
 TrainerAI: ; 3a52e (e:652e)
 ;XXX called at 34964, 3c342, 3c398
@@ -58990,6 +59054,17 @@ TrainerBattleVictory: ; 3c696 (f:4696)
 	call Func_3381
 	ld hl, MoneyForWinningText ; $46e4
 	call PrintText
+	; is this the shadow victory?
+	ld a, [$d059]
+	cp SHADOW + $C8
+	jr nz, .continue
+	; is this second shadow trainer?
+	ld a, [W_TRAINERNO]
+	cp 2
+	jr nz, .continue
+	ld hl, W_NEWFLAGS1
+	set 0, [hl]
+.continue
 	ld de, wPlayerMoney + 2 ; $d349
 	ld hl, $d07b
 	ld c, $3
@@ -92623,10 +92698,13 @@ RedsHouse2FScript: ; 5c0b0 (17:40b0)
 	jp CallFunctionInTable
 
 RedsHouse2FScriptPointers: ; 5c0bc (17:40bc)
-	dw RedsHouse2FScript0
-	dw RedsHouse2FScript1
-	dw RedsHouse2FScript2
-	dw RedsHouse2FScript3
+	dw RedsHouse2FScript0 ; walk around
+	dw RedsHouse2FScript1 ; start battle
+	dw RedsHouse2FScript2 ; finished battle
+	dw RedsHouse2FScript3 ; warped to Route 1
+	dw RedsHouse2FScript4 ; walk around
+	dw RedsHouse2FScript5 ; start battle
+	dw RedsHouse2FScript6 ; finished battle
 
 RedsHouse2FScript0: ; 5c0c0 (17:40c0)
 	call GiveDreamBattleMons
@@ -92696,6 +92774,8 @@ RedsHouse2FScript1: ; 5c0ce (17:40ce)
 	ld [W_TRAINERNO], a
 	xor a
 	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $8
+	ld [$d528], a
 	ld a, 2
 	ld [W_REDSHOUSE2CURSCRIPT], a
 	ret
@@ -92709,6 +92789,16 @@ LostChampionshipText:
 	db "@"
 
 RedsHouse2FScript2:
+	ld a, $f0
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, $8
+	ld [$d528], a
+	call UpdateSprites
+	ld a, $1
+	ld [$cf13], a
+	call Func_32f9
+	ld a, $7
+	call Predef
 	xor a
 	ld [wWhichPokemon], a
 	ld [$cf95], a
@@ -92735,9 +92825,74 @@ RedsHouse2FScript3:
 	ld [$ff8b],a ; save target map
 	jp WarpFound2
 
+RedsHouse2FScript4:
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS],a
+	ld a,8
+	ld [$D528],a
+	ld a, $3
+	ld [$ff00+$8c], a
+	call DisplayTextID
+	ld a, $ff
+	ld [wJoypadForbiddenButtonsMask], a
+	ld hl, $ccd3
+	ld de, EnterArenaMovement2
+	call DecodeRLEList
+	dec a
+	ld [$cd38], a
+	call Func_3486
+	ld a, 5
+	ld [W_REDSHOUSE2CURSCRIPT], a
+	ret
+
+EnterArenaMovement2:
+	db $10, 3
+	db $20, 1
+	db $80, 2
+	db $10, 2
+	db $FF
+
+RedsHouse2FScript5:
+	ld a, [$cd38]
+	and a
+	ret nz
+	ld a, $fc
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, $4
+	ld [$ff00+$8c], a
+	call DisplayTextID
+	xor a
+	ld [wJoypadForbiddenButtonsMask], a
+	ld hl, $d72d
+	set 6, [hl]
+	set 7, [hl]
+	ld hl, WonChampionshipText
+	ld de, LostChampionshipText
+	call PreBattleSaveRegisters
+	ld a, SHADOW + $C8
+	ld [$d059], a
+	ld a, $2
+	ld [W_TRAINERNO], a
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, 6
+	ld [W_REDSHOUSE2CURSCRIPT], a
+	ret
+
+RedsHouse2FScript6:
+	ld a, $7
+	call Predef
+	ld a, $6
+	ld [$d42f],a ; save target warp ID
+	ld a, VERMILION_CITY
+	ld [$ff8b],a ; save target map
+	jp WarpFound2
+
 RedsHouse2FTextPointers: ; 5c0cf (17:40cf)
 	dw EnteringArenaText
 	dw GotHere
+	dw EnteringText2
+	dw GotHere2
 
 EnteringArenaText:
 	TX_FAR _EnteringArenaText
@@ -92747,18 +92902,34 @@ GotHere:
 	TX_FAR _GotHere
 	db "@"
 
+EnteringText2:
+	TX_FAR _EnteringText2
+	db "@"
+
+GotHere2:
+	TX_FAR _GotHere
+	db "@"
+
+WonChampionshipText2:
+	TX_FAR _WonChampionshipText
+	db "@"
+
+LostChampionshipText2:
+	TX_FAR _LostChampionshipText
+	db "@"
+
 RedsHouse2FObject: ; 0x5c0d0 ?
 	db $00 ; border tile
 
 	db 1 ; warps
-	db 1, 7, 2, REDS_HOUSE_1F
+	db 3, 3, 2, REDS_HOUSE_1F
 
 	db 0 ; signs
 
 	db 0 ; people
 
 	; warp-to
-	EVENT_DISP REDS_HOUSE_2F_WIDTH, 1, 7
+	EVENT_DISP REDS_HOUSE_2F_WIDTH, 3, 3
 
 Func_5c0dc: ; 5c0dc (17:40dc)
 	ld hl, wPokedexOwned+7
@@ -93861,8 +94032,8 @@ VermilionPokecenterObject: ; 0x5c9a9 (size=44)
 	db $0 ; border tile
 
 	db $2 ; warps
-	db $7, $3, $0, $ff
-	db $7, $4, $0, $ff
+	db $7, $3, $0, VERMILION_CITY
+	db $7, $4, $0, VERMILION_CITY
 
 	db $0 ; signs
 

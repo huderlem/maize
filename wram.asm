@@ -1455,4 +1455,7 @@ W_BOXMON1NAME:: ; de06
 W_BOXMON2NAME:: ; de11
 	ds 11 * 19
 
-; dee2
+W_NEWFLAGS1:: ; dee2
+	ds 1
+	; 0: Beat Shadow of Copper Town 
+	; 1: Received Item from Shadow guy in Copper Town

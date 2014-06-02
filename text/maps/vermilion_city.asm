@@ -74,6 +74,62 @@ _VermilionCityText4:: ; a5805 (29:5805)
 	para "Take that, sign!"
 	done
 
+_CopperShadowGuyText1::
+	text "I'm such a rebel."
+
+	para "The sign says to"
+	line "not stand on this"
+	cont "rectangular path,"
+	cont "but I'm doing it"
+	cont "anyway!"
+
+	para "..."
+	line "..."
+
+	para "Oof..."
+	line "I feel strange"
+	cont "all of a sudden."
+
+	para "There's a voice"
+	line "in my head!"
+
+	para "..."
+	line "Aaaack!"
+
+	para "Make it stop!"
+
+	para ".........heh...."
+	line "...ahehehe......"
+	cont "HAHA......AHAHAH"
+
+	para $52, "...."
+
+	para "WE MEET AGAIN!"
+	prompt
+
+_CopperShadowGuyText2::
+	text "You made the"
+	line "voice go away!"
+
+	para "You can have"
+	line "this for helping"
+	cont "me."
+	prompt
+
+_CopperShadowGuyText3::
+	text $52, " got"
+	line "the BUBBLE RING!"
+	done
+
+_CopperShadowGuyText4::
+	text "You don't have"
+	line "room for it."
+	done
+
+_CopperShadowGuyText5::
+	text "I'm still a rebel."
+	done
+
 _VermilionCityText5:: ; a5852 (29:5852)
 	text "I'm practicing my"
 	line "silly walk"

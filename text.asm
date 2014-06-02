@@ -3184,6 +3184,16 @@ _LostChampionshipText::
 	text "..."
 	prompt
 
+_EnteringText2::
+	text "So, we meet"
+	line "again..."
+
+	para "Those who walk"
+	line "upon the"
+	cont "rectangular path"
+	cont "shall pay!"
+	done
+
 _ScouterText::
 	text "The SCOUTER RING"
 	line "is beeping!"
