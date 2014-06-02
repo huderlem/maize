@@ -11590,7 +11590,7 @@ ItemNames: ; 472b (1:472b)
 	db "HYPER POTION@"
 	db "SUPER POTION@"
 	db "POTION@"
-	db "BOULDERBADGE@"
+	db "LOST KEYS@"
 	db "CASCADEBADGE@"
 	db "THUNDERBADGE@"
 	db "RAINBOWBADGE@"
@@ -24700,8 +24700,8 @@ ItemUsePtrTable: ; d5e1 (3:55e1)
 	dw ItemUseMedicine   ; HYPER_POTION
 	dw ItemUseMedicine   ; SUPER_POTION
 	dw ItemUseMedicine   ; POTION
-	dw ItemUseBait       ; BOULDERBADGE
-	dw ItemUseRock       ; CASCADEBADGE
+	dw UnusableItem      ; LOST_KEYS
+	dw UnusableItem      ; CASCADEBADGE
 	dw UnusableItem      ; THUNDERBADGE
 	dw UnusableItem      ; RAINBOWBADGE
 	dw UnusableItem      ; SOULBADGE
@@ -26476,9 +26476,38 @@ CoinCaseNumCoinsText: ; e247 (3:6247)
 	TX_FAR _CoinCaseNumCoinsText
 	db "@"
 
+LostKeysNoRoomText:
+	TX_FAR _LostKeysNoRoomText
+	db "@"
+
+ReceivedLostKeysText:
+	TX_FAR _ReceivedLostKeysText
+	db "@"
+
 OldRodCode: ; e24c (3:624c)
 	call FishingInit
 	jp c, ItemUseNotTime
+	; is this the Agate City quest?
+	ld a, [W_CURMAP]
+	cp CERULEAN_CITY
+	jr nz, .notAgateQuest
+	ld a, [W_CERULEANGYMCURSCRIPT]
+	cp 5
+	jr nz, .notAgateQuest
+	; give player the LOST_KEYS
+	ld bc, (LOST_KEYS << 8) | 1
+	call GiveItem
+	jr nc, .BagFull
+	ld hl, ReceivedLostKeysText
+	call PrintText
+	ld a, $6
+	ld [W_CERULEANGYMCURSCRIPT], a
+	ret
+.BagFull
+	ld hl, LostKeysNoRoomText
+	call PrintText
+	ret
+.notAgateQuest
 	ld bc, (5 << 8) | MAGIKARP
 	ld a, $1 ; set bite
 	jr RodResponse ; 0xe257 $34
@@ -31612,7 +31641,7 @@ ItemInfoPointers:
 	db "@"
 	TX_FAR _PotionDescription
 	db "@"
-	TX_FAR _BoulderBadgeDescription
+	TX_FAR _LostKeysDescription
 	db "@"
 	TX_FAR _CascadeBadgeDescription
 	db "@"
@@ -40276,26 +40305,75 @@ CeruleanHouseTrashedTextPointers: ; 1d689 (7:5689)
 
 CeruleanHouseTrashedText1: ; 1d68f (7:568f)
 	db $08 ; asm
-	ld b, $e4
-	ld a, $1c
-	call Predef
-	and b
-	jr z, .asm_f8734 ; 0x1d698
-	ld hl, UnnamedText_1d6b0
+	; whic part of Agate quest are we on?
+	ld a, [W_CERULEANGYMCURSCRIPT]
+	cp 4
+	jr z, .part1
+	cp 5
+	jr z, .part2
+	cp 6
+	jr z, .part3
+	cp 7
+	jr nc, .part4
+.part1
+	ld hl, TaraQuestOwnerText1
 	call PrintText
-	jr .asm_8dfe9 ; 0x1d6a0
-.asm_f8734 ; 0x1d6a2
-	ld hl, UnnamedText_1d6ab
+	jr .done
+.part2
+	ld hl, TaraQuestOwnerText2
 	call PrintText
-.asm_8dfe9 ; 0x1d6a8
+	jr .done
+.part3
+	ld b, LOST_KEYS
+	call IsItemInBag
+	jr z, .part2 ; 0x1d75b
+	ld hl, TaraQuestOwnerText3
+	call PrintText
+	ld a, LOST_KEYS
+	ldh [$db], a
+	ld b, BANK(RemoveItemByID)
+	ld hl, RemoveItemByID
+	call Bankswitch
+	ld bc, (SHIELD_RING << 8) | 1
+	call GiveItem
+	jr nc, .BagFull
+	ld hl, TaraQuestOwnerGotRing
+	call PrintText
+	ld a, $7
+	ld [W_CERULEANGYMCURSCRIPT], a
+	jr .done
+.BagFull
+	ld hl, TaraQuestOwnerNoRoom
+	call PrintText
+	jr .done
+.part4
+	ld hl, TaraQuestOwnerText4
+	call PrintText
+.done
 	jp TextScriptEnd
 
-UnnamedText_1d6ab: ; 1d6ab (7:56ab)
-	TX_FAR _UnnamedText_1d6ab
+TaraQuestOwnerText1: ; 1d6ab (7:56ab)
+	TX_FAR _TaraQuestOwnerText1
 	db "@"
 
-UnnamedText_1d6b0: ; 1d6b0 (7:56b0)
-	TX_FAR _UnnamedText_1d6b0
+TaraQuestOwnerText2:
+	TX_FAR _TaraQuestOwnerText2
+	db "@"
+
+TaraQuestOwnerText3:
+	TX_FAR _TaraQuestOwnerText3
+	db "@"
+
+TaraQuestOwnerGotRing:
+	TX_FAR _TaraQuestOwnerGotRing
+	db "@"
+
+TaraQuestOwnerNoRoom:
+	TX_FAR _TaraQuestOwnerNoRoom
+	db "@"
+
+TaraQuestOwnerText4:
+	TX_FAR _TaraQuestOwnerText4
 	db "@"
 
 CeruleanHouseTrashedText2: ; 1d6b5 (7:56b5)
@@ -40340,9 +40418,69 @@ CeruleanHouseTextPointers: ; 1d6f9 (7:56f9)
 	dw CeruleanHouseText1
 	dw CeruleanHouseText2
 
-CeruleanHouseText1: ; 1d6fd (7:56fd)
+__CeruleanHouseText1:
 	TX_FAR _CeruleanHouseText1
 	db "@"
+
+TaraQuestRodText1:
+	TX_FAR _TaraQuestRodText1
+	db "@"
+
+TaraQuestRodReceived:
+	TX_FAR _TaraQuestRodReceived
+	db "@"
+
+TaraQuestRodNoRoom:
+	TX_FAR _TaraQuestRodNoRoom
+	db "@"
+
+TaraQuestRodText2
+	TX_FAR _TaraQuestRodText2
+	db "@"
+
+TaraQuestRodText3:
+	TX_FAR _TaraQuestRodText3
+	db "@"
+
+CeruleanHouseText1: ; 1d6fd (7:56fd)
+	db $08 ; asm
+	; which part of Agate Quest are we on?
+	ld a, [W_CERULEANGYMCURSCRIPT]
+	cp 4
+	jr z, .part1
+	cp 5
+	jr z, .part2
+	cp 6
+	jr nc, .part3
+	; haven't started quest, yet
+	ld hl, __CeruleanHouseText1
+	call PrintText
+	jr .done
+.part1
+	; give OLD_ROD
+	ld hl, TaraQuestRodText1
+	call PrintText
+	ld bc, (OLD_ROD << 8) | 1
+	call GiveItem
+	jr nc, .BagFull
+	ld hl, TaraQuestRodReceived
+	call PrintText
+	ld a, $5
+	ld [W_CERULEANGYMCURSCRIPT], a
+	jr .done
+.BagFull
+	ld hl, TaraQuestRodNoRoom
+	call PrintText
+	jr .done
+.part2
+	ld hl, TaraQuestRodText2
+	call PrintText
+	jr .done
+.part3
+	ld hl, TaraQuestRodText3
+	call PrintText
+.done
+	jp TextScriptEnd
 
 CeruleanHouseText2: ; 1d702 (7:5702)
 	db $08 ; asm
@@ -40506,20 +40644,6 @@ UnnamedText_1d834: ; 1d834 (7:5834)
 	db "@"
 
 BikeShopText2: ; 1d839 (7:5839)
-	db $08 ; asm
-	ld b, BICYCLE
-	call IsItemInBag
-	jr z, .noBike
-	ld hl, HasBike
-	call PrintText
-	jr .done
-.noBike
-	ld hl, NoBike
-	call PrintText
-.done
-	jp TextScriptEnd
-
-NoBike: ; 1d843 (7:5843)
 	TX_FAR _UnnamedText_1d843
 	db "@"
 
@@ -93290,6 +93414,13 @@ CeruleanGymScriptPointers: ; 5c6f8 (17:46f8)
 	dw Func_324c
 	dw EndTrainerBattle
 	dw CeruleanGymScript3
+	dw CeruleanGymScript4
+	dw CeruleanGymScript4
+	dw CeruleanGymScript4
+	dw CeruleanGymScript4
+
+CeruleanGymScript4:
+	ret
 
 CeruleanGymScript3: ; 5c700 (17:4700)
 	ld a, [W_ISINBATTLE] ; $d057
@@ -93318,6 +93449,9 @@ Func_5c70d: ; 5c70d (17:470d)
 	ld [H_DOWNARROWBLINKCNT2], a ; $FF00+$8c
 	call DisplayTextID
 .asm_5c736
+	ld a, $8
+	ld [H_DOWNARROWBLINKCNT2], a ; $FF00+$8c
+	call DisplayTextID
 	ld hl, W_OBTAINEDBADGES ; $d356
 	set 1, [hl]
 	ld hl, $d72a
@@ -93325,7 +93459,12 @@ Func_5c70d: ; 5c70d (17:470d)
 	ld hl, $d75e
 	set 2, [hl]
 	set 3, [hl]
-	jp Func_5c6ed
+	xor a
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, 4
+	ld [W_CERULEANGYMCURSCRIPT], a
+	ld [W_CURMAPSCRIPT], a
+	ret
 
 CeruleanGymTextPointers: ; 5c74a (17:474a)
 	dw CeruleanGymText1
@@ -93335,6 +93474,7 @@ CeruleanGymTextPointers: ; 5c74a (17:474a)
 	dw CeruleanGymText5
 	dw CeruleanGymText6
 	dw CeruleanGymText7
+	dw TaraQuestPart1
 
 CeruleanGymTrainerHeaders: ; 5c758 (17:4758)
 CeruleanGymTrainerHeader0: ; 5c758 (17:4758)
@@ -93368,7 +93508,29 @@ CeruleanGymText1: ; 5c771 (17:4771)
 	call DisableWaitingAfterTextDisplay
 	jr .asm_95b04 ; 0x5c783
 .asm_37a1b ; 0x5c785
-	ld hl, UnnamedText_5c7c3
+	; which part of the quest are we on?
+	ld a, [W_CERULEANGYMCURSCRIPT]
+	cp 4
+	jr z, .part1
+	cp 5
+	jr z, .part2
+	cp 6
+	jr z, .part3
+	jr .part4
+.part1
+	ld hl, TaraQuestPart1
+	call PrintText
+	jr .asm_95b04
+.part2
+	ld hl, TaraQuestPart2
+	call PrintText
+	jr .asm_95b04
+.part3
+	ld hl, TaraQuestPart3
+	call PrintText
+	jr .asm_95b04
+.part4
+	ld hl, TaraQuestPart4
 	call PrintText
 	jr .asm_95b04 ; 0x5c78b
 .asm_10854 ; 0x5c78d
@@ -93392,6 +93554,22 @@ CeruleanGymText1: ; 5c771 (17:4771)
 	ld [W_CERULEANGYMCURSCRIPT], a
 .asm_95b04 ; 0x5c7bb
 	jp TextScriptEnd
+
+TaraQuestPart1:
+	TX_FAR _TaraQuestPart1
+	db "@"
+
+TaraQuestPart2:
+	TX_FAR _TaraQuestPart2
+	db "@"
+
+TaraQuestPart3:
+	TX_FAR _TaraQuestPart3
+	db "@"
+
+TaraQuestPart4:
+	TX_FAR _TaraQuestPart4
+	db "@"
 
 UnnamedText_5c7be: ; 5c7be (17:47be)
 	TX_FAR _UnnamedText_5c7be
@@ -118058,8 +118236,14 @@ _PotionDescription::
 	line "by 20 HP.
 	prompt
 
-_BoulderBadgeDescription::
-	text "..."
+_LostKeysDescription::
+	text "A family in"
+	line "AGATE CITY"
+	cont "lost these in"
+	cont "their pond."
+
+	para "You should return"
+	line "them!"
 	prompt
 
 _CascadeBadgeDescription::

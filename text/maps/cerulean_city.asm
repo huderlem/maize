@@ -99,8 +99,8 @@ _UnnamedText_196f3:: ; a5010 (29:5010)
 
 _CeruleanCityText3:: ; a5030 (29:5030)
 	text "Most cities in"
-	line "Boldor have an"
-	cont "Outpost in them."
+	line "BOLDOR have an"
+	cont "OUTPOST in them."
 	done
 
 _CeruleanCityText4:: ; a506e (29:506e)

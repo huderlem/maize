@@ -125,3 +125,70 @@ _UnnamedText_5c82f:: ; 98db0 (26:4db0)
 	cont "darn good team!"
 	done
 
+_TaraQuestPart1::
+	text "A family in this"
+	line "city had some"
+	cont "bad luck."
+
+	para "A #MON went"
+	line "through their"
+	cont "house, and now"
+	cont "their keys are"
+	cont "at the bottom of"
+	cont "the pond in their"
+	cont "backyard!"
+
+	para "If you could fish"
+	line "them out, that"
+	cont "would be great!"
+
+	para "You'll need an"
+	line "OLD ROD, since"
+	cont "the other fishing"
+	cont "rods are too"
+	cont "fancy to hook"
+	cont "non-#MON."
+
+	para "I think an old"
+	line "man living in"
+	cont "this city has"
+	cont "one..."
+
+	para "He has an"
+	line "annoying wife."
+	done
+
+_TaraQuestPart2::
+	text "Great!"
+	line "You got the"
+	cont "OLD ROD."
+
+	para "Now see if you"
+	line "can fish up those"
+	cont "keys from the"
+	cont "bottom of the"
+	cont "pond!"
+	done
+
+_TaraQuestPart3::
+	text "Wow!"
+	line "You actually got"
+	cont "the keys out of"
+	cont "the pond."
+
+	para "I didn't really"
+	line "think that would"
+	cont "work."
+
+	para "Make sure to"
+	line "return them to"
+	cont "the owner of the"
+	cont "house!"
+	done
+
+_TaraQuestPart4::
+	text "Thanks for"
+	line "helping that"
+	cont "family get their"
+	cont "keys back!"
+	done

@@ -3140,6 +3140,20 @@ _UndergroundPathNSText1::
 	para "Yeah!"
 	done
 
+_LostKeysNoRoomText::
+	text $52, " fished"
+	line "up the LOST KEYS"
+	cont "but through them"
+	cont "back into the"
+	cont "pond because"
+	cont "there is no room"
+	cont "in the bag!"
+	done
+
+_ReceivedLostKeysText::
+	text $52, " fished"
+	line "up the LOST KEYS!"
+	prompt
 
 SECTION "Pokedex Text", ROMX, BANK[POKEDEX_TEXT]
 

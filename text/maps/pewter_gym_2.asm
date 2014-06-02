@@ -123,7 +123,7 @@ _BlandyQuestText3::
 
 _ReceivedLootRingText:: ; 980ad (26:40ad)
 	text $52, " received"
-	line "LOOT RING!@@"
+	line "the HUSTLE RING!@@"
 
 _LootRingNoRoomText::
 	text "You don't have"
