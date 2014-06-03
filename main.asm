@@ -48376,8 +48376,8 @@ GrowlitheBaseStats: ; 38a1a (e:4a1a)
 	; attacks known at lvl 0
 	db TACKLE
 	db GROWL
-	db WATER_GUN
-	db SHADOW_PUNCH
+	db 0
+	db 0
 
 	db 3 ; growth rate
 
@@ -57225,6 +57225,7 @@ Mon089_EvosMoves: ; 3b7b1 (e:77b1)
 ;Evolutions
 	db 0
 ;Learnset
+	db 27,SHADOW_PUNCH
 	db 30,POISON_GAS
 	db 33,MINIMIZE
 	db 36,DARK_PULSE
