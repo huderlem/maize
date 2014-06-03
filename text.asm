@@ -1045,7 +1045,7 @@ _PlayerBlackedOutText2:: ; 89748 (22:5748)
 	text $52, " is out of"
 	line "useable #MON!"
 
-	para $52, " blacked"
+	para $52, " purpled"
 	line "out!"
 	prompt
 

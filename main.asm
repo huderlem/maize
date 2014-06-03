@@ -34374,7 +34374,7 @@ PalletTownObject: ; 0x182c3 (size=58)
 
 	db $3 ; warps
 	db $d, $3, $0, REDS_HOUSE_1F
-	db $7, $3, $1, VERMILION_POKECENTER
+	db $7, $3, $1, CELADON_POKECENTER
 	db $b, $c, $1, OAKS_LAB
 
 	db $4 ; signs
@@ -38317,8 +38317,10 @@ ViridianHouseBlocks: ; 0x1c1de 41DE size=16
 	INCBIN "maps/viridianhouse.blk"
 
 CeladonMansion5Blocks: ; 1c1ee (7:41ee)
-SchoolBlocks: ; 0x1c1ee 41EE size=16
 	INCBIN "maps/celadonmansion5.blk"
+
+SchoolBlocks: ; 0x1c1ee 41EE size=16
+	INCBIN "maps/school.blk"
 
 CeruleanHouseTrashedBlocks: ; 0x1c1fe size=16
 	INCBIN "maps/ceruleanhousetrashed.blk"
@@ -76454,8 +76456,8 @@ CeladonPokecenterObject: ; 0x488d2 (size=44)
 	db $0 ; border tile
 
 	db $2 ; warps
-	db $7, $3, $5, $ff
-	db $7, $4, $5, $ff
+	db $7, $3, $5, CELADON_CITY
+	db $7, $4, $5, CELADON_CITY
 
 	db $0 ; signs
 
