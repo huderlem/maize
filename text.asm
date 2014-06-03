@@ -1841,7 +1841,7 @@ _UnnamedText_69e7:: ; 8a64a (22:664a)
 	text "Huh..."
 	line "Weird name."
 
-	para "I supposed you"
+	para "I suppose you"
 	line "should scurry"
 	cont "along home now."
 	prompt
