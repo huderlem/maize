@@ -34374,7 +34374,7 @@ PalletTownObject: ; 0x182c3 (size=58)
 
 	db $3 ; warps
 	db $d, $3, $0, REDS_HOUSE_1F
-	db $7, $3, $1, CELADON_POKECENTER
+	db $7, $3, $1, BLUES_HOUSE
 	db $b, $c, $1, OAKS_LAB
 
 	db $4 ; signs
