@@ -104651,12 +104651,19 @@ GetMapPaletteID: ; 71ec7 (1c:5ec7)
 	jr z, .caveOrBruno
 .normalDungeonOrBuilding
 	ld a, [$d365] ; town or route that current dungeon or building is located
+	jr .town
 .townOrRoute
-	cp SAFFRON_CITY + 1
-	jr c, .town
-	ld a, PAL_ROUTE - 1
+	call CheckDayNight
+	jr nc, .night
+	ld a, PAL_ROUTE
+	jr .gotPaletteID
+.night
+	ld a, PAL_NIGHT
+	jr .gotPaletteID
 .town
 	inc a ; a town's pallete ID is its map ID + 1
+.gotPaletteID
+	; a is the palette ID!
 	ld hl, $cf2e
 	ld [hld], a
 	ld de, BlkPacket_7219e
@@ -105444,7 +105451,7 @@ SuperPalettes: ; 72660 (1c:6660)
 	RGB 18,23,21
 	RGB 20,14,8
 	RGB 3,2,2
-	RGB 31,29,31 ; PAL_CELADON  1A 2B 36 05 43 08 
+	RGB 31,29,31 ; PAL_CELADON
 	RGB 26,24,10
 	RGB 22,9,1
 	RGB 3,2,2
@@ -105584,6 +105591,10 @@ ENDC
  	RGB 31, 25, 19
  	RGB 30, 16, 12
     RGB 00, 00, 00
+    RGB 20, 20, 25 ; PAL_NIGHT
+    RGB 8, 13, 19
+    RGB 5, 17, 14
+    RGB 3,2,2
 
 BorderPalettes: ; 72788 (1c:6788)
 IF _RED
@@ -106368,6 +106379,13 @@ PadSRAM_FF: ; 73b8f (1c:7b8f)
 	ld bc, $2000
 	ld a, $ff
 	jp FillMemory
+
+CheckDayNight:
+; set carry flag if it's day
+; Looks at total play time. Alternates between night and day every half hour.
+	ld a, [W_PLAYTIMEMINUTES + 1]
+	cp 30
+	ret
 
 SECTION "bank1D",ROMX,BANK[$1D]
 
