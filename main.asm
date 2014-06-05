@@ -48416,7 +48416,7 @@ ArcanineBaseStats: ; 38a36 (e:4a36)
 	db LEER
 	db TAKE_DOWN
 
-	db 5 ; growth rate
+	db 3 ; growth rate
 
 	; learnset
 	db %10101000
@@ -50044,7 +50044,7 @@ ExeggutorBaseStats: ; 38f06 (e:4f06)
 	db 0
 	db 0
 
-	db 5 ; growth rate
+	db 3 ; growth rate
 
 	; learnset
 	db %00100000
@@ -50710,7 +50710,7 @@ StarmieBaseStats: ; 390fe (e:50fe)
 	db HARDEN
 	db 0
 
-	db 5 ; growth rate
+	db 3 ; growth rate
 
 	; learnset
 	db %00100000
@@ -53130,7 +53130,7 @@ TrainerNames: ; 399ff (e:59ff)
 	db "CHIEF@"
 	db "SCIENTIST@"
 	db "GIOVANNI@"
-	db "ROCKET@"
+	db "QUARRY@"
 	db "COOLTRAINER♂@"
 	db "COOLTRAINER♀@"
 	db "BRUNO@"
@@ -71239,7 +71239,7 @@ RockTunnel1Object: ; 0x445f6 (size=127)
 	db $1f, $23, $8 ; RockTunnel1Text8
 
 	db $7 ; people
-	db SPRITE_BLACK_HAIR_BOY_1, $5 + 4, $23 + 4, $ff, $d2, $41, SUPER_NERD + $C8, $1 ; trainer
+	db SPRITE_BLACK_HAIR_BOY_1, $4 + 4, $22 + 4, $ff, $d0, $41, SUPER_NERD + $C8, $1 ; trainer
 	db SPRITE_HIKER, $6 + 4, $19 + 4, $ff, $d0, $42, HIKER + $C8, $1 ; trainer
 	db SPRITE_BLACK_HAIR_BOY_1, $c + 4, $8 + 4, $ff, $d3, $43, POKEMANIAC + $C8, $1 ; trainer
 	db SPRITE_LASS, $10 + 4, $5 + 4, $ff, $d2, $44, JR__TRAINER_F + $C8, $1 ; trainer
@@ -76921,7 +76921,7 @@ CeladonGymText14:
 
 CeladonGymText15:
     db $08 ; asm
-    ld hl, ThirdDoorText
+    ld hl, FourthDoorText
     call PrintText
     ld a, POISON
     call CheckPartyForType
@@ -103797,7 +103797,7 @@ LoadMonMiniSprites: ; 71791 (1c:5791)
 	ld e, l ; de now contains address in VRAM for the tiles
 	
 	ld a, [$d11e]
-	cp 50
+	cp 51
 	jr c, .firstBank
 	ld a, Bank(MiniSprites2)
 	jr .gotBank

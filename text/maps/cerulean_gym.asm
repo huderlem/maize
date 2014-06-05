@@ -99,30 +99,26 @@ _CeruleanGymAfterBattleText2:: ; 98cc4 (26:4cc4)
 	done
 
 _UnnamedText_5c82a:: ; 98d0a (26:4d0a)
-	text "Yo! Champ in"
-	line "making!"
+	text "This GYM is one"
+	line "of the easiest"
+	cont "GYMs in BOLDOR!"
 
-	para "Here's my advice!"
+	para "Don't tell TARA"
+	line "I said that!"
 
-	para "The LEADER, MISTY,"
-	line "is a pro who uses"
-	cont "water #MON!"
-
-	para "You can drain all"
-	line "their water with"
-	cont "plant #MON!"
-
-	para "Or, zap them with"
-	line "electricity!"
+	para "You'll sail right"
+	line "through all of"
+	cont "the GROUND-type"
+	cont "#MON if you"
+	cont "have a GRASS or"
+	cont "WATER-type"
+	cont "#MON!"
 	done
 
 _UnnamedText_5c82f:: ; 98db0 (26:4db0)
-	text "You beat MISTY!"
-	line "What'd I tell ya?"
-
-	para "You and me kid,"
-	line "we make a pretty"
-	cont "darn good team!"
+	text "Well, you"
+	line "destroyed this"
+	cont "GYM..."
 	done
 
 _TaraQuestPart1::

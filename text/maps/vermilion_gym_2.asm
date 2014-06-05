@@ -137,33 +137,30 @@ _VermilionGymAfterBattleText3:: ; 9c2c0 (27:42c0)
 	done
 
 _UnnamedText_5cbf4:: ; 9c32b (27:432b)
-	text "Yo! Champ in"
-	line "making!"
+	text "This is Maize's"
+	line "creator speaking!"
 
-	para "LT.SURGE has a"
-	line "nickname. People"
-	cont "refer to him as"
-	cont "the Lightning"
-	cont "American!"
+	para "Don't save the"
+	line "the game while on"
+	cont "parts of the"
+	cont "floor that appear"
+	cont "when you talk to"
+	cont "the trainers!!!"
 
-	para "He's an expert on"
-	line "electric #MON!"
+	para "You'll be stuck on"
+	line "the water when"
+	cont "you turn the game"
+	cont "back on!!!"
 
-	para "Birds and water"
-	line "#MON are at"
-	cont "risk! Beware of"
-	cont "paralysis too!"
+	para "Ok, that's all!"
 
-	para "LT.SURGE is very"
-	line "cautious!"
-
-	para "You'll have to"
-	line "break a code to"
-	cont "get to him!"
+	para "Keep having fun!"
 	done
 
 _UnnamedText_5cbf9:: ; 9c429 (27:4429)
-	text "Whew! That match"
-	line "was electric!"
+	text "Hooray!"
+
+	para "Way to cool off"
+	line "ELDA!"
 	done
 

@@ -188,4 +188,8 @@ _AlreadyGaveMedicineText::
 
 	para "Let the medicine"
 	line "do its work."
+
+	para "Go talk to"
+	line "PROF. CEDAR while"
+	cont "I recover."
 	done
