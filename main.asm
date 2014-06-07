@@ -33422,7 +33422,7 @@ MapSpriteSets: ; 17a64 (5:7a64)
 	db $02 ; PEWTER_CITY
 	db $02 ; CERULEAN_CITY
 	db $03 ; LAVENDER_TOWN
-	db $04 ; VERMILION_CITY
+	db $02 ; VERMILION_CITY
 	db $05 ; CELADON_CITY
 	db $0a ; FUCHSIA_CITY
 	db $01 ; CINNABAR_ISLAND
@@ -33433,7 +33433,7 @@ MapSpriteSets: ; 17a64 (5:7a64)
 	db $f1 ; ROUTE_2
 	db $02 ; ROUTE_3
 	db $02 ; ROUTE_4
-	db $f9 ; ROUTE_5
+	db $02 ; ROUTE_5
 	db $fa ; ROUTE_6
 	db $fb ; ROUTE_7
 	db $fc ; ROUTE_8
@@ -33472,9 +33472,9 @@ SplitMapSpriteSets: ; 17a89 (5:7a89)
 	db $01,$22,$09,$0A ; $f7
 	db $01,$35,$01,$0A ; $f8
 	db $02,$21,$02,$07 ; $f9
-	db $02,$02,$07,$04 ; $fa
+	db $02,$02,$02,$04 ; $fa
 	db $01,$11,$05,$07 ; $fb
-	db $01,$03,$07,$03 ; $fc
+	db $01,$03,$07,$02 ; $fc
 
 SpriteSets: ; 17ab9 (5:7ab9)
 ; sprite set $01
@@ -34587,11 +34587,11 @@ VermilionCityObject: ; 0x189ba (size=133)
 	db $7, $19, $d ; VermilionCityText13
 
 	db $6 ; people
-	db SPRITE_FOULARD_WOMAN, $d + 4, $13 + 4, $fe, $2, $1 ; person
-	db SPRITE_GAMBLER, $6 + 4, $e + 4, $ff, $ff, $2 ; person
-	db SPRITE_SAILOR, $0 + 4, $0 + 4, $ff, $d1, $3 ; person
-	db SPRITE_BLACK_HAIR_BOY_2, $8 + 4, $1a + 4, $ff, $ff, $4 ; person
-	db SPRITE_LYING_OLD_MAN, $17 + 4, $b + 4, $fe, $1, $5 ; person
+	db SPRITE_LASS, $d + 4, $13 + 4, $fe, $2, $1 ; person
+	db SPRITE_BLACK_HAIR_BOY_1, $6 + 4, $e + 4, $ff, $ff, $2 ; person
+	db SPRITE_BLACK_HAIR_BOY_2, $0 + 4, $0 + 4, $ff, $d1, $3 ; person
+	db SPRITE_GUARD, $8 + 4, $1a + 4, $ff, $ff, $4 ; person
+	db SPRITE_LYING_OLD_MAN_UNUSED_2, $17 + 4, $b + 4, $fe, $1, $5 ; person
 	db SPRITE_LASS, $19 + 4, $1b + 4, $fe, $2, $6 ; person
 
 	; warp-to
