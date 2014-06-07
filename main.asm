@@ -103423,7 +103423,7 @@ InternalMapEntries: ; 71382 (1c:5382)
 	IMAP $9D,$8,$C,SafariZoneName
 	IMAP $9F,$8,$D,FuchsiaCityName
 	IMAP $A3,$5,$F,SeafoamIslandsName
-	IMAP $A4,$A,$9,VermilionCityName
+	IMAP $A4,$E,$3,PewterCityName
 	IMAP $A5,$8,$D,FuchsiaCityName
 	IMAP $A6,$2,$F,PokemonMansionName
 	IMAP $AE,$2,$F,CinnabarIslandName
@@ -104641,6 +104641,10 @@ GetMapPaletteID: ; 71ec7 (1c:5ec7)
 	ld a, [W_CURMAP]
 	cp REDS_HOUSE_1F
 	jr c, .townOrRoute
+	cp ROCK_TUNNEL_1
+	jr z, .caveOrBruno
+	cp ROCK_TUNNEL_2
+	jr z, .caveOrBruno
 	cp UNKNOWN_DUNGEON_2
 	jr c, .normalDungeonOrBuilding
 	cp NAME_RATERS_HOUSE
