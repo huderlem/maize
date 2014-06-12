@@ -30416,6 +30416,7 @@ StatusScreen: ; 12953 (4:6953)
 	ld de, $cfa4
 	ld bc, $8205 ; 5
 	call PrintNumber ; ID Number
+	call PrintPerfectMonSymbol
 	ld d, $0
 	call PrintStatsBox
 	call Delay3
@@ -30494,6 +30495,32 @@ DrawLineBox ; 0x12ac7
 
 PTile: ; 12adc (4:6adc) ; This is a single 1bpp "P" tile
 	INCBIN "gfx/p_tile.1bpp"
+
+PrintPerfectMonSymbol:
+	; checks if DVs are all 15, and draws a "PERFECT" if they are all 15
+	ld a, [$cfb3] ; contains first byte of DVs
+	cp $ff
+	jr nz, .done
+	ld a, [$cfb4] ; contains second byte of DVs
+	cp $ff
+	jr nz, .done
+	; draw the "PERFECT" vertical text
+	ld bc, 20
+	ld de, PerfectText
+	FuncCoord 0,0
+	ld hl, Coord
+.drawLoop
+	ld a, [de]
+	inc de
+	ld [hl], a
+	add hl, bc
+	cp "T"
+	jr nz, .drawLoop
+.done
+	ret
+
+PerfectText:
+	db "PERFECT"
 
 PrintStatsBox: ; 12ae4 (4:6ae4)
 	ld a, d
