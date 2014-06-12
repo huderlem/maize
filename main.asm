@@ -46233,19 +46233,19 @@ Moves: ; 38000 (e:4000)
 	db SUPER_FANG  ,SUPER_FANG_EFFECT         ,$01,NORMAL,  $E5,10
 	db SLASH       ,NO_ADDITIONAL_EFFECT      ,$46,NORMAL,  $FF,20
 	db SUBSTITUTE  ,SUBSTITUTE_EFFECT         ,$00,NORMAL,  $FF,10
-	db BITE        ,SPECIAL_DOWN_SIDE_EFFECT  ,80,DARK,     $FF,15 ; CRUNCH
+	db $CC         ,SPECIAL_DOWN_SIDE_EFFECT  ,80,DARK,     $FF,15 ; CRUNCH
 	db PSYCHIC_M   ,FLINCH_SIDE_EFFECT2       ,80,DARK,     $FF,15 ; DARK_PULSE
 	db QUICK_ATTACK,SWIFT_EFFECT              ,60,DARK,     $FF,20 ; FEINT_ATTACK
-	db SLASH       ,NO_ADDITIONAL_EFFECT      ,70,DARK,     $FF,15 ; NIGHT_SLASH
+	db $CD         ,NO_ADDITIONAL_EFFECT      ,70,DARK,     $FF,15 ; NIGHT_SLASH
 	db HYPNOSIS    ,SLEEP_EFFECT              ,0,DARK,      $CC,10 ; DARK_VOID
 	db FLASH       ,SPECIAL_DOWN_SIDE_EFFECT  ,80,STEEL,    $FF,10 ; FLASH_CANNON
 	db HARDEN      ,DEFENSE_UP2_EFFECT        ,0,STEEL,     $FF,15 ; IRON_DEFENSE
-	db TAKE_DOWN   ,FLINCH_SIDE_EFFECT2       ,80,STEEL,    $FF,15 ; IRON_HEAD
+	db $CE         ,FLINCH_SIDE_EFFECT2       ,80,STEEL,    $FF,15 ; IRON_HEAD
 	db THUNDERSHOCK,SWIFT_EFFECT              ,60,STEEL,    $FF,20 ; MAGNET_BOMB
 	db SLASH       ,NO_ADDITIONAL_EFFECT      ,50,STEEL,    $F2,35 ; METAL_CLAW
 	db WING_ATTACK ,NO_ADDITIONAL_EFFECT      ,70,STEEL,    $E5,25 ; STEEL_WING
 	db LOW_KICK    ,NO_ADDITIONAL_EFFECT      ,100,STEEL,   $BF,15 ; IRON_TAIL
-	db QUICK_ATTACK,SWIFT_EFFECT              ,60,FLYING,   $FF,20 ; AERIAL_ACE
+	db $CF         ,SWIFT_EFFECT              ,60,FLYING,   $FF,20 ; AERIAL_ACE
 	db TAKE_DOWN   ,RECOIL_EFFECT             ,120,FLYING,  $FF,20 ; BRAVE_BIRD
 	db FIRE_PUNCH  ,NO_ADDITIONAL_EFFECT      ,50,FIRE,     $FF,20 ; FLAME_CHARGE
 	db EMBER       ,BURN_SIDE_EFFECT1         ,60,FIRE,     $FF,25 ; FLAME_WHEEL
@@ -114484,6 +114484,10 @@ AttackAnimationPointers: ; 7a07d (1e:607d)
 	dw ThrowRockAnim
 	dw ThrowBaitAnim
 	dw ZigZagScreenAnim
+	dw CrunchAnim
+	dw NightSlashAnim
+	dw IronHeadAnim
+	dw AerialAceAnim
 
 ; each animation is a list of subanimations and special effects
 ; if first byte < $56
@@ -114717,6 +114721,17 @@ LeerAnim: ; 7a327 (1e:6327)
 
 BiteAnim: ; 7a330 (1e:6330)
 	db $08,$2B,$02
+	db $FF
+
+CrunchAnim:
+	db SE_DARK_SCREEN_FLASH, $23
+	db $08,$2B,$02
+	db $FF
+
+NightSlashAnim:
+	db SE_DARK_SCREEN_PALETTE, $48
+	db $06,$A2,$0F
+	db SE_RESET_SCREEN_PALETTE, $FF
 	db $FF
 
 GrowlAnim: ; 7a334 (1e:6334)
@@ -115023,6 +115038,12 @@ QuickAttackAnim: ; 7a4c8 (1e:64c8)
 	db SE_SHOW_MON_PIC, $FF
 	db $FF
 
+AerialAceAnim:
+	db SE_SLIDE_MON_OUT, $61
+	db $04,$FF,$16
+	db SE_SHOW_MON_PIC, $FF
+	db $FF
+
 RageAnim: ; 7a4d0 (1e:64d0)
 	db $06,$62,$01
 	db $FF
@@ -115070,6 +115091,15 @@ HardenAnim: ; 7a506 (1e:6506)
 	db $46,$FF,$43
 	db SE_DARK_SCREEN_FLASH, $FF
 	db SE_RESET_SCREEN_PALETTE, $FF
+	db $FF
+
+IronHeadAnim:
+	db SE_LIGHT_SCREEN_PALETTE, $69
+	db $46,$FF,$43
+	db SE_DARK_SCREEN_FLASH, $FF
+	db SE_RESET_SCREEN_PALETTE, $FF
+	db SE_MOVE_MON_HORIZONTALLY, $48
+	db SE_RESET_MON_POSITION, $FF
 	db $FF
 
 MinimizeAnim: ; 7a510 (1e:6510)
