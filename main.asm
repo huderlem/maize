@@ -15371,8 +15371,8 @@ DungeonWarpData: ; 63d8 (1:63d8)
 ;	FLYWARP_DATA [Map Width][Y-pos][X-pos]
 ;	db Tileset_id
 FirstMapSpec: ; 6420 (1:6420)
-	db CELADON_POKECENTER
-	FLYWARP_DATA CELADON_POKECENTER_WIDTH,4,4
+	db REDS_HOUSE_2F
+	FLYWARP_DATA REDS_HOUSE_2F_WIDTH,0,0
 	db $0C
 
 BattleCenterSpec1: ; 6428 (1:6428)
@@ -88691,7 +88691,7 @@ Route6Object: ; 0x58022 (size=87)
 
 	db $1 ; signs
 	db $11, $13, $7 ; Route6Text7
-	
+
 	db $6 ; people
 	db SPRITE_BLACK_HAIR_BOY_1, $c + 4, $b + 4, $ff, $d3, $41, JR__TRAINER_M + $C8, $7 ; trainer
 	db SPRITE_LASS, $c + 4, $c + 4, $ff, $d2, $42, JR__TRAINER_F + $C8, $3 ; trainer
