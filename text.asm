@@ -3166,6 +3166,13 @@ INCLUDE "text/move_names.asm"
 
 SECTION "New Text", ROMX, BANK[NEW_TEXT]
 
+_NotOkToSaveText::
+	text "You can't save in"
+	line "this area!"
+
+	para "Sorry!"
+	prompt
+
 _EnteringArenaText::
     text "........."
 

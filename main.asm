@@ -32175,10 +32175,25 @@ StartMenu_SaveReset: ; 135e3 (4:75e3)
 	ld a,[$d72e]
 	bit 6,a ; is the player using the link feature?
 	jp nz,InitGame
+	; make sure player isn't in troublesome maps
+	ld a,[W_CURMAP]
+	cp VERMILION_GYM
+	jr z, .notOkToSave
+.okToSave
 	ld a,$3f
 	call Predef ; save the game
 	call LoadScreenTilesFromBuffer2 ; restore saved screen
 	jp HoldTextDisplayOpen
+.notOkToSave
+	; don't want the player saving in some maps
+	ld hl, NotOkToSaveText
+	call PrintText
+	call LoadScreenTilesFromBuffer2
+	jp RedisplayStartMenu
+
+NotOkToSaveText:
+	TX_FAR _NotOkToSaveText
+	db "@"
 
 StartMenu_Option: ; 135f6 (4:75f6)
 	xor a
