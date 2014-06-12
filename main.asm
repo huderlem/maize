@@ -15371,8 +15371,8 @@ DungeonWarpData: ; 63d8 (1:63d8)
 ;	FLYWARP_DATA [Map Width][Y-pos][X-pos]
 ;	db Tileset_id
 FirstMapSpec: ; 6420 (1:6420)
-	db REDS_HOUSE_2F
-	FLYWARP_DATA REDS_HOUSE_2F_WIDTH,0,0
+	db CELADON_POKECENTER
+	FLYWARP_DATA CELADON_POKECENTER_WIDTH,4,4
 	db $0C
 
 BattleCenterSpec1: ; 6428 (1:6428)
@@ -33432,7 +33432,7 @@ MapSpriteSets: ; 17a64 (5:7a64)
 	db $01 ; ROUTE_1
 	db $f1 ; ROUTE_2
 	db $02 ; ROUTE_3
-	db $02 ; ROUTE_4
+	db $05 ; ROUTE_4
 	db $02 ; ROUTE_5
 	db $fa ; ROUTE_6
 	db $fb ; ROUTE_7
@@ -33472,7 +33472,7 @@ SplitMapSpriteSets: ; 17a89 (5:7a89)
 	db $01,$22,$09,$0A ; $f7
 	db $01,$35,$01,$0A ; $f8
 	db $02,$21,$02,$07 ; $f9
-	db $02,$02,$02,$04 ; $fa
+	db $02,$02,$02,$05 ; $fa
 	db $01,$11,$05,$07 ; $fb
 	db $01,$03,$07,$02 ; $fc
 
@@ -34308,7 +34308,7 @@ CeladonCityObject: ; 0x18022 (size=189)
 
 	db $d ; warps
 	db $2, $8, $0, CELADON_MART_1
-	db $7, $19, $2, CELADON_MART_1
+	db $7, $19, $0, LAVENDER_MART
 	db $15, $d, $0, CELADON_HOTEL
 	db $7, $c, $0, MUSEUM_1F
 	db $13, $2b, $0, SAFFRON_HOUSE_2
@@ -34373,7 +34373,7 @@ PalletTownObject: ; 0x182c3 (size=58)
 	db $f ; border tile
 
 	db $3 ; warps
-	db $d, $3, $0, REDS_HOUSE_1F
+	db $d, $3, $0, VERMILION_POKECENTER
 	db $7, $3, $1, BLUES_HOUSE
 	db $b, $c, $1, OAKS_LAB
 
@@ -34573,7 +34573,7 @@ VermilionCityObject: ; 0x189ba (size=133)
 	db $5, $a, $0, VERMILION_GYM
 	db $1b, $7, $0, VERMILION_HOUSE_1
 	db $d, $9, $0, POKEMON_FAN_CLUB
-	db $8, $19, $0, REDS_HOUSE_2F
+	db $8, $19, $0, REDS_HOUSE_2F ; can't actually use this. just warp to it.
 	db $17, $20, $0, VERMILION_HOUSE_3
 	db $5, $1f, $0, PATH_ENTRANCE_ROUTE_5
 
@@ -84567,7 +84567,7 @@ Route4Object: ; 0x543b2 (size=58)
 	db $7, $1f, $6 ; Route4Text6
 
 	db $1 ; people
-	db SPRITE_LASS, $d + 4, $10 + 4, $fe, $0, $1 ; person
+	db SPRITE_GIRL, $d + 4, $10 + 4, $fe, $0, $1 ; person
 	; db SPRITE_LASS, $3 + 4, $3f + 4, $ff, $d3, $42, LASS + $C8, $4 ; trainer
 	; db SPRITE_BALL, $3 + 4, $39 + 4, $ff, $ff, $83, TM_04 ; item TODO: unused item slot!
 
@@ -88691,13 +88691,13 @@ Route6Object: ; 0x58022 (size=87)
 
 	db $1 ; signs
 	db $11, $13, $7 ; Route6Text7
-
+	
 	db $6 ; people
 	db SPRITE_BLACK_HAIR_BOY_1, $c + 4, $b + 4, $ff, $d3, $41, JR__TRAINER_M + $C8, $7 ; trainer
 	db SPRITE_LASS, $c + 4, $c + 4, $ff, $d2, $42, JR__TRAINER_F + $C8, $3 ; trainer
 	db SPRITE_BUG_CATCHER, $12 + 4, $6 + 4, $ff, $d3, $43, BUG_CATCHER + $C8, $7 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_1, $1d + 4, $8 + 4, $ff, $d2, $44, JR__TRAINER_M + $C8, $8 ; trainer
-	db SPRITE_LASS, $1c + 4, $8 + 4, $ff, $d2, $45, JR__TRAINER_F + $C8, $4 ; trainer
+	db SPRITE_FAT_BALD_GUY, $1d + 4, $8 + 4, $ff, $d2, $44, JR__TRAINER_M + $C8, $8 ; trainer
+	db SPRITE_OLD_PERSON, $1c + 4, $8 + 4, $ff, $d2, $45, JR__TRAINER_F + $C8, $4 ; trainer
 	db SPRITE_BUG_CATCHER, $13 + 4, $13 + 4, $ff, $d2, $46, BUG_CATCHER + $C8, $8 ; trainer
 
 	; warp-to
@@ -93986,8 +93986,8 @@ LavenderMartObject: ; 0x5c95d (size=38)
 	db $0 ; border tile
 
 	db $2 ; warps
-	db $7, $3, $3, $ff
-	db $7, $4, $3, $ff
+	db $7, $3, $1, CELADON_CITY
+	db $7, $4, $1, CELADON_CITY
 
 	db $0 ; signs
 
@@ -103408,7 +103408,7 @@ InternalMapEntries: ; 71382 (1c:5382)
 	IMAP $57,$D,$9,Route11Name
 	IMAP $58,$E,$7,Route12Name
 	IMAP $59,$C,$0,SeaCottageName
-	IMAP $5F,$A,$9,VermilionCityName
+	IMAP $5F,$7,$7,VermilionCityName
 	IMAP $69,$9,$A,SSAnneName
 	IMAP $6D,$0,$4,VictoryRoadName
 	IMAP $77,$0,$2,PokemonLeagueName
@@ -103428,7 +103428,7 @@ InternalMapEntries: ; 71382 (1c:5382)
 	IMAP $A6,$2,$F,PokemonMansionName
 	IMAP $AE,$2,$F,CinnabarIslandName
 	IMAP $AF,$0,$2,IndigoPlateauName
-	IMAP $B8,$A,$5,SaffronCityName
+	IMAP $B7,$A,$5,SaffronCityName
 	IMAP $BA,$9,$D,Route15Name
 	IMAP $BD,$4,$5,Route16Name
 	IMAP $BE,$E,$A,Route12Name
@@ -103437,7 +103437,7 @@ InternalMapEntries: ; 71382 (1c:5382)
 	IMAP $C2,$0,$7,Route22Name
 	IMAP $C3,$0,$4,VictoryRoadName
 	IMAP $C4,$E,$7,Route12Name
-	IMAP $C5,$A,$9,VermilionCityName
+	IMAP $C5,$7,$7,VermilionCityName
 	IMAP $C6,$f,$4,DiglettsCaveName
 	IMAP $C7,$0,$4,VictoryRoadName
 	IMAP $CF,$7,$5,RocketHQName
