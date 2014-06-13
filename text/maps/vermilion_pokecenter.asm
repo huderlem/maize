@@ -30,3 +30,18 @@ _VermilionPokecenterText3:: ; 9a539 (26:6539)
 	cont "was in this"
 	cont "region!"
 	done
+
+_SwarmReporterText1::
+	text "I study #MON"
+	line "migrations!"
+
+	para "If I'm not"
+	line "mistaken, there"
+	cont "is a swarm of"
+	cont "@"
+	TX_RAM $cd6d
+	text " near"
+	cont "@"
+	TX_RAM $cf4b
+	text "!"
+	done

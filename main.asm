@@ -32592,7 +32592,7 @@ Func_13870: ; 13870 (4:7870)
 	and a
 	jr z, .asm_1389e
 	dec a
-	jr z, .asm_13905
+	jp z, .asm_13905
 	ld [$d0db], a
 .asm_1389e
 	FuncCoord 9, 9 ; $c45d
@@ -32608,16 +32608,16 @@ Func_13870: ; 13870 (4:7870)
 	jr z, .asm_138c4
 	ld a, [W_CURMAP] ; $d35e
 	cp REDS_HOUSE_1F
-	jr c, .asm_13912
+	jp c, .asm_13912
 	ld a, [W_CURMAPTILESET] ; $d367
 	cp $3 ; Viridian Forest/Safari Zone
-	jr z, .asm_13912
+	jp z, .asm_13912
 	ld a, [W_GRASSRATE] ; $d887
 .asm_138c4
 	ld b, a
 	ld a, [H_RAND1] ; $FF00+$d3
 	cp b
-	jr nc, .asm_13912
+	jp nc, .asm_13912
 	ld a, [H_RAND2] ; $FF00+$d4
 	ld b, a
 	ld hl, WildMonEncounterSlotChances ; $7918
@@ -32658,9 +32658,43 @@ Func_13870: ; 13870 (4:7870)
 .continue
 	pop hl
 	ld [W_CURENEMYLVL], a ; $d127
+
+	push hl
+
+	; check for swarm
+	; TODO: fishing rod swarm stuff here or somewhere else?
+	; 40% chance of running into swarm pokemon
+	call GenRandom
+	cp 102
+	jr nc, .skipSwarm
+	; get swarm id based on gameplay time
+	ld a, [W_PLAYTIMEHOURS + 1] ; low byte of hours played
+	and %00000111 ; TODO update this when changing number of swarms
+	ld b, 0
+	ld c, a
+	ld hl, SwarmData
+	add hl, bc
+	add hl, bc
+	add hl, bc ; hl contains pointer to swarm data entry
+	ld a, [W_CURMAP]
+	cp [hl]
+	jr nz, .skipSwarm
+	inc hl ; hl contains pointer to swarm mon id
+
+	pop bc ; junk to get rid of
+
+	ld a, [hli]
+	ld [$cf91], a
+	ld [W_ENEMYMONID], a
+	ld a, [hl]
+	ld [W_CURENEMYLVL], a
+	jr .notSure
+.skipSwarm
+	pop hl
 	ld a, [hl]
 	ld [$cf91], a
 	ld [W_ENEMYMONID], a
+.notSure
 	ld a, [$d0db]
 	and a
 	jr z, .asm_13916
@@ -32923,6 +32957,19 @@ GenRandom_: ; 13a8f (4:7a8f)
 	sbc b
 	ld [H_RAND2],a
 	ret
+
+SwarmData:
+; TODO MAKE SURE TYOU CHANGE BOTH COPIES OF THIS LIST!!!
+; The swarm entry is determined by gameplay time.
+; format: [map id], [mon id], [mon level]
+	db ROUTE_1, PONYTA, 2
+	db ROUTE_2, MAGMAR, 2
+	db ROUTE_1, PONYTA, 2
+	db ROUTE_2, MAGMAR, 2
+	db ROUTE_1, PONYTA, 2
+	db ROUTE_2, MAGMAR, 2
+	db ROUTE_1, PONYTA, 2
+	db ROUTE_2, MAGMAR, 2
 
 SECTION "bank5",ROMX,BANK[$5]
 
@@ -94058,6 +94105,7 @@ VermilionPokecenterTextPointers: ; 5c995 (17:4995)
 	dw VermilionPokecenterText2
 	dw VermilionPokecenterText3
 	dw VermilionPokecenterText4
+	dw VermilionPokecenterText5
 
 VermilionPokecenterText1: ; 5c99d (17:499d)
 	db $ff
@@ -94073,6 +94121,55 @@ VermilionPokecenterText3: ; 5c9a3 (17:49a3)
 VermilionPokecenterText4: ; 5c9a8 (17:49a8)
 	db $f6
 
+VermilionPokecenterText5:
+	db $08 ; asm
+	; swarm reporter
+	; get swarm id based on gameplay time
+	ld a, [W_PLAYTIMEHOURS + 1] ; low byte of hours played
+	and %00000111 ; TODO update this when changing number of swarms
+	ld b, 0
+	ld c, a
+	ld hl, SwarmDataReporter
+	add hl, bc
+	add hl, bc
+	add hl, bc ; hl contains pointer to swarm data reporter entry
+	push hl
+	inc hl
+	ld a, [hli]
+	ld e, a
+	ld a, [hl]
+	ld d, a
+	call CopyStringToCF4B
+	pop hl
+	ld a, [hl]
+	ld [$d11e], a
+	call GetMonName
+	ld hl, SwarmReporterText1
+	call PrintText
+	jp TextScriptEnd
+
+SwarmReporterText1:
+	TX_FAR _SwarmReporterText1
+	db "@"
+
+SwarmDataReporter:
+; TODO MAKE SURE TYOU CHANGE BOTH COPIES OF THIS LIST!!!
+; The swarm entry is determined by gameplay time.
+	dbw PONYTA, SwarmMapName1
+	dbw MAGMAR, SwarmMapName2
+	dbw PONYTA, SwarmMapName1
+	dbw MAGMAR, SwarmMapName2
+	dbw PONYTA, SwarmMapName1
+	dbw MAGMAR, SwarmMapName2
+	dbw PONYTA, SwarmMapName1
+	dbw MAGMAR, SwarmMapName2
+
+SwarmMapNames:
+SwarmMapName1:
+	db "ROUTE 1@"
+SwarmMapName2:
+	db "ROUTE 2@"
+
 VermilionPokecenterObject: ; 0x5c9a9 (size=44)
 	db $0 ; border tile
 
@@ -94082,11 +94179,12 @@ VermilionPokecenterObject: ; 0x5c9a9 (size=44)
 
 	db $0 ; signs
 
-	db $4 ; people
+	db $5 ; people
 	db SPRITE_NURSE, $1 + 4, $3 + 4, $ff, $d0, $1 ; person
 	db SPRITE_FISHER, $3 + 4, $6 + 4, $ff, $d0, $2 ; person
 	db SPRITE_SAILOR, $3 + 4, $5 + 4, $ff, $d0, $3 ; person
 	db SPRITE_CABLE_CLUB_WOMAN, $2 + 4, $b + 4, $ff, $d0, $4 ; person
+	db SPRITE_OAK_AIDE, $5 + 4, $5 + 4, $ff, $d0, $5 ; person 
 
 	; warp-to
 	EVENT_DISP $7, $7, $3
