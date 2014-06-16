@@ -14990,9 +14990,9 @@ Func_60ca: ; 60ca (1:60ca)
 OakSpeech: ; 6115 (1:6115)
 	ld a,$FF
 	call PlaySound ; stop music
-	ld a, BANK(Music_Routes2) ; bank of song
+	ld a, BANK(Music_Celadon) ; bank of song
 	ld c,a
-	ld a, MUSIC_ROUTES2 ; song #
+	ld a, MUSIC_CELADON ; song #
 	call PlayMusic  ; plays music
 	call ClearScreen
 	call LoadTextBoxTilePatterns
@@ -18809,7 +18809,7 @@ MapSongBanks: ; c04d (3:404d)
 	db MUSIC_VERMILION, BANK(Music_Vermilion) ; FREEZE
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; Route7Gate
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; UndergroundPathEntranceRoute7
-	db MUSIC_CELADON, BANK(Music_Celadon) ;FREEZE
+	db MUSIC_VERMILION, BANK(Music_Vermilion) ;FREEZE
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; Route8Gate
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; UndergroundPathEntranceRoute8
 	db MUSIC_POKECENTER, BANK(Music_Pokecenter) ; RockTunnelPokecenter
@@ -18859,19 +18859,19 @@ MapSongBanks: ; c04d (3:404d)
 	db MUSIC_POKECENTER, BANK(Music_Pokecenter) ; CeladonMart4
 	db MUSIC_POKECENTER, BANK(Music_Pokecenter) ; CeladonMartRoof
 	db MUSIC_POKECENTER, BANK(Music_Pokecenter) ; CeladonMartElevator
-	db MUSIC_CELADON, BANK(Music_Celadon) ; CeladonMansion1
-	db MUSIC_CELADON, BANK(Music_Celadon) ; CeladonMansion2
-	db MUSIC_CELADON, BANK(Music_Celadon) ; CeladonMansion3
-	db MUSIC_CELADON, BANK(Music_Celadon) ; CeladonMansion4
-	db MUSIC_CELADON, BANK(Music_Celadon) ; CeladonMansion5
+	db MUSIC_VERMILION, BANK(Music_Vermilion) ; CeladonMansion1
+	db MUSIC_VERMILION, BANK(Music_Vermilion) ; CeladonMansion2
+	db MUSIC_VERMILION, BANK(Music_Vermilion) ; CeladonMansion3
+	db MUSIC_VERMILION, BANK(Music_Vermilion) ; CeladonMansion4
+	db MUSIC_VERMILION, BANK(Music_Vermilion) ; CeladonMansion5
 	db MUSIC_POKECENTER, BANK(Music_Pokecenter) ; CeladonPokecenter
 	db MUSIC_GYM, BANK(Music_Gym) ; CeladonGym
 	db MUSIC_GAME_CORNER, BANK(Music_GameCorner) ; CeladonGameCorner
 	db MUSIC_POKECENTER, BANK(Music_Pokecenter) ; CeladonMart5
-	db MUSIC_CELADON, BANK(Music_Celadon) ; CeladonPrizeRoom
-	db MUSIC_CELADON, BANK(Music_Celadon) ; CeladonDiner
-	db MUSIC_CELADON, BANK(Music_Celadon) ; CeladonHouse
-	db MUSIC_CELADON, BANK(Music_Celadon) ; CeladonHotel
+	db MUSIC_VERMILION, BANK(Music_Vermilion) ; CeladonPrizeRoom
+	db MUSIC_VERMILION, BANK(Music_Vermilion) ; CeladonDiner
+	db MUSIC_VERMILION, BANK(Music_Vermilion) ; CeladonHouse
+	db MUSIC_VERMILION, BANK(Music_Vermilion) ; CeladonHotel
 	db MUSIC_POKECENTER, BANK(Music_Pokecenter) ; LavenderPokecenter
 	db MUSIC_POKEMON_TOWER, BANK(Music_PokemonTower) ; PokemonTower1
 	db MUSIC_POKEMON_TOWER, BANK(Music_PokemonTower) ; PokemonTower2
@@ -18919,8 +18919,8 @@ MapSongBanks: ; c04d (3:404d)
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; Route15GateUpstairs
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; Route16GateMap
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; Route16GateUpstairs
-	db MUSIC_CELADON, BANK(Music_Celadon) ; Route16House
-	db MUSIC_CELADON, BANK(Music_Celadon) ; Route12House
+	db MUSIC_VERMILION, BANK(Music_Vermilion) ; Route16House
+	db MUSIC_VERMILION, BANK(Music_Vermilion) ; Route12House
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; Route18Gate
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; Route18GateUpstairs
 	db MUSIC_DUNGEON2, BANK(Music_Dungeon2) ; SeafoamIslands1
@@ -18970,8 +18970,8 @@ MapSongBanks: ; c04d (3:404d)
 	db MUSIC_SILPH_CO, BANK(Music_SilphCo) ; SilphCoElevator
 	db MUSIC_SILPH_CO, BANK(Music_SilphCo)
 	db MUSIC_SILPH_CO, BANK(Music_SilphCo)
-	db MUSIC_CELADON, BANK(Music_Celadon) ; BattleCenterM
-	db MUSIC_CELADON, BANK(Music_Celadon) ; TradeCenterM
+	db MUSIC_VERMILION, BANK(Music_Vermilion) ; BattleCenterM
+	db MUSIC_VERMILION, BANK(Music_Vermilion) ; TradeCenterM
 	db MUSIC_SILPH_CO, BANK(Music_SilphCo)
 	db MUSIC_SILPH_CO, BANK(Music_SilphCo)
 	db MUSIC_SILPH_CO, BANK(Music_SilphCo)

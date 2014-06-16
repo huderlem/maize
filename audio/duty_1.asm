@@ -23,7 +23,7 @@ Music2_Channel3Duty2: ; 0x8393
 	db $13,$69,$BD,$EE,$EE,$FF,$FF,$ED,$DE,$FF,$FF,$EE,$EE,$DB,$96,$31
 
 Music2_Channel3Duty3: ; 0x83a3
-	db $02,$46,$8A,$CD,$EF,$FE,$DE,$FF,$EE,$DC,$BA,$98,$76,$54,$32,$10
+	db $00,$11,$22,$33,$44,$33,$22,$11,$FF,$EE,$CC,$AA,$88,$AA,$CC,$EE
 
 Music2_Channel3Duty4: ; 0x83b3
 	db $01,$23,$45,$67,$8A,$CD,$EE,$F7,$7F,$EE,$DC,$A8,$76,$54,$32,$10

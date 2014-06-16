@@ -43,12 +43,14 @@ Music_Cities2:: ; 8255 (2:4255)
 	dw Music_Cities2_Ch3
 
 Music_Celadon:: ; 825e (2:425e)
-	db ( $80 | CH0 )
+	db ( $C0 | CH0 )
 	dw Music_Celadon_Ch1
 	db CH1
 	dw Music_Celadon_Ch2
 	db CH2
 	dw Music_Celadon_Ch3
+	db CH3
+	dw Music_Celadon_Ch4
 
 Music_Cinnabar:: ; 8267 (2:4267)
 	db ( $80 | CH0 )
