@@ -18737,7 +18737,7 @@ MapSongBanks: ; c04d (3:404d)
 	db MUSIC_CITIES2, BANK(Music_Cities2) ; CERULEAN_CITY
 	db MUSIC_LAVENDER, BANK(Music_Lavender) ; LAVENDER_TOWN
 	db MUSIC_VERMILION, BANK(Music_Vermilion) ; VERMILION_CITY
-	db MUSIC_CELADON, BANK(Music_Celadon) ; CELADON_CITY
+	db MUSIC_VERMILION, BANK(Music_Vermilion) ; CELADON_CITY
 	db MUSIC_CITIES2, BANK(Music_Cities2) ; FUCHSIA_CITY
 	db MUSIC_CINNABAR, BANK(Music_Cinnabar) ; CINNABAR_ISLAND
 	db MUSIC_INDIGO_PLATEAU, BANK(Music_IndigoPlateau) ; INDIGO_PLATEAU
@@ -34462,7 +34462,7 @@ PalletTownObject: ; 0x182c3 (size=58)
 	db $f ; border tile
 
 	db $3 ; warps
-	db $d, $3, $0, VERMILION_POKECENTER
+	db $d, $3, $0, REDS_HOUSE_1F
 	db $7, $3, $1, BLUES_HOUSE
 	db $b, $c, $1, OAKS_LAB
 
