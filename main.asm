@@ -14091,7 +14091,7 @@ Func_5849:
 	ld [wMusicHeaderPointer], a
 	ld a, $2
 	ld [$c0f0], a
-	ld a, $e5
+	ld a, MUSIC_SAFARI_ZONE
 	ld [$c0ee], a
 	call PlaySound
 	ld c, $64
@@ -38028,7 +38028,7 @@ Func_1a514: ; 1a514 (6:6514)
 	ld a, Bank(Func_9876)
 	ld [$c0ef], a
 	ld [$c0f0], a
-	ld a, $e1
+	ld a, MUSIC_MUSEUM_GUY
 	ld [$c0ee], a
 	call PlaySound
 	ld a, [$cf13]
@@ -38085,7 +38085,7 @@ Func_1a581: ; 1a581 (6:6581)
 	ld a, Bank(Func_9876)
 	ld [$c0ef], a
 	ld [$c0f0], a
-	ld a, $e1
+	ld a, MUSIC_MUSEUM_GUY
 	ld [$c0ee], a
 	call PlaySound
 	ld a, [$cf13]
@@ -75632,12 +75632,12 @@ MomHealPokemon: ; 4818a (12:418a)
 	call GBFadeOut2
 	call ReloadMapData
 	PREDEF HealPartyPredef
-	ld a, $E8
+	ld a, MUSIC_PKMN_HEALED
 	ld [$C0EE], a
 	call PlaySound ; play sound?
 .next
 	ld a, [$C026]
-	cp $E8
+	cp MUSIC_PKMN_HEALED
 	jr z, .next
 	ld a, [$D35B]
 	ld [$C0EE], a
@@ -99191,12 +99191,12 @@ SSAnne7RubText: ; 618ec (18:58ec)
 	ld a, Bank(Func_9876)
 	ld [$c0ef], a
 .asm_61908
-	ld a, $e8
+	ld a, MUSIC_PKMN_HEALED
 	ld [$c0ee], a
 	call PlaySound
 .asm_61910
 	ld a, [$c026]
-	cp $e8
+	cp MUSIC_PKMN_HEALED
 	jr z, .asm_61910 ; 0x61915 $f9
 	call Func_2307
 	ld hl, $d803
@@ -101367,7 +101367,7 @@ Func_70433: ; 70433 (1c:4433)
 	ld b, a
 .asm_7046e
 	call Func_70503
-	ld a, $9e
+	ld a, (SFX_02_4a - SFX_Headers_02) / 3
 	call PlaySound
 	ld c, $1e
 	call DelayFrames
@@ -101383,14 +101383,14 @@ Func_70433: ; 70433 (1c:4433)
 	ld a, Bank(Func_9876)
 	ld [$c0ef], a
 .asm_70495
-	ld a, $e8
+	ld a, MUSIC_PKMN_HEALED
 	ld [$c0ee], a
 	call PlaySound
 	ld d, $28
 	call Func_704f3
 .asm_704a2
 	ld a, [$c026]
-	cp $e8
+	cp MUSIC_PKMN_HEALED
 	jr z, .asm_704a2
 	ld c, $20
 	call DelayFrames
