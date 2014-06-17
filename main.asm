@@ -15029,6 +15029,29 @@ OakSpeech: ; 6115 (1:6115)
 	ld a,[$D732]
 	bit 1,a ; XXX when is bit 1 set?
 	jp nz,Func_61bc ; easter egg: skip the intro
+	ld hl, NuzlockeText
+	call PrintText 
+	call SaveScreenTilesToBuffer1
+	ld a, $7
+	ld [$d12c], a
+	FuncCoord 14, 7 ; $c43a
+	ld hl, Coord
+	ld bc, $80f
+	ld a, $14
+	ld [$d125], a
+	call DisplayTextBoxID
+	push af
+	call LoadScreenTilesFromBuffer1
+	pop af
+	jr nc, .resume
+	ld hl, NuzlockeConfirmText
+	call PrintText
+	; set bit for nuzlocked mode
+	ld hl, W_NEWFLAGS1
+	set 2, [hl]
+.resume
+	call GBFadeOut2
+	call ClearScreen
 	ld de,ProfOakPic
 	ld bc, (Bank(ProfOakPic) << 8) | $00
 	call IntroPredef3B   ; displays Oak pic?
@@ -15143,6 +15166,12 @@ IntroduceRivalText: ; 6267 (1:6267)
 	db "@"
 OakSpeechText3: ; 626c (1:626c)
 	TX_FAR _OakSpeechText3
+	db "@"
+NuzlockeText:
+	TX_FAR _NuzlockeText
+	db "@"
+NuzlockeConfirmText:
+	TX_FAR _NuzlockeConfirmText
 	db "@"
 
 FadeInIntroPic: ; 6271 (1:6271)
@@ -15520,6 +15549,13 @@ AskForMonNickname: ; 64eb (1:64eb)
 	ld a, [W_CURMAP]
 	cp REDS_HOUSE_2F
 	jr z, .popHL
+	
+	; if player is playing nuzlocke, don't ask for nickname
+	ld a, [W_NEWFLAGS1]
+	bit 2, a
+	pop hl
+	jr nz, .askForNickname
+	push hl
 	ld hl, DoYouWantToNicknameText ; $6557
 	call PrintText
 	FuncCoord 14, 7 ; $c43a
@@ -15532,6 +15568,7 @@ AskForMonNickname: ; 64eb (1:64eb)
 	ld a, [wCurrentMenuItem] ; $cc26
 	and a
 	jr nz, .asm_654c
+.askForNickname
 	ld a, [$cfcb]
 	push af
 	xor a

@@ -1459,6 +1459,7 @@ W_NEWFLAGS1:: ; dee2
 	ds 1
 	; 0: Beat Shadow of Copper Town 
 	; 1: Received Item from Shadow guy in Copper Town
+	; 2: Nuzlocke Mode 1=On, 0=Off
 
 W_SLOW_MUSIC:: ; dee3
 	ds 1

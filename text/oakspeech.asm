@@ -1,3 +1,42 @@
+_NuzlockeText::
+	text "Nuzlocke Mode"
+	line "makes the game"
+	cont "more challenging!"
+
+	para "If you play with"
+	line "Nuzlocke Mode"
+	cont "turned on, these"
+	cont "rules will be"
+	cont "enabled:"
+
+	para "1. #MON will"
+	line "die in battle,"
+	cont "not faint."
+
+	para "2. You are only"
+	line "able to catch the"
+	cont "first #MON you"
+	cont "see in each area."
+
+	para "3. If all of your"
+	line "die, it's game"
+	cont "over!"
+
+	para "So, would you"
+	line "like to play in"
+	cont "Nuzlocke Mode?"
+	done
+
+_NuzlockeConfirmText::
+	text "Great!"
+
+	para "I see you're"
+	line "up for a real"
+	cont "challenge!"
+
+	para "Best of luck..."
+	done
+
 _OakSpeechText1::
 	text "Sorry, but you'll"
 	line "have to wait a"
