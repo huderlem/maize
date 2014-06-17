@@ -1459,3 +1459,6 @@ W_NEWFLAGS1:: ; dee2
 	ds 1
 	; 0: Beat Shadow of Copper Town 
 	; 1: Received Item from Shadow guy in Copper Town
+
+W_SLOW_MUSIC:: ; dee3
+	ds 1

@@ -5322,6 +5322,22 @@ VBlankHandler:: ; 2024 (0:2024)
 	dec a
 	ld [H_FRAMECOUNTER],a
 .handleMusic
+	; delay music if night time and not in battle and in an outdoors map
+	ld a, [W_PLAYTIMEMINUTES + 1]
+	cp 30
+	jr c, .normalMusicHook
+	ld a, [W_ISINBATTLE]
+	and a
+	jr nz, .normalMusicHook
+	ld a, [W_CURMAP]
+	cp REDS_HOUSE_1F
+	jr nc, .normalMusicHook
+	ld a, [W_SLOW_MUSIC]
+	inc a
+	and %00000011
+	ld [W_SLOW_MUSIC], a
+	jr z, .afterMusic
+.normalMusicHook
 	call Func_28cb
 	ld a,[$c0ef] ; music ROM bank
 	ld [H_LOADEDROMBANK],a
