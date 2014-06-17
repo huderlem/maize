@@ -40,7 +40,7 @@ _SwarmReporterText1::
 	cont "is a swarm of"
 	cont "@"
 	TX_RAM $cd6d
-	text " near"
+	text " in"
 	cont "@"
 	TX_RAM $cf4b
 	text "!"

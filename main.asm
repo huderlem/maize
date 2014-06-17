@@ -21321,13 +21321,13 @@ Route9Mons: ; d1d1 (3:51d1)
 
 Route5Mons: ; d1e7 (3:51e7)
 	db $0F
-	db 13,ODDISH
-	db 13,PIDGEY
-	db 15,PIDGEY
+	db 13,BELLSPROUT
+	db 13,MAREEP
+	db 15,MAREEP
 	db 10,MANKEY
 	db 12,MANKEY
-	db 15,ODDISH
-	db 16,ODDISH
+	db 15,BELLSPROUT
+	db 16,BELLSPROUT
 	db 16,PIDGEY
 	db 14,MANKEY
 	db 16,MANKEY
@@ -32978,14 +32978,14 @@ SwarmData:
 ; TODO MAKE SURE TYOU CHANGE BOTH COPIES OF THIS LIST!!!
 ; The swarm entry is determined by gameplay time.
 ; format: [map id], [mon id], [mon level]
-	db ROUTE_1, PONYTA, 2
-	db ROUTE_2, MAGMAR, 2
-	db ROUTE_1, PONYTA, 2
-	db ROUTE_2, MAGMAR, 2
-	db ROUTE_1, PONYTA, 2
-	db ROUTE_2, MAGMAR, 2
-	db ROUTE_1, PONYTA, 2
-	db ROUTE_2, MAGMAR, 2
+	db ROUTE_3, ODDISH, 7
+	db ROUTE_24, MURKROW, 11
+	db ROUTE_22, SCYTHER, 15
+	db ROUTE_2, PONYTA, 9
+	db ROCK_TUNNEL_1, GASTLY, 12
+	db ROUTE_25, VENONAT, 13
+	db ROUTE_5, MACHOP, 14
+	db ROUTE_1, DITTO, 7
 
 SECTION "bank5",ROMX,BANK[$5]
 
@@ -56035,7 +56035,7 @@ Mon123_EvosMoves: ; 3b324 (e:7324)
 	db EV_ITEM,ITEM_STONE,1,SCIZOR
 	db 0
 ;Learnset
-	db 17,LEER
+	db 16,LEER
 	db 20,FOCUS_ENERGY
 	db 24,DOUBLE_TEAM
 	db 29,SLASH
@@ -56553,12 +56553,12 @@ Mon048_EvosMoves: ; 3b4ef (e:74ef)
 	db EV_LEVEL,31,VENOMOTH
 	db 0
 ;Learnset
-	db 24,POISONPOWDER
+	db 15,CONFUSION
+	db 20,POISONPOWDER
 	db 27,LEECH_LIFE
 	db 30,STUN_SPORE
 	db 35,PSYBEAM
 	db 38,SLEEP_POWDER
-	db 43,PSYCHIC_M
 	db 0
 Mon149_EvosMoves: ; 3b500 (e:7500)
 ;DRAGONITE
@@ -56747,9 +56747,9 @@ Mon165_EvosMoves: ; 3b57e (e:757e)
 	db 0
 ;Learnset
 	db 6,FOCUS_ENERGY
-	db 21,AGILITY
-	db 26,METAL_CLAW
-	db 34,SLASH
+	db 17,AGILITY
+	db 23,METAL_CLAW
+	db 32,SLASH
 	db 42,SWORDS_DANCE
 	db 43,IRON_DEFENSE
 	db 45,NIGHT_SLASH
@@ -94169,22 +94169,34 @@ SwarmReporterText1:
 	db "@"
 
 SwarmDataReporter:
-; TODO MAKE SURE TYOU CHANGE BOTH COPIES OF THIS LIST!!!
+; TODO MAKE SURE YOU CHANGE BOTH COPIES OF THIS LIST!!!
 ; The swarm entry is determined by gameplay time.
-	dbw PONYTA, SwarmMapName1
-	dbw MAGMAR, SwarmMapName2
-	dbw PONYTA, SwarmMapName1
-	dbw MAGMAR, SwarmMapName2
-	dbw PONYTA, SwarmMapName1
-	dbw MAGMAR, SwarmMapName2
-	dbw PONYTA, SwarmMapName1
-	dbw MAGMAR, SwarmMapName2
+	dbw ODDISH, SwarmMapName1
+	dbw MURKROW, SwarmMapName2
+	dbw SCYTHER, SwarmMapName3
+	dbw PONYTA, SwarmMapName4
+	dbw GASTLY, SwarmMapName5
+	dbw VENONAT, SwarmMapName6
+	dbw MACHOP, SwarmMapName7
+	dbw DITTO, SwarmMapName8
 
 SwarmMapNames:
 SwarmMapName1:
-	db "ROUTE 1@"
+	db "ROUTE 3@"
 SwarmMapName2:
+	db "ROUTE 5@"
+SwarmMapName3
+	db "ROUTE 10@"
+SwarmMapName4
 	db "ROUTE 2@"
+SwarmMapName5
+	db "ARBOR HOLLOW@"
+SwarmMapName6
+	db "ROUTE 4@"
+SwarmMapName7
+	db "ROUTE 8@"
+SwarmMapName8
+	db "ROUTE 1@"
 
 VermilionPokecenterObject: ; 0x5c9a9 (size=44)
 	db $0 ; border tile
