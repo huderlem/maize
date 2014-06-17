@@ -65286,6 +65286,22 @@ Func_3ef8b: ; 3ef8b (f:6f8b)
 	xor a
 	ld [W_TRAINERCLASS], a ; $d031
 	ld [$FF00+$e1], a
+	; check for night time, put enemy to sleep
+	ld a, [W_PLAYTIMEMINUTES + 1]
+	cp 30
+	jr c, .goOn
+	call GenRandom
+	cp 26 ; only 10% of pokemon at night are asleep
+	jr nc, .goOn
+	ld a, [W_CURMAP]
+	cp REDS_HOUSE_1F
+	jr nc, .goOn ; must be on outdoor map
+.genRandomNum
+	call GenRandom
+	and %00000111
+	jr z, .genRandomNum
+	ld [W_ENEMYMONSTATUS], a
+.goOn
 	FuncCoord 12, 0 ; $c3ac
 	ld hl, Coord
 	ld a, $1
@@ -89169,7 +89185,7 @@ Func_58d99: ; 58d99 (16:4d99)
 	call IsItemInBag
 	ld a, [W_ENEMYMONID]
 	ld [$cf91], a
-	cp $91
+	cp MAROWAK
 	jr z, .asm_58e03
 	ld a, b
 	and a
