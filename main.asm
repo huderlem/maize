@@ -6982,12 +6982,21 @@ DisplaySafariGameOverText:: ; 2a90 (0:2a90)
 	jp AfterDisplayingTextID
 
 DisplayPokemonFaintedText:: ; 2a9b (0:2a9b)
+	ld hl, W_NEWFLAGS1
+	bit 2, [hl]
 	ld hl,PokemonFaintedText
+	jr z, .printText
+	ld hl,PokemonDiedText
+.printText
 	call PrintText
 	jp AfterDisplayingTextID
 
 PokemonFaintedText:: ; 2aa4 (0:2aa4)
 	TX_FAR _PokemonFaintedText
+	db "@"
+
+PokemonDiedText::
+	TX_FAR _PokemonDiedText
 	db "@"
 
 DisplayPlayerBlackedOutText:: ; 2aa9 (0:2aa9)
@@ -19868,6 +19877,7 @@ Func_c636: ; c636 (3:4636)
 	ret
 
 Func_c69c: ; c69c (3:469c)
+; decrement hp of poisoned pokemon
 	ld a, [$d730]
 	add a
 	jp c, .asm_c74f
@@ -19881,10 +19891,11 @@ Func_c69c: ; c69c (3:469c)
 	ld [wWhichPokemon], a ; $cf92
 	ld hl, W_PARTYMON1_STATUS ; $d16f
 	ld de, W_PARTYMON1 ; $d164
-.asm_c6be
+.asm_c6be ; loop
 	ld a, [hl]
 	and $8
 	jr z, .asm_c6fd
+	; it's poisoned!
 	dec hl
 	dec hl
 	; hl now has W_PARTYMON1HP + 1
@@ -19893,6 +19904,7 @@ Func_c69c: ; c69c (3:469c)
 	ld a, [hli]
 	or b
 	jr z, .asm_c6fb
+	; mon's hp > 0
 	ld a, [hl]
 	dec a
 	ld [hld], a
@@ -19905,10 +19917,13 @@ Func_c69c: ; c69c (3:469c)
 	ld a, [hli]
 	or [hl]
 	jr nz, .asm_c6fb
+	; 0 hp
+	; hl now has MONHP + 1
 	push hl
 	inc hl
 	inc hl
-	ld [hl], a
+	; hl now has MON_STATUS
+	ld [hl], a ; clears mon status because a = 0
 	ld a, [de]
 	ld [$d11e], a
 	push de
@@ -19920,7 +19935,41 @@ Func_c69c: ; c69c (3:469c)
 	call EnableAutoTextBoxDrawing
 	ld a, $d0
 	ld [H_DOWNARROWBLINKCNT2], a ; $FF00+$8c
-	call DisplayTextID
+	call DisplayTextID ; "mon fainted!"
+	; if playing nuzlocke mode, remove mon
+	ld hl, W_NEWFLAGS1
+	bit 2, [hl]
+	jr z, .noNuzlocke
+	; remove mon from party
+	xor a ; specify party for RemovePokemon
+	ld [$cf95], a
+	call RemovePokemon
+	; check if party is empty
+	ld a, [W_NUMINPARTY]
+	and a
+	jr nz, .notEmpty
+	; game over because party is empty!
+	ld b,BANK(DisplayTextIDInit)
+	ld hl,DisplayTextIDInit ; initialization
+	call Bankswitch
+	ld hl, PlayerGameOverText2
+	call PrintText
+	; clear save file
+	ld b, BANK(Func_73b6a)
+	ld hl, Func_73b6a
+	call Bankswitch ; indirect jump to Func_73b6a (73b6a (1c:7b6a))
+	; reset game
+	ld sp, $fffe
+	jp Start
+.notEmpty
+	; don't move to the next pokemon slot, because we just removed a pokemon
+	; and everything was shifted up in the party
+	pop de
+	pop hl
+	inc hl
+	inc hl
+	jr .asm_c6be
+.noNuzlocke
 	pop de
 	pop hl
 .asm_c6fb
@@ -19930,14 +19979,14 @@ Func_c69c: ; c69c (3:469c)
 	inc de
 	ld a, [de]
 	inc a
-	jr z, .asm_c70e
+	jr z, .asm_c70e ; end of party
 	ld bc, $2c
 	add hl, bc
 	push hl
 	ld hl, wWhichPokemon ; $cf92
 	inc [hl]
 	pop hl
-	jr .asm_c6be
+	jp .asm_c6be
 .asm_c70e
 	ld hl, W_PARTYMON1_STATUS ; $d16f
 	ld a, [W_NUMINPARTY] ; $d163
@@ -30179,6 +30228,10 @@ PokemonStuffText: ; fc45 (3:7c45)
 	TX_FAR _PokemonStuffText
 	db "@"
 
+PlayerGameOverText2:
+	TX_FAR _PlayerGameOverText
+	db "@"
+
 SECTION "bank4",ROMX,BANK[$4]
 
 OakAideSprite: ; 10000 (4:4000)
@@ -38664,6 +38717,7 @@ MonsterNames: ; 1c21e (7:421e)
 	db "VICTREEBEL"
 
 Func_1c98a: ; 1c98a (7:498a)
+	; clear saved data
 	call ClearScreen
 	call GoPAL_SET_CF1C
 	call LoadFontTilePatterns
@@ -59303,11 +59357,48 @@ Func_3c741: ; 3c741 (f:4741)
 	ret z
 	ld a, [W_PLAYERMONID]
 	call PlayCry
+	; if nuzlocke is enabled, print death text
+	ld hl, W_NEWFLAGS1
+	bit 2, [hl]
+	jr nz, .nuzlocke
 	ld hl, PlayerMonFaintedText
+	jr .done
+.nuzlocke
+	ld hl, PlayerMonDiedText
+	call PrintText
+	; remove pokemon from party
+	ld a, [wPlayerMonNumber]
+	ld [wWhichPokemon], a
+	xor a
+	ld [$cf95], a
+	call RemovePokemon
+	; did player blackout?
+	ld a, [W_NUMINPARTY]
+	and a
+	ret nz
+.noMonsLeft ; fall through
+	ld hl, PlayerGameOverText
+	call PrintText
+	; clear save file
+	ld b, BANK(Func_73b6a)
+	ld hl, Func_73b6a
+	call Bankswitch ; indirect jump to Func_73b6a (73b6a (1c:7b6a))
+	; reset game
+	ld sp, $fffe
+	jp Start
+.done
 	jp PrintText
 
 PlayerMonFaintedText: ; 3c796 (f:4796)
 	TX_FAR _PlayerMonFaintedText
+	db "@"
+
+PlayerMonDiedText:
+	TX_FAR _PlayerMonDiedText
+	db "@"
+
+PlayerGameOverText:
+	TX_FAR _PlayerGameOverText
 	db "@"
 
 Func_3c79b: ; 3c79b (f:479b)
@@ -80291,7 +80382,7 @@ MoveAnimationPredef: ; 4fe91 (13:7e91)
 	dw RemoveMissableObject
 	db BANK(IsMissableObjectHidden)
 	dw IsMissableObjectHidden
-	dbw BANK(Func_c69c),Func_c69c
+	dbw BANK(Func_c69c),Func_c69c ; decrement hp of poisoned pokemon
 	db BANK(AnyPokemonAliveCheck)
 	dw AnyPokemonAliveCheck
 	db BANK(AddMissableObject)
@@ -92960,12 +93051,17 @@ RedsHouse2FScript2:
 	call Func_32f9
 	ld a, $7
 	call Predef
+	ld a, [W_NUMINPARTY]
+	ld e, a
+.loop
+	push de
 	xor a
 	ld [wWhichPokemon], a
 	ld [$cf95], a
 	call RemovePokemon
-	call RemovePokemon
-	call RemovePokemon
+	pop de
+	dec e
+	jr nz, .loop
 	; clear pokedex flags
 	xor a
 	ld hl, wPokedexOwned

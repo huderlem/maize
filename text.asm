@@ -1032,6 +1032,26 @@ _PlayerMonFaintedText:: ; 8970c (22:570c)
 	line "fainted!"
 	prompt
 
+_PlayerMonDiedText::
+	TX_RAM W_PLAYERMONNAME
+	db $0
+	line "has died!"
+
+	para "Goodbye, friend."
+	prompt
+
+_PlayerGameOverText::
+	text "All of your"
+	line "#MON have"
+	cont "departed into the"
+	cont "afterlife!"
+
+	para "Better luck next"
+	line "time!"
+
+	para "GAME OVER"
+	prompt
+
 _UnnamedText_3c7d3:: ; 8971a (22:571a)
 	text "Use next #MON?"
 	done
@@ -2370,6 +2390,14 @@ _PokemonFaintedText:: ; a25b7 (28:65b7)
 	TX_RAM $cd6d
 	db $0
 	line "fainted!"
+	done
+
+_PokemonDiedText::
+	TX_RAM $cd6d
+	db $0
+	line "has died!"
+
+	para "Goodbye, friend."
 	done
 
 _PlayerBlackedOutText:: ; a25c5 (28:65c5)
