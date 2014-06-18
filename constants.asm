@@ -32,4 +32,4 @@ INCLUDE "constants/music_constants.asm"
 
 ; mininum total DVs a wild pokemon needs to have for set off the SCOUTER
 SCOUTER_DV_TRIGGER EQU 50
-EXTRA_WRAM_BYTES   EQU 2
+EXTRA_WRAM_BYTES   EQU 18

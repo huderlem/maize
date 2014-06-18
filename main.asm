@@ -24910,6 +24910,13 @@ ItemUseBall: ; d687 (3:5687)
 	jp z,ItemUseNotTime ; not in battle
 	dec a
 	jp nz,ThrowBallAtTrainerMon
+	; nuzlocke check for map availabiilty
+    ld hl, W_NEWFLAGS1
+    bit 2, [hl]
+    jr z, .noNuzlocke
+    bit 3, [hl] ; can we throw a ball on this map?
+    jp z,NuzlockeNotAllowed
+.noNuzlocke
 	ld a,[W_BATTLETYPE]
 	dec a
 	jr z,.UseBall
@@ -27094,6 +27101,10 @@ ItemUseNotTime: ; e581 (3:6581)
 	ld hl,ItemUseNotTimeText
 	jr ItemUseFailed
 
+NuzlockeNotAllowed:
+    ld hl,NuzlockeFailedBallText
+    jr ItemUseFailed
+
 ItemUseNotYoursToUse: ; e586 (3:6586)
 	ld hl,ItemUseNotYoursToUseText
 	jr ItemUseFailed
@@ -27131,6 +27142,10 @@ ItemUseFailed: ; e5b9 (3:65b9)
 ItemUseNotTimeText: ; e5c0 (3:65c0)
 	TX_FAR _ItemUseNotTimeText
 	db "@"
+
+NuzlockeFailedBallText:
+    TX_FAR _NuzlockeFailedBallText
+    db "@"
 
 ItemUseNotYoursToUseText: ; e5c5 (3:65c5)
 	TX_FAR _ItemUseNotYoursToUseText
@@ -30231,6 +30246,41 @@ PokemonStuffText: ; fc45 (3:7c45)
 PlayerGameOverText2:
 	TX_FAR _PlayerGameOverText
 	db "@"
+
+NuzlockeAllowedToCatch:
+	; c register and zero flags set if player is allowed to catch pokemon on this map
+	ld a, [W_CURMAP]
+	ld hl, W_NUZLOCKE_MAP_FLAGS
+.loop
+	cp a, 8
+	jr c, .foundByte
+	sub 8
+	inc hl
+	jr .loop
+.foundByte
+	; hl points to correct byte
+	; a = bit in [hl] that we want
+    ld b, 2 ; read bit
+    ld c, a
+	jp _HandleBitArray
+
+NuzlockeSetAllowedToCatch:
+    ; sets the corresponding map's bit in W_NUZLOCKE_MAP_FLAGS
+    ld a, [W_CURMAP]
+    ld hl, W_NUZLOCKE_MAP_FLAGS
+.loop
+    cp a, 8
+    jr c, .foundByte
+    sub 8
+    inc hl
+    jr .loop
+.foundByte
+    ; hl points to correct byte
+    ; a = bit in [hl] that we want
+    ld b, 1 ; set the bit
+    ld c, a
+    jp _HandleBitArray
+
 
 SECTION "bank4",ROMX,BANK[$4]
 
@@ -89292,7 +89342,25 @@ Func_58d99: ; 58d99 (16:4d99)
 	ld a, [W_ISINBATTLE] ; $d057
 	dec a
 	jr nz, .continue
+    ; if nuzlocke mode is enabled, set flags that allows player to throw ball
+    ld hl, W_NEWFLAGS1
+    bit 2, [hl]
+    jr z, .doScouterLogic
+    ld hl, NuzlockeAllowedToCatch
+    ld b, BANK(NuzlockeAllowedToCatch)
+    call Bankswitch ; indirect jump to NuzlockeAllowedToCatch
+    ld hl, W_NEWFLAGS1
+    jr nz, .notAllowedCatch
+    set 3, [hl]
+    jr .markMap
+.notAllowedCatch
+    res 3, [hl]
+.markMap
+    ld hl, NuzlockeSetAllowedToCatch
+    ld b, BANK(NuzlockeSetAllowedToCatch)
+    call Bankswitch ; indirect jump to NuzlockeSetAllowedToCatch
 
+.doScouterLogic
 	; scouter here
 	; is SCOUTER_RING in the first item slot?
 	ld hl, wBagItems
@@ -89321,7 +89389,7 @@ Func_58d99: ; 58d99 (16:4d99)
 	ld hl, Func_3eb01
 	ld b, BANK(Func_3eb01)
 	call Bankswitch ; indirect jump to Func_3eb01 (3eb01 (f:6b01))
-	jr .asm_58daa
+	jp .asm_58daa
 .asm_58df5
 	ld hl, UnnamedText_58e45 ; $4e45
 	call PrintText

@@ -2916,6 +2916,19 @@ _ItemUseNotTimeText:: ; a6aa6 (29:6aa6)
 	cont "time to use that! "
 	prompt
 
+_NuzlockeFailedBallText::
+	text "You already had a"
+	line "chance to catch a"
+	cont "#MON in this"
+	cont "area!"
+
+	para "You're playing"
+	line "Nuzlocke Mode,"
+	cont "remember?"
+
+	para "Good luck!"
+	prompt
+
 _ItemUseNotYoursToUseText:: ; a6ad0 (29:6ad0)
 	text "This isn't yours"
 	line "to use!"

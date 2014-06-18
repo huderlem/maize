@@ -1455,14 +1455,23 @@ W_BOXMON1NAME:: ; de06
 W_BOXMON2NAME:: ; de11
 	ds 11 * 19
 
+; extra bytes begin here. REMEMBER TO UPDATE THE CONSTANT "EXTRA_WRAM_BYTES"
+
 W_NEWFLAGS1:: ; dee2
 	ds 1
 	; 0: Beat Shadow of Copper Town 
 	; 1: Received Item from Shadow guy in Copper Town
 	; 2: Nuzlocke Mode 1=On, 0=Off
+	; 3: Allowed to throw pokeball this battle 0=no, 1=yes
 
 W_SLOW_MUSIC:: ; dee3
 	ds 1
+
+W_NUZLOCKE_MAP_FLAGS::
+	; 1 bit for each map
+	; 1=already had chance
+	; 0=can still catch pokemon
+	ds 16
 
 ; if you ever add more here, you have to modify 
 ; LoadSAVCheckSum
