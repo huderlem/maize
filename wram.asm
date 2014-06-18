@@ -1463,3 +1463,10 @@ W_NEWFLAGS1:: ; dee2
 
 W_SLOW_MUSIC:: ; dee3
 	ds 1
+
+; if you ever add more here, you have to modify 
+; LoadSAVCheckSum
+; LoadSAVCheckSum1
+; SaveSAVtoSRAM0
+; SaveSAVtoSRAM1
+
