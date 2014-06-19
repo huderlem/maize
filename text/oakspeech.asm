@@ -19,8 +19,8 @@ _NuzlockeText::
 	cont "see in each area."
 
 	para "3. If all of your"
-	line "die, it's game"
-	cont "over!"
+	line "#MON die, it's"
+	cont "game over!"
 
 	para "So, would you"
 	line "like to play in"
