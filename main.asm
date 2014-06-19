@@ -54354,7 +54354,7 @@ BrockData: ; 3a3b5 (e:63b5)
 if _YELLOW
 	db $FF,10,GEODUDE,12,ONIX,0
 else
-	db $FF,10,CLEFAIRY,11,PORYGON,12,SPEAROW,0 ; Blandy
+	db $FF,9,CLEFAIRY,10,PORYGON,11,SPEAROW,0 ; Blandy
 endc
 MistyData: ; 3a3bb (e:63bb)
 	db $FF,20,ONIX,22,RHYHORN,0
