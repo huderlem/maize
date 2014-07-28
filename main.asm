@@ -93830,6 +93830,7 @@ CeruleanPokecenterTextPointers: ; 5c64b (17:464b)
 	dw CeruleanPokecenterText2
 	dw CeruleanPokecenterText3
 	dw CeruleanPokecenterText4
+	dw CeruleanPokecenterText5
 
 CeruleanPokecenterText4: ; 5c653 (17:4653)
 	db $f6
@@ -93845,6 +93846,205 @@ CeruleanPokecenterText3: ; 5c65a (17:465a)
 	TX_FAR _CeruleanPokecenterText3
 	db "@"
 
+CeruleanPokecenterText5:
+	db $08 ; asm
+	; check if playing nuzlocke mode
+	ld hl, W_NEWFLAGS1
+	bit 2, [hl]
+	jr nz, .nuzlockeMode
+	ld hl, AgatePokecenterText5
+	call PrintText
+	jp TextScriptEnd
+.nuzlockeMode
+	; load HM list of HMs
+	ld hl, AgatePokecenterText5_2
+	call PrintText
+.showHMList
+	xor a
+	ld [wCurrentMenuItem], a
+	ld [wListScrollOffset], a
+
+	ld hl, NuzlockeHMMoveList
+	; taken from cerulean house badge information guy
+	call LoadItemList
+	ld hl, $cf7b
+	ld a, l
+	ld [$cf8b], a
+	ld a, h
+	ld [$cf8c], a
+	xor a
+	ld [$cf93], a
+	ld [$cc35], a
+	ld a, SPECIALLISTMENU
+	ld [wListMenuID], a
+	call DisplayListMenuID
+	jp c, .goodbye
+	ld a, [$cf91] ; a contains list selection
+	ld hl, W_OBTAINEDBADGES
+	cp HM_05
+	jr z, .hm05
+	cp HM_04
+	jr z, .hm04
+	cp HM_03
+	jr z, .hm03
+	cp HM_02
+	jr z, .hm02
+.hm01
+	bit 1, [hl]
+	jp z, .dontHaveRequiredBadge
+	jr .getMove
+.hm05
+	bit 0, [hl]
+	jp z, .dontHaveRequiredBadge
+	jr .getMove
+.hm04
+	bit 3, [hl]
+	jp z, .dontHaveRequiredBadge
+	jr .getMove
+.hm03
+	bit 4, [hl]
+	jp z, .dontHaveRequiredBadge
+	jr .getMove
+.hm02
+	bit 2, [hl]
+	jp z, .dontHaveRequiredBadge
+.getMove
+	ld a, [$cf91] ; a contains list selection
+	sub HM_01
+	ld c, a
+	ld b, 0
+	ld hl, NuzlockeHMMONList
+	add hl, bc
+	ld a, [hl] ; a contains mon id
+	push hl
+	ld [$d11e], a
+	call GetMonName
+	ld hl, AgatePokecenterText5_5
+	call PrintText
+	call YesNoChoice
+	ld a, [$cc26]
+	and a
+	pop hl
+	jp nz, .goodbye
+	push hl
+	ld hl, AgatePokecenterText5_6
+	call PrintText
+	; choose a pokemon from the party
+	call SaveScreenTilesToBuffer2
+	xor a
+	ld [$d07d], a
+	ld [$cfcb], a
+	ld [$cc35], a
+	call DisplayPartyMenu
+	push af
+	call GBPalWhiteOutWithDelay3
+	call Func_3dbe
+	call LoadGBPal
+	call LoadScreenTilesFromBuffer2
+	pop af
+	pop hl
+	jr c, .goodbye
+	push hl
+	ld hl, AgatePokecenterText5_7
+	call PrintText
+	call YesNoChoice
+	ld a, [$cc26]
+	and a
+	pop hl
+	jr nz, .goodbye
+	push hl
+	ld a,[$cf92] ; index within party
+	ld [wWhichPokemon], a
+	xor a
+	ld [$cf95], a
+	call RemovePokemon
+	; now add the new pokemon
+	pop hl
+	ld a, [hl] ; a contains new mon id
+	ld b, a
+	ld c, 2 ; level 2
+	call GivePokemon
+	ld a, [W_NUMINPARTY]
+	dec a
+	ld hl, W_PARTYMON1_IV
+	ld bc, 44
+.addLoop
+	and a
+	jr z, .overwriteDVs
+	add hl, bc
+	dec a
+	jr .addLoop
+.overwriteDVs
+	xor a
+	ld [hli], a
+	ld [hli], a
+	; recalculate stats
+	ld bc, $0005
+	add hl, bc
+	ld d, h
+	ld e, l
+	ld bc, -18
+	add hl, bc
+	push hl
+	call CalcStats
+	pop hl
+	ld bc, -15
+	add hl, bc
+	; 1 HP left
+	xor a
+	ld [hli], a
+	inc a
+	ld [hl], a
+	jr .goodbye
+.dontHaveRequiredBadge
+	ld hl, AgatePokecenterText5_4
+	call PrintText
+	jp .showHMList
+.goodbye
+	ld hl, AgatePokecenterText5_3
+	call PrintText
+	jp TextScriptEnd
+
+NuzlockeHMMONList:
+	db RATTATA, PIDGEY, TENTACOOL, EKANS, PARAS
+
+NuzlockeHMMoveList:
+	db $5 ; num items in list
+	db HM_01, HM_02, HM_03, HM_04, HM_05
+	db $ff ; terminator
+
+HMMoveList:
+	db CUT, FLY, SURF, STRENGTH, FLASH
+
+AgatePokecenterText5:
+	TX_FAR _AgatePokecenterText5
+	db "@"
+
+AgatePokecenterText5_2:
+	TX_FAR _AgatePokecenterText5_2
+	db "@"
+
+AgatePokecenterText5_3:
+	TX_FAR _AgatePokecenterText5_3
+	db "@"
+
+AgatePokecenterText5_4:
+	TX_FAR _AgatePokecenterText5_4
+	db "@"
+
+AgatePokecenterText5_5:
+	TX_FAR _AgatePokecenterText5_5
+	db "@"
+
+AgatePokecenterText5_6:
+	TX_FAR _AgatePokecenterText5_6
+	db "@"
+
+AgatePokecenterText5_7:
+	TX_FAR _AgatePokecenterText5_7
+	db "@"
+
+
 CeruleanPokecenterObject: ; 0x5c65f (size=44)
 	db $0 ; border tile
 
@@ -93854,11 +94054,12 @@ CeruleanPokecenterObject: ; 0x5c65f (size=44)
 
 	db $0 ; signs
 
-	db $4 ; people
+	db $5 ; people
 	db SPRITE_NURSE, $1 + 4, $3 + 4, $ff, $d0, $1 ; person
 	db SPRITE_BLACK_HAIR_BOY_2, $5 + 4, $a + 4, $fe, $0, $2 ; person
-	db SPRITE_GENTLEMAN, $3 + 4, $4 + 4, $ff, $d0, $3 ; person
+	db SPRITE_GENTLEMAN, $5 + 4, $6 + 4, $ff, $ff, $3 ; person
 	db SPRITE_CABLE_CLUB_WOMAN, $2 + 4, $b + 4, $ff, $d0, $4 ; person
+	db SPRITE_OAK_AIDE, $3 + 4, $4 + 4, $ff, $d0, $5 ; person
 
 	; warp-to
 	EVENT_DISP $7, $7, $3
