@@ -3244,7 +3244,9 @@ _EnteringText2::
 
 _ScouterText::
 	text "The SCOUTER RING"
-	line "is beeping!"
+	line "flashed @"
+	TX_NUM $ffdd, 1, 2
+	text "!"
 	prompt
 
 _FocusRingHeldOnText::

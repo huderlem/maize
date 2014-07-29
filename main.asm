@@ -89369,11 +89369,15 @@ Func_58d99: ; 58d99 (16:4d99)
 	jr nz, .continue
 .countDVs	
 	call CountTotalDV
-	cp SCOUTER_DV_TRIGGER
-	jr c, .continue ; jump if the DVs are too low
+	push af
+	ld a, [$ff00+$dd]
+	ld b, a
+	pop af
+	ld [$ff00+$dd], a
 	ld hl, ScouterText
 	call PrintText
-
+	ld a, b
+	ld [$ff00+$dd], a
 .continue
 	jr asm_58e3a
 .asm_58dd8
