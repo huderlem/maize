@@ -43903,7 +43903,7 @@ TypeNamePointers: ; 27dae (9:7dae)
 	dw Type07Name
 	dw Type08Name
 	dw Type09Name
-	dw Type00Name
+	dw Type0AName
 	dw Type00Name
 	dw Type00Name
 	dw Type00Name
@@ -43955,6 +43955,8 @@ Type1AName: ; 27e43 (9:7e43)
 	db "DRAGON@"
 Type09Name:
 	db "STEEL@"
+Type0AName:
+	db "FAIRY@"
 Type13Name:
 	db "DARK@"
 
@@ -47758,8 +47760,8 @@ ClefairyBaseStats: ; 38796 (e:4796)
 	db 35 ; base speed
 	db 60 ; base special
 
-	db NORMAL ; species type 1
-	db NORMAL ; species type 2
+	db FAIRY ; species type 1
+	db FAIRY ; species type 2
 
 	db 150 ; catch rate
 	db 68 ; base exp yield
@@ -47795,8 +47797,8 @@ ClefableBaseStats: ; 387b2 (e:47b2)
 	db 60 ; base speed
 	db 85 ; base special
 
-	db NORMAL ; species type 1
-	db NORMAL ; species type 2
+	db FAIRY ; species type 1
+	db FAIRY ; species type 2
 
 	db 25 ; catch rate
 	db 129 ; base exp yield
@@ -47907,7 +47909,7 @@ JigglypuffBaseStats: ; 38806 (e:4806)
 	db 25 ; base special
 
 	db NORMAL ; species type 1
-	db NORMAL ; species type 2
+	db FAIRY ; species type 2
 
 	db 170 ; catch rate
 	db 76 ; base exp yield
@@ -47944,7 +47946,7 @@ WigglytuffBaseStats: ; 38822 (e:4822)
 	db 50 ; base special
 
 	db NORMAL ; species type 1
-	db NORMAL ; species type 2
+	db FAIRY ; species type 2
 
 	db 50 ; catch rate
 	db 109 ; base exp yield
@@ -50978,7 +50980,7 @@ MrMimeBaseStats: ; 3911a (e:511a)
 	db 100 ; base special
 
 	db PSYCHIC ; species type 1
-	db PSYCHIC ; species type 2
+	db FAIRY ; species type 2
 
 	db 45 ; catch rate
 	db 136 ; base exp yield
@@ -63978,6 +63980,18 @@ TypeEffects: ; 3e474 (f:6474)
 	db GHOST,DARK,05
 	db GHOST,STEEL,05
 	db DRAGON,STEEL,05
+	db FAIRY,FIGHTING,20
+	db FAIRY,POISON,05
+	db FAIRY,STEEL,05
+	db FAIRY,FIRE,05
+	db FAIRY,DRAGON,20
+	db FAIRY,DARK,20
+	db FIGHTING,FAIRY,05
+	db POISON,FAIRY,20
+	db BUG,FAIRY,05
+	db STEEL,FAIRY,20
+	db DRAGON,FAIRY,0
+	db DARK,FAIRY,05
 	db $FF
 
 ; some tests that need to pass for a move to hit
