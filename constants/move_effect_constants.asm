@@ -70,6 +70,7 @@ METRONOME_EFFECT           EQU $53
 LEECH_SEED_EFFECT          EQU $54
 SPLASH_EFFECT              EQU $55
 DISABLE_EFFECT             EQU $56
+FLAME_CHARGE_EFFECT        EQU $57
 
 ; fixed damage constants
 SONICBOOM_DAMAGE   EQU 20

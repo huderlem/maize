@@ -46480,7 +46480,7 @@ Moves: ; 38000 (e:4000)
 	db LOW_KICK    ,NO_ADDITIONAL_EFFECT      ,100,STEEL,   $BF,15 ; IRON_TAIL
 	db $CF         ,SWIFT_EFFECT              ,60,FLYING,   $FF,20 ; AERIAL_ACE
 	db TAKE_DOWN   ,RECOIL_EFFECT             ,120,FLYING,  $FF,20 ; BRAVE_BIRD
-	db FIRE_PUNCH  ,NO_ADDITIONAL_EFFECT      ,50,FIRE,     $FF,20 ; FLAME_CHARGE
+	db FIRE_PUNCH  ,FLAME_CHARGE_EFFECT       ,50,FIRE,     $FF,20 ; FLAME_CHARGE
 	db EMBER       ,BURN_SIDE_EFFECT1         ,60,FIRE,     $FF,25 ; FLAME_WHEEL
 	db WATER_GUN   ,BURN_SIDE_EFFECT1         ,80,WATER,    $FF,15 ; SCALD
 	db RAZOR_LEAF  ,SPECIAL_DOWN_SIDE_EFFECT  ,120,GRASS,   $D8,5  ; SEED_FLARE
@@ -65800,6 +65800,35 @@ MoveEffectPointerTable: ; 3f150 (f:7150)
 	 dw Func_3fa7c
 	 dw Func_3fa84
 	 dw Func_3fa8a
+	 dw FlameChargeEffect ; FLAME_CHARGE_EFFECT
+
+FlameChargeEffect:
+	ld hl, wPlayerMonSpeedMod ; $cd1a
+	ld a, [H_WHOSETURN] ; $fff3
+	and a
+	jr z, .start
+	ld hl, wEnemyMonSpeedMod ; $cd2e
+.start
+	ld a, [hl]
+	cp $d
+	ret z
+	inc a
+	ld [hl], a
+	ld hl, FlameChargeText1
+	ld a, [H_WHOSETURN]
+	and a
+	jr z, .printText
+	ld hl, FlameChargeText2
+.printText
+	jp PrintText
+
+FlameChargeText1:
+	TX_FAR _FlameChargeText1
+	db "@"
+
+FlameChargeText2:
+	TX_FAR _FlameChargeText2
+	db "@"
 
 Func_3f1fc: ; 3f1fc (f:71fc)
 	ld de, W_ENEMYMONSTATUS ; $cfe9

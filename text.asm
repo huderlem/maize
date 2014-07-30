@@ -3254,3 +3254,16 @@ _FocusRingHeldOnText::
 	line "helped ", $59
 	cont "hold on!"
 	prompt
+
+_FlameChargeText1::
+	TX_RAM W_PLAYERMONNAME
+	text "'s"
+	line "SPEED rose!"
+	prompt
+
+_FlameChargeText2::
+	text "Enemy @"
+	TX_RAM W_ENEMYMONNAME
+	text "'s"
+	line "SPEED rose!"
+	prompt
