@@ -30520,6 +30520,18 @@ StatusScreen: ; 12953 (4:6953)
 	PREDEF DrawHPBarPredef ; predef $5f
 	ld hl, $cf25
 	call Func_3df9
+	; is mon supposed to be shiny?
+	ld b, Bank(IsMonShiny)
+	ld hl, IsMonShiny
+	ld de, $cfb3
+	call Bankswitch
+	ld hl, W_NEWFLAGS1
+	jr nz, .shiny
+	res 4, [hl]
+	jr .setPAL
+.shiny
+	set 4, [hl]
+.setPAL
 	ld b, $3
 	call GoPAL_SET ; SGB palette
 	FuncCoord 16,6
@@ -30573,6 +30585,7 @@ StatusScreen: ; 12953 (4:6953)
 	ld bc, $8205 ; 5
 	call PrintNumber ; ID Number
 	call PrintPerfectMonSymbol
+	call PrintShinySymbol
 	ld d, $0
 	call PrintStatsBox
 	call Delay3
@@ -30677,6 +30690,20 @@ PrintPerfectMonSymbol:
 
 PerfectText:
 	db "PERFECT"
+
+PrintShinySymbol:
+	; check if mon is shiny
+	ld b, Bank(IsMonShiny)
+	ld hl, IsMonShiny
+	ld de, $cfb3
+	call Bankswitch
+	ret z
+	; draw the shiny symbol
+	FuncCoord 0, 0
+	ld hl, Coord
+	ld a, $e7 ; "!"
+	ld [hl], a
+	ret
 
 PrintStatsBox: ; 12ae4 (4:6ae4)
 	ld a, d
@@ -58481,6 +58508,18 @@ Func_3c04c: ; 3c04c (f:404c)
 	inc a
 	ld [H_AUTOBGTRANSFERENABLED], a ; $FF00+$ba
 	call Delay3
+	; is mon shiny?
+	ld b, Bank(IsMonShiny)
+	ld hl, IsMonShiny
+	ld de, W_ENEMYMONATKDEFIV
+	call Bankswitch
+	ld hl, W_NEWFLAGS1
+	jr nz, .shiny
+	res 4, [hl]
+	jr .setPAL
+.shiny
+	set 4, [hl]
+.setPAL
 	ld b, $1
 	call GoPAL_SET
 	call ResetLCD_OAM
@@ -60156,6 +60195,26 @@ Func_3cca4: ; 3cca4 (f:4ca4)
 	ld hl, Coord
 	ld a, $2
 	call Predef ; indirect jump to Func_3f073 (3f073 (f:7073))
+	; is mon is shiny, flash the screen
+	ld b, Bank(IsMonShiny)
+	ld hl, IsMonShiny
+	ld de, W_PLAYERMONIVS
+	call Bankswitch
+	jr z, .playCry
+	; flash the screen
+	ld a, [rBGP]
+	push af
+	ld a,%00011011 ; 0, 1, 2, 3 (inverted colors)
+	ld [rBGP],a
+	ld c,2
+	call DelayFrames
+	xor a ; white out background
+	ld [rBGP],a
+	ld c,2
+	call DelayFrames
+	pop af
+	ld [rBGP],a ; restore initial palette
+.playCry
 	ld a, [$cf91]
 	call PlayCry
 	call Func_3ee94
@@ -89358,8 +89417,28 @@ Func_58d99: ; 58d99 (16:4d99)
 	cp POKEMONTOWER_3
 	jr c, .asm_58daa
 	cp LAVENDER_HOUSE_1
-	jr c, .asm_58dd8
+	jp c, .asm_58dd8
 .asm_58daa
+	; flash screen if mon is shiny
+	ld b, Bank(IsMonShiny)
+	ld hl, IsMonShiny
+	ld de, W_ENEMYMONATKDEFIV
+	call Bankswitch
+	jr z, .playCry
+	; flash the screen
+	ld a, [rBGP]
+	push af
+	ld a,%00011011 ; 0, 1, 2, 3 (inverted colors)
+	ld [rBGP],a
+	ld c,2
+	call DelayFrames
+	xor a ; white out background
+	ld [rBGP],a
+	ld c,2
+	call DelayFrames
+	pop af
+	ld [rBGP],a ; restore initial palette
+.playCry
 	ld a, [W_ENEMYMONID]
 	call PlayCry
 	ld hl, UnnamedText_58e3b ; $4e3b "wild whatever appeared!"
@@ -105160,13 +105239,46 @@ Func_71e06: ; 71e06 (1c:5e06)
 	ld de, $cf2d
 	ld bc, $10
 	call CopyData
+
+	ld hl, W_NEWFLAGS1
+	res 4, [hl]
+	ld a, [W_PLAYERMONID]
+	and a
+	jr z, .getPALID
+	; is mon shiny?
+	ld b, BANK(IsMonShiny)
+	ld hl, IsMonShiny
+	ld de, W_PLAYERMONIVS
+	call Bankswitch
+	jr z, .getPALID
+	ld hl, W_NEWFLAGS1
+	set 4, [hl]
+.getPALID	
 	ld a, [W_PLAYERBATTSTATUS3]
 	ld hl, W_PLAYERMONID
 	call DeterminePaletteID
 	ld b, a
+	push bc
+
+	ld hl, W_NEWFLAGS1
+	res 4, [hl]
+	ld a, [W_ENEMYMONID]
+	and a
+	jr z, .getPALID2
+	; is mon shiny?
+	ld b, BANK(IsMonShiny)
+	ld hl, IsMonShiny
+	ld de, W_ENEMYMONATKDEFIV
+	call Bankswitch
+	jr z, .getPALID2
+	ld hl, W_NEWFLAGS1
+	set 4, [hl]
+.getPALID2
 	ld a, [W_ENEMYBATTSTATUS3]
 	ld hl, W_ENEMYMONID
 	call DeterminePaletteID
+	pop bc
+
 	ld c, a
 	ld hl, $cf2e
 	ld a, [$cf1d]
@@ -105414,6 +105526,20 @@ DeterminePaletteIDOoutOfBattle: ; 71f9d (1c:5f9d)
 	ld hl, MonsterPalettes   ; not just for Pokemon, Trainers use it too
 	add hl, de
 	ld a, [hl]
+	push bc
+	ld d, a
+	ld a, e
+	and a
+	ld a, d
+	jr z, .done
+	ld b, a
+	ld a, [W_NEWFLAGS1]
+	bit 4, a ; is mon supposed to be shiny?
+	ld a, b
+	jr z, .done
+	add $17
+.done
+	pop bc
 	ret
 
 Func_71fb6: ; 71fb6 (1c:5fb6)
@@ -106232,6 +106358,47 @@ ENDC
     RGB 8, 13, 19
     RGB 5, 17, 14
     RGB 3,2,2
+    RGB 31,29,31 ; PAL_MEWMON_SHINY
+	RGB 22,30,17
+	RGB 14,16,19
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_BLUEMON_SHINY
+	RGB 20,11,27
+	RGB 15,11,23
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_REDMON_SHINY
+	RGB 20,31,10
+	RGB 10,26,6
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_CYANMON_SHINY
+	RGB 25,0,29
+	RGB 14,19,25
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_PURPLEMON_SHINY
+	RGB 27,0,24
+	RGB 21,15,23
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_BROWNMON_SHINY
+	RGB 28,0,15
+	RGB 21,14,9
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_GREENMON_SHINY
+	RGB 20,26,16
+	RGB 9,0,11
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_PINKMON_SHINY
+	RGB 30,0,24
+	RGB 28,15,21
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_YELLOWMON_SHINY
+	RGB 31,0,14
+	RGB 26,20,0
+	RGB 3,2,2
+	RGB 31,29,31 ; PAL_GREYMON_SHINY
+	RGB 26,0,22
+	RGB 15,15,18
+	RGB 3,2,2
+
 
 BorderPalettes: ; 72788 (1c:6788)
 IF _RED
@@ -118653,8 +118820,10 @@ Func_7bde9: ; 7bde9 (1e:7de9)
 	jr .asm_7be81
 
 Func_7beb4: ; 7beb4 (1e:7eb4)
-	ld b, $b
-	jp GoPAL_SET
+	ld d, c
+	ld b, Bank(Moved_Func_7beb4)
+	ld hl, Moved_Func_7beb4
+	jp Bankswitch
 
 Func_7beb9: ; 7beb9 (1e:7eb9)
 	call GetMonHeader
@@ -119968,6 +120137,47 @@ HealingRing:
 	jr .loop
 .done	
 	ret
+
+IsMonShiny:
+; input de = address in RAM for DVs
+; reset zero flag if mon is shiny
+; mon is shiny if Defense/Speed/Special are 10, and Attack is 2, 3, 6, 7, 10, 11, 14, or 15
+	ld h, d
+	ld l, e
+	ld a, [hli]
+	bit 5, a
+	jr z, .notShiny
+	and a, $0f
+	cp $0a
+	jr nz, .notShiny
+	ld a, [hl]
+	cp $aa
+	jr nz, .notShiny
+	; set zero flag
+	and a ; a cannot be 0, so zero flag is set with thing command
+	ret
+.notShiny
+	; reset zero flag
+	xor a
+	ret
+
+Moved_Func_7beb4: ; 7beb4 (1e:7eb4)
+	; check if evolving mon is shiny
+	ld hl, W_NEWFLAGS1
+	res 4, [hl]
+	ld b, Bank(IsMonShiny)
+	ld hl, IsMonShiny
+	push de
+	ld de, $cfb3
+	call Bankswitch
+	pop de
+	jr z, .setPAL
+	ld hl, W_NEWFLAGS1
+	set 4, [hl]
+.setPAL
+	ld c, d
+	ld b, $b
+	jp GoPAL_SET
 
 SECTION "MiniSprites 2", ROMX, BANK[$35]
 
