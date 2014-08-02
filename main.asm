@@ -11710,7 +11710,7 @@ ItemNames: ; 472b (1:472b)
 	db "BUBBLE RING@"
 	db "AMULET RING@"
 	db "BOOSTER RING@"
-	db "X@"
+	db "SHINY RING@"
 	db "X@"
 	db "X@"
 	db "X@"
@@ -24897,6 +24897,7 @@ ItemUsePtrTable: ; d5e1 (3:55e1)
 	dw UnusableItem      ; BUBBLE_RING
 	dw UnusableItem      ; AMULET_RING
 	dw UnusableItem      ; BOOSTER_RING
+	dw UnusableItem      ; SHINY_RING	
 
 ExtraItemUsePtrTable:
 	dw ItemUseBall       ; DV_BALL
@@ -31807,7 +31808,7 @@ DisplayItemInfo:
 	sub $e ; FOCUS_RING's id is now $54
 	jr .ready
 .TMHM
-	sub $70 - 7 ; HM_01's id is now $54 + 7 ; CHANGE THIS EVERY TIME YOU ADD A NEW ITEM AFTER ID $62
+	sub $70 - 8 ; HM_01's id is now $54 + 8 ; CHANGE THIS EVERY TIME YOU ADD A NEW ITEM AFTER ID $62
 .ready
 	ld hl,ItemInfoPointers
 	ld bc, 5
@@ -32002,6 +32003,8 @@ ItemInfoPointers:
 	db "@"
 	TX_FAR _BoosterRingDescription
 	db "@"
+    TX_FAR _ShinyRingDescription
+    db "@"
 	TX_FAR _HM01Description
 	db "@"
 	TX_FAR _HM02Description
@@ -64831,11 +64834,31 @@ Func_3eb01: ; 3eb01 (f:6b01)
 	ld a, $98
 	ld b, $88
 	jr z, .asm_3eb33
+    ; check for SHINY_RING
+    ld a, [wBagItems]
+    cp SHINY_RING
+    jr nz, .genDVs
+    ; fix shiny 1/64 of the time
+    call GenRandomInBattle
+    cp $4
+    jr nc, .genDVs
+    call GenRandomInBattle
+    ld b, a
+    sla b
+    sla b
+    sla b
+    sla b
+    ld a, $0A
+    or a, b
+    set 5, a
+    ld b, $AA
+    jr .asm_3eb33
+.genDVs
 	call GenRandomInBattle
 	ld b, a
 	call GenRandomInBattle
 .asm_3eb33
-	ld hl, $cff1
+	ld hl, W_ENEMYMONATKDEFIV
 	ld [hli], a
 	ld [hl], b
 	ld de, W_ENEMYMONLEVEL ; $cff3
@@ -120057,6 +120080,22 @@ _BoosterRingDescription::
 	cont "your inventory to"
 	cont "be in effect."
 	prompt
+
+_ShinyRingDescription::
+    text "A glimmering ring"
+    line "that lures shiny"
+    cont "#MON."
+
+    para "The odds of"
+    line "finding a shiny"
+    cont "increases to"
+    cont "1/64 chance."
+
+    para "Must be in the"
+    line "top item slot of"
+    cont "your inventory to"
+    cont "be in effect."
+    prompt
 
 SECTION "New Functions", ROMX, BANK[$34]
 
