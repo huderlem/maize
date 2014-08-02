@@ -11450,6 +11450,7 @@ ItemPrices: ; 4608 (1:4608)
 	db $00,$00,$00
 	db $00,$00,$00
 	db $00,$00,$00
+	db $00,$00,$00 ; FOCUS_RING
 	db $00,$00,$00
 	db $00,$00,$00
 	db $00,$00,$00
@@ -11457,6 +11458,7 @@ ItemPrices: ; 4608 (1:4608)
 	db $00,$00,$00
 	db $00,$00,$00
 	db $00,$00,$00
+	db $00,$12,$00 ; SHINY_BALL
 	db $00,$00,$00
 	db $00,$00,$00
 	db $00,$00,$00
@@ -11601,9 +11603,10 @@ ItemPrices: ; 4608 (1:4608)
 	db $00,$00,$00
 	db $00,$00,$00
 	db $00,$00,$00
-	db $00,$00,$00
-	db $00,$00,$00
-	db $00,$02,$00
+	db $00,$12,$00
+    db $00,$00,$00
+    db $00,$00,$00
+    db $00,$00,$00
 
 ItemNames: ; 472b (1:472b)
 	db "MASTER BALL@"
@@ -11711,7 +11714,7 @@ ItemNames: ; 472b (1:472b)
 	db "AMULET RING@"
 	db "BOOSTER RING@"
 	db "SHINY RING@"
-	db "X@"
+	db "SHINY BALL@"
 	db "X@"
 	db "X@"
 	db "X@"
@@ -24897,7 +24900,8 @@ ItemUsePtrTable: ; d5e1 (3:55e1)
 	dw UnusableItem      ; BUBBLE_RING
 	dw UnusableItem      ; AMULET_RING
 	dw UnusableItem      ; BOOSTER_RING
-	dw UnusableItem      ; SHINY_RING	
+	dw UnusableItem      ; SHINY_RING
+    dw ItemUseBall       ; SHINY_BALL
 
 ExtraItemUsePtrTable:
 	dw ItemUseBall       ; DV_BALL
@@ -24986,6 +24990,8 @@ ItemUseBall: ; d687 (3:5687)
 	ld a,[hl]
 	cp a,GREAT_BALL
 	jr z,.checkForAilments
+    cp a,SHINY_BALL
+    jr z,.checkForAilments
 	ld a,150	;get only numbers <= 150 for Ultra Ball
 	cp b
 	jr c,.loop
@@ -25020,8 +25026,13 @@ ItemUseBall: ; d687 (3:5687)
 	call Multiply	; MaxHP * 255
 	ld a,[$cf91]
 	cp a,GREAT_BALL
-	ld a,12		;any other BallFactor
-	jr nz,.next7
+	jr z,.greatBallShinyBall
+    cp a,SHINY_BALL
+    jr nz,.otherBall
+.greatBallShinyBall
+    ld a, 12
+    jr .next7
+.otherBall
 	ld a,8
 .next7	;$574d
 	ld [H_DIVISOR],a
@@ -25065,7 +25076,7 @@ ItemUseBall: ; d687 (3:5687)
 	cp b
 	jr c,.next10
 .BallSuccess	;$578b
-	jr .BallSuccess2
+	jp .BallSuccess2
 .next10	;$578d
 	ld a,[H_QUOTIENT + 3]
 	ld [$d11e],a
@@ -25086,6 +25097,8 @@ ItemUseBall: ; d687 (3:5687)
 	ld b,200
 	cp a,GREAT_BALL
 	jr z,.next11
+    cp a,SHINY_BALL
+    jr z,.next11
 	ld b,150
 	cp a,ULTRA_BALL
 	jr z,.next11
@@ -25140,7 +25153,23 @@ ItemUseBall: ; d687 (3:5687)
 	ld hl, W_ENEMYMONATKDEFIV
 	ld [hli], a
 	ld [hl], a
+    jr .pastSpecialBalls
 .skipDVBall
+    cp SHINY_BALL
+    jr nz, .pastSpecialBalls
+    call GenRandom
+    ld b, a
+    sla b
+    sla b
+    sla b
+    sla b
+    ld a, $0A
+    or a, b
+    set 5, a
+    ld [W_ENEMYMONATKDEFIV], a
+    ld a, $AA
+    ld [W_ENEMYMONSPDSPCIV], a
+.pastSpecialBalls
 	ld c,20
 	call DelayFrames
 	ld a,TOSS_ANIM
@@ -31808,7 +31837,7 @@ DisplayItemInfo:
 	sub $e ; FOCUS_RING's id is now $54
 	jr .ready
 .TMHM
-	sub $70 - 8 ; HM_01's id is now $54 + 8 ; CHANGE THIS EVERY TIME YOU ADD A NEW ITEM AFTER ID $62
+	sub $70 - 9 ; HM_01's id is now $54 + 9 ; CHANGE THIS EVERY TIME YOU ADD A NEW ITEM AFTER ID $62
 .ready
 	ld hl,ItemInfoPointers
 	ld bc, 5
@@ -32004,6 +32033,8 @@ ItemInfoPointers:
 	TX_FAR _BoosterRingDescription
 	db "@"
     TX_FAR _ShinyRingDescription
+    db "@"
+    TX_FAR _ShinyBallDescription
     db "@"
 	TX_FAR _HM01Description
 	db "@"
@@ -119170,17 +119201,17 @@ _RockyPointFlyGuyText2::
 	done
 
 _MasterBallDescription::
-	text "A #BALL that"
+	text "A # BALL that"
 	line "never fails."
 	done
 
 _UltraBallDescription::
-	text "A #BALL with"
+	text "A # BALL with"
 	line "a high rate of"
 	cont "success."
 
 _GreatBallDescription::
-	text "A #BALL with"
+	text "A # BALL with"
 	line "a decent success"
 	cont "rate."
 	prompt
@@ -119215,7 +119246,7 @@ _SurfboardDescription::
 	prompt
 
 _SafariBallDescription::
-	text "#BALL used in"
+	text "# BALL used in"
 	line "the SAFARI ZONE."
 	prompt
 
@@ -119939,7 +119970,7 @@ _TM50Description::
 	prompt
 
 _DVBallDescription::
-	text "A rare #BALL"
+	text "A rare # BALL"
 	line "that converts a"
 	cont "captured #MON"
 	cont "to its full"
@@ -120095,6 +120126,16 @@ _ShinyRingDescription::
     line "top item slot of"
     cont "your inventory to"
     cont "be in effect."
+    prompt
+
+_ShinyBallDescription::
+    text "A rare # BALL"
+    line "that makes a"
+    cont "captured #MON"
+    cont "shiny."
+
+    para "It has a decent"
+    line "catch rate."
     prompt
 
 SECTION "New Functions", ROMX, BANK[$34]
