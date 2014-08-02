@@ -25145,31 +25145,6 @@ ItemUseBall: ; d687 (3:5687)
 	ld a,b
 	ld [$d11e],a
 .BallSuccess2	;$5805
-	; DV_BALL sets the DVs to max
-	ld a,[$cf91]
-	cp DV_BALL
-	jr nz, .skipDVBall
-	ld a,$ff
-	ld hl, W_ENEMYMONATKDEFIV
-	ld [hli], a
-	ld [hl], a
-    jr .pastSpecialBalls
-.skipDVBall
-    cp SHINY_BALL
-    jr nz, .pastSpecialBalls
-    call GenRandom
-    ld b, a
-    sla b
-    sla b
-    sla b
-    sla b
-    ld a, $0A
-    or a, b
-    set 5, a
-    ld [W_ENEMYMONATKDEFIV], a
-    ld a, $AA
-    ld [W_ENEMYMONSPDSPCIV], a
-.pastSpecialBalls
 	ld c,20
 	call DelayFrames
 	ld a,TOSS_ANIM
@@ -25246,6 +25221,31 @@ ItemUseBall: ; d687 (3:5687)
 	ld [hld],a
 	pop af
 	ld [hl],a
+    ; DV_BALL sets the DVs to max
+    ld a,[$cf91]
+    cp DV_BALL
+    jr nz, .skipDVBall
+    ld a,$ff
+    ld hl, W_ENEMYMONATKDEFIV
+    ld [hli], a
+    ld [hl], a
+    jr .pastSpecialBalls
+.skipDVBall
+    cp SHINY_BALL
+    jr nz, .pastSpecialBalls
+    call GenRandom
+    ld b, a
+    sla b
+    sla b
+    sla b
+    sla b
+    ld a, $0A
+    or a, b
+    set 5, a
+    ld [W_ENEMYMONATKDEFIV], a
+    ld a, $AA
+    ld [W_ENEMYMONSPDSPCIV], a
+.pastSpecialBalls
 	ld a,[$cfe5]	;enemy
 	ld [$d11c],a
 	ld [$cf91],a
@@ -75101,7 +75101,7 @@ HiddenObjectMaps: ; 46a40 (11:6a40)
 	db VIRIDIAN_FOREST
 	db MT_MOON_3
 	db INDIGO_PLATEAU
-	db ROUTE_25
+	db ROUTE_3
 	db ROUTE_9
 	db SS_ANNE_6
 	db SS_ANNE_10
@@ -75190,7 +75190,7 @@ HiddenObjectPointers: ; 46a96 (11:6a96)
 	dw ViridianForestHiddenObjects
 	dw MtMoon3HiddenObjects
 	dw IndigoPlateauHiddenObjects
-	dw Route25HiddenObjects
+	dw Route3HiddenObjects
 	dw Route9HiddenObjects
 	dw SSAnne6HiddenObjects
 	dw SSAnne10HiddenObjects
@@ -75540,10 +75540,10 @@ IndigoPlateauHiddenObjects: ; 46e61 (11:6e61)
 	db $0d,$0b,$00 ; XXX, y, x
 	dbw Bank(Func_52a2f), Func_52a2f
 	db $FF
-Route25HiddenObjects: ; 46e6e (11:6e6e)
-	db $03,$26,ETHER
+Route3HiddenObjects: ; 46e6e (11:6e6e)
+	db $7,$22,SHINY_BALL
 	dbw BANK(HiddenItems),HiddenItems
-	db $01,$0a,ELIXER
+	db $7,$10,RARE_CANDY
 	dbw BANK(HiddenItems),HiddenItems
 	db $FF
 Route9HiddenObjects: ; 46e7b (11:6e7b)
@@ -85941,8 +85941,13 @@ Route3Text10: ; 55653 (15:5653)
 
 	ld hl,$cce5 ; total price of items
 	ld [hl], $1
+    ld hl,$cce4
+    ld [hl], $0
+    ld hl,$cce3
+    ld [hl], $0
+    ld hl,$cce5
 	ld de,wPlayerMoney + 2
-	ld c,1 ; length of money in bytes
+	ld c,3 ; length of money in bytes
 	ld a,$0b
 	call Predef ; add total price to money
 	pop bc
@@ -111849,7 +111854,8 @@ HiddenItemCoords: ; 766b8 (1d:66b8)
 	db UNDERGROUND_PATH_WE,$02,$0c
 	db UNDERGROUND_PATH_WE,$05,$15
 	db CELADON_CITY,$0f,$30
-	db ROUTE_25,$01,$0a
+	db ROUTE_3,$22,$07
+    db ROUTE_3,$10,$07
 	db MT_MOON_3,$09,$21
 	db SEAFOAM_ISLANDS_4,$10,$09
 	db VERMILION_CITY,$0b,$0e
