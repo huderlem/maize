@@ -94132,7 +94132,7 @@ CeruleanPokecenterText5:
 	jp TextScriptEnd
 
 NuzlockeHMMONList:
-	db RATTATA, PIDGEY, TENTACOOL, EKANS, PARAS
+	db RATTATA, PIDGEY, TENTACOOL, EKANS, CLEFAIRY
 
 NuzlockeHMMoveList:
 	db $5 ; num items in list
