@@ -173,6 +173,39 @@ _UnnamedText_1d340:: ; 9526b (25:526b)
 	para "He has taught me"
 	line "everything I"
 	cont "know!"
+
+	para "Except, he has no"
+	line "fashion sense!"
+
+	para "I have this ring"
+	line "that sparkles in"
+	cont "the sun, but it"
+	cont "just doesn't go"
+	cont "with any of my"
+	cont "outfits!"
+
+	para "PROF.CEDAR didn't"
+	line "want it because"
+	cont "he isn't hip."
+
+	para "You look hip, so"
+	line "you can have it!"
+	prompt
+
+_GotShinyRingText::
+	text $52, " got the"
+	line "SHINY RING!"
+	prompt
+
+_ShinyRingNoRoomText::
+	text "Aw, you don't have"
+	line "any room for it!"
+	done
+
+_AfterShinyRingText::
+	text "Wear that"
+	line "SHINY RING with"
+	cont "pride!"
 	done
 
 _OaksLabRivalWaitingText:: ; 952bb (25:52bb)

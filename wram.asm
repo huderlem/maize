@@ -1464,6 +1464,7 @@ W_NEWFLAGS1:: ; dee2
 	; 2: Nuzlocke Mode 1=On, 0=Off
 	; 3: Allowed to throw pokeball this battle 0=no, 1=yes
 	; 4: Mon palette should be shiny
+	; 5: Received Shiny Ring from girl in Cedar's Lab in Lapis Town
 
 W_SLOW_MUSIC:: ; dee3
 	ds 1

@@ -40174,13 +40174,43 @@ OaksLabText8: ; 1d331 (7:5331)
 OaksLabText36: ; 1d336 (7:5336)
 OaksLabText9: ; 1d336 (7:5336)
 	db $08 ; asm
+    ld a, [W_NEWFLAGS1]
+    bit 5, a
+    jr nz, .alreadyGotIt
 	ld hl, UnnamedText_1d340
 	call PrintText
+    ld bc, (SHINY_RING << 8) | 1
+    call GiveItem
+    jr nc, .BagFull
+    ld hl, W_NEWFLAGS1
+    set 5, [hl]
+    ld hl, GotShinyRingText
+    call PrintText
+.alreadyGotIt
+    ld hl, AfterShinyRingText
+    jr .done
+.BagFull
+    ld hl, ShinyRingNoRoomText
+    jp TextScriptEnd
+.done
+    call PrintText
 	jp TextScriptEnd
 
 UnnamedText_1d340: ; 1d340 (7:5340)
 	TX_FAR _UnnamedText_1d340
 	db "@"
+
+GotShinyRingText:
+    TX_FAR _GotShinyRingText
+    db "@"
+
+AfterShinyRingText:
+    TX_FAR _AfterShinyRingText
+    db "@"
+
+ShinyRingNoRoomText:
+    TX_FAR _ShinyRingNoRoomText
+    db "@"
 
 OaksLabText17: ; 1d345 (7:5345)
 	db $8
@@ -84954,7 +84984,7 @@ Route2Object: ; 0x54022 (size=72)
 
 	db $2 ; people
 	db SPRITE_BALL, $29 + 4, $4 + 4, $ff, $ff, $81, REPEL ; item
-	db SPRITE_BALL, $1a + 4, $11 + 4, $ff, $ff, $82, POKE_BALL ; item
+	db SPRITE_BALL, $1a + 4, $11 + 4, $ff, $ff, $82, POTION ; item
 
 	; warp-to
 	EVENT_DISP ROUTE_2_WIDTH, $17, $c  ; DIGLETTS_CAVE
