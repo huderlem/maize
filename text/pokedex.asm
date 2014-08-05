@@ -1644,3 +1644,13 @@ _ScizorDexEntry::
 	next "SKARMORY is able"
 	next "to fly"
 	dex
+
+_EspeonDexEntry::
+	text "Uses its fur to"
+	next "predict opponent"
+	next "attacks."
+
+	page "That sounds like"
+	next "cheating, but oh"
+	next "well"
+	dex
