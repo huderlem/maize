@@ -3053,7 +3053,7 @@ LoadFrontSpriteByMonIndex:: ; 1389 (0:1389)
 	and a
 	pop hl
 	jr z, .invalidDexNumber  ; dex #0 invalid
-	cp 167 ; num mons in dex + 1
+	cp 171 ; num mons in dex + 1
 	jr c, .validDexNumber    ; dex >#151 invalid
 .invalidDexNumber
 	ld a, RHYDON ; $1
@@ -38729,15 +38729,15 @@ MonsterNames: ; 1c21e (7:421e)
 	db "PIKACHU@@@"
 	db "RAICHU@@@@"
 	db "ESPEON@@@@"
-	db "MISSINGNO."
+	db "UMBREON@@@"
 	db "DRATINI@@@"
 	db "DRAGONAIR@"
 	db "KABUTO@@@@"
 	db "KABUTOPS@@"
 	db "HORSEA@@@@"
 	db "SEADRA@@@@"
-	db "MISSINGNO."
-	db "MISSINGNO."
+	db "LEAFEON@@@"
+	db "GLACEON@@@"
 	db "SANDSHREW@"
 	db "SANDSLASH@"
 	db "OMANYTE@@@"
@@ -38757,7 +38757,7 @@ MonsterNames: ; 1c21e (7:421e)
 	db "WEEDLE@@@@"
 	db "KAKUNA@@@@"
 	db "BEEDRILL@@"
-	db "MISSINGNO."
+	db "SYLVEON@@@"
 	db "DODRIO@@@@"
 	db "PRIMEAPE@@"
 	db "DUGTRIO@@@"
@@ -52704,6 +52704,154 @@ EspeonBaseStats:
 
 	db Bank(EspeonPicFront)
 
+UmbreonBaseStats:
+	db DEX_UMBREON ; pokedex id
+	db 95    ; base hp
+	db 65   ; base attack
+	db 110   ; base defense
+	db 65    ; base speed
+	db 90    ; base special
+
+	db DARK     ; species type 1
+	db DARK     ; species type 2
+
+	db 45  ; catch rate
+	db 197 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw UmbreonPicFront
+	dw UmbreonPicBack
+
+	; attacks known at lvl 0
+	db TACKLE
+	db TAIL_WHIP
+	db 0
+	db 0
+
+	db 0 ; growth rate
+
+	; learnset
+	db %10100000
+	db %01000011
+	db %00001000
+	db %11000000
+	db %11000011
+	db %00001010
+	db %01000110
+
+	db Bank(UmbreonPicFront)
+
+LeafonBaseStats:
+	db DEX_LEAFEON ; pokedex id
+	db 65    ; base hp
+	db 110   ; base attack
+	db 130   ; base defense
+	db 95    ; base speed
+	db 60    ; base special
+
+	db GRASS     ; species type 1
+	db GRASS     ; species type 2
+
+	db 45  ; catch rate
+	db 197 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw LeafeonPicFront
+	dw LeafeonPicBack
+
+	; attacks known at lvl 0
+	db TACKLE
+	db TAIL_WHIP
+	db 0
+	db 0
+
+	db 0 ; growth rate
+
+	; learnset
+	db %10100100
+	db %01000011
+	db %00111000
+	db %11001000
+	db %11000011
+	db %00001000
+	db %00100010
+
+	db Bank(LeafeonPicFront)
+
+GlaceonBaseStats:
+	db DEX_GLACEON ; pokedex id
+	db 65    ; base hp
+	db 60   ; base attack
+	db 110   ; base defense
+	db 65    ; base speed
+	db 110    ; base special
+
+	db ICE     ; species type 1
+	db ICE     ; species type 2
+
+	db 45  ; catch rate
+	db 197 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw GlaceonPicFront
+	dw GlaceonPicBack
+
+	; attacks known at lvl 0
+	db TACKLE
+	db TAIL_WHIP
+	db 0
+	db 0
+
+	db 0 ; growth rate
+
+	; learnset
+	db %10100000
+	db %01110011
+	db %00001000
+	db %11001000
+	db %11000011
+	db %00001000
+	db %00100010
+
+	db Bank(GlaceonPicFront)
+
+SylveonBaseStats:
+	db DEX_SYLVEON ; pokedex id
+	db 95    ; base hp
+	db 65   ; base attack
+	db 65   ; base defense
+	db 60    ; base speed
+	db 120    ; base special
+
+	db FAIRY     ; species type 1
+	db FAIRY     ; species type 2
+
+	db 45  ; catch rate
+	db 197 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw SylveonPicFront
+	dw SylveonPicBack
+
+	; attacks known at lvl 0
+	db TACKLE
+	db TAIL_WHIP
+	db 0
+	db 0
+
+	db 0 ; growth rate
+
+	; learnset
+	db %10100000
+	db %01000011
+	db %00001000
+	db %11001000
+	db %11000011
+	db %00001000
+	db %01000110
+
+	db Bank(SylveonPicFront)
+
 
 CryData: ; 39446 (e:5446)
 	;$BaseCry, $Pitch, $Length
@@ -52793,15 +52941,15 @@ CryData: ; 39446 (e:5446)
 	db $0F, $EE, $01; Pikachu
 	db $09, $EE, $08; Raichu
 	db $1A, $C8, $90; Espeon
-	db $00, $00, $00; MissingNo.
+	db $1A, $30, $90; Umbreon
 	db $0F, $60, $40; Dratini
 	db $0F, $40, $80; Dragonair
 	db $16, $BB, $40; Kabuto
 	db $18, $EE, $01; Kabutops
 	db $19, $99, $10; Horsea
 	db $19, $3C, $01; Seadra
-	db $0F, $40, $C0; MissingNo.
-	db $0F, $20, $C0; MissingNo.
+	db $1A, $60, $20; Leafeon
+	db $1A, $E0, $E0; Glaceon
 	db $00, $20, $40; Sandshrew
 	db $00, $FF, $FF; Sandslash
 	db $1F, $F0, $01; Omanyte
@@ -52821,7 +52969,7 @@ CryData: ; 39446 (e:5446)
 	db $15, $EE, $01; Weedle
 	db $13, $FF, $01; Kakuna
 	db $13, $60, $80; Beedrill
-	db $00, $00, $00; MissingNo.
+	db $1A, $A0, $A0; Sylveon
 	db $0B, $99, $20; Dodrio
 	db $0A, $AF, $40; Primeape
 	db $0B, $2A, $10; Dugtrio
@@ -55940,15 +56088,15 @@ EvosMovesPointerTable: ; 3b05c (e:705c)
 	dw Mon025_EvosMoves
 	dw Mon026_EvosMoves
 	dw Mon166_EvosMoves	;Espeon
-	dw Mon167_EvosMoves	;MissingNo
+	dw Mon167_EvosMoves	;Umbreon
 	dw Mon147_EvosMoves
 	dw Mon148_EvosMoves
 	dw Mon140_EvosMoves
 	dw Mon141_EvosMoves
 	dw Mon116_EvosMoves
 	dw Mon117_EvosMoves
-	dw Mon168_EvosMoves	;MissingNo
-	dw Mon169_EvosMoves	;MissingNo
+	dw Mon168_EvosMoves	;Leafeon
+	dw Mon169_EvosMoves	;Glaceon
 	dw Mon027_EvosMoves
 	dw Mon028_EvosMoves
 	dw Mon138_EvosMoves
@@ -55968,7 +56116,7 @@ EvosMovesPointerTable: ; 3b05c (e:705c)
 	dw Mon013_EvosMoves
 	dw Mon014_EvosMoves
 	dw Mon015_EvosMoves
-	dw Mon170_EvosMoves	;MissingNo
+	dw Mon170_EvosMoves	;Sylveon
 	dw Mon085_EvosMoves
 	dw Mon057_EvosMoves
 	dw Mon051_EvosMoves
@@ -57064,11 +57212,20 @@ Mon166_EvosMoves: ; 3b5a4 (e:75a4)
 	db 0
 
 Mon167_EvosMoves: ; 3b5a6 (e:75a6)
-;MISSINGNO
+;UMBREON
 ;Evolutions
 	db 0
 ;Learnset
+	db 8,SAND_ATTACK
+	db 16,BITE
+	db 23,QUICK_ATTACK
+	db 30,CONFUSE_RAY
+	db 36,FEINT_ATTACK
+	db 42,CRUNCH
+	db 47,SCREECH
+	db 52,RECOVER
 	db 0
+
 Mon147_EvosMoves: ; 3b5a8 (e:75a8)
 ;DRATINI
 ;Evolutions
@@ -57144,18 +57301,33 @@ Mon117_EvosMoves: ; 3b5ec (e:75ec)
 	db 0
 
 Mon168_EvosMoves: ; 3b5f8 (e:75f8)
-;MISSINGNO
+;LEAFEON
 ;Evolutions
 	db 0
 ;Learnset
+	db 8,SAND_ATTACK
+	db 16,RAZOR_LEAF
+	db 23,QUICK_ATTACK
+	db 30,RECOVER
+	db 36,MEGA_DRAIN
+	db 42,SCREECH
+	db 47,AERIAL_ACE
 	db 0
 
 Mon169_EvosMoves: ; 3b5fa (e:75fa)
-;MISSINGNO
+;GLACEON
 ;Evolutions
 	db 0
 ;Learnset
+	db 8,SAND_ATTACK
+	db 16,ICY_WIND
+	db 23,QUICK_ATTACK
+	db 30,BARRIER
+	db 36,BITE
+	db 42,ICE_BEAM
+	db 54,BLIZZARD
 	db 0
+
 Mon027_EvosMoves: ; 3b5fc (e:75fc)
 ;SANDSHREW
 ;Evolutions
@@ -57383,11 +57555,16 @@ Mon015_EvosMoves: ; 3b6ee (e:76ee)
 	db 0
 
 Mon170_EvosMoves: ; 3b6fc (e:76fc)
-;MISSINGNO
+;SYLVEON
 ;Evolutions
 	db 0
 ;Learnset
+	db 8,SAND_ATTACK
+	db 16,QUICK_ATTACK
+	db 23,SWIFT
+	db 30,LIGHT_SCREEN ; TODO: ADD TO SYLVEON MOVESET!!!!
 	db 0
+
 Mon085_EvosMoves: ; 3b6fe (e:76fe)
 ;DODRIO
 ;Evolutions
@@ -67499,15 +67676,15 @@ PokedexEntryPointers: ; 4047e (10:447e)
 	dw PikachuDexEntry
 	dw RaichuDexEntry
 	dw EspeonDexEntry
-	dw MissingNoDexEntry
+	dw UmbreonDexEntry
 	dw DratiniDexEntry
 	dw DragonairDexEntry
 	dw KabutoDexEntry
 	dw KabutopsDexEntry
 	dw HorseaDexEntry
 	dw SeadraDexEntry
-	dw MissingNoDexEntry
-	dw MissingNoDexEntry
+	dw LeafeonDexEntry
+	dw GlaceonDexEntry
 	dw SandshrewDexEntry
 	dw SandslashDexEntry
 	dw OmanyteDexEntry
@@ -67527,7 +67704,7 @@ PokedexEntryPointers: ; 4047e (10:447e)
 	dw WeedleDexEntry
 	dw KakunaDexEntry
 	dw BeedrillDexEntry
-	dw MissingNoDexEntry
+	dw SylveonDexEntry
 	dw DodrioDexEntry
 	dw PrimeapeDexEntry
 	dw DugtrioDexEntry
@@ -68771,6 +68948,34 @@ EspeonDexEntry:
 	TX_FAR _EspeonDexEntry
 	db "@"
 
+UmbreonDexEntry:
+	db "MOONLIGHT@"
+	db 3, 3
+	dw 595
+	TX_FAR _UmbreonDexEntry
+	db "@"
+
+LeafeonDexEntry:
+	db "VERDANT@"
+	db 3, 3
+	dw 562
+	TX_FAR _LeafeonDexEntry
+	db "@"
+
+GlaceonDexEntry:
+	db "FRESH SNOW@"
+	db 2, 7
+	dw 571
+	TX_FAR _GlaceonDexEntry
+	db "@"
+
+SylveonDexEntry:
+	db "RIBBON@"
+	db 3, 3
+	dw 518
+	TX_FAR _SylveonDexEntry
+	db "@"
+
 MissingNoDexEntry: ; 40fe5 (10:4fe5)
 	db "???@"
 	db 10 ; 1.0 m
@@ -68901,15 +69106,15 @@ PokedexOrder: ; 41024 (10:5024)
 	db DEX_PIKACHU
 	db DEX_RAICHU
 	db DEX_ESPEON
-	db 0 ; MISSINGNO.
+	db DEX_UMBREON
 	db DEX_DRATINI
 	db DEX_DRAGONAIR
 	db DEX_KABUTO
 	db DEX_KABUTOPS
 	db DEX_HORSEA
 	db DEX_SEADRA
-	db 0 ; MISSINGNO.
-	db 0 ; MISSINGNO.
+	db DEX_LEAFEON
+	db DEX_GLACEON
 	db DEX_SANDSHREW
 	db DEX_SANDSLASH
 	db DEX_OMANYTE
@@ -68929,7 +69134,7 @@ PokedexOrder: ; 41024 (10:5024)
 	db DEX_WEEDLE
 	db DEX_KAKUNA
 	db DEX_BEEDRILL
-	db 0 ; MISSINGNO.
+	db DEX_SYLVEON
 	db DEX_DODRIO
 	db DEX_PRIMEAPE
 	db DEX_DUGTRIO
@@ -93378,8 +93583,6 @@ CeruleanPokecenterText3: ; 5c65a (17:465a)
 
 CeruleanPokecenterText5:
 	db $08 ; asm
-	ld bc, (ESPEON << 8) | 100
-	call GivePokemon
 	; check if playing nuzlocke mode
 	ld hl, W_NEWFLAGS1
 	bit 2, [hl]
@@ -104264,6 +104467,8 @@ MonOverworldData: ; 7190d (1c:590d)
 	dn SPRITE_MON, SPRITE_MON               ;Gligar/Gliscor
 	dn SPRITE_BIRD_M, SPRITE_BIRD_M         ;Murkrow/Honchkrow
 	dn SPRITE_MON, SPRITE_QUADRUPED         ;Scizor/Espeon
+	dn SPRITE_QUADRUPED, SPRITE_QUADRUPED   ;Umbreon/Leafeon
+	dn SPRITE_QUADRUPED, SPRITE_QUADRUPED   ;Glaceon/SYLVEON
 	db 0
 
 MonOverworldSprites: ; 71959 (1c:5959)
@@ -105590,6 +105795,10 @@ MonsterPalettes: ; 725c8 (1c:65c8)
 	db PAL_GREYMON   ; HONCHKROW
 	db PAL_GREYMON   ; SCIZOR
 	db PAL_PURPLEMON ; ESPEON
+	db PAL_GREYMON   ; UMBREON
+	db PAL_GREENMON  ; LEAFEON
+	db PAL_BLUEMON   ; GLACEON
+	db PAL_PINKMON   ; SYLVEON
 
 ; palettes for overworlds, title screen, monsters
 SuperPalettes: ; 72660 (1c:6660)
@@ -118478,6 +118687,22 @@ TitleScreenBlink1Pic:
 TitleScreenBlink2Pic:
 	INCBIN "gfx/ampharos_title_blink_2.2bpp"
 
+UmbreonPicFront:
+	INCBIN "pic/bmon/umbreon.pic"
+UmbreonPicBack:
+	INCBIN "pic/monback/umbreonb.pic"
+LeafeonPicFront:
+	INCBIN "pic/bmon/leafeon.pic"
+LeafeonPicBack:
+	INCBIN "pic/monback/leafeonb.pic"
+GlaceonPicFront:
+	INCBIN "pic/bmon/glaceon.pic"
+GlaceonPicBack:
+	INCBIN "pic/monback/glaceonb.pic"
+SylveonPicFront:
+	INCBIN "pic/bmon/sylveon.pic"
+SylveonPicBack:
+	INCBIN "pic/monback/sylveonb.pic"
 
 SECTION "New Text", ROMX, BANK[$33]
 

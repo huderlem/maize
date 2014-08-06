@@ -1654,3 +1654,43 @@ _EspeonDexEntry::
 	next "cheating, but oh"
 	next "well"
 	dex
+
+_UmbreonDexEntry::
+	text "Apparently, it"
+	next "can spray poison"
+	next "from its pores."
+
+	page "Avoid hugging it"
+	next "if you value your"
+	next "life"
+	dex
+
+_LeafeonDexEntry::
+	text "It uses"
+	next "photosynthesis"
+	next "to regain health"
+
+	page "in battle. Sounds"
+	next "like cheating to"
+	next "me"
+	dex
+
+_GlaceonDexEntry::
+	text "It has great"
+	next "control over its"
+	next "body temparature,"
+
+	page "so it can fake"
+	next "being sick to"
+	next "skip school"
+	dex
+
+_SylveonDexEntry::
+	text "It does not have"
+	next "pupils, so it"
+	next "really should not"
+
+	page "be able to see."
+	next "Unless those are"
+	next "two big pupils"
+	dex
