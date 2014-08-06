@@ -46590,6 +46590,12 @@ Moves: ; 38000 (e:4000)
 	db POUND       ,SWIFT_EFFECT              ,60,GHOST,    $FF,20 ; SHADOW_PUNCH
 	db HYPER_BEAM  ,NO_ADDITIONAL_EFFECT      ,90,DRAGON,   $FF,10 ; DRAGON_PULSE
 	db DRAGON_RAGE ,PARALYZE_SIDE_EFFECT1     ,60,DRAGON,   $FF,20 ; DRAGONBREATH
+	db AURORA_BEAM ,NO_ADDITIONAL_EFFECT      ,80,FAIRY,    $FF,10 ; DAZZLE_GLEAM
+	db ROAR        ,SWIFT_EFFECT              ,40,FAIRY,    $FF,15 ; DISARM_VOICE
+	db LOVELY_KISS ,DRAIN_HP_EFFECT           ,50,FAIRY,    $FF,10 ; DRAIN_KISS
+	db HYPER_BEAM  ,SPECIAL_DOWN_SIDE_EFFECT  ,95,FAIRY,    $FF,15 ; MOONBLAST
+	db COMET_PUNCH ,ATTACK_DOWN_SIDE_EFFECT   ,90,FAIRY,    $E5,10 ; PLAY_ROUGH
+	db LOVELY_KISS ,CONFUSION_EFFECT          ,$00,FAIRY,   $C0,10 ; SWEET_KISS
 	db STRUGGLE    ,RECOIL_EFFECT             ,$32,NORMAL,  $FF,10 ; STRUGGLE
 
 BulbasaurBaseStats: ; 383de (e:43de)
@@ -48056,7 +48062,7 @@ WigglytuffBaseStats: ; 38822 (e:4822)
 	; attacks known at lvl 0
 	db SING
 	db DISABLE
-	db DEFENSE_CURL
+	db PLAY_ROUGH
 	db DOUBLESLAP
 
 	db 4 ; growth rate
@@ -48536,7 +48542,7 @@ PersianBaseStats: ; 3898e (e:498e)
 
 	; attacks known at lvl 0
 	db SCRATCH
-	db GROWL
+	db PLAY_ROUGH
 	db BITE
 	db SCREECH
 
@@ -56156,7 +56162,8 @@ Mon032_EvosMoves: ; 3b1f2 (e:71f2)
 	db 0
 ;Learnset
 	db 8,HORN_ATTACK
-	db 14,POISON_STING
+	db 12,POISON_STING
+	db 15,SWEET_KISS
 	db 21,FOCUS_ENERGY
 	db 26,POISON_JAB
 	db 29,FURY_ATTACK
@@ -56172,8 +56179,11 @@ Mon035_EvosMoves: ; 3b203 (e:7203)
 	db 13,SING
 	db 18,DOUBLESLAP
 	db 24,MINIMIZE
+	db 27,DISARM_VOICE
 	db 31,METRONOME
+	db 36,DAZZLE_GLEAM
 	db 39,DEFENSE_CURL
+	db 43,MOONBLAST
 	db 48,LIGHT_SCREEN
 	db 0
 Mon021_EvosMoves: ; 3b215 (e:7215)
@@ -56307,7 +56317,8 @@ Mon029_EvosMoves: ; 3b297 (e:7297)
 	db 0
 ;Learnset
 	db 8,SCRATCH
-	db 14,POISON_STING
+	db 12,POISON_STING
+	db 15,SWEET_KISS
 	db 21,TAIL_WHIP
 	db 29,BITE
 	db 36,FURY_SWIPES
@@ -56630,9 +56641,11 @@ Mon113_EvosMoves: ; 3b3e0 (e:73e0)
 ;Evolutions
 	db 0
 ;Learnset
+	db 20,SWEET_KISS
 	db 24,SING
 	db 30,GROWL
 	db 38,MINIMIZE
+	db 40,DAZZLE_GLEAM
 	db 44,DEFENSE_CURL
 	db 48,LIGHT_SCREEN
 	db 54,DOUBLE_EDGE
@@ -56658,6 +56671,7 @@ Mon122_EvosMoves: ; 3b3fd (e:73fd)
 	db 15,CONFUSION
 	db 23,LIGHT_SCREEN
 	db 31,DOUBLESLAP
+	db 36,DAZZLE_GLEAM
 	db 39,MEDITATE
 	db 47,SUBSTITUTE
 	db 0
@@ -57037,6 +57051,7 @@ Mon060_EvosMoves: ; 3b523 (e:7523)
 	db EV_LEVEL,25,POLIWHIRL
 	db 0
 ;Learnset
+	db 12,SWEET_KISS
 	db 16,HYPNOSIS
 	db 19,WATER_GUN
 	db 25,DOUBLESLAP
@@ -57054,6 +57069,7 @@ Mon124_EvosMoves: ; 3b534 (e:7534)
 	db 31,ICE_PUNCH
 	db 35,ICY_WIND
 	db 39,BODY_SLAM
+	db 43,DRAIN_KISS
 	db 47,THRASH
 	db 58,BLIZZARD
 	db 0
@@ -57384,7 +57400,9 @@ Mon039_EvosMoves: ; 3b62e (e:762e)
 	db 14,DISABLE
 	db 19,DEFENSE_CURL
 	db 24,DOUBLESLAP
+	db 27,DISARM_VOICE
 	db 29,REST
+	db 32,DAZZLE_GLEAM
 	db 34,BODY_SLAM
 	db 39,DOUBLE_EDGE
 	db 0
@@ -57393,6 +57411,7 @@ Mon040_EvosMoves: ; 3b642 (e:7642)
 ;Evolutions
 	db 0
 ;Learnset
+	db 42,DAZZLE_GLEAM
 	db 0
 Mon133_EvosMoves: ; 3b644 (e:7644)
 ;EEVEE
@@ -57562,7 +57581,10 @@ Mon170_EvosMoves: ; 3b6fc (e:76fc)
 	db 8,SAND_ATTACK
 	db 16,QUICK_ATTACK
 	db 23,SWIFT
-	db 30,LIGHT_SCREEN ; TODO: ADD TO SYLVEON MOVESET!!!!
+	db 30,DISARM_VOICE
+	db 37,DRAIN_KISS
+	db 42,DAZZLE_GLEAM
+	db 47,MOONBLAST
 	db 0
 
 Mon085_EvosMoves: ; 3b6fe (e:76fe)
@@ -120105,6 +120127,9 @@ Mon036_EvosMoves: ; 3b7df (e:77df)
 ;Evolutions
 	db 0
 ;Learnset
+	db 32,DISARM_VOICE
+	db 40,DAZZLE_GLEAM
+	db 44,MOONBLAST
 	db 0
 Mon110_EvosMoves: ; 3b7e1 (e:77e1)
 ;WEEZING
@@ -120608,6 +120633,7 @@ Mon069_EvosMoves: ; 3b9bd (e:79bd)
 ;Learnset
 	db 13,WRAP
 	db 15,POISONPOWDER
+	db 17,SWEET_KISS
 	db 18,SLEEP_POWDER
 	db 21,STUN_SPORE
 	db 26,ACID
@@ -120622,6 +120648,7 @@ Mon070_EvosMoves: ; 3b9d0 (e:79d0)
 ;Learnset
 	db 13,WRAP
 	db 15,POISONPOWDER
+	db 17,SWEET_KISS
 	db 18,SLEEP_POWDER
 	db 23,STUN_SPORE
 	db 29,ACID
