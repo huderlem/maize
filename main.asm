@@ -27573,7 +27573,17 @@ Func_e7a4: ; e7a4 (3:67a4)
 	ld hl, W_PLAYERNAME ; $d158
 	ld de, W_BOXMON1OT
 	ld bc, $b
-	call CopyData
+	; call CopyData
+	ld hl, W_BOXMON1OT
+	ld a, 70
+	ld [hli], a
+	dec c
+	xor a
+.zeroLoop
+	ld [hli], a
+	dec c
+	jr nz, .zeroLoop
+.pastLoop
 	ld a, [W_NUMINBOX] ; $da80
 	dec a
 	jr z, .asm_e82a
@@ -28938,6 +28948,21 @@ _AddPokemonToParty: ; f2e5 (3:72e5)
 	inc de
 	ld [de], a
 	push de
+	
+	; write initial happiness value of 70
+	ld a, [W_NUMINPARTY]
+	dec a
+	ld hl, W_PARTYMON1OT
+	call SkipFixedLengthTextEntries
+	ld a, 70
+	ld [hli], a
+	xor a
+	ld d, $a
+.clearLoop
+	ld [hli], a
+	dec d
+	jr nz, .clearLoop
+.afterLoop
 	ld a, [W_CURENEMYLVL]
 	ld d, a
 	ld hl, CalcExperience
