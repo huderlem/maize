@@ -28782,7 +28782,7 @@ _AddPokemonToParty: ; f2e5 (3:72e5)
 	ld e, l
 	ld hl, W_PLAYERNAME ; $d158
 	ld bc, $b
-	call CopyData
+	; call CopyData ; Don't copy player's name as OT anymore
 	ld a, [$cc49]
 	and a
 	jr nz, .asm_f33f
@@ -29050,8 +29050,16 @@ _AddEnemyMonToPlayerParty: ; f49d (3:749d)
 	ld hl, W_ENEMYMON1OT
 	ld a, [wWhichPokemon]
 	call SkipFixedLengthTextEntries
+	ld h, d
+	ld l, e
 	ld bc, $000b
-	call CopyData    ; write new mon's OT name (from an enemy mon)
+	; call CopyData    ; write new mon's OT name (from an enemy mon)
+	xor a
+.clearLoop
+	ld [hli], a
+	dec c
+	jr nz, .clearLoop
+.afterLoop
 	ld hl, W_PARTYMON1NAME
 	ld a, [W_NUMINPARTY]
 	dec a
@@ -30608,7 +30616,7 @@ StatusScreen: ; 12953 (4:6953)
 	ld e, l
 	FuncCoord 12,16
 	ld hl, Coord
-	call PlaceString ; OT
+	; call PlaceString ; OT
 	FuncCoord 12,14
 	ld hl, Coord
 	ld de, $cfa4
@@ -30666,7 +30674,7 @@ IDNoText: ; 12ab3 (4:6ab3)
 	db $73, "№", "/", $4e
 
 OTText: ; 12ab7 (4:6ab7)
-	db "OT/", $4e, "@"
+	db "", $4e, "@"
 
 StatusText: ; 12abc (4:6abc)
 	db "STATUS/@"
@@ -41325,14 +41333,6 @@ Func_1da15: ; 1da15 (7:5a15)
 	ret
 
 Func_1da20: ; 1da20 (7:5a20)
-	ld hl, W_PARTYMON1OT
-	ld bc, $000b
-	ld a, [wWhichPokemon]
-	call AddNTimes
-	ld de, W_PLAYERNAME
-	ld c, $b
-	call .asm_1da47
-	jr c, .asm_1da52 ; 0x1da34 $1c
 	ld hl, $d177
 	ld bc, $002c
 	ld a, [wWhichPokemon]
@@ -53751,7 +53751,7 @@ Func_39bd5: ; 39bd5 (e:5bd5)
 	cp $4
 	jr nz, .calcAttackStat4
 	ld hl, W_NUMINPARTY ; $d163
-	ld de, W_PARTYMON1OT ; $d273
+	ld de, W_PARTYMON1OT ; $d273 Happiness todo test trading later
 	ld a, $5
 	jr .asm_39c18
 .calcAttackStat4
@@ -57411,7 +57411,7 @@ Mon040_EvosMoves: ; 3b642 (e:7642)
 ;Evolutions
 	db 0
 ;Learnset
-	db 42,DAZZLE_GLEAM
+	db 42, 
 	db 0
 Mon133_EvosMoves: ; 3b644 (e:7644)
 ;EEVEE
