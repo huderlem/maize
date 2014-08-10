@@ -19973,6 +19973,13 @@ Func_c69c: ; c69c (3:469c)
 	inc hl
 	jr .asm_c6be
 .noNuzlocke
+	; update Happiness because mon fainted
+	ld a, [wWhichPokemon]
+	ld d, a
+	ld e, 4 ; fainted category id for UpdateHappiness
+	ld hl, UpdateHappiness
+	ld b, BANK(UpdateHappiness)
+	call Bankswitch
 	pop de
 	pop hl
 .asm_c6fb
@@ -26054,6 +26061,13 @@ ItemUseMedicine: ; dabb (3:5abb)
 	call PlaySound ; play sound
 	ld hl,VitaminStatRoseText
 	call PrintText
+	; update Happiness for using vitamin
+	ld a, [$cf06]
+	ld d, a
+	ld e, 1 ; vitamin category id for UpdateHappiness
+	ld hl, UpdateHappiness
+	ld b, BANK(UpdateHappiness)
+	call Bankswitch
 	jp RemoveUsedItem
 .vitaminNoEffect
 	pop hl
@@ -26158,6 +26172,15 @@ ItemUseMedicine: ; dabb (3:5abb)
 	call Bankswitch ; evolve pokemon, if appropriate
 	ld a,$01
 	ld [$cfcb],a
+
+	; update Happiness for levelUp
+	ld a, [$cf06]
+	ld d, a
+	ld e, 2 ; levelUp category id for UpdateHappiness
+	ld hl, UpdateHappiness
+	ld b, BANK(UpdateHappiness)
+	call Bankswitch
+
 	pop af
 	ld [$cf91],a
 	pop af
@@ -59074,6 +59097,15 @@ Func_3c741: ; 3c741 (f:4741)
 	ld sp, $fffe
 	jp Start
 .done
+	push hl
+	; update Happiness for fainting
+	ld a, [wPlayerMonNumber]
+	ld d, a
+	ld e, 4 ; fainted category id for UpdateHappiness
+	ld hl, UpdateHappiness
+	ld b, BANK(UpdateHappiness)
+	call Bankswitch
+	pop hl
 	jp PrintText
 
 PlayerMonFaintedText: ; 3c796 (f:4796)
@@ -85150,6 +85182,15 @@ Func_5525f: ; 5525f (15:525f)
 	ld b, $1
 	ld a, $10
 	call Predef ; indirect jump to HandleBitArray (f666 (3:7666))
+
+	; update Happiness for levelUp
+	ld a, [wWhichPokemon]
+	ld d, a
+	ld e, 2 ; levelUp category id for UpdateHappiness
+	ld hl, UpdateHappiness
+	ld b, BANK(UpdateHappiness)
+	call Bankswitch
+
 	pop hl
 	pop af
 	ld [W_CURENEMYLVL], a ; $d127
@@ -119771,6 +119812,20 @@ _ShinyBallDescription::
 SECTION "New Functions", ROMX, BANK[$34]
 
 HealingRing:
+; update happiness of party mons from walking
+	ld a, [$d13b] ; step counter
+	and a
+	jr nz, .healingRingLogic
+	ld a, [W_NUMINPARTY]
+	ld e, 0 ; walking category id for UpdateHappiness
+.partyLoop
+	and a
+	jr z, .healingRingLogic
+	dec a
+	ld d, a
+	call UpdateHappiness
+	jr .partyLoop
+.healingRingLogic
 ; try and heal pokemon in party
 ; using the HEALING_RING effect
 	ld a, [$d13b] ; step counter
@@ -119888,6 +119943,83 @@ Moved_Func_7beb4: ; 7beb4 (1e:7eb4)
 	ld c, d
 	ld b, $b
 	jp GoPAL_SET
+
+UpdateHappiness:
+; d = mon index in party
+; e = category id
+	ld hl, W_PARTYMON1OT
+	ld bc, 11
+	ld a, d
+	call AddNTimes ; hl contains pointer to mon's happiness byte
+	ld a, e
+	cp 0
+	jr z, .walking256Steps
+	cp 1
+	jr z, .vitamin
+	cp 2
+	jr z, .vitamin
+	cp 3
+	jr z, .challengeGymLeader ; (not used, yet)
+	cp 4
+	jr z, .fainted
+	ret
+
+.walking256Steps ; category id = 0
+	inc [hl]
+	ret nz
+	dec [hl] ; fix overflow
+	ret
+
+.vitamin ; category id = 1. This is also used for leveling up
+	ld a, [hl]
+	cp 100
+	jr nc, .vitaminTier2
+	add 5
+	jr .saveVitaminHappiness
+.vitaminTier2
+	cp 200
+	jr nc, .vitaminTier3
+	add 3
+	jr .saveVitaminHappiness
+.vitaminTier3
+	add 2
+.saveVitaminHappiness
+	; make sure we didn't overflow
+	jr nc, .fixedOverflowVitaminHappiness
+	ld a, $ff ; set to max happiness if we overflowed
+.fixedOverflowVitaminHappiness
+	ld [hl], a
+	ret
+
+.challengeGymLeader ; category id = 3
+	ld a, [hl]
+	cp 100
+	jr nc, .challengeGymLeaderTier2
+	add 3
+	jr .saveChallengeGymLeaderHappiness
+.challengeGymLeaderTier2
+	cp 200
+	jr nc, .challengeGymLeaderTier3
+	add 2
+	jr .saveChallengeGymLeaderHappiness
+.challengeGymLeaderTier3
+	add 1
+.saveChallengeGymLeaderHappiness
+	; make sure we didn't overflow
+	jr nc, .fixedOverflowChallengeGymLeaderHappiness
+	ld a, $ff ; set to max happiness if we overflowed
+.fixedOverflowChallengeGymLeaderHappiness
+	ld [hl], a
+	ret
+
+.fainted ; category id = 4
+	dec [hl]
+	ld a, [hl]
+	cp $ff
+	ret nz
+	xor a
+	ld [hl], a
+	ret
 
 SECTION "MiniSprites 2", ROMX, BANK[$35]
 
