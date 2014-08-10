@@ -55596,13 +55596,17 @@ Func_3ad71: ; 3ad71 (e:6d71)
 	cp $32
 	jr z, asm_3ad2e
 	ld a, b
-	cp $2
+	cp EV_HAPPINESS_DAY
+	jr z, .happinessDayEvo
+	cp EV_HAPPINESS_NIGHT
+	jr z, .happinessNightEvo
+	cp EV_ITEM
 	jr z, .asm_3ada4
 	ld a, [$ccd4]
 	and a
 	jr nz, asm_3ad2e
 	ld a, b
-	cp $1
+	cp EV_LEVEL
 	jr z, .asm_3adad
 .asm_3ad91
 	ld a, [W_ISLINKBATTLE] ; $d12b
@@ -55614,6 +55618,38 @@ Func_3ad71: ; 3ad71 (e:6d71)
 	cp b
 	jp c, asm_3ad2e
 	jr .asm_3adb6
+.happinessDayEvo
+	; is it day?
+	ld a, [W_PLAYTIMEMINUTES + 1]
+	cp 30
+	jp nc, Func_3aed9
+	; is happiness >= 220
+	push hl
+	ld bc, 11
+	ld a, [wWhichPokemon]
+	ld hl, W_PARTYMON1OT
+	call AddNTimes ; hl points to happiness byte
+	ld a, [hl]
+	pop hl
+	cp 220
+	jp c, Func_3aed9
+	jr .asm_3adad
+.happinessNightEvo
+	; is it night?
+	ld a, [W_PLAYTIMEMINUTES + 1]
+	cp 30
+	jp c, Func_3aed9
+	; is happiness >= 220
+	push hl
+	ld bc, 11
+	ld a, [wWhichPokemon]
+	ld hl, W_PARTYMON1OT
+	call AddNTimes ; hl points to happiness byte
+	ld a, [hl]
+	pop hl
+	cp 220
+	jp c, Func_3aed9
+	jr .asm_3adad
 .asm_3ada4
 	ld a, [W_ISINBATTLE]
 	and a
@@ -57467,6 +57503,8 @@ Mon133_EvosMoves: ; 3b644 (e:7644)
 	db EV_ITEM,FIRE_STONE,1,FLAREON
 	db EV_ITEM,THUNDER_STONE ,1,JOLTEON
 	db EV_ITEM,WATER_STONE ,1,VAPOREON
+	db EV_HAPPINESS_DAY,1,ESPEON
+	db EV_HAPPINESS_NIGHT,1,UMBREON
 	db 0
 ;Learnset
 	db 27,QUICK_ATTACK
@@ -93641,7 +93679,7 @@ HappinessCheckerText:
 	cp 200
 	ld hl, HappinessChecker5
 	jr c, .tellHappiness
-	cp 230
+	cp 220
 	ld hl, HappinessChecker6
 	jr c, .tellHappiness
 	cp 250
@@ -120977,13 +121015,17 @@ Func_3ad71_2: ; 3ad71 (e:6d71)
 	cp $32
 	jr z, asm_3ad2e_2
 	ld a, b
-	cp $2
+	cp EV_HAPPINESS_DAY
+	jr z, .happinessDayEvo_2
+	cp EV_HAPPINESS_NIGHT
+	jr z, .happinessNightEvo_2
+	cp EV_ITEM
 	jr z, .asm_3ada4_2
 	ld a, [$ccd4]
 	and a
 	jr nz, asm_3ad2e_2
 	ld a, b
-	cp $1
+	cp EV_LEVEL
 	jr z, .asm_3adad_2
 .asm_3ad91_2
 	ld a, [W_ISLINKBATTLE] ; $d12b
@@ -120995,6 +121037,38 @@ Func_3ad71_2: ; 3ad71 (e:6d71)
 	cp b
 	jp c, asm_3ad2e_2
 	jr .asm_3adb6_2
+.happinessDayEvo_2
+	; is it day?
+	ld a, [W_PLAYTIMEMINUTES + 1]
+	cp 30
+	jp nc, Func_3aed9_2
+	; is happiness >= 220
+	push hl
+	ld bc, 11
+	ld a, [wWhichPokemon]
+	ld hl, W_PARTYMON1OT
+	call AddNTimes ; hl points to happiness byte
+	ld a, [hl]
+	pop hl
+	cp 220
+	jp c, Func_3aed9_2
+	jr .asm_3adad_2
+.happinessNightEvo_2
+	; is it day?
+	ld a, [W_PLAYTIMEMINUTES + 1]
+	cp 30
+	jp c, Func_3aed9_2
+	; is happiness >= 220
+	push hl
+	ld bc, 11
+	ld a, [wWhichPokemon]
+	ld hl, W_PARTYMON1OT
+	call AddNTimes ; hl points to happiness byte
+	ld a, [hl]
+	pop hl
+	cp 220
+	jp c, Func_3aed9_2
+	jr .asm_3adad_2
 .asm_3ada4_2
 	ld a, [W_ISINBATTLE]
 	and a
