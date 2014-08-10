@@ -93551,6 +93551,7 @@ PewterPokecenterTextPointers: ; 5c58d (17:458d)
 	dw PewterPokecenterText2
 	dw PewterPokecenterText3
 	dw PewterPokecenterText4
+	dw HappinessCheckerText
 
 PewterPokecenterText1: ; 5c595 (17:4595)
 	db $ff
@@ -93618,6 +93619,82 @@ Unknown_5c608: ; 5c608 (17:4608)
 PewterPokecenterText4: ; 5c60c (17:460c)
 	db $f6
 
+HappinessCheckerText:
+	db $08 ; asm
+	ld de, W_PARTYMON1NAME
+	call CopyStringToCF4B
+	ld hl, HappinessCheckerText1
+	call PrintText
+	ld a, [W_PARTYMON1OT]
+	cp 40
+	ld hl, HappinessChecker1
+	jr c, .tellHappiness
+	cp 80
+	ld hl, HappinessChecker2
+	jr c, .tellHappiness
+	cp 120
+	ld hl, HappinessChecker3
+	jr c, .tellHappiness
+	cp 160
+	ld hl, HappinessChecker4
+	jr c, .tellHappiness
+	cp 200
+	ld hl, HappinessChecker5
+	jr c, .tellHappiness
+	cp 230
+	ld hl, HappinessChecker6
+	jr c, .tellHappiness
+	cp 250
+	ld hl, HappinessChecker7
+	jr c, .tellHappiness
+	cp 255
+	ld hl, HappinessChecker8
+	jr c, .tellHappiness
+	ld hl, HappinessChecker9
+.tellHappiness
+	call PrintText
+	jp TextScriptEnd
+
+HappinessCheckerText1:
+	TX_FAR _HappinessCheckerText1
+	db "@"
+
+HappinessChecker1:
+	TX_FAR _HappinessChecker1
+	db "@"
+
+HappinessChecker2:
+	TX_FAR _HappinessChecker2
+	db "@"
+
+HappinessChecker3:
+	TX_FAR _HappinessChecker3
+	db "@"
+
+HappinessChecker4:
+	TX_FAR _HappinessChecker4
+	db "@"	
+
+HappinessChecker5:
+	TX_FAR _HappinessChecker5
+	db "@"
+
+HappinessChecker6:
+	TX_FAR _HappinessChecker6
+	db "@"
+
+HappinessChecker7:
+	TX_FAR _HappinessChecker7
+	db "@"
+
+HappinessChecker8:
+	TX_FAR _HappinessChecker8
+	db "@"
+
+HappinessChecker9:
+	TX_FAR _HappinessChecker9
+	db "@"
+
 PewterPokecenterObject: ; 0x5c60d (size=44)
 	db $0 ; border tile
 
@@ -93627,11 +93704,12 @@ PewterPokecenterObject: ; 0x5c60d (size=44)
 
 	db $0 ; signs
 
-	db $4 ; people
+	db $5 ; people
 	db SPRITE_NURSE, $1 + 4, $3 + 4, $ff, $d0, $1 ; person
 	db SPRITE_GENTLEMAN, $1 + 4, $9 + 4, $ff, $d1, $2 ; person
 	db SPRITE_CLEFAIRY, $7 + 4, $a + 4, $ff, $d0, $3 ; person
 	db SPRITE_CABLE_CLUB_WOMAN, $2 + 4, $b + 4, $ff, $d0, $4 ; person
+	db SPRITE_LITTLE_GIRL, $3 + 4, $4 + 4, $ff, $d0, $5 ; person
 
 	; warp-to
 	EVENT_DISP $7, $7, $3
