@@ -55600,14 +55600,18 @@ Func_3ad71: ; 3ad71 (e:6d71)
 	jr z, .happinessDayEvo
 	cp EV_HAPPINESS_NIGHT
 	jr z, .happinessNightEvo
+	cp EV_MOSS_ROCK
+	jp z, .mossRock
+	cp EV_ICE_ROCK
+	jp z, .iceRock
 	cp EV_ITEM
-	jr z, .asm_3ada4
+	jp z, .asm_3ada4
 	ld a, [$ccd4]
 	and a
 	jr nz, asm_3ad2e
 	ld a, b
 	cp EV_LEVEL
-	jr z, .asm_3adad
+	jp z, .asm_3adad
 .asm_3ad91
 	ld a, [W_ISLINKBATTLE] ; $d12b
 	cp $32
@@ -55617,7 +55621,7 @@ Func_3ad71: ; 3ad71 (e:6d71)
 	ld a, [$cfb9]
 	cp b
 	jp c, asm_3ad2e
-	jr .asm_3adb6
+	jp .asm_3adb6
 .happinessDayEvo
 	; is it day?
 	ld a, [W_PLAYTIMEMINUTES + 1]
@@ -55649,6 +55653,40 @@ Func_3ad71: ; 3ad71 (e:6d71)
 	pop hl
 	cp 220
 	jp c, Func_3aed9
+	jr .asm_3adad
+.mossRock
+	; is the map right?
+	ld a, [W_CURMAP]
+	cp MOSS_ROCK_MAP
+	jp nz, Func_3aed9
+	; is player within rectangle?
+	ld a, [W_XCOORD]
+	cp MOSS_ROCK_X
+	jp c, Func_3aed9
+	cp MOSS_ROCK_X + MOSS_ROCK_WIDTH
+	jp nc, Func_3aed9
+	ld a, [W_YCOORD]
+	cp MOSS_ROCK_Y
+	jp c, Func_3aed9
+	cp MOSS_ROCK_Y + MOSS_ROCK_HEIGHT
+	jp nc, Func_3aed9
+	jr .asm_3adad
+.iceRock
+	; is the map right?
+	ld a, [W_CURMAP]
+	cp ICE_ROCK_MAP
+	jp nz, Func_3aed9
+	; is player within rectangle?
+	ld a, [W_XCOORD]
+	cp ICE_ROCK_X
+	jp c, Func_3aed9
+	cp ICE_ROCK_X + ICE_ROCK_WIDTH
+	jp nc, Func_3aed9
+	ld a, [W_YCOORD]
+	cp ICE_ROCK_Y
+	jp c, Func_3aed9
+	cp ICE_ROCK_Y + ICE_ROCK_HEIGHT
+	jp nc, Func_3aed9
 	jr .asm_3adad
 .asm_3ada4
 	ld a, [W_ISINBATTLE]
@@ -57505,6 +57543,8 @@ Mon133_EvosMoves: ; 3b644 (e:7644)
 	db EV_ITEM,WATER_STONE ,1,VAPOREON
 	db EV_HAPPINESS_DAY,1,ESPEON
 	db EV_HAPPINESS_NIGHT,1,UMBREON
+	db EV_MOSS_ROCK,1,LEAFEON
+	db EV_ICE_ROCK,1,GLACEON
 	db 0
 ;Learnset
 	db 27,QUICK_ATTACK
@@ -121019,14 +121059,18 @@ Func_3ad71_2: ; 3ad71 (e:6d71)
 	jr z, .happinessDayEvo_2
 	cp EV_HAPPINESS_NIGHT
 	jr z, .happinessNightEvo_2
+	cp EV_MOSS_ROCK
+	jp z, .mossRock_2
+	cp EV_ICE_ROCK
+	jp z, .iceRock_2
 	cp EV_ITEM
-	jr z, .asm_3ada4_2
+	jp z, .asm_3ada4_2
 	ld a, [$ccd4]
 	and a
-	jr nz, asm_3ad2e_2
+	jp nz, asm_3ad2e_2
 	ld a, b
 	cp EV_LEVEL
-	jr z, .asm_3adad_2
+	jp z, .asm_3adad_2
 .asm_3ad91_2
 	ld a, [W_ISLINKBATTLE] ; $d12b
 	cp $32
@@ -121036,7 +121080,7 @@ Func_3ad71_2: ; 3ad71 (e:6d71)
 	ld a, [$cfb9]
 	cp b
 	jp c, asm_3ad2e_2
-	jr .asm_3adb6_2
+	jp .asm_3adb6_2
 .happinessDayEvo_2
 	; is it day?
 	ld a, [W_PLAYTIMEMINUTES + 1]
@@ -121068,6 +121112,40 @@ Func_3ad71_2: ; 3ad71 (e:6d71)
 	pop hl
 	cp 220
 	jp c, Func_3aed9_2
+	jr .asm_3adad_2
+.mossRock_2
+	; is the map right?
+	ld a, [W_CURMAP]
+	cp MOSS_ROCK_MAP
+	jp nz, Func_3aed9_2
+	; is player within rectangle?
+	ld a, [W_XCOORD]
+	cp MOSS_ROCK_X
+	jp c, Func_3aed9_2
+	cp MOSS_ROCK_X + MOSS_ROCK_WIDTH
+	jp nc, Func_3aed9_2
+	ld a, [W_YCOORD]
+	cp MOSS_ROCK_Y
+	jp c, Func_3aed9_2
+	cp MOSS_ROCK_Y + MOSS_ROCK_HEIGHT
+	jp nc, Func_3aed9_2
+	jr .asm_3adad_2
+.iceRock_2
+	; is the map right?
+	ld a, [W_CURMAP]
+	cp ICE_ROCK_MAP
+	jp nz, Func_3aed9_2
+	; is player within rectangle?
+	ld a, [W_XCOORD]
+	cp ICE_ROCK_X
+	jp c, Func_3aed9_2
+	cp ICE_ROCK_X + ICE_ROCK_WIDTH
+	jp nc, Func_3aed9_2
+	ld a, [W_YCOORD]
+	cp ICE_ROCK_Y
+	jp c, Func_3aed9_2
+	cp ICE_ROCK_Y + ICE_ROCK_HEIGHT
+	jp nc, Func_3aed9_2
 	jr .asm_3adad_2
 .asm_3ada4_2
 	ld a, [W_ISINBATTLE]
