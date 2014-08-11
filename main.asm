@@ -55599,7 +55599,9 @@ Func_3ad71: ; 3ad71 (e:6d71)
 	cp EV_HAPPINESS_DAY
 	jr z, .happinessDayEvo
 	cp EV_HAPPINESS_NIGHT
-	jr z, .happinessNightEvo
+	jr z, .happinessNightEvo	
+	cp EV_HAPPINESS
+	jr z, .happiness
 	cp EV_MOSS_ROCK
 	jp z, .mossRock
 	cp EV_ICE_ROCK
@@ -55608,7 +55610,7 @@ Func_3ad71: ; 3ad71 (e:6d71)
 	jp z, .asm_3ada4
 	ld a, [$ccd4]
 	and a
-	jr nz, asm_3ad2e
+	jp nz, asm_3ad2e
 	ld a, b
 	cp EV_LEVEL
 	jp z, .asm_3adad
@@ -55627,6 +55629,7 @@ Func_3ad71: ; 3ad71 (e:6d71)
 	ld a, [W_PLAYTIMEMINUTES + 1]
 	cp 30
 	jp nc, Func_3aed9
+.happiness
 	; is happiness >= 220
 	push hl
 	ld bc, 11
@@ -57533,7 +57536,7 @@ Mon040_EvosMoves: ; 3b642 (e:7642)
 ;Evolutions
 	db 0
 ;Learnset
-	db 42, 
+	db 42, DAZZLE_GLEAM
 	db 0
 Mon133_EvosMoves: ; 3b644 (e:7644)
 ;EEVEE
@@ -121059,6 +121062,8 @@ Func_3ad71_2: ; 3ad71 (e:6d71)
 	jr z, .happinessDayEvo_2
 	cp EV_HAPPINESS_NIGHT
 	jr z, .happinessNightEvo_2
+	cp EV_HAPPINESS
+	jr z, .happiness
 	cp EV_MOSS_ROCK
 	jp z, .mossRock_2
 	cp EV_ICE_ROCK
@@ -121086,6 +121091,7 @@ Func_3ad71_2: ; 3ad71 (e:6d71)
 	ld a, [W_PLAYTIMEMINUTES + 1]
 	cp 30
 	jp nc, Func_3aed9_2
+.happiness
 	; is happiness >= 220
 	push hl
 	ld bc, 11
