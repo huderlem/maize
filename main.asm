@@ -101180,7 +101180,7 @@ Tset09_GFX: ; 6960f (1a:560f)
 Tset09_Block: ; 69bff (1a:5bff)
 	INCBIN "gfx/blocksets/09.bst"
 Tset03_GFX: ; 6a3ff (1a:63ff)
-	INCBIN "gfx/tilesets/03.2bpp"
+	INCBIN "gfx/tilesets/18.2bpp"
 Tset03_Block: ; 6a9ff (1a:69ff)
 	INCBIN "gfx/blocksets/03.bst"
 Tset16_GFX: ; 6b1ff (1a:71ff)
