@@ -55846,7 +55846,7 @@ EvolutionForkHook: ; allow to other routine to hook back in
 	push hl
 	ld l, e
 	ld h, d
-	jr Func_3aeda
+	jp asm_3ad2e
 
 Func_3aed9: ; 3aed9 (e:6ed9)
 	inc hl
@@ -57544,10 +57544,10 @@ Mon133_EvosMoves: ; 3b644 (e:7644)
 	db EV_ITEM,FIRE_STONE,1,FLAREON
 	db EV_ITEM,THUNDER_STONE ,1,JOLTEON
 	db EV_ITEM,WATER_STONE ,1,VAPOREON
-	db EV_HAPPINESS_DAY,1,ESPEON
-	db EV_HAPPINESS_NIGHT,1,UMBREON
 	db EV_MOSS_ROCK,1,LEAFEON
 	db EV_ICE_ROCK,1,GLACEON
+	db EV_HAPPINESS_DAY,1,ESPEON
+	db EV_HAPPINESS_NIGHT,1,UMBREON
 	db 0
 ;Learnset
 	db 27,QUICK_ATTACK
