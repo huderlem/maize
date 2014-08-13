@@ -71193,6 +71193,7 @@ RockTunnel1TextPointers: ; 444f5 (11:44f5)
 	dw RockTunnel1Text6
 	dw RockTunnel1Text7
 	dw RockTunnel1Text8
+	dw MossRockText
 
 RockTunnel1TrainerHeaders: ; 44505 (11:4505)
 RockTunnel1TrainerHeader1: ; 44505 (11:4505)
@@ -71385,6 +71386,10 @@ RockTunnel1Text8: ; 445f1 (11:45f1)
 	TX_FAR _RockTunnel1Text8
 	db "@"
 
+MossRockText:
+	TX_FAR _MossRockText
+	db "@"
+
 RockTunnel1Object: ; 0x445f6 (size=127)
 	db $3 ; border tile
 
@@ -71400,8 +71405,12 @@ RockTunnel1Object: ; 0x445f6 (size=127)
 	db $23, $24, $0, $ff
 	db $23, $25, $0, $ff
 
-	db $1 ; signs
+	db $5 ; signs
 	db $1f, $23, $8 ; RockTunnel1Text8
+	db $6, $22, $9 ; MossRockText
+	db $7, $22, $9 ; MossRockText
+	db $6, $23, $9 ; MossRockText
+	db $7, $23, $9 ; MossRockText
 
 	db $7 ; people
 	db SPRITE_BLACK_HAIR_BOY_1, $4 + 4, $22 + 4, $ff, $d0, $41, SUPER_NERD + $C8, $1 ; trainer

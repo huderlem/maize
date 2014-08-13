@@ -1,7 +1,15 @@
 _RockTunnel1BattleText1:: ; 8c33a (23:433a)
-	text "Yes, finally!"
+	text "See this rock?"
 
-	para "Let's battle."
+	para "It's covered with"
+	line "moss, and it's"
+	cont "infused with some"
+	cont "kind of"
+	cont "evolutionary"
+	cont "powers."
+
+	para "I wonder what it's"
+	line "for?"
 	done
 
 _RockTunnel1EndBattleText1:: ; 8c35d (23:435d)
@@ -10,9 +18,14 @@ _RockTunnel1EndBattleText1:: ; 8c35d (23:435d)
 	prompt
 
 _RockTunnel1AfterBattleText1:: ; 8c36c (23:436c)
-	text "I took down a"
-	line "member of TEAM"
-	cont "QUARRY earlier."
+	text "I figured it out!"
+
+	para "Maybe a certain"
+	line "#MON reacts"
+	cont "with this mossy"
+	cont "rock in a way"
+	cont "that helps it"
+	cont "evolve?"
 	done
 
 _RockTunnel1BattleText2:: ; 8c39c (23:439c)
@@ -113,3 +126,10 @@ _RockTunnel1Text8:: ; 8c5b7 (23:45b7)
 	cont "LAVENDER TOWN"
 	done
 
+_MossRockText::
+	text "The surface is"
+	line "covered in moss."
+
+	para "Touching it feels"
+	line "good somehow."
+	done
