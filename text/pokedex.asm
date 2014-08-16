@@ -1694,3 +1694,23 @@ _SylveonDexEntry::
 	next "Unless those are"
 	next "two big pupils"
 	dex
+
+_BonslyDexEntry::
+	text "It is a huge"
+	next "cry baby."
+	next "Seriously, it"
+
+	page "cries to regulate"
+	next "its body moisture"
+	next "or something.."
+	dex
+	
+_SudowoodoDexEntry::
+	text "It's actually a"
+	next "rock, despite"
+	next "looking exactly"
+
+	page "like a tree."
+	next "It hates"
+	next "SQUIRTBOTTLES"
+	dex

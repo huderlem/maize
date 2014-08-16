@@ -2812,7 +2812,16 @@ LoadMapData:: ; 1241 (0:1241)
 	ld b,BANK(InitMapSprites)
 	ld hl,InitMapSprites
 	call Bankswitch ; load tile pattern data for sprites
+	ld a, [W_CURMAP]
+	cp VIRIDIAN_FOREST
+	jr nz, .normalLoadBlockMap
+	ld b,Bank(GenSudoRandWoodMap)
+	ld hl,GenSudoRandWoodMap
+	call Bankswitch
+	jr .pastBlockMap
+.normalLoadBlockMap
 	call LoadTileBlockMap
+.pastBlockMap
 	call LoadTilesetTilePatternData
 	call LoadCurrentMapView
 ; copy current map view to VRAM
@@ -3053,7 +3062,7 @@ LoadFrontSpriteByMonIndex:: ; 1389 (0:1389)
 	and a
 	pop hl
 	jr z, .invalidDexNumber  ; dex #0 invalid
-	cp 171 ; num mons in dex + 1
+	cp 173 ; num mons in dex + 1
 	jr c, .validDexNumber    ; dex >#151 invalid
 .invalidDexNumber
 	ld a, RHYDON ; $1
@@ -8652,21 +8661,22 @@ CheckCoords:: ; 34c7 (0:34c7)
 ; [$cd3d] = if there is match, the matching array index
 ; sets carry if the coordinates are in the array, clears carry if not
 CheckBoulderCoords:: ; 34e4 (0:34e4)
-	push hl
-	ld hl, $c204
-	ld a, [$ff00+$8c]
-	swap a
-	ld d, $0
-	ld e, a
-	add hl, de
-	ld a, [hli]
-	sub $4 ; because sprite coordinates are offset by 4
-	ld b, a
-	ld a, [hl]
-	sub $4 ; because sprite coordinates are offset by 4
-	ld c, a
-	pop hl
-	jp CheckCoords
+	ret  ; TODO commented this out to save space in this cramped Bank
+	;push hl
+	;ld hl, $c204
+	;ld a, [$ff00+$8c]
+	;swap a
+	;ld d, $0
+	;ld e, a
+	;add hl, de
+	;ld a, [hli]
+	;sub $4 ; because sprite coordinates are offset by 4
+	;ld b, a
+	;ld a, [hl]
+	;sub $4 ; because sprite coordinates are offset by 4
+	;ld c, a
+	;pop hl
+	;jp CheckCoords
 
 Func_34fc:: ; 34fc (0:34fc)
 	ld h, $c1
@@ -21281,17 +21291,17 @@ Route22Mons: ; d10b (3:510b)
 	db $00
 
 ForestMons: ; d121 (3:5121)
-	db $08
-	db 4,WEEDLE
-	db 5,KAKUNA
-	db 3,WEEDLE
-	db 5,WEEDLE
-	db 4,KAKUNA
-	db 6,KAKUNA
-	db 4,METAPOD
-	db 3,CATERPIE
-	db 3,PIKACHU
-	db 5,PIKACHU
+	db $0D
+	db 14,BONSLY
+	db 15,BONSLY
+	db 16,BONSLY
+	db 15,BONSLY
+	db 14,MURKROW
+	db 16,BONSLY
+	db 14,EEVEE
+	db 17,SUDOWOODO
+	db 18,SUDOWOODO
+	db 18,SUDOWOODO
 
 	db $00
 
@@ -34743,7 +34753,7 @@ PalletTownObject: ; 0x182c3 (size=58)
 
 	db $3 ; warps
 	db $d, $3, $0, REDS_HOUSE_1F
-	db $7, $3, $1, BLUES_HOUSE
+	db $7, $3, $1, VIRIDIAN_FOREST ;BLUES_HOUSE TODO
 	db $b, $c, $1, OAKS_LAB
 
 	db $4 ; signs
@@ -38819,8 +38829,8 @@ MonsterNames: ; 1c21e (7:421e)
 	db "DUGTRIO@@@"
 	db "VENOMOTH@@"
 	db "DEWGONG@@@"
-	db "MISSINGNO."
-	db "MISSINGNO."
+	db "BONSLY@@@@"
+	db "SUDOWOODO@"
 	db "CATERPIE@@"
 	db "METAPOD@@@"
 	db "BUTTERFREE"
@@ -52906,6 +52916,80 @@ SylveonBaseStats:
 
 	db Bank(SylveonPicFront)
 
+BonslyBaseStats:
+	db DEX_BONSLY ; pokedex id
+	db 50    ; base hp
+	db 80   ; base attack
+	db 95   ; base defense
+	db 10    ; base speed
+	db 45    ; base special
+
+	db ROCK     ; species type 1
+	db ROCK     ; species type 2
+
+	db 255  ; catch rate
+	db 68 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw BonslyPicFront
+	dw BonslyPicBack
+
+	; attacks known at lvl 0
+	db LEER
+	db 0
+	db 0
+	db 0
+
+	db 0 ; growth rate
+
+	; learnset
+	db %00100000
+	db %00000010
+	db %00000000
+	db %11001000
+	db %00001010
+	db %11001000
+	db %00000010
+
+	db Bank(BonslyPicFront)
+
+SudowoodoBaseStats:
+	db DEX_SUDOWOODO ; pokedex id
+	db 70    ; base hp
+	db 100   ; base attack
+	db 115   ; base defense
+	db 30    ; base speed
+	db 60    ; base special
+
+	db ROCK     ; species type 1
+	db ROCK     ; species type 2
+
+	db 65  ; catch rate
+	db 135 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw SudowoodoPicFront
+	dw SudowoodoPicBack
+
+	; attacks known at lvl 0
+	db ROCK_THROW
+	db MIMIC
+	db 0
+	db 0
+
+	db 0 ; growth rate
+
+	; learnset
+	db %10110001
+	db %00000010
+	db %00000110
+	db %11001010
+	db %00001010
+	db %11001000
+	db %00100010
+
+	db Bank(SudowoodoPicFront)
+
 
 CryData: ; 39446 (e:5446)
 	;$BaseCry, $Pitch, $Length
@@ -53029,8 +53113,8 @@ CryData: ; 39446 (e:5446)
 	db $0B, $2A, $10; Dugtrio
 	db $1A, $29, $80; Venomoth
 	db $0C, $23, $FF; Dewgong
-	db $00, $00, $00; MissingNo.
-	db $00, $00, $00; MissingNo.
+	db $17, $80, $80; Bonsly
+	db $17, $40, $40; Sudowoodo
 	db $16, $80, $20; Caterpie
 	db $1C, $CC, $01; Metapod
 	db $16, $77, $40; Butterfree
@@ -56253,8 +56337,8 @@ EvosMovesPointerTable: ; 3b05c (e:705c)
 	dw Mon051_EvosMoves
 	dw Mon049_EvosMoves
 	dw Mon087_EvosMoves
-	dw Mon171_EvosMoves	;MissingNo
-	dw Mon172_EvosMoves	;MissingNo
+	dw Mon171_EvosMoves	;Bonsly
+	dw Mon172_EvosMoves	;Sudowoodo
 
 Mon112_EvosMoves: ; 3b1d8 (e:71d8)
 ;RHYDON
@@ -57550,10 +57634,13 @@ Mon133_EvosMoves: ; 3b644 (e:7644)
 	db EV_HAPPINESS_NIGHT,1,UMBREON
 	db 0
 ;Learnset
-	db 27,QUICK_ATTACK
-	db 31,TAIL_WHIP
-	db 37,BITE
-	db 45,TAKE_DOWN
+	db 10,TAIL_WHIP
+	db 14,QUICK_ATTACK
+	db 21,SWIFT
+	db 26,BITE
+	db 31,SWEET_KISS
+	db 37,TAKE_DOWN
+	db 45,DOUBLE_EDGE
 	db 0
 Mon136_EvosMoves: ; 3b65a (e:765a)
 ;FLAREON
@@ -57778,17 +57865,32 @@ Mon087_EvosMoves: ; 3b732 (e:7732)
 	db 0
 
 Mon171_EvosMoves: ; 3b73e (e:773e)
-;MISSINGNO
+;BONSLY
 ;Evolutions
 	db 0
 ;Learnset
+	db 8,TACKLE
+	db 15,LOW_KICK
+	db 21,MIMIC
+	db 24,ROCK_THROW
+	db 31,FEINT_ATTACK
+	db 35,ROCK_SLIDE
+	db 41,SLAM
+	db 48,DOUBLE_EDGE
 	db 0
 
 Mon172_EvosMoves: ; 3b740 (e:7740)
-;MISSINGNO
+;SUDOWOODO
 ;Evolutions
 	db 0
 ;Learnset
+	db 10,TACKLE
+	db 17,LOW_KICK
+	db 25,ROCK_SLIDE
+	db 30,COUNTER
+	db 35,FEINT_ATTACK
+	db 46,SLAM
+	db 57,DOUBLE_EDGE
 	db 0
 
 Func_3b9ec: ; 3b9ec (e:79ec)
@@ -67870,8 +67972,8 @@ PokedexEntryPointers: ; 4047e (10:447e)
 	dw DugtrioDexEntry
 	dw VenomothDexEntry
 	dw DewgongDexEntry
-	dw MissingNoDexEntry
-	dw MissingNoDexEntry
+	dw BonslyDexEntry
+	dw SudowoodoDexEntry
 	dw CaterpieDexEntry
 	dw MetapodDexEntry
 	dw ButterfreeDexEntry
@@ -69136,6 +69238,20 @@ SylveonDexEntry:
 	TX_FAR _SylveonDexEntry
 	db "@"
 
+BonslyDexEntry:
+	db "BONSAI@"
+	db 1, 8
+	dw 331
+	TX_FAR _BonslyDexEntry
+	db "@"
+
+SudowoodoDexEntry:
+	db "IMITATION@"
+	db 3, 11
+	dw 836
+	TX_FAR _SudowoodoDexEntry
+	db "@"
+
 MissingNoDexEntry: ; 40fe5 (10:4fe5)
 	db "???@"
 	db 10 ; 1.0 m
@@ -69300,8 +69416,8 @@ PokedexOrder: ; 41024 (10:5024)
 	db DEX_DUGTRIO
 	db DEX_VENOMOTH
 	db DEX_DEWGONG
-	db 0 ; MISSINGNO.
-	db 0 ; MISSINGNO.
+	db DEX_BONSLY
+	db DEX_SUDOWOODO
 	db DEX_CATERPIE
 	db DEX_METAPOD
 	db DEX_BUTTERFREE
@@ -98783,7 +98899,7 @@ LoadFossilItemAndMonName: ; 610eb (18:50eb)
 
 ViridianForest_h: ; 0x61101 to 0x6110d (12 bytes) (id=51)
 	db $03 ; tileset
-	db VIRIDIAN_FOREST_HEIGHT, VIRIDIAN_FOREST_WIDTH ; dimensions (y, x)
+	db SUDORAND_HEIGHT, SUDORAND_WIDTH ; dimensions (y, x)
 	dw ViridianForestBlocks, ViridianForestTextPointers, ViridianForestScript ; blocks, texts, scripts
 	db $00 ; connections
 	dw ViridianForestObject ; objects
@@ -98935,42 +99051,42 @@ ViridianForestText14: ; 611d5 (18:51d5)
 	db "@"
 
 ViridianForestObject: ; 0x611da (size=127)
-	db $3 ; border tile
+	db $26 ; border tile
 
-	db $6 ; warps
-	db $0, $1, $2, VIRIDIAN_FOREST_EXIT
-	db $0, $2, $3, VIRIDIAN_FOREST_EXIT
-	db $2f, $f, $1, VIRIDIAN_FOREST_ENTRANCE
-	db $2f, $10, $1, VIRIDIAN_FOREST_ENTRANCE
-	db $2f, $11, $1, VIRIDIAN_FOREST_ENTRANCE
-	db $2f, $12, $1, VIRIDIAN_FOREST_ENTRANCE
+	db $3 ; warps
+	db $1f, $10, $1, PALLET_TOWN
+	db $1f, $11, $1, PALLET_TOWN
+	db $1, $1, $2, VIRIDIAN_FOREST_EXIT
+	;db $2f, $f, $1, VIRIDIAN_FOREST_ENTRANCE
+	;db $2f, $10, $1, VIRIDIAN_FOREST_ENTRANCE
+	;db $2f, $11, $1, VIRIDIAN_FOREST_ENTRANCE
+	;db $2f, $12, $1, VIRIDIAN_FOREST_ENTRANCE
 
-	db $6 ; signs
-	db $28, $18, $9 ; ViridianForestText9
-	db $20, $10, $a ; ViridianForestText10
-	db $11, $1a, $b ; ViridianForestText11
-	db $18, $4, $c ; ViridianForestText12
-	db $2d, $12, $d ; ViridianForestText13
-	db $1, $2, $e ; ViridianForestText14
+	db $0 ; signs TODO
+	;db $6 ; signs
+	;db $28, $18, $9 ; ViridianForestText9
+	;db $20, $10, $a ; ViridianForestText10
+	;db $11, $1a, $b ; ViridianForestText11
+	;db $18, $4, $c ; ViridianForestText12
+	;db $2d, $12, $d ; ViridianForestText13
+	;db $1, $2, $e ; ViridianForestText14
 
-	db $8 ; people
-	db SPRITE_BUG_CATCHER, $2b + 4, $10 + 4, $ff, $ff, $1 ; person
-	db SPRITE_BUG_CATCHER, $21 + 4, $1e + 4, $ff, $d2, $42, BUG_CATCHER + $C8, $1 ; trainer
-	db SPRITE_BUG_CATCHER, $13 + 4, $1e + 4, $ff, $d2, $43, BUG_CATCHER + $C8, $2 ; trainer
-	db SPRITE_BUG_CATCHER, $12 + 4, $2 + 4, $ff, $d2, $44, BUG_CATCHER + $C8, $3 ; trainer
-	db SPRITE_BALL, $b + 4, $19 + 4, $ff, $ff, $85, ANTIDOTE ; item
-	db SPRITE_BALL, $1d + 4, $c + 4, $ff, $ff, $86, POTION ; item
-	db SPRITE_BALL, $1f + 4, $1 + 4, $ff, $ff, $87, POKE_BALL ; item
-	db SPRITE_BUG_CATCHER, $28 + 4, $1b + 4, $ff, $ff, $8 ; person
+	db $0 ; people TODO
+	;db $8 ; people
+	;db SPRITE_BUG_CATCHER, $2b + 4, $10 + 4, $ff, $ff, $1 ; person
+	;db SPRITE_BUG_CATCHER, $21 + 4, $1e + 4, $ff, $d2, $42, BUG_CATCHER + $C8, $1 ; trainer
+	;db SPRITE_BUG_CATCHER, $13 + 4, $1e + 4, $ff, $d2, $43, BUG_CATCHER + $C8, $2 ; trainer
+	;db SPRITE_BUG_CATCHER, $12 + 4, $2 + 4, $ff, $d2, $44, BUG_CATCHER + $C8, $3 ; trainer
+	;db SPRITE_BALL, $b + 4, $19 + 4, $ff, $ff, $85, ANTIDOTE ; item
+	;db SPRITE_BALL, $1d + 4, $c + 4, $ff, $ff, $86, POTION ; item
+	;db SPRITE_BALL, $1f + 4, $1 + 4, $ff, $ff, $87, POKE_BALL ; item
+	;db SPRITE_BUG_CATCHER, $28 + 4, $1b + 4, $ff, $ff, $8 ; person
 
 	; warp-to
-	EVENT_DISP $11, $0, $1 ; VIRIDIAN_FOREST_EXIT
-	EVENT_DISP $11, $0, $2 ; VIRIDIAN_FOREST_EXIT
-	EVENT_DISP $11, $2f, $f ; VIRIDIAN_FOREST_ENTRANCE
-	EVENT_DISP $11, $2f, $10 ; VIRIDIAN_FOREST_ENTRANCE
-	EVENT_DISP $11, $2f, $11 ; VIRIDIAN_FOREST_ENTRANCE
-	EVENT_DISP $11, $2f, $12 ; VIRIDIAN_FOREST_ENTRANCE
-
+	EVENT_DISP SUDORAND_WIDTH, $1f, $10, ; EVENT_DISP $11, $0, $2 ; VIRIDIAN_FOREST_EXIT TODO
+	EVENT_DISP SUDORAND_WIDTH, $1f, $11, ; EVENT_DISP $11, $0, $2 ; VIRIDIAN_FOREST_EXIT TODO
+	EVENT_DISP SUDORAND_WIDTH, $1, $1, ; EVENT_DISP $11, $0, $2 ; VIRIDIAN_FOREST_EXIT TODO
+	
 SSAnne1_h: ; 0x61259 to 0x61265 (12 bytes) (id=95)
 	db $0d ; tileset
 	db SS_ANNE_1_HEIGHT, SS_ANNE_1_WIDTH ; dimensions (y, x)
@@ -104724,7 +104840,8 @@ MonOverworldData: ; 7190d (1c:590d)
 	dn SPRITE_BIRD_M, SPRITE_BIRD_M         ;Murkrow/Honchkrow
 	dn SPRITE_MON, SPRITE_QUADRUPED         ;Scizor/Espeon
 	dn SPRITE_QUADRUPED, SPRITE_QUADRUPED   ;Umbreon/Leafeon
-	dn SPRITE_QUADRUPED, SPRITE_QUADRUPED   ;Glaceon/SYLVEON
+	dn SPRITE_QUADRUPED, SPRITE_QUADRUPED   ;Glaceon/Sylveon
+	dn SPRITE_MON, SPRITE_MON               ;Bonsly/Sudowoodo
 	db 0
 
 MonOverworldSprites: ; 71959 (1c:5959)
@@ -106055,6 +106172,8 @@ MonsterPalettes: ; 725c8 (1c:65c8)
 	db PAL_GREENMON  ; LEAFEON
 	db PAL_BLUEMON   ; GLACEON
 	db PAL_PINKMON   ; SYLVEON
+	db PAL_BROWNMON  ; BONSLY
+	db PAL_BROWNMON  ; SUDOWOODO
 
 ; palettes for overworlds, title screen, monsters
 SuperPalettes: ; 72660 (1c:6660)
@@ -118959,6 +119078,14 @@ SylveonPicFront:
 	INCBIN "pic/bmon/sylveon.pic"
 SylveonPicBack:
 	INCBIN "pic/monback/sylveonb.pic"
+BonslyPicFront:
+	INCBIN "pic/bmon/bonsly.pic"
+BonslyPicBack:
+	INCBIN "pic/monback/bonslyb.pic"
+SudowoodoPicFront:
+	INCBIN "pic/bmon/sudowoodo.pic"
+SudowoodoPicBack:
+	INCBIN "pic/monback/sudowoodob.pic"
 
 SECTION "New Text", ROMX, BANK[$33]
 
@@ -121473,3 +121600,232 @@ WriteMonMoves_ShiftMoveData_2:
 	jr nz, .asm_3b050
 	ret
 
+SECTION "Random Stuff", ROMX, BANK[$37]
+
+ClearOpening:
+; d = x
+; e = y
+	push hl
+	push bc
+	push de
+	ld a, e
+	ld bc, 2
+	ld hl, wStringBuffer1
+.yLoop
+	and a
+	jr z, .pastYLoop
+	add hl, bc
+	dec a
+	jr .yLoop
+.pastYLoop
+	ld a, d
+	srl a
+	srl a
+	srl a
+	ld c, a
+	ld b, 0
+	add hl, bc
+; hl now points to the correct byte
+; now set the correct bit
+	ld a, d
+	and %00000111 ; a now contains the bit index
+	xor %00000111 ; flip the bit order to make it easier for a human eye to see the results...
+	jr z, .bitZero
+	cp 1
+	jr z, .bitOne
+	cp 2
+	jr z, .bitTwo
+	cp 3
+	jr z, .bitThree
+	cp 4
+	jr z, .bitFour
+	cp 5
+	jr z, .bitFive
+	cp 6
+	jr z, .bitSix
+	set 7, [hl]
+	jr .done
+.bitZero
+	set 0, [hl]
+	jr .done
+.bitOne
+	set 1, [hl]
+	jr .done
+.bitTwo
+	set 2, [hl]
+	jr .done
+.bitThree
+	set 3, [hl]
+	jr .done
+.bitFour
+	set 4, [hl]
+	jr .done
+.bitFive
+	set 5, [hl]
+	jr .done
+.bitSix
+	set 6, [hl]
+.done
+	pop de
+	pop bc
+	pop hl
+	ret
+
+GenSudoRandWoodMap:
+; fill C6E8-CBFB with the background tile
+	ld hl,$c6e8
+	ld a,[$d3ad] ; background tile number
+	ld d,a
+	ld bc,$0514
+.backgroundTileLoop
+	ld a,d
+	ld [hli],a
+	dec bc
+	ld a,c
+	or b
+	jr nz,.backgroundTileLoop
+	ld hl,$c6e8
+	ld a,SUDORAND_WIDTH
+	ld [$ff8c],a
+	add a,$06 ; border (east and west)
+	ld [$ff8b],a ; map width + border
+	ld b,$00
+	ld c,a
+; make space for north border (next 3 lines)
+	add hl,bc
+	add hl,bc
+	add hl,bc
+	ld c,$03
+	add hl,bc ; this puts us past the (west) border
+	push hl
+; empty the 2D array
+	xor a
+	ld b, (SUDORAND_WIDTH * SUDORAND_HEIGHT) / 8
+	ld hl, wStringBuffer1
+.clearLoop
+	ld [hli], a
+	dec b
+	jr nz, .clearLoop
+; starting position
+	ld a, [W_XCOORD]
+	srl a
+	ld d, a ; (d, e) = (x, y)
+	ld a, [W_YCOORD]
+	srl a
+	ld e, a
+	ld c, 6 + 1 ; 4 waypoints
+.waypointLoop
+	dec c
+	jr z, .fillInBlocks
+; pick waypoint
+	ld a, c
+	cp $1
+	jr nz, .secondToLast
+	ld h, 0
+	ld l, 1
+	jr .waypointLoopY
+.secondToLast
+	cp $2
+	jr nz, .randomWaypoint
+	ld h, 8
+	ld l, 15
+	jr .waypointLoopY
+.randomWaypoint
+	call GenRandom
+	and SUDORAND_WIDTH - 1
+	ld h, a
+	call GenRandom 
+	and SUDORAND_WIDTH - 1
+	ld l, a
+	; (h, l) = (x, y)
+.waypointLoopY
+	call ClearOpening
+	ld a, e
+	cp l
+	jr z, .waypointLoopX
+	jr c, .waypointLoopYUp
+	dec e
+	jr .waypointLoopY
+.waypointLoopYUp
+	inc e
+	jr .waypointLoopY
+.waypointLoopX
+	call ClearOpening
+	ld a, d
+	cp h
+	jr z, .waypointLoop
+	jr c, .waypointLoopXLeft
+	dec d
+	jr .waypointLoopX
+.waypointLoopXLeft
+	inc d
+	jr .waypointLoopX
+
+.fillInBlocks
+; actually fill in the blocks from our 2D array!
+	ld de, wStringBuffer1
+	pop hl ; MAKE SURE THIS LINES UP WITH the line right before "; empty the 2D array"
+	push hl
+	ld c, 16 + 1 ; 16 bytes tall
+	push bc
+.heightLoop
+	pop bc
+	dec c
+	jr z, .afterHeightLoop
+	push bc
+	ld b, 2 + 1 ; 2 bytes wide
+.widthLoop1
+	dec b
+	jr z, .afterWidthLoop1
+	ld a, [de]
+	inc de
+	ld c, 8 + 1
+.widthLoop2
+	dec c
+	jr z, .widthLoop1
+	bit 7, a
+	jr z, .noFill
+	push af
+	push bc
+	ld b, $22
+	call GenRandom
+	and $3
+	add b
+	ld [hli], a
+	pop bc
+	pop af
+	sla a
+	jr .widthLoop2
+.noFill
+	push af
+	ld a, SUDORAND_CLOSEDTILE
+	ld [hli], a
+	pop af
+	sla a
+	jr .widthLoop2
+.afterWidthLoop1
+	inc hl
+	inc hl
+	inc hl
+	inc hl
+	inc hl
+	inc hl
+	jr .heightLoop
+.afterHeightLoop
+	ld bc, -14
+	add hl, bc
+	ld a, $59
+	ld [hl], a
+	pop hl
+	ld a, $19
+	ld [hli], a
+	ld a, $1c
+	ld [hli], a
+	ld a, $1b
+	ld [hld], a
+	dec hl
+	ld bc, SUDORAND_WIDTH + 6
+	add hl, bc
+	ld [hli], a
+	ld [hli], a
+	ret
