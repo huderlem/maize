@@ -21292,16 +21292,16 @@ Route22Mons: ; d10b (3:510b)
 
 ForestMons: ; d121 (3:5121)
 	db $0D
-	db 14,BONSLY
+	db 17,BONSLY
 	db 15,BONSLY
 	db 16,BONSLY
-	db 15,BONSLY
-	db 14,MURKROW
+	db 18,BONSLY
+	db 18,MURKROW
 	db 16,BONSLY
-	db 14,EEVEE
-	db 17,SUDOWOODO
-	db 18,SUDOWOODO
-	db 18,SUDOWOODO
+	db 18,EEVEE
+	db 21,SUDOWOODO
+	db 22,SUDOWOODO
+	db 22,SUDOWOODO
 
 	db $00
 
@@ -34753,7 +34753,7 @@ PalletTownObject: ; 0x182c3 (size=58)
 
 	db $3 ; warps
 	db $d, $3, $0, REDS_HOUSE_1F
-	db $7, $3, $1, VIRIDIAN_FOREST ;BLUES_HOUSE TODO
+	db $7, $3, $0, BLUES_HOUSE
 	db $b, $c, $1, OAKS_LAB
 
 	db $4 ; signs
@@ -88987,14 +88987,16 @@ Route6_h: ; 0x58000 to 0x58022 (34 bytes) (id=17)
 Route6Object: ; 0x58022 (size=87)
 	db $f ; border tile
 
-	db $4 ; warps
+	db $5 ; warps
 	db $1, $a, $2, ROUTE_5_GATE
 	db $1, $b, $2, ROUTE_5_GATE
 	db $7, $a, $0, ROUTE_5_GATE
 	db $1d, $c, $1, UNDERGROUND_PATH_NS
+	db $9, $3, $0, VIRIDIAN_FOREST
 
-	db $1 ; signs
+	db $2 ; signs
 	db $11, $13, $7 ; Route6Text7
+	db $b, $5, $8 ; Route6Text8
 
 	db $6 ; people
 	db SPRITE_BLACK_HAIR_BOY_1, $c + 4, $b + 4, $ff, $d3, $41, JR__TRAINER_M + $C8, $7 ; trainer
@@ -89009,6 +89011,7 @@ Route6Object: ; 0x58022 (size=87)
 	EVENT_DISP $a, $1, $b ; ROUTE_6_GATE
 	EVENT_DISP $a, $7, $a ; ROUTE_6_GATE
 	EVENT_DISP $a, $1d, $c ; PATH_ENTRANCE_ROUTE_6
+	EVENT_DISP $a, $9, $3, ; VIRIDIAN_FOREST
 
 Route6Blocks: ; 58079 (16:4079)
 	INCBIN "maps/route6.blk"
@@ -89873,6 +89876,7 @@ Route6TextPointers: ; 590c9 (16:50c9)
 	dw Route6Text5
 	dw Route6Text6
 	dw Route6Text7
+	dw Route6Text8
 
 Route6TrainerHeaders: ; 590d7 (16:50d7)
 Route6TrainerHeader0: ; 590d7 (16:50d7)
@@ -90037,6 +90041,9 @@ Route6AfterBattleText6: ; 591ac (16:51ac)
 
 Route6Text7: ; 591b1 (16:51b1)
 	TX_FAR _Route6Text7
+	db "@"
+Route6Text8:
+	TX_FAR _Route6Text8
 	db "@"
 
 Route8Script: ; 591b6 (16:51b6)
@@ -93236,6 +93243,8 @@ RedsHouse2FScript5:
 RedsHouse2FScript6:
 	ld a, $7
 	call Predef
+	ld hl, $d72e
+	res 5, [hl]
 	ld a, $6
 	ld [$d42f],a ; save target warp ID
 	ld a, VERMILION_CITY
@@ -99054,14 +99063,10 @@ ViridianForestObject: ; 0x611da (size=127)
 	db $26 ; border tile
 
 	db $3 ; warps
-	db $1f, $10, $1, PALLET_TOWN
-	db $1f, $11, $1, PALLET_TOWN
+	db $1f, $10, $4, ROUTE_6
+	db $1f, $11, $4, ROUTE_6
 	db $1, $1, $2, VIRIDIAN_FOREST_EXIT
-	;db $2f, $f, $1, VIRIDIAN_FOREST_ENTRANCE
-	;db $2f, $10, $1, VIRIDIAN_FOREST_ENTRANCE
-	;db $2f, $11, $1, VIRIDIAN_FOREST_ENTRANCE
-	;db $2f, $12, $1, VIRIDIAN_FOREST_ENTRANCE
-
+	
 	db $0 ; signs TODO
 	;db $6 ; signs
 	;db $28, $18, $9 ; ViridianForestText9
@@ -99083,8 +99088,8 @@ ViridianForestObject: ; 0x611da (size=127)
 	;db SPRITE_BUG_CATCHER, $28 + 4, $1b + 4, $ff, $ff, $8 ; person
 
 	; warp-to
-	EVENT_DISP SUDORAND_WIDTH, $1f, $10, ; EVENT_DISP $11, $0, $2 ; VIRIDIAN_FOREST_EXIT TODO
-	EVENT_DISP SUDORAND_WIDTH, $1f, $11, ; EVENT_DISP $11, $0, $2 ; VIRIDIAN_FOREST_EXIT TODO
+	EVENT_DISP SUDORAND_WIDTH, $1f, $10, ; EVENT_DISP $11, $0, $2 ; ROUTE_6
+	EVENT_DISP SUDORAND_WIDTH, $1f, $11, ; EVENT_DISP $11, $0, $2 ; ROUTE_6
 	EVENT_DISP SUDORAND_WIDTH, $1, $1, ; EVENT_DISP $11, $0, $2 ; VIRIDIAN_FOREST_EXIT TODO
 	
 SSAnne1_h: ; 0x61259 to 0x61265 (12 bytes) (id=95)

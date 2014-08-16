@@ -96,3 +96,11 @@ _Route6Text7:: ; 8de49 (23:5e49)
 	cont "VERMILION CITY"
 	done
 
+_Route6Text8::
+	text "SUDORAND WOODS"
+	line "ENTRACE"
+
+	para "BEWARE OF"
+	line "MOVING TREES"
+	done
+
