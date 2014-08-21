@@ -1,9 +1,27 @@
 _ViridianForestText1:: ; 8031d (20:431d)
-	text "I came here with"
-	line "some friends!"
+	text "This place is"
+	line "maddening!"
 
-	para "They're out for"
-	line "#MON fights!"
+	para "Every time I turn"
+	line "around, the path"
+	cont "changes!"
+
+	para "I think the trees"
+	line "are aliiive!!"
+
+	para "My house is in"
+	line "here, but I can't"
+	cont "find it anymore."
+
+	para "I've decided to"
+	line "just build a new"
+	cont "one inside of"
+	cont "ARBOR HOLLOW."
+
+	para "It's a shame that"
+	line "I'll leave my"
+	cont "prized posession"
+	cont "behind..."
 	done
 
 _ViridianForestBattleText1:: ; 80359 (20:4359)

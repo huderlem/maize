@@ -20211,7 +20211,7 @@ MapHSPointers: ; c8f5 (3:48f5)
 	dw MapHSXX
 	dw MapHSXX
 	dw MapHSXX
-	dw MapHSXX
+	dw MapHS32
 	dw MapHS33
 	dw MapHS34
 	dw MapHSXX
@@ -20562,8 +20562,9 @@ MapHS58: ; cc0d (3:4c0d)
 	db BILLS_HOUSE,$01,Show
 	db BILLS_HOUSE,$02,Hide
 	db BILLS_HOUSE,$03,Hide
-MapHS33: ; cc16 (3:4c16)
-	db VIRIDIAN_FOREST,$05,Show
+MapHS32: ; cc16 (3:4c16)
+	db VIRIDIAN_FOREST_ENTRANCE,$01,Show
+MapHS33:
 	db VIRIDIAN_FOREST,$06,Show
 	db VIRIDIAN_FOREST,$07,Show
 MapHS3B: ; cc1f (3:4c1f)
@@ -53748,10 +53749,10 @@ TrainerPicAndMoneyPointers: ; 39914 (e:5914)
 	dw GentlemanPic
 	db 0,$70,0
 
-	dw Rival2Pic
+	dw Rival1Pic
 	db 0,$65,0
 
-	dw Rival3Pic
+	dw Rival1Pic
 	db 0,$99,0
 
 	dw LoreleiPic
@@ -80120,7 +80121,7 @@ BlackbeltPic: ; 4de76 (13:5e76)
 Rival1Pic: ; 4e049 (13:6049)
 	INCBIN "pic/trainer/rival1.pic"
 ProfOakPic: ; 4e15f (13:615f)
-	INCBIN "pic/trainer/prof.oak.pic"
+	INCBIN "pic/trainer/prof_cedar.pic"
 ChiefPic: ; 4e27d (13:627d)
 ScientistPic: ; 4e27d (13:627d)
 	INCBIN "pic/trainer/scientist.pic"
@@ -80150,10 +80151,6 @@ SabrinaPic: ; 4f252 (13:7252)
 	INCBIN "pic/trainer/sabrina.pic"
 GentlemanPic: ; 4f3d0 (13:73d0)
 	INCBIN "pic/trainer/gentleman.pic"
-Rival2Pic: ; 4f4cf (13:74cf)
-	INCBIN "pic/trainer/rival2.pic"
-Rival3Pic: ; 4f623 (13:7623)
-	INCBIN "pic/trainer/rival3.pic"
 LoreleiPic: ; 4f779 (13:7779)
 	INCBIN "pic/trainer/lorelei.pic"
 ChannelerPic: ; 4f8a4 (13:78a4)
@@ -93035,8 +93032,10 @@ UndergroundTunnelEntranceRoute6Blocks: ; 5c080 (17:4080)
 UndergroundTunnelEntranceRoute5Blocks: ; 5c080 (17:4080)
 	INCBIN "maps/undergroundtunnelentranceroute5.blk"
 
-Route2GateBlocks: ; 5c090 (17:4090)
 ViridianForestEntranceBlocks: ; 5c090 (17:4090)
+	INCBIN "maps/viridianforestentrance.blk"
+
+Route2GateBlocks: ; 5c090 (17:4090)
 ViridianForestexitBlocks: ; 5c090 (17:4090)
 	INCBIN "maps/viridianforestexit.blk"
 
@@ -96394,7 +96393,7 @@ Route2GateObject: ; 0x5d620 (size=48)
 	EVENT_DISP $5, $7, $5
 
 ViridianForestEntrance_h: ; 0x5d650 to 0x5d65c (12 bytes) (id=50)
-	db $09 ; tileset
+	db $08 ; tileset
 	db VIRIDIAN_FOREST_ENTRANCE_HEIGHT, VIRIDIAN_FOREST_ENTRANCE_WIDTH ; dimensions (y, x)
 	dw ViridianForestEntranceBlocks, ViridianForestEntranceTextPointers, ViridianForestEntranceScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -96404,8 +96403,8 @@ ViridianForestEntranceScript: ; 5d65c (17:565c)
 	jp EnableAutoTextBoxDrawing
 
 ViridianForestEntranceTextPointers: ; 5d65f (17:565f)
+	dw Predef5CText
 	dw ViridianForestEntranceText1
-	dw ViridianForestEntranceText2
 
 ViridianForestEntranceText1: ; 5d663 (17:5663)
 	TX_FAR _ViridianForestEntranceText1
@@ -96418,23 +96417,19 @@ ViridianForestEntranceText2: ; 5d668 (17:5668)
 ViridianForestEntranceObject: ; 0x5d66d (size=48)
 	db $a ; border tile
 
-	db $4 ; warps
-	db $0, $4, $3, VIRIDIAN_FOREST
-	db $0, $5, $4, VIRIDIAN_FOREST
-	db $7, $4, $5, $ff
-	db $7, $5, $5, $ff
+	db $2 ; warps
+	db $7, $4, $2, VIRIDIAN_FOREST
+	db $7, $5, $2, VIRIDIAN_FOREST
+	
+	db $1 ; signs
+	db $4, $1, $2
 
-	db $0 ; signs
-
-	db $2 ; people
-	db SPRITE_GIRL, $4 + 4, $8 + 4, $ff, $d2, $1 ; person
-	db SPRITE_LITTLE_GIRL, $4 + 4, $2 + 4, $fe, $1, $2 ; person
+	db $1 ; people
+	db SPRITE_BALL, $4 + 4, $2 + 4, $ff, $ff, $81, HM_03 ; item
 
 	; warp-to
-	EVENT_DISP $5, $0, $4 ; VIRIDIAN_FOREST
-	EVENT_DISP $5, $0, $5 ; VIRIDIAN_FOREST
-	EVENT_DISP $5, $7, $4
-	EVENT_DISP $5, $7, $5
+	EVENT_DISP VIRIDIAN_FOREST_ENTRANCE_WIDTH, $7, $4 ; VIRIDIAN_FOREST
+	EVENT_DISP VIRIDIAN_FOREST_ENTRANCE_WIDTH, $7, $5 ; VIRIDIAN_FOREST
 
 UndergroundTunnelEntranceRoute5_h: ; 0x5d69d to 0x5d6a9 (12 bytes) (id=71)
 	db $09 ; tileset
@@ -99065,7 +99060,7 @@ ViridianForestObject: ; 0x611da (size=127)
 	db $3 ; warps
 	db $1f, $10, $4, ROUTE_6
 	db $1f, $11, $4, ROUTE_6
-	db $1, $1, $2, VIRIDIAN_FOREST_EXIT
+	db $1, $1, $0, VIRIDIAN_FOREST_ENTRANCE
 	
 	db $0 ; signs TODO
 	;db $6 ; signs
@@ -99076,9 +99071,8 @@ ViridianForestObject: ; 0x611da (size=127)
 	;db $2d, $12, $d ; ViridianForestText13
 	;db $1, $2, $e ; ViridianForestText14
 
-	db $0 ; people TODO
-	;db $8 ; people
-	;db SPRITE_BUG_CATCHER, $2b + 4, $10 + 4, $ff, $ff, $1 ; person
+	db $1 ; people TODO
+	db SPRITE_BUG_CATCHER, $1d + 4, $10 + 4, $ff, $ff, $1 ; person
 	;db SPRITE_BUG_CATCHER, $21 + 4, $1e + 4, $ff, $d2, $42, BUG_CATCHER + $C8, $1 ; trainer
 	;db SPRITE_BUG_CATCHER, $13 + 4, $1e + 4, $ff, $d2, $43, BUG_CATCHER + $C8, $2 ; trainer
 	;db SPRITE_BUG_CATCHER, $12 + 4, $2 + 4, $ff, $d2, $44, BUG_CATCHER + $C8, $3 ; trainer
