@@ -5110,34 +5110,9 @@ UpdateMovingBgTiles:: ; 1ebe (0:1ebe)
 	ret c
 	cp a,21
 	jr z,.updateFlowerTile
-	ld hl,$9140 ; water tile pattern VRAM location
-	ld c,16 ; number of bytes in a tile pattern
-	ld a,[$d085]
-	inc a
-	and a,$07
-	ld [$d085],a
-	and a,$04
-	jr nz,.rotateWaterLeftLoop
-.rotateWaterRightloop
-	ld a,[hl]
-	rrca
-	ld [hli],a
-	dec c
-	jr nz,.rotateWaterRightloop
-	jr .done
-.rotateWaterLeftLoop
-	ld a,[hl]
-	rlca
-	ld [hli],a
-	dec c
-	jr nz,.rotateWaterLeftLoop
-.done
-	ld a,[$ffd7]
-	rrca
-	ret nc
-	xor a
-	ld [$ffd8],a
-	ret
+	ld b, Bank(AnimateWater)
+	ld hl, AnimateWater
+	jp Bankswitch
 .updateFlowerTile
 	xor a
 	ld [$ffd8],a
@@ -101209,10 +101184,6 @@ Unknown_62529: ; 62529 (18:6529)
 
 SECTION "bank19",ROMX,BANK[$19]
 
-Tset00_GFX: ; 64000 (19:4000)
-	INCBIN "gfx/tilesets/00.2bpp"
-Tset00_Block: ; 645e0 (19:45e0)
-	INCBIN "gfx/blocksets/00.bst"
 Tset01_GFX: ; 64de0 (19:4de0)
 	INCBIN "gfx/tilesets/01.2bpp"
 Tset01_Block: ; 65270 (19:5270)
@@ -119086,6 +119057,12 @@ SudowoodoPicFront:
 SudowoodoPicBack:
 	INCBIN "pic/monback/sudowoodob.pic"
 
+
+Tset00_GFX: ; 64000 (19:4000)
+	INCBIN "gfx/tilesets/00.2bpp"
+Tset00_Block: ; 645e0 (19:45e0)
+	INCBIN "gfx/blocksets/00.bst"
+
 SECTION "New Text", ROMX, BANK[$33]
 
 _VermilionGymAfterBattleStep1::
@@ -121828,3 +121805,42 @@ GenSudoRandWoodMap:
 	ld [hli], a
 	ld [hli], a
 	ret
+
+AnimateWater:
+	ld hl,$9140 ; water tile pattern VRAM location
+	call AnimateWater_
+	ld hl,$95e0
+	call AnimateWater_
+	ld a,[$d085]
+	inc a
+	and a,$07
+	ld [$d085],a
+	ret
+
+AnimateWater_:
+	ld c,16 ; number of bytes in a tile pattern
+	ld a,[$d085]
+	inc a
+	and a,$04
+	jr nz,.rotateWaterLeftLoop
+.rotateWaterRightloop
+	ld a,[hl]
+	rrca
+	ld [hli],a
+	dec c
+	jr nz,.rotateWaterRightloop
+	jr .done
+.rotateWaterLeftLoop
+	ld a,[hl]
+	rlca
+	ld [hli],a
+	dec c
+	jr nz,.rotateWaterLeftLoop
+.done
+	ld a,[$ffd7]
+	rrca
+	ret nc
+	xor a
+	ld [$ffd8],a
+	ret
+
