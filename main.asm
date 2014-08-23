@@ -18808,7 +18808,7 @@ HandleJoypadResetButtons: ; c03c (3:403c)
 MapSongBanks: ; c04d (3:404d)
 	db MUSIC_PALLET_TOWN, BANK(Music_PalletTown) ;PALLET_TOWN
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; VIRIDIAN_CITY
-	db MUSIC_CITIES1, BANK(Music_Cities1) ; PEWTER_CITY
+	db MUSIC_GAME_CORNER, BANK(Music_GameCorner) ; PEWTER_CITY
 	db MUSIC_CITIES2, BANK(Music_Cities2) ; CERULEAN_CITY
 	db MUSIC_LAVENDER, BANK(Music_Lavender) ; LAVENDER_TOWN
 	db MUSIC_VERMILION, BANK(Music_Vermilion) ; VERMILION_CITY
