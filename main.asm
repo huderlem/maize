@@ -2391,6 +2391,8 @@ CollisionCheckOnWater:: ; 0fb7 (0:0fb7)
 	ld a,$35
 	call Predef ; get tile in front of player (puts it in c and [$CFC6])
 	ld a,[$cfc6] ; tile in front of player
+	cp a,$5e ; deep water tile
+	jr z,.noCollision
 	cp a,$14 ; water tile
 	jr z,.noCollision ; keep surfing if it's a water tile
 	cp a,$32 ; either the left tile of the S.S. Anne boarding platform or the tile on eastern coastlines (depending on the current tileset)
@@ -9127,8 +9129,11 @@ GetName:: ; 376b (0:376b)
 ; [$D0B7] = bank of list
 ;
 ; returns pointer to name in de
+	ld a, [W_LISTTYPE]
+	cp MOVE_NAME
 	ld a,[$d0b5]
 	ld [$d11e],a
+	jr z, .nonMachine
 	cp DV_BALL
 	jr nc, .nonMachine
 	cp a,$C4        ;it's TM/HM
@@ -15264,6 +15269,9 @@ Func_62ce: ; 62ce (1:62ce)
 	ret
 
 Func_62ff: ; 62ff (1:62ff)
+	ld hl, W_NEWFLAGS1
+	bit 6, [hl] ; dive?
+	jp nz, .diveWarping
 	ld a, [$d72d]
 	cp $ef
 	jr nz, .asm_6314
@@ -15312,10 +15320,11 @@ Func_62ff: ; 62ff (1:62ff)
 	jr z, .asm_638e
 	ld a, [$d719]
 	jr .asm_6391
-.asm_635b
+.asm_635b ; dungeon warping
 	ld hl, $d72d
 	res 4, [hl]
 	ld a, [$d71d]
+.diveHook
 	ld b, a
 	ld [W_CURMAP], a ; $d35e
 	ld a, [$d71e]
@@ -15379,6 +15388,13 @@ Func_62ff: ; 62ff (1:62ff)
 	ld [$d42f], a
 	ret
 
+.diveWarping
+	ld a, [wTempDiveWarpID]
+	ld [$d71e], a
+	ld a, [wTempDiveCurMap]
+	jr .diveHook
+
+
 DungeonWarpList: ; 63bf (1:63bf)
 	db SEAFOAM_ISLANDS_2,$01
 	db SEAFOAM_ISLANDS_2,$02
@@ -15392,6 +15408,7 @@ DungeonWarpList: ; 63bf (1:63bf)
 	db MANSION_1,$01
 	db MANSION_1,$02
 	db MANSION_2,$03
+	db CELADON_POKECENTER,$01
 	db $FF
 
 DungeonWarpData: ; 63d8 (1:63d8)
@@ -15407,6 +15424,7 @@ DungeonWarpData: ; 63d8 (1:63d8)
 	FLYWARP_DATA MANSION_1_WIDTH,14,16
 	FLYWARP_DATA MANSION_1_WIDTH,14,16
 	FLYWARP_DATA MANSION_2_WIDTH,14,18
+	FLYWARP_DATA CELADON_POKECENTER_WIDTH,4,4
 
 ;Format:
 ;	db Map_id
@@ -18112,7 +18130,7 @@ Func_76e1: ; 76e1 (1:36e1)
 FieldMoveNames: ; 778d (1:778d)
 	db "CUT@"
 	db "FLY@"
-	db "@"
+	db "DIVE@"
 	db "SURF@"
 	db "STRENGTH@"
 	db "FLASH@"
@@ -18186,7 +18204,7 @@ GetMonFieldMoves: ; 77d6 (1:77d6)
 FieldMoveDisplayData: ; 7823 (1:7823)
 	db CUT, $01, $0C
 	db FLY, $02, $0C 
-	db $B4, $03, $0C ; unused field move
+	db DIVE, $03, $0C
 	db SURF, $04, $0C 
 	db STRENGTH, $05, $0A 
 	db FLASH, $06, $0C 
@@ -27728,6 +27746,8 @@ IsNextTileShoreOrWater: ; e8b8 (3:68b8)
 	cp a,$32 ; usual eastern shore tile
 	jr z,.shoreOrWater
 .skipShoreTiles
+	cp a,$5e ; deep water tile
+	jr z, .shoreOrWater
 	cp a,$14 ; water tile
 	jr z,.shoreOrWater
 .notShoreOrWater
@@ -31543,7 +31563,7 @@ StartMenu_Pokemon: ; 130a9 (4:70a9)
 .outOfBattleMovePointers
 	dw .cut
 	dw .fly
-	dw .surf
+	dw .dive
 	dw .surf
 	dw .strength
 	dw .flash
@@ -31579,6 +31599,85 @@ StartMenu_Pokemon: ; 130a9 (4:70a9)
 	and a
 	jp z,.loop
 	jp CloseTextDisplay
+.dive
+	bit 3, a ; does player have badge from Pyrite City?
+	jp z,.newBadgeRequired
+	ld a,[W_CURMAPTILESET]
+	and a
+	jr nz,.notDeepWater
+	ld hl, .DiveData
+	ld a, [W_CURMAP]
+	ld b, a
+.diveLoop
+	ld a, [hli]
+	cp b
+	jr z, .foundMap
+	cp $ff
+	jp z, .notDeepWater
+.foundMap
+	ld a, [hli]
+	ld e, a
+	ld a, [hl]
+	ld d, a
+	ld h, d
+	ld l, e ; hl contains pointer to x, y data
+	ld a, [W_XCOORD]
+	ld b, a
+	ld a, [W_YCOORD]
+	ld c, a ; bc contain player (x, y)
+.diveSpotsLoop
+	ld a, [hli]
+	cp $ff
+	jr z, .notDeepWater
+	cp b
+	jr nz, .xNoMatch
+	ld a, [hli]
+	cp c
+	jr z, .isDeepWater
+	inc hl
+	inc hl
+	jr .diveSpotsLoop
+.xNoMatch
+	inc hl
+	inc hl
+	inc hl
+	jr .diveSpotsLoop
+.notDeepWater
+	ld a,[wWhichPokemon]
+	ld hl,W_PARTYMON1NAME
+	call GetPartyMonName
+	ld hl, .CantDiveText
+	call PrintText
+	jp .loop
+.isDeepWater
+	ld a, [hli]
+	ld [wTempDiveCurMap], a
+	ld a, [hl]
+	ld [wTempDiveWarpID], a
+	ld hl, $d732
+	set 3, [hl]
+	ld hl, W_NEWFLAGS1
+	set 6, [hl] ; diving animation
+	call GBPalWhiteOutWithDelay3
+	jp .goBackToMap
+.DivingText
+	TX_FAR _UseDiveText
+	db "@"
+.CantDiveText
+	TX_FAR _CantUseDiveText
+	db "@"
+
+.DiveData:
+	dbw CELADON_CITY, .CeladonCityDive
+	db $ff ; terminator
+
+.CeladonCityDive:
+	db $26, $12, CELADON_POKECENTER, 1
+	db $26, $13, CELADON_POKECENTER, 1
+	db $27, $12, CELADON_POKECENTER, 1
+	db $27, $13, CELADON_POKECENTER, 1
+	db $ff
+
 .surf
 	bit 4,a ; does the player have the Soul Badge?
 	jp z,.newBadgeRequired
@@ -32898,8 +32997,11 @@ Func_13870: ; 13870 (4:7870)
 	ld hl, W_GRASSMONS ; $d888
 	FuncCoord 8, 9 ; $c45c
 	ld a, [Coord]
+	cp $5e ; deep water
+	jr z, .watertile
 	cp $14
 	jr nz, .asm_138e5
+.watertile
 	ld hl, W_WATERMONS ; $d8a5 (aliases: W_ENEMYMON1HP)
 .asm_138e5
 	ld b, $0
@@ -46630,6 +46732,7 @@ Moves: ; 38000 (e:4000)
 	db HYPER_BEAM  ,SPECIAL_DOWN_SIDE_EFFECT  ,95,FAIRY,    $FF,15 ; MOONBLAST
 	db COMET_PUNCH ,ATTACK_DOWN_SIDE_EFFECT   ,90,FAIRY,    $E5,10 ; PLAY_ROUGH
 	db LOVELY_KISS ,CONFUSION_EFFECT          ,$00,FAIRY,   $C0,10 ; SWEET_KISS
+	db $D0         ,FLY_EFFECT                ,$50,WATER,   $FF,10 ; DIVE
 	db STRUGGLE    ,RECOIL_EFFECT             ,$32,NORMAL,  $FF,10 ; STRUGGLE
 
 BulbasaurBaseStats: ; 383de (e:43de)
@@ -66688,8 +66791,11 @@ Func_3f88c: ; 3f88c (f:788c)
 	ld b, $64
 .asm_3f8ad
 	ld a, [de]
-	cp $5b
+	cp $D0 ; DIVE effect
+	jr z, .digOrDive
+	cp DIG
 	jr nz, .asm_3f8b6
+.digOrDive
 	set 6, [hl]
 	ld b, $c0
 .asm_3f8b6
@@ -66723,8 +66829,15 @@ UnnamedText_3f8c8: ; 3f8c8 (f:78c8)
 	jr z, .asm_3f8f8
 	cp $5b
 	ld hl, UnnamedText_3f912 ; $7912
+	jr z, .asm_3f8f8
+	cp $D0 ; DIVE animation
+	ld hl, DiveText
 .asm_3f8f8
 	ret
+
+DiveText::
+	TX_FAR _DiveText
+	db "@"
 
 UnnamedText_3f8f9: ; 3f8f9 (f:78f9)
 	TX_FAR _UnnamedText_3f8f9
@@ -101954,6 +102067,12 @@ Func_70510: ; 70510 (1c:4510)
 	call Delay3
 	push hl
 	call GBFadeIn2
+	pop hl
+	ld hl, W_NEWFLAGS1
+	bit 6, [hl]
+	res 6, [hl] ; dive?
+	jr nz, .asm_70558
+	push hl
 	ld hl, W_FLAGS_D733
 	bit 7, [hl]
 	res 7, [hl]
@@ -102039,6 +102158,9 @@ Func_705aa: ; 705aa (1c:45aa)
 	jp Func_70755
 
 _DoFlyOrTeleportAwayGraphics: ; 705ba (1c:45ba)
+	ld hl, W_NEWFLAGS1
+	bit 6, [hl] ; are we doing Dive animation?
+	jp nz, .diveAnimation
 	call Func_706ef
 	call Func_70787
 	ld a, b
@@ -102110,6 +102232,7 @@ _DoFlyOrTeleportAwayGraphics: ; 705ba (1c:45ba)
 	ld [hl], $8
 	ld de, FlyAnimationScreenCoords2 ; $4667
 	call Func_706ae
+.diveAnimation
 	call GBFadeOut2
 	jp Func_70772
 
@@ -115234,7 +115357,8 @@ AttackAnimationPointers: ; 7a07d (1e:607d)
 	dw CrunchAnim
 	dw NightSlashAnim
 	dw IronHeadAnim
-	dw AerialAceAnim
+	dw AerialAceAnim ; $CF
+	dw DiveAnim      ; $D0
 
 ; each animation is a list of subanimations and special effects
 ; if first byte < $56
@@ -115788,6 +115912,12 @@ QuickAttackAnim: ; 7a4c8 (1e:64c8)
 AerialAceAnim:
 	db SE_SLIDE_MON_OUT, $61
 	db $04,$FF,$16
+	db SE_SHOW_MON_PIC, $FF
+	db $FF
+
+DiveAnim:
+	db $06,$37,$1A
+	db $46,$12,$04
 	db SE_SHOW_MON_PIC, $FF
 	db $FF
 

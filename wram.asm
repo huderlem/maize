@@ -908,7 +908,12 @@ wPokedexOwned:: ; d2f7
 	ds (150 / 8) + 1
 wPokedexOwnedEnd::
 
-	ds (150 / 8) + 1
+	ds 17
+
+wTempDiveCurMap::
+	ds 1
+wTempDiveWarpID::
+	ds 1
 
 wNumBagItems:: ; d31d
 	ds 1
@@ -1465,6 +1470,7 @@ W_NEWFLAGS1:: ; dee2
 	; 3: Allowed to throw pokeball this battle 0=no, 1=yes
 	; 4: Mon palette should be shiny
 	; 5: Received Shiny Ring from girl in Cedar's Lab in Lapis Town
+	; 6: diving animation
 
 W_SLOW_MUSIC:: ; dee3
 	ds 1

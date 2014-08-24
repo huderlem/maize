@@ -195,4 +195,5 @@ MoveNames:: ; b0000 (2c:4000)
 	db "MOONBLAST@"
 	db "PLAY ROUGH@"
 	db "SWEET KISS@"
+	db "DIVE@"
 	db "STRUGGLE@"

@@ -194,7 +194,8 @@ DRAIN_KISS   EQU $C1
 MOONBLAST    EQU $C2
 PLAY_ROUGH   EQU $C3
 SWEET_KISS   EQU $C4
-STRUGGLE     EQU $C5
+DIVE         EQU $C5
+STRUGGLE     EQU $C6
 
 ; these do double duty as animation identifiers
 SHOWPIC_ANIM EQU $A6 ; redraw monster pic

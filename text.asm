@@ -2124,6 +2124,23 @@ _UnnamedText_3f912:: ; 9486a (25:486a)
 	line "dug a hole!"
 	prompt
 
+_DiveText::
+	db $0
+	line "hid underwater!"
+	prompt
+
+_UseDiveText::
+	TX_RAM $cd6d
+	text " dove"
+	line "into the water!"
+	prompt	
+
+_CantUseDiveText::
+	TX_RAM $cd6d
+	text " can't"
+	line "dive here."
+	prompt
+
 _UnnamedText_3f9a1:: ; 94878 (25:4878)
 	text $59
 	line "became confused!"
