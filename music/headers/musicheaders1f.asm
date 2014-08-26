@@ -130,12 +130,14 @@ Music_SilphCo:: ; 7c2d9 (1f:42d9)
 	dw Music_SilphCo_Ch3
 
 Music_MeetEvilTrainer:: ; 7c2e2 (1f:42e2)
-	db ( $80 | CH0 )
+	db ( $C0 | CH0 )
 	dw Music_MeetEvilTrainer_Ch1
 	db CH1
-	dw Music_MeetEvilTrainer_Ch2
+	dw Music_MusicMeetEvilTrainer2_Ch2
 	db CH2
-	dw Music_MeetEvilTrainer_Ch3
+	dw Music_MusicMeetEvilTrainer2_Ch3
+	db CH3
+	dw Music_MusicMeetEvilTrainer2_Ch4
 
 Music_MeetFemaleTrainer:: ; 7c2eb (1f:42eb)
 	db ( $80 | CH0 )

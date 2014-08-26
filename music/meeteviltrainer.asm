@@ -1,81 +1,325 @@
-Music_MeetEvilTrainer_Ch1:: ; 7f69d (1f:769d)
-	tempo 0, 124
+Music_MeetEvilTrainer_Ch1:: ; 7e887 (1f:6887)
+	tempo 0, 150
 	stereopanning 119
-	duty 2
-	togglecall
-	notetype 12, 11, 1
-	rest 4
-	octave 3
-	note D_, 2
-	note C#, 2
-	notetype 12, 4, 15
-	note D_, 4
-
-Music_MeetEvilTrainer_branch_7f6ae::
-	notetype 12, 10, 1
-	note D_, 4
-	note D_, 4
-	note D_, 4
-	notetype 12, 7, 0
-	note D_, 4
-	loopchannel 0, Music_MeetEvilTrainer_branch_7f6ae
-
-
-Music_MeetEvilTrainer_Ch2:: ; 7f6ba (1f:76ba)
 	duty 1
-	notetype 12, 11, 6
-	octave 3
-	note B_, 2
-	note A#, 2
-	note B_, 8
+	notetype 12, 10, 1
 
-Music_MeetEvilTrainer_branch_7f6c2::
-	notetype 12, 12, 2
+Music_MusicMeetEvilTrainer2_Ch1_b0::
+	callchannel Music_MusicMeetEvilTrainer2_Ch1_b1
+	callchannel Music_MusicMeetEvilTrainer2_Ch1_b1
+	callchannel Music_MusicMeetEvilTrainer2_Ch1_b2
+	loopchannel 0, Music_MusicMeetEvilTrainer2_Ch1_b0
+
+Music_MusicMeetEvilTrainer2_Ch1_b1::
+	rest 1
 	octave 4
-	note D#, 2
-	note D_, 2
-	note C#, 2
-	note C_, 2
-	octave 3
-	note B_, 4
-	note B_, 4
-	note B_, 4
-	note B_, 4
-	note B_, 4
-	notetype 12, 4, 15
-	note A#, 4
-	notetype 12, 12, 2
-	note G_, 2
-	note G#, 2
-	note A_, 2
-	note A#, 2
-	note B_, 4
-	note B_, 4
-	note B_, 4
-	note B_, 4
-	note B_, 4
-	notetype 12, 3, 15
-	note A#, 4
-	notetype 12, 12, 2
-	loopchannel 0, Music_MeetEvilTrainer_branch_7f6c2
-
-
-Music_MeetEvilTrainer_Ch3:: ; 7f6e6 (1f:76e6)
-	notetype 12, 1, 0
-	rest 8
+	note F#, 1
+	rest 1
+	note G#, 1
+	rest 1
+	note A_, 1
+	rest 1
+	note G#, 1
+	rest 1
+	note A_, 1
+	rest 1
+	note B_, 1
+	rest 1
+	note A_, 1
+	rest 1
+	note G#, 1
+	rest 1
+	octave 5
+	note C#, 1
+	rest 1
 	octave 4
+	note A_, 1
+	rest 1
+	note G#, 1
+	rest 1
+	note B_, 1
+	rest 1
+	note A_, 1
+	rest 1
+	note G#, 1
+	rest 1
+	note A_, 1
+	rest 1
+	note G#, 1
+	endchannel
+
+Music_MusicMeetEvilTrainer2_Ch1_b2::
+	rest 1
+	octave 4
+	note F_, 1
+	rest 1
+	note F#, 1
+	rest 1
+	note G#, 1
+	rest 1
+	note F_, 1
+	rest 1
+	note B_, 1
+	rest 1
+	note A_, 1
+	rest 1
+	note G#, 1
+	rest 1
+	note A_, 1
+	rest 1
+	note G#, 1
+	rest 1
 	note F#, 1
 	rest 1
 	note F_, 1
 	rest 1
+	note G#, 1
+	rest 1
+	note F#, 1
+	rest 1
+	note F_, 1
+	rest 1
+	note F#, 1
+	rest 1
+	note G#, 1
+	rest 1
+	note F_, 1
+	rest 1
+	note F#, 1
+	rest 1
+	note G#, 1
+	rest 1
+	note F_, 1
+	rest 1
+	note B_, 1
+	rest 1
+	note A_, 1
+	rest 1
+	note G#, 1
+	rest 1
+	note A_, 1
+	rest 1
+	note G#, 1
+	rest 1
+	note F#, 1
+	rest 1
+	note F_, 1
+	rest 1
+	note G#, 1
+	rest 1
+	note F_, 1
+	rest 1
+	note D_, 1
+	rest 1
+	note F_, 1
+	rest 1
+	note G_, 1
+	endchannel
 
-Music_MeetEvilTrainer_branch_7f6ee::
+
+Music_MusicMeetEvilTrainer2_Ch2:: ; 7e8d8 (1f:68d8)
+	duty 3
+	notetype 12, 12, 1
+
+Music_MusicMeetEvilTrainer2_Ch2_b0::
+	callchannel Music_MusicMeetEvilTrainer2_Ch2_b1
+	callchannel Music_MusicMeetEvilTrainer2_Ch2_b1
+	callchannel Music_MusicMeetEvilTrainer2_Ch2_b2
+	loopchannel 0, Music_MusicMeetEvilTrainer2_Ch2_b0
+
+Music_MusicMeetEvilTrainer2_Ch2_b1::
+	octave 4
 	note F#, 1
-	rest 3
+	rest 1
+	note G#, 1
+	rest 1
+	note A_, 1
+	rest 1
+	note G#, 1
+	rest 1
+	note A_, 1
+	rest 1
+	note B_, 1
+	rest 1
+	note A_, 1
+	rest 1
+	note G#, 1
+	rest 1
+	octave 5
+	note C#, 1
+	rest 1
+	octave 4
+	note A_, 1
+	rest 1
+	note G#, 1
+	rest 1
+	note B_, 1
+	rest 1
+	note A_, 1
+	rest 1
+	note G#, 1
+	rest 1
+	note A_, 1
+	rest 1
+	note G#, 1
+	rest 1
+	endchannel
+
+Music_MusicMeetEvilTrainer2_Ch2_b2::
+	octave 4
+	note F_, 1
+	rest 1
 	note F#, 1
-	rest 3
+	rest 1
+	note G#, 1
+	rest 1
+	note F_, 1
+	rest 1
+	note B_, 1
+	rest 1
+	note A_, 1
+	rest 1
+	note G#, 1
+	rest 1
+	note A_, 1
+	rest 1
+	note G#, 1
+	rest 1
 	note F#, 1
-	rest 3
-	note A#, 4
-	loopchannel 0, Music_MeetEvilTrainer_branch_7f6ee
-; 0x7f6f9
+	rest 1
+	note F_, 1
+	rest 1
+	note G#, 1
+	rest 1
+	note F#, 1
+	rest 1
+	note F_, 1
+	rest 1
+	note F#, 1
+	rest 1
+	note G#, 1
+	rest 1
+	note F_, 1
+	rest 1
+	note F#, 1
+	rest 1
+	note G#, 1
+	rest 1
+	note F_, 1
+	rest 1
+	note B_, 1
+	rest 1
+	note A_, 1
+	rest 1
+	note G#, 1
+	rest 1
+	note A_, 1
+	rest 1
+	note G#, 1
+	rest 1
+	note F#, 1
+	rest 1
+	note F_, 1
+	rest 1
+	note G#, 1
+	rest 1
+	note F_, 1
+	rest 1
+	note D_, 1
+	rest 1
+	note F_, 1
+	rest 1
+	note G_, 1
+	rest 1
+	endchannel
+
+
+Music_MusicMeetEvilTrainer2_Ch3:: ; 7e93b (1f:693b)
+	notetype 12, 1, 2
+
+Music_MusicMeetEvilTrainer2_Ch3_b0::
+	callchannel Music_MusicMeetEvilTrainer2_branch_7e940
+	callchannel Music_MusicMeetEvilTrainer2_branch_7e940
+	callchannel Music_MusicMeetEvilTrainer2_branch_7e941
+	loopchannel 0, Music_MusicMeetEvilTrainer2_Ch3_b0
+
+Music_MusicMeetEvilTrainer2_branch_7e940::
+	octave 5
+	note C#, 2
+	rest 2
+	octave 4
+	note C#, 2
+	octave 5
+	note C_, 2
+	rest 2
+	octave 4
+	note C#, 2
+	note G#, 2
+	note C#, 2
+	note A_, 2
+	rest 2
+	note C#, 2
+	note F#, 2
+	octave 3
+	note A_, 2
+	octave 4
+	note C_, 2
+	note D#, 2
+	note F#, 2
+	endchannel
+
+Music_MusicMeetEvilTrainer2_branch_7e941::
+	octave 5
+	note C#, 2
+	rest 2
+	octave 4
+	note C#, 2
+	note B_, 2
+	rest 2
+	note C#, 2
+	note G#, 2
+	note C#, 2
+	note G#, 2
+	rest 2
+	note C#, 2
+	note B_, 2
+	octave 3
+	note G#, 2
+	note B_, 2
+	octave 4
+	note G#, 2
+	octave 5
+	note C#, 2
+	note D_, 2
+	octave 4
+	note F#, 2
+	note G#, 2
+	note B_, 2
+	rest 2
+	note F#, 2
+	note G#, 2
+	note A_, 2
+	note G#, 2
+	rest 2
+	note C#, 2
+	note D_, 2
+	octave 3
+	note A_, 2
+	octave 4
+	note C_, 2
+	note D_, 2
+	note F_, 2
+	endchannel
+
+Music_MusicMeetEvilTrainer2_Ch4:: ; 7e9dc (1f:69dc)
+	dspeed 12
+
+Music_MusicMeetEvilTrainer2_branch_7e9dd::
+	dnote 2, triangle3
+	dnote 4, cymbal1
+	dnote 1, triangle3
+	dnote 1, triangle3
+	dnote 2, triangle3
+	dnote 6, cymbal1
+	loopchannel 0, Music_MusicMeetEvilTrainer2_branch_7e9dd
+; 0x7e9f1
