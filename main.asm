@@ -31249,7 +31249,7 @@ MapSpriteSets: ; 17a64 (5:7a64)
 	db $02 ; ROUTE_3
 	db $05 ; ROUTE_4
 	db $02 ; ROUTE_5
-	db $fa ; ROUTE_6
+	db $09 ; ROUTE_6
 	db $fb ; ROUTE_7
 	db $fc ; ROUTE_8
 	db $02 ; ROUTE_9
@@ -51772,19 +51772,10 @@ YoungsterData: ; 39d99 (e:5d99)
 	db 17,RATTATA,RATTATA,RATICATE,0
 	db 18,NIDORAN_M,NIDORINO,0
 	db 17,SPEAROW,RATTATA,RATTATA,SPEAROW,0
-if _YELLOW
-	db 24,SANDSHREW,0
-endc
 BugCatcherData: ; 39dce (e:5dce)
-if _YELLOW
-	db 7,CATERPIE,CATERPIE,0
-	db 6,METAPOD,CATERPIE,METAPOD,0
-	db 10,CATERPIE,0
-else
 	db 12,CATERPIE,METAPOD,0 ; Route 3
 	db 11,WEEDLE,KAKUNA,WEEDLE,WEEDLE,0 ; Route 3
 	db 10,CATERPIE,WEEDLE,BUTTERFREE,0 ; Route 3
-endc
 	db 12,PARAS,METAPOD,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 12,KAKUNA,KAKUNA,BEEDRILL,0 ; Route 4 (south of Agate)
 	db 16,BUTTERFREE,BEEDRILL,0 ; Route 5 (east of Copper Town)
@@ -51796,9 +51787,6 @@ endc
 	db 18,METAPOD,CATERPIE,VENONAT,0
 	db 19,BEEDRILL,BEEDRILL,0
 	db 20,CATERPIE,WEEDLE,VENONAT,0
-if _YELLOW
-	db 8,CATERPIE,METAPOD,0
-endc
 LassData: ; 39e0c (e:5e0c)
 	db 10,JIGGLYPUFF,0 ; Route 3
 	db 10,CLEFAIRY,SPEAROW,0 ; Blandy's gym
@@ -51811,24 +51799,13 @@ LassData: ; 39e0c (e:5e0c)
 	db 21,SKARMORY,MAGNEMITE,0 ; Pyrite City Gym
 	db 24,MAGNEMITE,MAGNEMITE,0 ; Pyrite City Gym
 	db 18,PIDGEY,NIDORAN_F,0
-if _YELLOW
-	db 20,JIGGLYPUFF,0
-else
 	db 18,RATTATA,PIKACHU,0
-endc
 	db 23,NIDORAN_F,NIDORINA,0
 	db 24,MEOWTH,MEOWTH,MEOWTH,0
-if _YELLOW
-	db 19,PIDGEY,RATTATA,NIDORAN_F,MEOWTH,NIDORAN_M,0
-else
 	db 19,PIDGEY,RATTATA,NIDORAN_M,MEOWTH,PIKACHU,0
-endc
 	db 22,CLEFAIRY,CLEFAIRY,0
 	db 23,BELLSPROUT,WEEPINBELL,0
 	db 23,ODDISH,GLOOM,0
-if _YELLOW
-	db 6,NIDORAN_F,NIDORAN_M,0
-endc
 SailorData: ; 39e58 (e:5e58)
 	db 18,MACHOP,SHELLDER,0
 	db 17,MACHOP,TENTACOOL,0
@@ -51837,17 +51814,9 @@ SailorData: ; 39e58 (e:5e58)
 	db 18,TENTACOOL,STARYU,0
 	db 17,HORSEA,HORSEA,HORSEA,0
 	db 20,MACHOP,0
-if _YELLOW
-	db 24,MAGNEMITE,0
-else
 	db 21,PIKACHU,PIKACHU,0
-endc
 JrTrainerMData: ; 39e78 (e:5e78)
-if _YELLOW
-	db 9,DIGLETT,SANDSHREW,0
-else
 	db 11,MACHOP,EKANS,0 ; Route 3
-endc
 	db 13,PIDGEY,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 14,PIDGEY,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 17,SANDSHREW,0 ; Route 4 (south of Agate)
@@ -51856,9 +51825,6 @@ endc
 	db 21,GROWLITHE,CHARMANDER,0 ; Route 6 (south of Copper Town)
 	db 19,RATTATA,DIGLETT,EKANS,SANDSHREW,0 ; Route 6 (south of Copper Town)
 	db 29,NIDORAN_M,NIDORINO,0
-if _YELLOW
-	db 16,WEEPINBELL,0
-endc
 JrTrainerFData: ; 39e9d (e:5e9d)
 	db 14,VULPIX,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 16,SANDSHREW,DIGLETT,0 ; Agate City Gym
@@ -51866,20 +51832,12 @@ JrTrainerFData: ; 39e9d (e:5e9d)
 	db 22,BULBASAUR,0 ; Route 6 (south of Copper Town)
 	db 26,STEELIX,0 ; Pyrite City Gym
 	db 23,MEOWTH,0
-if _YELLOW
-	db 20,JIGGLYPUFF,CLEFAIRY,0
-else
 	db 20,PIKACHU,CLEFAIRY,0
-endc
 	db 21,PIDGEY,PIDGEOTTO,0
 	db 21,JIGGLYPUFF,PIDGEY,MEOWTH,0
 	db 22,ODDISH,BULBASAUR,0
 	db 24,BULBASAUR,IVYSAUR,0
-if _YELLOW
-	db 24,PIDGEY,MEOWTH,RATTATA,PIDGEY,MEOWTH,0
-else
 	db 24,PIDGEY,MEOWTH,RATTATA,PIKACHU,MEOWTH,0
-endc
 	db 30,POLIWAG,POLIWAG,0
 	db 27,PIDGEY,MEOWTH,PIDGEY,PIDGEOTTO,0
 	db 28,GOLDEEN,POLIWAG,HORSEA,0
@@ -51888,21 +51846,14 @@ endc
 	db 20,MEOWTH,ODDISH,PIDGEY,0
 	db 19,PIDGEY,RATTATA,RATTATA,BELLSPROUT,0
 	db 28,GLOOM,ODDISH,ODDISH,0
-if _YELLOW
-	db 29,PIDGEY,PIDGEOTTO,0
-else
 	db 29,PIKACHU,RAICHU,0
-endc
 	db 33,CLEFAIRY,0
 	db 29,BELLSPROUT,ODDISH,TANGELA,0
 	db 30,TENTACOOL,HORSEA,SEEL,0
-if _YELLOW
-	db 20,CUBONE,0
-endc
 PokemaniacData: ; 39f09 (e:5f09)
 	db 12,ODDISH,BELLSPROUT,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 16,DIGLETT,SANDSHREW,0 ; Route 5 (east of Copper Town)
-	db 20,SLOWPOKE,SLOWPOKE,SLOWPOKE,0
+	db 23,BONSLY,SUDOWOODO,0 ; Route 6 (North of Pyrite City)
 	db 22,CHARMANDER,CUBONE,0
 	db 25,SLOWPOKE,0
 	db 40,CHARMELEON,LAPRAS,LICKITUNG,0
@@ -51936,7 +51887,7 @@ HikerData: ; 39f5e (e:5f5e)
 	db 20,ONIX,ONIX,GEODUDE,0
 	db 21,GEODUDE,GRAVELER,0
 BikerData: ; 39f9c (e:5f9c)
-	db 28,KOFFING,KOFFING,KOFFING,0
+	db 23,KOFFING,ARBOK,GLOOM,0 ; Route 6 (North of Pyrite City)
 	db 29,KOFFING,GRIMER,0
 	db 25,KOFFING,KOFFING,WEEZING,KOFFING,GRIMER,0
 	db 28,KOFFING,GRIMER,WEEZING,0
@@ -51952,7 +51903,7 @@ BikerData: ; 39f9c (e:5f9c)
 	db 28,GRIMER,GRIMER,KOFFING,0
 	db 29,KOFFING,MUK,0
 BurglarData: ; 39fe4 (e:5fe4)
-	db 29,GROWLITHE,VULPIX,0
+	db 23,MURKROW,GOLBAT,0 ; Route 6 (North of Pyrite City)
 	db 33,GROWLITHE,0
 	db 28,VULPIX,CHARMANDER,PONYTA,0
 	db 36,GROWLITHE,VULPIX,NINETALES,0
@@ -52006,7 +51957,7 @@ CueBallData: ; 3a08d (e:608d)
 	db 29,PRIMEAPE,MACHOKE,0
 	db 31,TENTACOOL,TENTACOOL,TENTACRUEL,0
 GamblerData: ; 3a0b3 (e:60b3)
-	db 18,POLIWAG,HORSEA,0
+	db 22,MEOWTH,MAGNEMITE,0 ; Route 6 (North of Pyrite City)
 	db 18,BELLSPROUT,ODDISH,0
 	db 18,VOLTORB,MAGNEMITE,0
 	db 18,GROWLITHE,VULPIX,0
@@ -52017,12 +51968,8 @@ BeautyData: ; 3a0d1 (e:60d1)
 	db 4,NIDORAN_M,NIDORAN_F,SPEAROW,SPEAROW,0 ; trainer house (Nickel city)
 	db 25,STEELIX,0 ; Pyrite City Gym
 	db 23,DRILBUR,DRILBUR,0 ; Pyrite City Gym
-if _YELLOW
-	db 27,RATTATA,VULPIX,RATTATA,0
-else
 	db 23,MAGNEMITE,MAGNEMITE,DRILBUR,0 ; Pyrite City Gym
-endc
-	db 29,CLEFAIRY,MEOWTH,0
+	db 23,EEVEE,FLAAFFY,PONYTA,0
 	db 35,SEAKING,0
 	db 30,SHELLDER,SHELLDER,CLOYSTER,0
 	db 31,POLIWAG,SEAKING,0
@@ -52055,14 +52002,14 @@ JugglerData: ; 3a130 (e:6130)
 	db 38,HYPNO,0
 	db 34,DROWZEE,KADABRA,0
 TamerData: ; 3a151 (e:6151)
-	db 34,SANDSLASH,ARBOK,0
+	db 22,NIDORINO,NIDORINA,FEAROW,0 ; Route 6 (North of Pyrite City)
 	db 33,ARBOK,SANDSLASH,ARBOK,0
 	db 43,RHYHORN,0
 	db 39,ARBOK,TAUROS,0
 	db 44,PERSIAN,GOLDUCK,0
 	db 42,RHYHORN,PRIMEAPE,ARBOK,TAUROS,0
 BirdKeeperData: ; 3a16b (e:616b)
-	db 29,PIDGEY,PIDGEOTTO,0
+	db 22,PIDGEOTTO,FEAROW,MURKROW,0 ; Route 6 (North of Pyrite City)
 	db 25,SPEAROW,PIDGEY,PIDGEY,SPEAROW,SPEAROW,0
 	db 26,PIDGEY,PIDGEOTTO,SPEAROW,FEAROW,0
 	db 33,FARFETCH_D,0
@@ -52239,11 +52186,7 @@ else
 	db $FF,42,GROWLITHE,40,PONYTA,42,RAPIDASH,47,ARCANINE,0
 endc
 SabrinaData: ; 3a3e5 (e:63e5)
-if _YELLOW
-	db $FF,50,ABRA,50,KADABRA,50,ALAKAZAM,0
-else
 	db $FF,24,MAGNEMITE,27,STEELIX,28,EXCADRILL,29,SCIZOR,0
-endc
 GentlemanData: ; 3a3ef (e:63ef)
 	db 7,MANKEY,GEODUDE,0 ; trainer house (Nickel City)
 	db 19,NIDORAN_M,NIDORAN_F,0
@@ -86442,12 +86385,24 @@ Route6Object: ; 0x58022 (size=87)
 	db $b, $5, $8 ; Route6Text8
 
 	db $6 ; people
-	db SPRITE_BLACK_HAIR_BOY_1, $c + 4, $b + 4, $ff, $d3, $41, JR__TRAINER_M + $C8, $7 ; trainer
-	db SPRITE_LASS, $c + 4, $c + 4, $ff, $d2, $42, JR__TRAINER_F + $C8, $3 ; trainer
-	db SPRITE_BUG_CATCHER, $12 + 4, $6 + 4, $ff, $d3, $43, BUG_CATCHER + $C8, $7 ; trainer
-	db SPRITE_FAT_BALD_GUY, $1d + 4, $8 + 4, $ff, $d2, $44, JR__TRAINER_M + $C8, $8 ; trainer
-	db SPRITE_ROCKET, $1c + 4, $8 + 4, $ff, $d2, $45, ROCKET + $C8, $4 ; trainer
-	db SPRITE_BUG_CATCHER, $13 + 4, $13 + 4, $ff, $d2, $46, BUG_CATCHER + $C8, $8 ; trainer
+	db SPRITE_BIKER, $9 + 4, $13 + 4, $ff, $d2, $41, BIKER + $C8, $1 ; trainer
+	db SPRITE_BLACK_HAIR_BOY_1, $e + 4, $e + 4, $ff, $d0, $42, BIRD_KEEPER + $C8, $1 ; trainer
+	db SPRITE_BLACK_HAIR_BOY_2, $12 + 4, $6 + 4, $ff, $d1, $43, POKEMANIAC + $C8, $3 ; trainer
+	db SPRITE_BLACK_HAIR_BOY_2, $17 + 4, $4 + 4, $ff, $d3, $44, BURGLAR + $C8, $1 ; trainer
+	db SPRITE_ROCKER, $18 + 4, $10 + 4, $ff, $d1, $45, TAMER + $C8, $1 ; trainer
+	db SPRITE_GAMBLER, $1c + 4, $6 + 4, $ff, $d0, $46, GAMBLER + $C8, $1 ; trainer
+
+	;db SPRITE_BIKER
+	;db SPRITE_BLACK_HAIR_BOY_1
+	;db SPRITE_LAPRAS_GIVER
+	;db SPRITE_FISHER2
+	;db SPRITE_ROCKER
+	;db SPRITE_HIKER
+	;db SPRITE_GAMBLER
+	;db SPRITE_FAT_BALD_GUY
+	;db SPRITE_BLACK_HAIR_BOY_2
+	;db SPRITE_BALL
+	;db SPRITE_SNORLAX
 
 	; warp-to
 	EVENT_DISP $a, $1, $a ; ROUTE_6_GATE
@@ -87333,10 +87288,10 @@ Route6TrainerHeader0: ; 590d7 (16:50d7)
 
 Route6TrainerHeader1: ; 590e3 (16:50e3)
 	db $2 ; flag's bit
-	db ($0 << 4) ; trainer's view range
+	db ($1 << 4) ; trainer's view range
 	dw $d7c9 ; flag's byte
 	dw Route6BattleText2 ; 0x5143 TextBeforeBattle
-	dw Route6AfterBattleText1 ; 0x5134 TextAfterBattle
+	dw Route6AfterBattleText2 ; 0x5134 TextAfterBattle
 	dw Route6EndBattleText2 ; 0x5148 TextEndBattle
 	dw Route6EndBattleText2 ; 0x5148 TextEndBattle
 
@@ -87404,6 +87359,10 @@ Route6Text2: ; 59139 (16:5139)
 
 Route6BattleText2: ; 59143 (16:5143)
 	TX_FAR _Route6BattleText2
+	db "@"
+
+Route6AfterBattleText2:
+	TX_FAR _Route6AfterBattleText2
 	db "@"
 
 Route6EndBattleText2: ; 59148 (16:5148)
