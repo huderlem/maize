@@ -96462,10 +96462,11 @@ ViridianForestText14: ; 611d5 (18:51d5)
 ViridianForestObject: ; 0x611da (size=127)
 	db $26 ; border tile
 
-	db $3 ; warps
+	db $4 ; warps
 	db $1f, $10, $4, ROUTE_6
 	db $1f, $11, $4, ROUTE_6
 	db $1, $1, $0, VIRIDIAN_FOREST_ENTRANCE
+	db $1e, $4, $4, ROUTE_6
 	
 	db $0 ; signs TODO
 	;db $6 ; signs
@@ -96490,6 +96491,7 @@ ViridianForestObject: ; 0x611da (size=127)
 	EVENT_DISP SUDORAND_WIDTH, $1f, $10, ; EVENT_DISP $11, $0, $2 ; ROUTE_6
 	EVENT_DISP SUDORAND_WIDTH, $1f, $11, ; EVENT_DISP $11, $0, $2 ; ROUTE_6
 	EVENT_DISP SUDORAND_WIDTH, $1, $1, ; EVENT_DISP $11, $0, $2 ; VIRIDIAN_FOREST_EXIT TODO
+	EVENT_DISP SUDORAND_WIDTH, $1e, $4 
 	
 SSAnne1_h: ; 0x61259 to 0x61265 (12 bytes) (id=95)
 	db $0d ; tileset
@@ -119231,6 +119233,8 @@ GenSudoRandWoodMap:
 .heightLoop
 	pop bc
 	dec c
+	ld a, c
+	ld [W_ENEMYMONNAME], a
 	jr z, .afterHeightLoop
 	push bc
 	ld b, 2 + 1 ; 2 bytes wide
@@ -119247,11 +119251,26 @@ GenSudoRandWoodMap:
 	jr z, .noFill
 	push af
 	push bc
+; secret ladder?
+	bit 0, b
+	jr nz, .notSecretLadder
+	ld a, [W_ENEMYMONNAME]
+	cp 1
+	jr nz, .notSecretLadder
+	ld a, c
+	cp 6
+	jr nz, .notSecretLadder
+	; secret ladder!
+	ld a, $64
+	ld [hli], a
+	jr .nextBlock
+.notSecretLadder
 	ld b, $22
 	call GenRandom
 	and $3
 	add b
 	ld [hli], a
+.nextBlock
 	pop bc
 	pop af
 	sla a
