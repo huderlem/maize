@@ -73048,9 +73048,8 @@ Route7_h: ; 0x48000 to 0x48022 (34 bytes) (bank=12) (id=18)
 	db $00 ; tileset
 	db ROUTE_7_HEIGHT, ROUTE_7_WIDTH ; dimensions (y, x)
 	dw Route7Blocks, Route7TextPointers, Route7Script ; blocks, texts, scripts
-	db WEST | EAST ; connections
-	WEST_MAP_CONNECTION CELADON_CITY, CELADON_CITY_WIDTH, -3, 1, CELADON_CITY_HEIGHT - 3, CeladonCityBlocks, ROUTE_7_WIDTH
-	EAST_MAP_CONNECTION SAFFRON_CITY, SAFFRON_CITY_WIDTH, -3, 1, SAFFRON_CITY_HEIGHT - 3, SaffronCityBlocks, ROUTE_7_WIDTH
+	db EAST ; connections
+	EAST_MAP_CONNECTION ROUTE_6, ROUTE_6_WIDTH, -4, 0, 12, Route6Blocks, ROUTE_7_WIDTH
 	dw Route7Object ; objects
 
 Route7Object: ; 0x48022 (size=47)
@@ -86365,9 +86364,10 @@ Route6_h: ; 0x58000 to 0x58022 (34 bytes) (id=17)
 	db $00 ; tileset
 	db ROUTE_6_HEIGHT, ROUTE_6_WIDTH ; dimensions (y, x)
 	dw Route6Blocks, Route6TextPointers, Route6Script ; blocks, texts, scripts
-	db NORTH | SOUTH ; connections
+	db NORTH | SOUTH | WEST ; connections
 	NORTH_MAP_CONNECTION VERMILION_CITY, VERMILION_CITY_WIDTH, VERMILION_CITY_HEIGHT, -4, 0, VERMILION_CITY_WIDTH, VermilionCityBlocks
 	SOUTH_MAP_CONNECTION CELADON_CITY, CELADON_CITY_WIDTH, 0,11, $10, CeladonCityBlocks, ROUTE_6_WIDTH, ROUTE_6_HEIGHT
+	WEST_MAP_CONNECTION ROUTE_7, ROUTE_7_WIDTH, 4, 0, ROUTE_7_HEIGHT, Route7Blocks, ROUTE_6_WIDTH
 	dw Route6Object ; objects
 
 Route6Object: ; 0x58022 (size=87)
