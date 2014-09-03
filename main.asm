@@ -86772,6 +86772,9 @@ Func_58d99: ; 58d99 (16:4d99)
     ld hl, W_NEWFLAGS1
     bit 2, [hl]
     jr z, .doScouterLogic
+    ld a, [W_BATTLETYPE]
+	cp 1
+	jr z, .oldManBattle
     ld hl, NuzlockeAllowedToCatch
     ld b, BANK(NuzlockeAllowedToCatch)
     call Bankswitch ; indirect jump to NuzlockeAllowedToCatch
@@ -86779,6 +86782,10 @@ Func_58d99: ; 58d99 (16:4d99)
     jr nz, .notAllowedCatch
     set 3, [hl]
     jr .markMap
+.oldManBattle
+	ld hl, W_NEWFLAGS1
+	set 3, [hl]
+	jr .doScouterLogic
 .notAllowedCatch
     res 3, [hl]
 .markMap
