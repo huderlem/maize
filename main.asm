@@ -289,7 +289,7 @@ MapHeaderPointers:: ; 01ae (0:01ae)
 	dw SSAnne9_h
 	dw SSAnne10_h
 	dw DeepSea1_h
-	dw Lance_h ; unused
+	dw DeepSea2_h
 	dw Lance_h ; unused
 	dw VictoryRoad1_h
 	dw Lance_h ; unused
@@ -15412,6 +15412,8 @@ DungeonWarpList: ; 63bf (1:63bf)
 	db MANSION_1,$02
 	db MANSION_2,$03
 	db DEEP_SEA_1,$01
+    db DEEP_SEA_2,$00
+    db DEEP_SEA_2,$01
 	db $FF
 
 DungeonWarpData: ; 63d8 (1:63d8)
@@ -15428,6 +15430,8 @@ DungeonWarpData: ; 63d8 (1:63d8)
 	FLYWARP_DATA MANSION_1_WIDTH,14,16
 	FLYWARP_DATA MANSION_2_WIDTH,14,18
 	FLYWARP_DATA DEEP_SEA_1_WIDTH,13,15
+    FLYWARP_DATA DEEP_SEA_2_WIDTH,3,5
+    FLYWARP_DATA DEEP_SEA_2_WIDTH,23,7
 
 ;Format:
 ;	db Map_id
@@ -18908,7 +18912,7 @@ MapSongBanks: ; c04d (3:404d)
 	db MUSIC_SS_ANNE, BANK(Music_SSAnne) ; SSAnne9
 	db MUSIC_SS_ANNE, BANK(Music_SSAnne) ; SSAnne10
 	db MUSIC_DUNGEON2, BANK(Music_Dungeon2) ; DeepSea1
-	db MUSIC_DUNGEON2, BANK(Music_Dungeon2) ;unused
+	db MUSIC_DUNGEON2, BANK(Music_Dungeon2) ; DeepSea2
 	db MUSIC_SS_ANNE, BANK(Music_SSAnne) ;unused
 	db MUSIC_DUNGEON3, BANK(Music_Dungeon3) ; VictoryRoad1
 	db MUSIC_POKEMON_TOWER, BANK(Music_PokemonTower) ;unused
@@ -19159,7 +19163,7 @@ MapHeaderBanks: ; c23d (3:423d)
 	db BANK(SSAnne9_h)
 	db BANK(SSAnne10_h)
 	db BANK(DeepSea1_h)
-	db $1D ;unused
+	db BANK(DeepSea2_h)
 	db $1D ;unused
 	db BANK(VictoryRoad1_h)
 	db $1D ;unused
@@ -19433,6 +19437,7 @@ ForcedBikeOrSurfMaps: ; c3e6 (3:43e6)
 
 ForceSurfMaps:
 	db DEEP_SEA_1
+    db DEEP_SEA_2
 	db $FF ; terminator
 
 Func_c3ff: ; c3ff (3:43ff)
@@ -28968,6 +28973,9 @@ StartMenu_Pokemon: ; 130a9 (4:70a9)
 	jr z, .foundMap
 	cp $ff
 	jp z, .notDeepWater
+    inc hl
+    inc hl
+    jr .diveLoop
 .foundMap
 	ld a, [hli]
 	ld e, a
@@ -29025,6 +29033,7 @@ StartMenu_Pokemon: ; 130a9 (4:70a9)
 
 .DiveData:
 	dbw CELADON_CITY, .CeladonCityDive
+    dbw ROUTE_21, .Route21Dive
 	db $ff ; terminator
 
 .CeladonCityDive:
@@ -29033,6 +29042,18 @@ StartMenu_Pokemon: ; 130a9 (4:70a9)
 	db $a, $d, DEEP_SEA_1, 1
 	db $b, $d, DEEP_SEA_1, 1
 	db $ff
+
+.Route21Dive:
+    db $8, $36, DEEP_SEA_2, 0
+    db $9, $36, DEEP_SEA_2, 0
+    db $8, $37, DEEP_SEA_2, 0
+    db $9, $37, DEEP_SEA_2, 0
+
+    db $a, $46, DEEP_SEA_2, 1
+    db $b, $46, DEEP_SEA_2, 1
+    db $a, $47, DEEP_SEA_2, 1
+    db $b, $47, DEEP_SEA_2, 1
+    db $ff
 
 .surf
 	bit 4,a ; does the player have the Soul Badge?
@@ -31250,7 +31271,7 @@ MapSpriteSets: ; 17a64 (5:7a64)
 	db $05 ; ROUTE_4
 	db $02 ; ROUTE_5
 	db $09 ; ROUTE_6
-	db $fb ; ROUTE_7
+	db $09 ; ROUTE_7
 	db $fc ; ROUTE_8
 	db $02 ; ROUTE_9
 	db $f2 ; ROUTE_10
@@ -73063,9 +73084,10 @@ Route7Object: ; 0x48022 (size=47)
 	db $d, $5, $0, PATH_ENTRANCE_ROUTE_7
 
 	db $1 ; signs
-	db $d, $3, $1 ; Route7Text1
+	db $7, $15, $2 ; Route7Text2
 
-	db $0 ; people
+	db $1 ; people
+	db SPRITE_FISHER2, $a + 4, $11 + 4, $ff, $d1, $1 ; person
 
 	; warp-to
 	EVENT_DISP $a, $9, $12 ; ROUTE_7_GATE
@@ -73164,9 +73186,14 @@ Route7Script: ; 48152 (12:4152)
 
 Route7TextPointers: ; 48155 (12:4155)
 	dw Route7Text1
+	dw Route7Text2
 
-Route7Text1: ; 48157 (12:4157)
+Route7Text1:
 	TX_FAR _Route7Text1
+	db "@"
+
+Route7Text2: ; 48157 (12:4157)
+	TX_FAR _Route7Text2
 	db "@"
 
 RedsHouse1F_h: ; 4815c (12:415c)
@@ -82466,20 +82493,26 @@ Route21_h: ; 0x54fff to 0x55021 (34 bytes) (id=32)
 Route21Object: ; 0x55021 (size=76)
 	db $43 ; border tile
 
-	db $0 ; warps
+	db $3 ; warps
+    db $11, $d, $0, ROUTE_21
+    db $37, $8, $0, DEEP_SEA_2
+    db $46, $a, $1, DEEP_SEA_2
 
 	db $0 ; signs
 
-	db $9 ; people
-	db SPRITE_FISHER2, $18 + 4, $4 + 4, $ff, $d2, $41, FISHER + $C8, $7 ; trainer
-	db SPRITE_FISHER2, $19 + 4, $6 + 4, $ff, $d0, $42, FISHER + $C8, $9 ; trainer
+	db $8 ; people
+	db SPRITE_SWIMMER, $36 + 4, $9 + 4, $ff, $d1, $1 ; person
+	db SPRITE_FISHER2, $0 + 4, $0 + 4, $ff, $d0, $42, FISHER + $C8, $9 ; trainer
 	db SPRITE_FISHER2, $3 + 4, $4 + 4, $ff, $d3, $43, FISHER + $C8, $1 ; trainer
-	db SPRITE_SWIMMER, $1e + 4, $c + 4, $ff, $d3, $44, CUE_BALL + $C8, $9 ; trainer
-	db SPRITE_SWIMMER, $3f + 4, $10 + 4, $ff, $d0, $45, SWIMMER + $C8, $d ; trainer
-	db SPRITE_SWIMMER, $47 + 4, $5 + 4, $ff, $d3, $46, SWIMMER + $C8, $e ; trainer
-	db SPRITE_SWIMMER, $47 + 4, $f + 4, $ff, $d2, $47, SWIMMER + $C8, $f ; trainer
-	db SPRITE_FISHER2, $38 + 4, $e + 4, $ff, $d2, $48, FISHER + $C8, $8 ; trainer
-	db SPRITE_FISHER2, $39 + 4, $11 + 4, $ff, $d3, $49, FISHER + $C8, $a ; trainer
+	db SPRITE_SWIMMER, $0 + 4, $0 + 4, $ff, $d0, $45, SWIMMER + $C8, $d ; trainer
+	db SPRITE_SWIMMER, $0 + 4, $0 + 4, $ff, $d3, $46, SWIMMER + $C8, $e ; trainer
+	db SPRITE_SWIMMER, $0 + 4, $0 + 4, $ff, $d2, $47, SWIMMER + $C8, $f ; trainer
+	db SPRITE_FISHER2, $0 + 4, $0 + 4, $ff, $d2, $48, FISHER + $C8, $8 ; trainer
+	db SPRITE_FISHER2, $0 + 4, $0 + 4, $ff, $d3, $49, FISHER + $C8, $a ; trainer
+
+    EVENT_DISP ROUTE_21_WIDTH, $11, $d ; ROUTE_21
+    EVENT_DISP ROUTE_21_WIDTH, $37, $8 ; DEEP_SEA_2
+    EVENT_DISP ROUTE_21_WIDTH, $46, $a ; DEEP_SEA_2
 
 Route21Blocks: ; 5506d (15:506d)
 	INCBIN "maps/route21.blk"
@@ -84790,14 +84823,36 @@ Route21Script: ; 55eeb (15:5eeb)
 	ld hl, Route21TrainerHeaders
 	ld de, Route21ScriptPointers
 	ld a, [W_ROUTE21CURSCRIPT]
+    cp 3
+    jr z, .diveGuy
 	call ExecuteCurMapScriptInTable
 	ld [W_ROUTE21CURSCRIPT], a
 	ret
+.diveGuy
+    call DiveDiveDive
+    xor a
+    ld [W_ROUTE21CURSCRIPT], a
+    ret
 
 Route21ScriptPointers: ; 55efe (15:5efe)
 	dw CheckFightingMapTrainers
 	dw Func_324c
 	dw EndTrainerBattle
+	dw DiveDiveDive
+
+DiveDiveDive:
+	xor a
+	ld [W_ROUTE21CURSCRIPT], a
+
+    ld a, DEEP_SEA_2
+    ld [wTempDiveCurMap], a
+    ld a, 0
+    ld [wTempDiveWarpID], a
+    ld hl, $d732
+    set 3, [hl]
+    ld hl, W_NEWFLAGS1
+    set 6, [hl] ; diving animation
+	ret
 
 Route21TextPointers: ; 55f04 (15:5f04)
 	dw Route21Text1
@@ -84896,9 +84951,15 @@ Route21TrainerHeader8: ; 55f76 (15:5f76)
 
 Route21Text1: ; 55f83 (15:5f83)
 	db $08 ; asm
-	ld hl, Route21TrainerHeader0
-	call TalkToTrainer
+	ld hl, Route21DiveGuyText1
+	call PrintText
+    ld a, 3
+    ld [W_ROUTE21CURSCRIPT], a
 	jp TextScriptEnd
+
+Route21DiveGuyText1:
+	TX_FAR _Route21DiveGuyText1
+	db "@"
 
 Route21Text2: ; 55f8d (15:5f8d)
 	db $08 ; asm
@@ -109406,8 +109467,45 @@ DeepSea1Object:
 	db $0 ; people
 
 	; warp-to
-	EVENT_DISP DEEP_SEA_1_WIDTH, $5, $3 ; BRUNOS_ROOM
-	EVENT_DISP DEEP_SEA_1_WIDTH, $d, $f ; BRUNOS_ROOM
+	EVENT_DISP DEEP_SEA_1_WIDTH, $5, $3
+	EVENT_DISP DEEP_SEA_1_WIDTH, $d, $f
+
+DeepSea2_h:
+    db $0c ; tileset
+    db DEEP_SEA_2_HEIGHT, DEEP_SEA_2_WIDTH ; dimensions (y, x)
+    dw DeepSea2Blocks, DeepSea2TextPointers, DeepSea2Script ; blocks, texts, scripts
+    db $00 ; connections
+    dw DeepSea2Object ; objects
+
+DeepSea2Blocks:
+	INCBIN "maps/deepsea2.blk"
+
+DeepSea2TextPointers:
+	db "@"
+
+DeepSea2Script:
+    ld a, [$d700]
+    cp 2
+    jr z, .done
+    ld a,2
+    ld [$d700],a ; change player state to surfing
+.done
+    jp EnableAutoTextBoxDrawing
+
+DeepSea2Object:
+    db $1d ; border tile
+
+    db $2 ; warps
+    db $3, $5, $1, ROUTE_21
+    db $17, $7, $2, ROUTE_21
+	
+    db $0 ; signs
+
+    db $0 ; people
+
+    ; warp-to
+    EVENT_DISP DEEP_SEA_2_WIDTH, $3, $5 ; ROUTE_21
+    EVENT_DISP DEEP_SEA_2_WIDTH, $17, $7 ; ROUTE_21
 
 SECTION "bank1E",ROMX,BANK[$1E]
 

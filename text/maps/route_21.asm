@@ -1,3 +1,29 @@
+_Route21DiveGuyText1::
+	text "Ho there!"
+
+	para "See this dark"
+	line "water I'm on right"
+	cont "now?"
+
+	para "It's deep, and"
+	line "I'm getting ready"
+	cont "to DIVE to the"
+	cont "bottom of the"
+	cont "ocean!"
+
+	para "Come with me!"
+
+	para "..."
+
+	para "You can't?"
+
+	para "Here, let me"
+	line "help you!"
+
+	para "Hold your breath!"
+	done
+
+
 _Route21BattleText1:: ; 91fb8 (24:5fb8)
 	text "You want to know"
 	line "if the fish are"
