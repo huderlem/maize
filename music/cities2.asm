@@ -1,417 +1,209 @@
 Music_Cities2_Ch1:: ; b504 (2:7504)
-	tempo 0, 148
+	tempo 0, 210
 	stereopanning 119
-	duty 3
+	duty 2
 	vibrato 8, 3, 2
-	togglecall
-	notetype 12, 11, 6
-	rest 8
-	octave 3
-	note E_, 2
-	note D#, 2
-	note C#, 2
-	note C_, 2
-	octave 2
-	note B_, 2
-	rest 14
+	notetype 12, 10, 2
 
-Music_Cities2_branch_b51a::
+Music_Cities2_Ch1_b0::
+	callchannel Music_Cities2_Ch1_b1
+	callchannel Music_Cities2_Ch1_b2
+	callchannel Music_Cities2_Ch1_b1
+	callchannel Music_Cities2_Ch1_b2
+	rest 16
+	rest 16
+	rest 16
+	rest 16
+	rest 16
+	rest 16
+	rest 16
+	rest 16
+	loopchannel 0, Music_Cities2_Ch1_b0
+
+Music_Cities2_Ch1_b1::
+	rest 2
 	octave 3
-	note B_, 4
+	note F#, 2
+	note G#, 2
+	note A#, 2
+	rest 4
 	octave 4
 	note C#, 2
-	note D#, 1
-	note D_, 1
-	note C#, 4
 	octave 3
-	note B_, 4
-	note G#, 8
-	note E_, 8
-	note A_, 4
-	note G#, 2
-	note F#, 2
-	note G#, 2
-	note A_, 2
 	note B_, 2
-	octave 4
-	note C#, 2
+	rest 4
+	note G#, 2
+	note A#, 2
+	rest 8
 	rest 16
-	note C#, 4
-	octave 3
-	note B_, 2
-	octave 4
-	note C#, 1
-	note D#, 1
-	note C#, 4
-	octave 3
-	note B_, 4
-	note E_, 1
-	note E_, 1
-	note E_, 1
-	note E_, 1
-	note E_, 1
-	rest 3
-	note G#, 8
-	note B_, 4
-	note A_, 2
-	note G#, 2
-	note F#, 2
-	note G#, 2
-	note A_, 2
-	note B_, 2
-	note E_, 2
-	note F#, 2
-	note G#, 2
+	rest 16
+	endchannel
+
+Music_Cities2_Ch1_b2::
 	rest 2
-	octave 4
-	note E_, 4
 	octave 3
-	note B_, 4
+	note F_, 2
 	note F#, 2
 	note G#, 2
-	note A_, 2
-	rest 2
-	octave 4
-	note F#, 4
-	note D#, 4
-	octave 3
-	note E_, 2
+	rest 4
+	note B_, 2
+	note A#, 2
 	rest 4
 	note F#, 2
-	rest 4
-	note A_, 2
-	rest 2
-	note B_, 2
+	note G#, 2
+	rest 8
 	rest 16
 	rest 16
-	rest 14
-	note E_, 16
-	note F#, 8
-	note G#, 4
-	note F#, 4
-	note E_, 2
-	rest 14
-	loopchannel 0, Music_Cities2_branch_b51a
+	endchannel
 
 
 Music_Cities2_Ch2:: ; b569 (2:7569)
-	duty 3
+	duty 2
 	vibrato 8, 2, 3
-	notetype 12, 12, 2
-	octave 4
-	note E_, 2
-	note D#, 2
-	note C#, 2
-	octave 3
-	note B_, 2
-	note A_, 2
-	note B_, 2
-	octave 4
-	note C#, 2
-	note D#, 2
-	note E_, 6
-	notetype 12, 12, 2
-	duty 2
-	octave 4
-	note E_, 1
-	octave 3
-	note B_, 1
-	octave 4
-	note C#, 2
-	note D#, 2
-	note E_, 1
-	note F#, 1
-	note G#, 1
-	note A_, 1
+	notetype 12, 10, 2
 
-Music_Cities2_branch_b58b::
-	notetype 12, 10, 6
-	note G#, 6
-	notetype 12, 12, 2
-	note A_, 1
-	note G#, 1
-	notetype 12, 12, 4
-	note F#, 14
-	notetype 12, 12, 2
-	note E_, 1
+Music_Cities2_Ch2_b0::
+	callchannel Music_Cities2_Ch2_b1
+	callchannel Music_Cities2_Ch2_b2
+	callchannel Music_Cities2_Ch2_b1
+	callchannel Music_Cities2_Ch2_b2
+	rest 16
+	rest 16
+	rest 16
+	rest 16
+	rest 16
+	rest 16
+	rest 16
+	rest 16
+	loopchannel 0, Music_Cities2_Ch2_b0
+
+Music_Cities2_Ch2_b1::
+	rest 2
 	octave 3
-	note B_, 1
+	note A#, 2
+	note B_, 2
 	octave 4
 	note C#, 2
+	rest 4
+	note F_, 2
 	note D#, 2
-	note E_, 1
-	note F#, 1
-	note G#, 1
-	note A_, 1
-	notetype 12, 12, 4
-	note G#, 6
-	notetype 12, 12, 2
-	note E_, 1
-	note G#, 1
+	rest 4
+	octave 3
+	note B_, 2
+	octave 4
+	note C#, 2
+	rest 16
+	note C#, 2
+	octave 3
+	note A#, 2
+	note B_, 2
 	notetype 12, 12, 5
-	note B_, 14
-	notetype 12, 12, 2
-	note E_, 1
-	octave 3
-	note B_, 1
 	octave 4
+	note C#, 6
+	rest 6
 	note C#, 2
-	note D#, 2
-	note E_, 1
-	note F#, 1
-	note G#, 1
-	note A_, 1
-	notetype 12, 10, 6
-	note G#, 6
-	notetype 12, 12, 2
-	note A_, 1
-	note G#, 1
-	notetype 12, 12, 4
-	note F#, 8
-	notetype 12, 10, 1
-	duty 1
+	notetype 12, 10, 2
 	octave 3
-	note G#, 1
-	note G#, 1
-	note G#, 1
-	note G#, 1
-	note G#, 1
-	rest 1
-	notetype 12, 12, 2
-	duty 2
-	octave 4
-	note E_, 1
-	octave 3
-	note B_, 1
-	octave 4
 	note C#, 2
-	note D#, 2
-	note E_, 1
-	note F#, 1
-	note G#, 1
-	note A_, 1
-	notetype 12, 12, 4
-	note G#, 6
-	note E_, 1
-	note G#, 1
-	notetype 12, 12, 6
-	note B_, 8
-	notetype 12, 12, 2
-	note C#, 1
+	note C#, 2
+	endchannel
+
+Music_Cities2_Ch2_b2::
+	notetype 12, 10, 2
+	rest 2
 	octave 3
-	note B_, 1
-	octave 4
-	note C#, 1
-	note D#, 1
-	note E_, 4
-	notetype 12, 12, 7
-	note G#, 4
-	note E_, 4
-	notetype 12, 12, 2
-	note D#, 1
-	note C#, 1
-	note D#, 1
-	note E_, 1
-	note F#, 4
-	notetype 12, 12, 7
-	note B_, 4
-	note F#, 4
-	notetype 12, 12, 2
-	note C#, 1
-	octave 3
-	note B_, 1
-	octave 4
-	note C#, 1
-	note D#, 1
-	note E_, 2
-	note E_, 1
-	note D#, 1
-	note E_, 1
-	note F#, 1
 	note G#, 2
-	note G#, 1
-	note A_, 1
-	note G#, 1
-	note A_, 1
-	note B_, 1
-	note F#, 1
-	note D#, 1
-	note C#, 1
-	octave 3
-	note B_, 1
+	note A#, 2
+	note B_, 2
+	rest 4
 	octave 4
-	note C#, 1
-	note D#, 1
-	note F#, 1
-	notetype 12, 12, 2
-	note B_, 8
-	notetype 12, 11, 7
-	octave 3
-	note E_, 8
-	octave 2
-	note B_, 4
-	octave 3
-	note F#, 4
-	note G#, 4
-	note A_, 4
-	note B_, 8
-	note B_, 8
-	note G#, 4
-	octave 4
-	note D#, 4
-	note C#, 4
-	note D#, 4
-	note E_, 2
 	note D#, 2
 	note C#, 2
-	note D#, 2
-	notetype 12, 12, 2
-	note E_, 6
-	note E_, 1
+	rest 4
 	octave 3
-	note B_, 1
+	note A#, 2
+	note B_, 2
+	rest 16
+	note B_, 2
+	note G#, 2
+	note A#, 2
+	notetype 12, 12, 5
+	note B_, 6
+	rest 6
 	octave 4
 	note C#, 2
-	note D#, 2
-	note E_, 1
-	note F#, 1
-	note G#, 1
-	note A_, 1
-	loopchannel 0, Music_Cities2_branch_b58b
+	notetype 12, 10, 2
+	octave 3
+	note C#, 2
+	note C#, 2
+	endchannel
 
 
 Music_Cities2_Ch3:: ; b640 (2:7640)
-	notetype 12, 1, 1
-	rest 16
-	octave 4
-	note E_, 2
-	note G#, 2
-	note E_, 2
-	note G#, 2
-	note E_, 2
-	note G#, 2
-	note E_, 2
-	note G#, 2
+	notetype 12, 1, 3
 
-Music_Cities2_branch_b64c::
-	note F#, 2
-	note A_, 2
-	note F#, 2
-	note A_, 2
-	note B_, 2
-	note A_, 2
-	note G#, 2
-	note F#, 2
-	note E_, 2
-	note G#, 2
-	note E_, 2
-	note G#, 2
-	note E_, 2
-	note G#, 2
-	note E_, 2
-	note G#, 2
-	note F#, 2
-	note A_, 2
-	note F#, 2
-	note A_, 2
-	note B_, 2
-	note A_, 2
-	note G#, 2
-	note F#, 2
-	note E_, 2
-	note G#, 2
-	note E_, 2
-	note G#, 2
-	note E_, 2
-	note G#, 2
-	note E_, 2
-	note G#, 2
-	note F#, 2
-	note A_, 2
-	note F#, 2
-	note A_, 2
-	note B_, 2
-	note A_, 2
-	note G#, 2
-	note F#, 2
-	note E_, 2
-	note G#, 2
-	note E_, 2
-	note G#, 2
-	note E_, 2
-	note G#, 2
-	note E_, 2
-	note G#, 2
-	note F#, 2
-	note A_, 2
-	note F#, 2
-	note A_, 2
-	note B_, 2
-	note A_, 2
-	note G#, 2
-	note F#, 2
-	note E_, 2
-	note G#, 2
-	note E_, 2
-	rest 2
-	note E_, 4
-	note G#, 4
-	note F#, 2
-	note A_, 2
-	note F#, 2
-	rest 2
-	note F#, 4
-	note A_, 4
+Music_Cities2_Ch3_b0::
+	callchannel Music_Cities2_Ch3_b1
+	callchannel Music_Cities2_Ch3_b1
+	callchannel Music_Cities2_Ch3_b1
+	callchannel Music_Cities2_Ch3_b1
+	callchannel Music_Cities2_Ch3_b1
+	callchannel Music_Cities2_Ch3_b1
+	callchannel Music_Cities2_Ch3_b1
+	callchannel Music_Cities2_Ch3_b1
+	callchannel Music_Cities2_Ch3_b1
+	callchannel Music_Cities2_Ch3_b1
+	callchannel Music_Cities2_Ch3_b1
+	callchannel Music_Cities2_Ch3_b1
+	callchannel Music_Cities2_Ch3_b1
+	callchannel Music_Cities2_Ch3_b1
+	callchannel Music_Cities2_Ch3_b1
+	callchannel Music_Cities2_Ch3_b1
+	rest 16
+	rest 16
+	rest 16
+	rest 16
+	callchannel Music_Cities2_Ch3_b1
+	callchannel Music_Cities2_Ch3_b1
+	callchannel Music_Cities2_Ch3_b1
+	callchannel Music_Cities2_Ch3_b1
+	loopchannel 0, Music_Cities2_Ch3_b0
+
+Music_Cities2_Ch3_b1::
+	octave 2
+	note F#, 3
+	rest 3
+	octave 3
+	note D#, 1
+	rest 1
 	note C#, 2
-	rest 4
-	note E_, 2
-	rest 4
-	note G#, 2
-	note A_, 2
-	note B_, 2
-	rest 8
-	note A_, 2
-	note G#, 2
-	note F#, 2
-	note E_, 2
-	note G#, 2
-	note E_, 2
-	note G#, 2
-	note E_, 2
-	note G#, 2
-	note E_, 2
-	note G#, 2
-	note F#, 2
-	note A_, 2
-	note F#, 2
-	note A_, 2
-	note B_, 2
-	note A_, 2
-	note G#, 2
-	note F#, 2
-	note E_, 2
-	note G#, 2
-	note E_, 2
-	note G#, 2
-	note E_, 2
-	note G#, 2
-	note E_, 2
-	note G#, 2
-	note F#, 2
-	note A_, 2
-	note F#, 2
-	note A_, 2
-	note B_, 2
-	note A_, 2
-	note G#, 2
-	note F#, 2
-	note E_, 2
-	note G#, 2
-	note E_, 2
-	note G#, 2
-	note E_, 2
-	note G#, 2
-	note E_, 2
-	note G#, 2
-	loopchannel 0, Music_Cities2_branch_b64c
-; 0xb6c7
+	rest 1
+	note C#, 1
+	rest 2
+	octave 2
+	note C#, 1
+	rest 1
+	endchannel
+
+Music_Cities2_Ch4:: ; b640 (2:7640)
+	dspeed 12
+
+Music_Cities2_Ch4_b0::
+	rest 2
+	dnote 2, cymbal1
+	dnote 2, snare1
+	dnote 2, cymbal1
+	rest 2
+	dnote 2, cymbal1
+	dnote 2, snare1
+	dnote 2, cymbal1
+	rest 2
+	dnote 2, cymbal1
+	dnote 2, snare1
+	dnote 2, cymbal1
+	rest 2
+	dnote 2, cymbal1
+	dnote 2, snare1
+	dnote 2, snare3
+	loopchannel 0, Music_Cities2_Ch4_b0
+

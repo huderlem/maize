@@ -35,12 +35,14 @@ Music_Cities1:: ; 8249 (2:4249)
 
 ; Cerulean City, Fuchsia City
 Music_Cities2:: ; 8255 (2:4255)
-	db ( $80 | CH0 )
+	db ( $C0 | CH0 )
 	dw Music_Cities2_Ch1
 	db CH1
 	dw Music_Cities2_Ch2
 	db CH2
 	dw Music_Cities2_Ch3
+	db CH3
+	dw Music_Cities2_Ch4
 
 Music_Celadon:: ; 825e (2:425e)
 	db ( $C0 | CH0 )
