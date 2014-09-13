@@ -407,41 +407,12 @@ PlayBattleMusic:: ; 0x90c6
 
 INCLUDE "audio/engine_1.asm"
 
-
-; an alternate start for MeetRival which has a different first measure
-Music_RivalAlternateStart:: ; 0x9b47
-	ld c, BANK(Music_MeetRival)
-	ld a, MUSIC_MEET_RIVAL
-	call PlayMusic
-	ld hl, $c006
-	ld de, Music_MeetRival_branch_b1a2
-	call Music2_OverwriteChannelPointer
-	ld de, Music_MeetRival_branch_b21d
-	call Music2_OverwriteChannelPointer
-	ld de, Music_MeetRival_branch_b2b5
-
 Music2_OverwriteChannelPointer: ; 0x9b60
 	ld a, e
 	ld [hli], a
 	ld a, d
 	ld [hli], a
 	ret
-
-; an alternate tempo for MeetRival which is slightly slower
-Music_RivalAlternateTempo:: ; 0x9b65
-	ld c, BANK(Music_MeetRival)
-	ld a, MUSIC_MEET_RIVAL
-	call PlayMusic
-	ld hl, $c006
-	ld de, Music_MeetRival_branch_b119
-	jp Music2_OverwriteChannelPointer
-
-; applies both the alternate start and alternate tempo
-Music_RivalAlternateStartAndTempo:: ; 0x9b75
-	call Music_RivalAlternateStart
-	ld hl, $c006
-	ld de, Music_MeetRival_branch_b19b
-	jp Music2_OverwriteChannelPointer
 
 ; an alternate tempo for Cities1 which is used for the Hall of Fame room
 Music_Cities1AlternateTempo:: ; 0x9b81

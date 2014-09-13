@@ -15011,9 +15011,9 @@ Func_60ca: ; 60ca (1:60ca)
 OakSpeech: ; 6115 (1:6115)
 	ld a,$FF
 	call PlaySound ; stop music
-	ld a, BANK(Music_Celadon) ; bank of song
+	ld a, BANK(Music_SilphCo) ; bank of song
 	ld c,a
-	ld a, MUSIC_CELADON ; song #
+	ld a, MUSIC_SILPH_CO ; song #
 	call PlayMusic  ; plays music
 	call ClearScreen
 	call LoadTextBoxTilePatterns
@@ -33672,8 +33672,8 @@ CeruleanCityScript2: ; 195b1 (6:55b1)
 	ld a, $ff
 	ld [$c0ee], a
 	call PlaySound
-	ld b, BANK(Music_RivalAlternateStart)
-	ld hl, Music_RivalAlternateStart
+	ld b, BANK(Music_MeetRival)
+	ld hl, Music_MeetRival
 	call Bankswitch
 	ld a, $1
 	ld [$ff00+$8c], a
@@ -37033,8 +37033,8 @@ OaksLabScript13: ; 1ce32 (7:4e32)
 	ld a, $10
 	ld [$ff00+$8c], a
 	call DisplayTextID
-	ld b, BANK(Music_RivalAlternateStart)
-	ld hl, Music_RivalAlternateStart
+	ld b, BANK(Music_MeetRival)
+	ld hl, Music_MeetRival
 	call Bankswitch
 	ld a, $1
 	ld [$ff00+$8c], a
@@ -37101,8 +37101,8 @@ OaksLabScript15: ; 1ceb0 (7:4eb0)
 	ld a, $ff
 	ld [$c0ee], a
 	call PlaySound
-	ld b, BANK(Music_RivalAlternateStart)
-	ld hl, Music_RivalAlternateStart
+	ld b, BANK(Music_MeetRival)
+	ld hl, Music_MeetRival
 	call Bankswitch
 	ld a, $15
 	ld [$ff00+$8c], a
@@ -37211,8 +37211,8 @@ OaksLabScript16: ; 1cf12 (7:4f12)
 	ld a, $ff
 	ld [$c0ee], a
 	call PlaySound
-	ld b, BANK(Music_RivalAlternateStart)
-	ld hl, Music_RivalAlternateStart
+	ld b, BANK(Music_MeetRival)
+	ld hl, Music_MeetRival
 	call Bankswitch
 	ld a, $1
 	ld [$ff00+$8c], a
@@ -78851,8 +78851,8 @@ Route22Script2: ; 50fb5 (14:4fb5)
 	ld a, $ff
 	ld [$c0ee], a
 	call PlaySound
-	ld b, BANK(Music_RivalAlternateStart)
-	ld hl, Music_RivalAlternateStart
+	ld b, BANK(Music_MeetRival)
+	ld hl, Music_MeetRival
 	call Bankswitch
 	ld a, [$cf0d]
 	cp $1
@@ -78918,9 +78918,9 @@ Func_5104e: ; 5104e (14:504e)
 	ld a, $ff
 	ld [$c0ee], a
 	call PlaySound
-	ld b, BANK(Music_RivalAlternateTempo)
-	ld hl, Music_RivalAlternateTempo
-	call Bankswitch ; indirect jump to Music_RivalAlternateTempo (9b65 (2:5b65))
+	ld b, BANK(Music_MeetRival)
+	ld hl, Music_MeetRival
+	call Bankswitch ; indirect jump to Music_MeetRival (9b65 (2:5b65))
 	ld a, $2
 	ld [H_DOWNARROWBLINKCNT2], a ; $FF00+$8c
 	call Func_50ee6
@@ -79002,9 +79002,9 @@ Route22Script5: ; 510df (14:50df)
 	ld a, $ff
 	ld [$c0ee], a
 	call PlaySound
-	ld b, BANK(Music_RivalAlternateStartAndTempo)
-	ld hl, Music_RivalAlternateStartAndTempo
-	call Bankswitch ; indirect jump to Music_RivalAlternateStartAndTempo (9b75 (2:5b75))
+	ld b, BANK(Music_MeetRival)
+	ld hl, Music_MeetRival
+	call Bankswitch ; indirect jump to Music_MeetRival (9b75 (2:5b75))
 	ld a, [$cf0d]
 	cp $1
 	jr nz, .asm_51134
@@ -80634,9 +80634,9 @@ SilphCo7Script4: ; 51cc8 (14:5cc8)
 	ld a, $ff
 	ld [$c0ee], a
 	call PlaySound
-	ld b, BANK(Music_RivalAlternateStart)
-	ld hl, Music_RivalAlternateStart
-	call Bankswitch ; indirect jump to Music_RivalAlternateStart (9b47 (2:5b47))
+	ld b, BANK(Music_MeetRival)
+	ld hl, Music_MeetRival
+	call Bankswitch ; indirect jump to Music_MeetRival (9b47 (2:5b47))
 	ld de, MovementData_51d1d
 	ld a, [$cf0d]
 	cp $1
@@ -95034,8 +95034,8 @@ PokemonTower2Script1: ; 60563 (18:4563)
 	ld a, $ff
 	ld [$c0ee], a
 	call PlaySound
-	ld b, BANK(Music_RivalAlternateStart)
-	ld hl, Music_RivalAlternateStart
+	ld b, BANK(Music_MeetRival)
+	ld hl, Music_MeetRival
 	call Bankswitch
 	ld a, $2
 	ld [W_POKEMONTOWER2CURSCRIPT], a
@@ -96775,8 +96775,8 @@ SSAnne2Script2: ; 6146d (18:546d)
 	ld a, $ff
 	ld [$c0ee], a
 	call PlaySound
-	ld b, BANK(Music_RivalAlternateStart)
-	ld hl, Music_RivalAlternateStart
+	ld b, BANK(Music_MeetRival)
+	ld hl, Music_MeetRival
 	call Bankswitch
 	ld a, $3
 	ld [W_SSANNE2CURSCRIPT], a

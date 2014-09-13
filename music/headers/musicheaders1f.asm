@@ -122,12 +122,14 @@ Music_PokemonTower:: ; 7c2d0 (1f:42d0)
 	dw Music_PokemonTower_Ch3
 
 Music_SilphCo:: ; 7c2d9 (1f:42d9)
-	db ( $80 | CH0 )
+	db ( $C0 | CH0 )
 	dw Music_SilphCo_Ch1
 	db CH1
 	dw Music_SilphCo_Ch2
 	db CH2
 	dw Music_SilphCo_Ch3
+	db CH3
+	dw Music_SilphCo_Ch4
 
 Music_MeetEvilTrainer:: ; 7c2e2 (1f:42e2)
 	db ( $C0 | CH0 )

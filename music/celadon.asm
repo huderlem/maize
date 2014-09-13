@@ -430,4 +430,3 @@ Celadondrumloop::
 	dnote 2, cymbal1
 	dnote 2, cymbal1
 	endchannel
-
