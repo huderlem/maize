@@ -11623,7 +11623,7 @@ ItemNames: ; 472b (1:472b)
 	db "SUPER POTION@"
 	db "POTION@"
 	db "LOST KEYS@"
-	db "CASCADEBADGE@"
+	db "SLAVE BALL@"
 	db "THUNDERBADGE@"
 	db "RAINBOWBADGE@"
 	db "SOULBADGE@"
@@ -22187,7 +22187,7 @@ ItemUsePtrTable: ; d5e1 (3:55e1)
 	dw ItemUseMedicine   ; SUPER_POTION
 	dw ItemUseMedicine   ; POTION
 	dw UnusableItem      ; LOST_KEYS
-	dw UnusableItem      ; CASCADEBADGE
+	dw ItemUseBall       ; SLAVE_BALL
 	dw UnusableItem      ; THUNDERBADGE
 	dw UnusableItem      ; RAINBOWBADGE
 	dw UnusableItem      ; SOULBADGE
@@ -22285,6 +22285,13 @@ ItemUseBall: ; d687 (3:5687)
 	jp z,ItemUseNotTime ; not in battle
 	dec a
 	jp nz,ThrowBallAtTrainerMon
+	; clear slave bit just to be safe
+	ld hl, W_NEWFLAGS1
+	res 7, [hl]
+	; allow Slave Ball to be thrown
+	ld a, [$cf91]
+	cp SLAVE_BALL
+	jr z, .noNuzlocke
 	; nuzlocke check for map availabiilty
     ld hl, W_NEWFLAGS1
     bit 2, [hl]
@@ -22349,7 +22356,9 @@ ItemUseBall: ; d687 (3:5687)
 	ld hl,$cf91
 	ld a,[hl]
 	cp a,MASTER_BALL
-	jp z,.BallSuccess	;$578b
+	jp z,.BallSuccess
+	cp a,SLAVE_BALL
+	jp z,.BallSuccess
 	cp a,POKE_BALL
 	jr z,.checkForAilments
 	cp a,DV_BALL
@@ -22602,7 +22611,7 @@ ItemUseBall: ; d687 (3:5687)
     jr .pastSpecialBalls
 .skipDVBall
     cp SHINY_BALL
-    jr nz, .pastSpecialBalls
+    jr nz, .skipShinyBall
     call GenRandom
     ld b, a
     sla b
@@ -22615,6 +22624,17 @@ ItemUseBall: ; d687 (3:5687)
     ld [W_ENEMYMONATKDEFIV], a
     ld a, $AA
     ld [W_ENEMYMONSPDSPCIV], a
+    jr .pastSpecialBalls
+.skipShinyBall
+	cp SLAVE_BALL
+	jr nz, .pastSpecialBalls
+	; set slave bit so AddPokemonToParty knows it's a slave
+	ld hl, W_NEWFLAGS1
+	set 7, [hl]
+	; set pokemon level to 2
+	ld a, 2
+	ld [W_ENEMYMONLEVEL], a
+	ld [W_CURENEMYLVL], a
 .pastSpecialBalls
 	ld a,[$cfe5]	;enemy
 	ld [$d11c],a
@@ -23453,6 +23473,19 @@ ItemUseMedicine: ; dabb (3:5abb)
 	ld a,[hl] ; a = level
 	cp a,100
 	jr z,.vitaminNoEffect ; can't raise level above 100
+
+	; is mon an HM slave?
+	ld b, a
+	push bc
+	ld hl, W_PARTYMON1OT + 1
+	ld bc, 11
+	ld a, [$cf06]
+	call AddNTimes
+	pop bc
+	ld a, b
+	bit 0, [hl]
+	jr nz, .vitaminNoEffect
+
 	inc a
 	ld [hl],a ; store incremented level
 	ld [$d127],a
@@ -24896,7 +24929,7 @@ IsKeyItem_: ; e764 (3:6764)
 KeyItemBitfield: ; e799 (3:6799)
 	db %11110000 ; 1-8
 	db %00000001 ; 9-10
-	db %11110000 ; 11-18
+	db %11010000 ; 11-18
 	db %01001111 ; 19-20
 	db %00000000 ; 21-28
 	db %10010111 ; 29-30
@@ -26284,11 +26317,22 @@ _AddPokemonToParty: ; f2e5 (3:72e5)
 	ld [hli], a
 	ld a, [W_ENEMYMONSPDSPCIV]
 	ld [hl], a
+
+	ld a, [W_NEWFLAGS1]
+	bit 7, a
+	jr z, .normalWay
+	xor a
+	ld [de], a
+	inc de
+	ld [de], a
+	jr .afterHP
+.normalWay
 	ld a, [W_ENEMYMONCURHP]    ; copy HP from cur enemy mon
 	ld [de], a
 	inc de
 	ld a, [W_ENEMYMONCURHP+1]
 	ld [de], a
+.afterHP
 	inc de
 	xor a
 	ld [de], a                 ; level (?)
@@ -26350,7 +26394,14 @@ _AddPokemonToParty: ; f2e5 (3:72e5)
 	ld [hli], a
 	dec d
 	jr nz, .clearLoop
-.afterLoop
+	ld a, [W_NEWFLAGS1]
+	bit 7, a
+	jr z, .afterExtraBytesStuff
+.writeSlave
+	ld bc, -10
+	add hl, bc
+	set 0, [hl]
+.afterExtraBytesStuff
 	ld a, [W_CURENEMYLVL]
 	ld d, a
 	ld hl, CalcExperience
@@ -26383,6 +26434,9 @@ _AddPokemonToParty: ; f2e5 (3:72e5)
 	inc de
 	ld a, [W_ISINBATTLE] ; $d057
 	dec a
+	jr nz, .calcFreshStats
+	ld a, [W_NEWFLAGS1]
+	bit 7, a
 	jr nz, .calcFreshStats
 	ld hl, W_ENEMYMONMAXHP ; $cff4
 	ld bc, $a
@@ -28036,6 +28090,7 @@ StatusScreen: ; 12953 (4:6953)
 	ld bc, $8205 ; 5
 	call PrintNumber ; ID Number
 	call PrintPerfectMonSymbol
+	call PrintSlaveMonSymbol
 	call PrintShinySymbol
 	ld d, $0
 	call PrintStatsBox
@@ -28141,6 +28196,34 @@ PrintPerfectMonSymbol:
 
 PerfectText:
 	db "PERFECT"
+
+PrintSlaveMonSymbol:
+	; checks if mon is an HM slave
+	ld a, [wWhichPokemon]
+	ld hl, W_PARTYMON1OT + 1
+	ld bc, 11
+	call AddNTimes
+	bit 0, [hl]
+	ret z
+
+	; draw the "HM SLAVE" vertical text
+	ld bc, 1
+	ld de, SlaveText
+	FuncCoord 9,0
+	ld hl, Coord
+.drawLoop
+	ld a, [de]
+	inc de
+	ld [hl], a
+	add hl, bc
+	cp "E"
+	jr nz, .drawLoop
+.done
+	ret
+
+SlaveText:
+	db "HM SLAVE"
+
 
 PrintShinySymbol:
 	; check if mon is shiny
@@ -29419,7 +29502,7 @@ ItemInfoPointers:
 	db "@"
 	TX_FAR _LostKeysDescription
 	db "@"
-	TX_FAR _CascadeBadgeDescription
+	TX_FAR _SlaveBallDescription
 	db "@"
 	TX_FAR _ThunderBadgeDescription
 	db "@"
@@ -82622,6 +82705,19 @@ Func_5525f: ; 5525f (15:525f)
 	ld a, [hl]
 	cp BOOSTER_RING
 	call z, Func_5549f ; multiplies exp by 1.5
+
+	; check to see if mon is an HM slave
+	ld a, [wWhichPokemon]
+	ld hl, W_PARTYMON1OT + 1
+	ld bc, 11
+	call AddNTimes
+	bit 0, [hl] ; is it an HM slave?
+	jr z, .doneDoingSpecialStuff
+	xor a
+	ld [$FF00 + $98], a
+	ld [$FF00 + $97], a
+
+.doneDoingSpecialStuff
 	pop hl
 
 	inc hl
@@ -116861,8 +116957,29 @@ _LostKeysDescription::
 	line "them!"
 	prompt
 
-_CascadeBadgeDescription::
-	text "..."
+_SlaveBallDescription::
+	text "This # BALL"
+	line "will convert a"
+	cont "captured #MON"
+	cont "into an HM Slave."
+
+	para "The Pokemon's"
+	line "level will be"
+	cont "permanently set"
+	cont "to 2."
+
+	para "This BALL never"
+	line "fails, and it can"
+	cont "be used in areas"
+	cont "where you've"
+	cont "already had a"
+	cont "chance to catch"
+	cont "a #MON."
+
+	para "This item is only"
+	line "meant to be used"
+	cont "when playing in"
+	cont "Nuzlocke Mode."
 	prompt
 
 _ThunderBadgeDescription::

@@ -875,6 +875,11 @@ W_PARTYMON5DATA:: ; d21b
 W_PARTYMON6DATA:: ; d247
 	ds 44
 
+; these 11 bytes now have the following meaning:
+; Byte 0: happiness value
+; Byte 1: 
+;     	Bit 0: Slave bit
+
 W_PARTYMON1OT:: ; d273
 	ds 11
 W_PARTYMON2OT:: ; d27e
@@ -1471,6 +1476,7 @@ W_NEWFLAGS1:: ; dee2
 	; 4: Mon palette should be shiny
 	; 5: Received Shiny Ring from girl in Cedar's Lab in Lapis Town
 	; 6: diving animation
+	; 7: Mon should be slave
 
 W_SLOW_MUSIC:: ; dee3
 	ds 1
