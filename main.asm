@@ -102576,7 +102576,7 @@ Func_71d4f: ; 71d4f (1c:5d4f)
 
 String_71d59: ; 71d59 (1c:5d59)
 	; "TRAINER@@@@@@@@@@"
-	db $5d, "@@@@@@@@@@"
+	db 70, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 ; base happiness 70 for traded pokemon
 
 InGameTradeTextPointers: ; 71d64 (1c:5d64)
 	dw TradeTextPointers1
