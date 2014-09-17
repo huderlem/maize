@@ -23475,6 +23475,8 @@ ItemUseMedicine: ; dabb (3:5abb)
 	jr z,.vitaminNoEffect ; can't raise level above 100
 
 	; is mon an HM slave?
+	push de
+	push hl
 	ld b, a
 	push bc
 	ld hl, W_PARTYMON1OT + 1
@@ -23484,8 +23486,10 @@ ItemUseMedicine: ; dabb (3:5abb)
 	pop bc
 	ld a, b
 	bit 0, [hl]
+	pop hl
+	pop de
 	jr nz, .vitaminNoEffect
-
+.addLevel
 	inc a
 	ld [hl],a ; store incremented level
 	ld [$d127],a
@@ -52024,10 +52028,10 @@ Juggler1Data: ; 3a013 (e:6013)
 ; none
 FisherData: ; 3a013 (e:6013)
 	db  4,MAGIKARP,MAGIKARP,GOLDEEN,0 ; route south of Jade Village
-	db 17,TENTACOOL,STARYU,SHELLDER,0
-	db 22,GOLDEEN,POLIWAG,GOLDEEN,0
-	db 24,TENTACOOL,GOLDEEN,0
-	db 27,GOLDEEN,0
+	db 27,SEAKING,SEAKING,0 ; route 21 (south of Jade Village)
+	db 26,GOLDEEN,POLIWHIRL,TENTACOOL,0 ; Route 21 (south of Jade Village)
+	db 28,STARYU,KRABBY,GYARADOS,0 ; Route 21 (south of Jade Village)
+	db 32,KINGLER,GOLDUCK,0 ; Route 21 (south of Jade Village)
 	db 21,POLIWAG,SHELLDER,GOLDEEN,HORSEA,0
 	db 28,SEAKING,GOLDEEN,SEAKING,SEAKING,0
 	db 31,SHELLDER,CLOYSTER,0
@@ -52037,9 +52041,9 @@ FisherData: ; 3a013 (e:6013)
 SwimmerData: ; 3a049 (e:6049)
 	db 21,GROWLITHE,HOUNDOUR,GROWLITHE,0 ; Copper Town Gym
 	db 23,MAGMAR,0 ; Copper Town Gym
-	db 29,GOLDEEN,HORSEA,STARYU,0
-	db 30,POLIWAG,POLIWHIRL,0
-	db 27,HORSEA,TENTACOOL,TENTACOOL,GOLDEEN,0
+	db 26,HORSEA,SHELLDER,SLOWPOKE,TENTACOOL,0 ; Route 21 (south of Jade Village)
+	db 27,TENTACOOL,TENTACOOL,TENTACOOL,TENTACRUEL,0 ; Route 21 (south of Jade Village)
+	db 33,GRAVELER,0 ; Route 21 (south of Jade Village)
 	db 29,GOLDEEN,SHELLDER,SEAKING,0
 	db 30,HORSEA,HORSEA,0
 	db 27,TENTACOOL,TENTACOOL,STARYU,HORSEA,TENTACRUEL,0
@@ -82581,17 +82585,17 @@ Route21Object: ; 0x55021 (size=76)
     db $37, $8, $0, DEEP_SEA_2
     db $46, $a, $1, DEEP_SEA_2
 
-	db $0 ; signs
+	db $ ; signs
 
 	db $8 ; people
 	db SPRITE_SWIMMER, $36 + 4, $9 + 4, $ff, $d1, $1 ; person
-	db SPRITE_FISHER2, $0 + 4, $0 + 4, $ff, $d0, $42, FISHER + $C8, $9 ; trainer
+	db SPRITE_FISHER2, $e + 4, $4 + 4, $ff, $d1, $42, FISHER + $C8, $2 ; trainer
 	db SPRITE_FISHER2, $3 + 4, $4 + 4, $ff, $d3, $43, FISHER + $C8, $1 ; trainer
-	db SPRITE_SWIMMER, $0 + 4, $0 + 4, $ff, $d0, $45, SWIMMER + $C8, $d ; trainer
-	db SPRITE_SWIMMER, $0 + 4, $0 + 4, $ff, $d3, $46, SWIMMER + $C8, $e ; trainer
-	db SPRITE_SWIMMER, $0 + 4, $0 + 4, $ff, $d2, $47, SWIMMER + $C8, $f ; trainer
-	db SPRITE_FISHER2, $0 + 4, $0 + 4, $ff, $d2, $48, FISHER + $C8, $8 ; trainer
-	db SPRITE_FISHER2, $0 + 4, $0 + 4, $ff, $d3, $49, FISHER + $C8, $a ; trainer
+	db SPRITE_FISHER2, $13 + 4, $9 + 4, $ff, $d0, $44, FISHER + $C8, $3 ; trainer
+	db SPRITE_SWIMMER, $1b + 4, $e + 4, $ff, $d2, $45, SWIMMER + $C8, $4 ; trainer
+	db SPRITE_SWIMMER, $28 + 4, $d + 4, $ff, $d0, $46, SWIMMER + $C8, $5 ; trainer 
+	db SPRITE_FISHER2, $2d + 4, $5 + 4, $ff, $d3, $47, FISHER + $C8, $4 ; trainer
+	db SPRITE_FISHER2, $30 + 4, $9 + 4, $ff, $d0, $48, FISHER + $C8, $5 ; trainer
 
     EVENT_DISP ROUTE_21_WIDTH, $11, $d ; ROUTE_21
     EVENT_DISP ROUTE_21_WIDTH, $37, $8 ; DEEP_SEA_2
@@ -84919,7 +84923,7 @@ Route21Script: ; 55eeb (15:5eeb)
 	ld hl, Route21TrainerHeaders
 	ld de, Route21ScriptPointers
 	ld a, [W_ROUTE21CURSCRIPT]
-    cp 3
+    cp 4
     jr z, .diveGuy
 	call ExecuteCurMapScriptInTable
 	ld [W_ROUTE21CURSCRIPT], a
@@ -84991,7 +84995,7 @@ Route21TrainerHeader2: ; 55f2e (15:5f2e)
 
 Route21TrainerHeader3: ; 55f3a (15:5f3a)
 	db $4 ; flag's bit
-	db ($4 << 4) ; trainer's view range
+	db ($0 << 4) ; trainer's view range
 	dw $d7e9 ; flag's byte
 	dw Route21BattleText4 ; 0x600a TextBeforeBattle
 	dw Route21AfterBattleText4 ; 0x6014 TextAfterBattle
@@ -85000,7 +85004,7 @@ Route21TrainerHeader3: ; 55f3a (15:5f3a)
 
 Route21TrainerHeader4: ; 55f46 (15:5f46)
 	db $5 ; flag's bit
-	db ($4 << 4) ; trainer's view range
+	db ($1 << 4) ; trainer's view range
 	dw $d7e9 ; flag's byte
 	dw Route21BattleText5 ; 0x6019 TextBeforeBattle
 	dw Route21AfterBattleText5 ; 0x6023 TextAfterBattle
@@ -85018,7 +85022,7 @@ Route21TrainerHeader5: ; 55f52 (15:5f52)
 
 Route21TrainerHeader6: ; 55f5e (15:5f5e)
 	db $7 ; flag's bit
-	db ($3 << 4) ; trainer's view range
+	db ($0 << 4) ; trainer's view range
 	dw $d7e9 ; flag's byte
 	dw Route21BattleText7 ; 0x6037 TextBeforeBattle
 	dw Route21AfterBattleText7 ; 0x6041 TextAfterBattle
@@ -85049,7 +85053,7 @@ Route21Text1: ; 55f83 (15:5f83)
 	db $08 ; asm
 	ld hl, Route21DiveGuyText1
 	call PrintText
-    ld a, 3
+    ld a, 4
     ld [W_ROUTE21CURSCRIPT], a
 	jp TextScriptEnd
 
@@ -85186,7 +85190,42 @@ Route21EndBattleText7: ; 5603c (15:603c)
 	db "@"
 
 Route21AfterBattleText7: ; 56041 (15:6041)
-	TX_FAR _Route21AfterBattleText7
+	db $08 ; asm
+	ld hl, $d728
+	bit 4, [hl] ; got the good rod already?
+	jr nz, .alreadyHave
+	ld bc, (GOOD_ROD << 8) | 1
+	call GiveItem
+	jr nc, .full
+	ld hl, Route21GotGoodRod
+	call PrintText
+	ld hl, $d728
+	set 4, [hl]
+	jr .done
+.full
+	ld hl, Route21AfterBattleText7NoRoom
+	call PrintText
+	jr .done
+.alreadyHave
+	ld hl, Route21AfterBattleText7_2
+	call PrintText
+.done
+	jp TextScriptEnd
+
+Route21GotGoodRod:
+	TX_FAR _Route21GotGoodRod
+	db "@"
+
+Route21AfterBattleText7_1:
+	TX_FAR _Route21AfterBattleText7_1
+	db "@"
+
+Route21AfterBattleText7NoRoom:
+	TX_FAR _Route21AfterBattleText7NoRoom
+	db "@"
+
+Route21AfterBattleText7_2:
+	TX_FAR _Route21AfterBattleText7_2
 	db "@"
 
 Route21BattleText8: ; 56046 (15:6046)
@@ -85377,7 +85416,7 @@ FuchsiaHouse3Text1: ; 56181 (15:6181)
 	call GiveItem
 	jr nc, .full
 
-	ld hl, $d728
+	ld hl, $d728 ; TODO ALREADY USED THIS FLAG on ROUTE 21 (South of Jade Village)
 	set 4, [hl]
 
 	ld hl, UnnamedText_561c2
