@@ -82581,7 +82581,7 @@ Route21Object: ; 0x55021 (size=76)
 	db $43 ; border tile
 
 	db $3 ; warps
-    db $11, $d, $0, ROUTE_21
+    db $11, $d, $0, ROUTE_12_HOUSE
     db $37, $8, $0, DEEP_SEA_2
     db $46, $a, $1, DEEP_SEA_2
 
@@ -82605,9 +82605,11 @@ Route21Blocks: ; 5506d (15:506d)
 	INCBIN "maps/route21.blk"
 
 VermilionHouse2Blocks: ; 5522f (15:522f)
-Route12HouseBlocks: ; 5522f (15:522f)
 DayCareMBlocks: ; 5522f (15:522f)
 	INCBIN "maps/daycarem.blk"
+
+Route12HouseBlocks: ; 5522f (15:522f)
+	INCBIN "maps/route12house.blk"
 
 FuchsiaHouse3Blocks: ; 5523f (15:523f)
 	INCBIN "maps/fuchsiahouse3.blk"
@@ -85785,7 +85787,7 @@ DayCareMObject: ; 0x56459 (size=26)
 	EVENT_DISP $4, $7, $3
 
 Route12House_h: ; 0x56473 to 0x5647f (12 bytes) (id=189)
-	db $08 ; tileset
+	db $07 ; tileset
 	db ROUTE_12_HOUSE_HEIGHT, ROUTE_12_HOUSE_WIDTH ; dimensions (y, x)
 	dw Route12HouseBlocks, Route12HouseTextPointers, Route12HouseScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -85796,70 +85798,169 @@ Route12HouseScript: ; 5647f (15:647f)
 
 Route12HouseTextPointers: ; 56482 (15:6482)
 	dw Route12HouseText1
+	dw Route12HouseText2
+	dw Route12HouseText3
+
+Route12HouseText3:
+	db $08 ; asm
+	ld a, [$d728]
+	bit 5, a ; found glasses?
+	jr nz, .foundGlasses
+	ld hl, BushGiveGlasses
+	call PrintText
+	ld hl, $d728
+	set 5, [hl]
+	jr .done
+.foundGlasses
+	ld hl, BushFoundGlasses
+	call PrintText
+.done
+	jp TextScriptEnd
+
+BushGiveGlasses:
+	TX_FAR _BushGiveGlasses
+	db "@"
+
+BushFoundGlasses:
+	TX_FAR _BushFoundGlasses
+	db "@"
+
+Route12HouseText2:
+	db $08 ; asm
+	; is player part of bush covenant?
+	ld a, [W_COVENANT]
+	cp a, SHRUB_COVENANT
+	jr nz, .notMember
+	call GenRandom
+	and $3
+	ld b, 0
+	ld c, 5
+	ld hl, FriendlyBushText1
+	call AddNTimes
+	call PrintText
+	jr .done
+.notMember
+	call GenRandom
+	and $3
+	ld b, 0
+	ld c, 5
+	ld hl, HostileBushText1
+	call AddNTimes
+	call PrintText
+.done
+	jp TextScriptEnd
+
+HostileBushText1:
+	TX_FAR _HostileBushText1
+	db "@"
+	TX_FAR _HostileBushText2
+	db "@"
+	TX_FAR _HostileBushText3
+	db "@"
+	TX_FAR _HostileBushText4
+	db "@"
+
+FriendlyBushText1:
+	TX_FAR _FriendlyBushText1
+	db "@"
+	TX_FAR _FriendlyBushText2
+	db "@"
+	TX_FAR _FriendlyBushText3
+	db "@"
+	TX_FAR _FriendlyBushText4
+	db "@"
 
 Route12HouseText1: ; 56484 (15:6484)
 	db $08 ; asm
 	ld a, [$d728]
 	bit 5, a
-	jr nz, asm_b4cad ; 0x5648a
-	ld hl, UnnamedText_564c0
+	jr nz, .foundGlasses ; 0x5648a
+	ld hl, ShrubberIntro
+	call PrintText
+	jr .done
+.foundGlasses
+	ld a, [W_NEWFLAGS2]
+	bit 0, a
+	jr nz, .gaveGlasses
+	ld hl, ShrubberGiveGlasses
+	call PrintText
+	ld hl, W_NEWFLAGS2
+	set 0, [hl]
+.gaveGlasses
+	ld a, [W_COVENANT]
+	cp SHRUB_COVENANT
+	jr nz, .askToJoin
+	ld hl, InCovenant
+	call PrintText
+	jr .done
+.askToJoin
+	ld hl, JoinShrubCovenant
 	call PrintText
 	call YesNoChoice
 	ld a, [$cc26]
 	and a
-	jr nz, asm_a2d76 ; 0x56499
-	ld bc, (SUPER_ROD << 8) | 1
-	call GiveItem
-	jr nc, .BagFull
-	ld hl, $d728
-	set 5, [hl]
-	ld hl, UnnamedText_564c5
-	jr asm_df984 ; 0x564ab
-.BagFull
-	ld hl, UnnamedText_564d9
-	jr asm_df984 ; 0x564b0
-asm_a2d76 ; 0x564b2
-	ld hl, UnnamedText_564cf
-	jr asm_df984 ; 0x564b5
-asm_b4cad ; 0x564b7
-	ld hl, UnnamedText_564d4
-asm_df984 ; 0x564ba
+	jr nz, .notJoin
+	ld hl, AcceptShrubCovenant
 	call PrintText
+	ld a, SHRUB_COVENANT
+	ld [W_COVENANT], a
+	jr .done
+.notJoin
+	ld hl, RejectShrubCovenant
+	call PrintText
+.done
 	jp TextScriptEnd
 
-UnnamedText_564c0: ; 564c0 (15:64c0)
-	TX_FAR _UnnamedText_564c0
+ShrubberIntro: ; 564c0 (15:64c0)
+	TX_FAR _ShrubberIntro
 	db "@"
 
-UnnamedText_564c5: ; 564c5 (15:64c5)
-	TX_FAR _UnnamedText_564c5 ; 0x8ca00
-	db $0B
-	TX_FAR _UnnamedText_564ca ; 0x8ca4f
+ShrubberGiveGlasses: ; 564c5 (15:64c5)
+	TX_FAR _ShrubberGiveGlasses ; 0x8ca00
 	db "@"
 
-UnnamedText_564cf: ; 564cf (15:64cf)
-	TX_FAR _UnnamedText_564cf
+JoinShrubCovenant:
+	TX_FAR _JoinShrubCovenant
 	db "@"
 
-UnnamedText_564d4: ; 564d4 (15:64d4)
-	TX_FAR _UnnamedText_564d4
+RejectShrubCovenant:
+	TX_FAR _RejectShrubCovenant
 	db "@"
 
-UnnamedText_564d9: ; 564d9 (15:64d9)
-	TX_FAR _UnnamedText_564d9
+AcceptShrubCovenant:
+	TX_FAR _AcceptShrubCovenant
+	db "@"
+
+InCovenant:
+	TX_FAR _InCovenant
 	db "@"
 
 Route12HouseObject: ; 0x564de (size=26)
-	db $a ; border tile
+	db $3 ; border tile
 
 	db $2 ; warps
-	db $7, $2, $3, $ff
-	db $7, $3, $3, $ff
+	db $7, $2, $0, ROUTE_21
+	db $7, $3, $0, ROUTE_21
 
-	db $0 ; signs
+	db $f ; signs
+	db $5, $6, $2
+	db $6, $5, $2
+	db $5, $2, $2
+	db $4, $1, $2
+	db $3, $1, $2
+	db $2, $1, $2
+	db $1, $2, $2
+	db $0, $3, $3
+	db $0, $4, $2
+	db $0, $5, $2
+	db $1, $6, $2
+	db $2, $6, $2
+	db $3, $6, $2
+	db $4, $5, $2
+	db $3, $4, $2
 
 	db $1 ; people
-	db SPRITE_FISHER, $4 + 4, $2 + 4, $ff, $d3, $1 ; person
+	db SPRITE_FISHER, $4 + 4, $4 + 4, $ff, $d0, $1 ; person
 
 	; warp-to
 	EVENT_DISP $4, $7, $2

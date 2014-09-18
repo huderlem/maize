@@ -1487,6 +1487,13 @@ W_NUZLOCKE_MAP_FLAGS::
 	; 0=can still catch pokemon
 	ds 16
 
+W_NEWFLAGS2::
+	ds 1
+	; 0: gave shrubber his glasses
+
+W_COVENANT::
+	ds 1
+
 ; if you ever add more here, you have to modify 
 ; LoadSAVCheckSum
 ; LoadSAVCheckSum1
