@@ -31344,7 +31344,7 @@ MapSpriteSets: ; 17a64 (5:7a64)
 	db $01 ; VIRIDIAN_CITY
 	db $02 ; PEWTER_CITY
 	db $02 ; CERULEAN_CITY
-	db $03 ; LAVENDER_TOWN
+	db $01 ; LAVENDER_TOWN
 	db $02 ; VERMILION_CITY
 	db $05 ; CELADON_CITY
 	db $0a ; FUCHSIA_CITY
@@ -68272,43 +68272,36 @@ LavenderTown_h: ; 0x44000 to 0x4402d (45 bytes) (bank=11) (id=4)
 	db $00 ; tileset
 	db LAVENDER_TOWN_HEIGHT, LAVENDER_TOWN_WIDTH ; dimensions (y, x)
 	dw LavenderTownBlocks, LavenderTownTextPointers, LavenderTownScript ; blocks, texts, scripts
-	db NORTH | SOUTH | WEST ; connections
-	NORTH_MAP_CONNECTION ROUTE_10, ROUTE_10_WIDTH, ROUTE_10_HEIGHT, 0, 0, ROUTE_10_WIDTH, Route10Blocks
-	SOUTH_MAP_CONNECTION ROUTE_12, ROUTE_12_WIDTH, 0, 0, ROUTE_12_WIDTH, Route12Blocks, LAVENDER_TOWN_WIDTH, LAVENDER_TOWN_HEIGHT
-	WEST_MAP_CONNECTION ROUTE_8, ROUTE_8_WIDTH, 0, 0, ROUTE_8_HEIGHT, Route8Blocks, LAVENDER_TOWN_WIDTH
+	db NORTH ; connections
+	NORTH_MAP_CONNECTION ROUTE_21, ROUTE_21_WIDTH, ROUTE_21_HEIGHT, 0, 0, ROUTE_21_WIDTH, Route21Blocks
 	dw LavenderTownObject ; objects
 
 LavenderTownObject: ; 0x4402d (size=88)
-	db $2c ; border tile
+	db $43 ; border tile
 
-	db $6 ; warps
-	db $5, $3, $0, LAVENDER_POKECENTER
-	db $5, $e, $0, POKEMONTOWER_1
-	db $9, $7, $0, LAVENDER_HOUSE_1
-	db $d, $f, $0, LAVENDER_MART
-	db $d, $3, $0, LAVENDER_HOUSE_2
-	db $d, $7, $0, NAME_RATERS_HOUSE
+	db $5 ; warps
+	db $3, $3, $0, LAVENDER_HOUSE_1
+	db $7, $f, $0, LAVENDER_HOUSE_2
+	db $9, $7, $0, LAVENDER_POKECENTER
+	db $d, $3, $0, NAME_RATERS_HOUSE
+	db $d, $d, $0, LAVENDER_HOUSE_2
 
-	db $6 ; signs
-	db $9, $b, $4 ; LavenderTownText4
-	db $3, $9, $5 ; LavenderTownText5
-	db $d, $10, $6 ; MartSignText
-	db $5, $4, $7 ; PokeCenterSignText
-	db $9, $5, $8 ; LavenderTownText8
-	db $7, $11, $9 ; LavenderTownText9
+	db $3 ; signs
+	db $3, $7, $4 ; LavenderTownText4
+	db $7, $d, $5 ; LavenderTownText5
+	db $9, $8, $6 ; PokeCenterSignText
 
 	db $3 ; people
-	db SPRITE_LITTLE_GIRL, $9 + 4, $f + 4, $fe, $0, $1 ; person
-	db SPRITE_BLACK_HAIR_BOY_1, $a + 4, $9 + 4, $ff, $ff, $2 ; person
-	db SPRITE_BLACK_HAIR_BOY_2, $7 + 4, $8 + 4, $fe, $2, $3 ; person
+	db SPRITE_GIRL, $4 + 4, $8 + 4, $ff, $ff, $1 ; person
+	db SPRITE_GAMBLER, $b + 4, $b+ 4, $ff, $ff, $2 ; person
+	db SPRITE_SWIMMER, $12 + 4, $c + 4, $ff, $d0, $3 ; person
 
 	; warp-to
-	EVENT_DISP $a, $5, $3 ; LAVENDER_POKECENTER
-	EVENT_DISP $a, $5, $e ; POKEMONTOWER_1
-	EVENT_DISP $a, $9, $7 ; LAVENDER_HOUSE_1
-	EVENT_DISP $a, $d, $f ; LAVENDER_MART
-	EVENT_DISP $a, $d, $3 ; LAVENDER_HOUSE_2
-	EVENT_DISP $a, $d, $7 ; NAME_RATERS_HOUSE
+	EVENT_DISP LAVENDER_TOWN_WIDTH, $3, $3 ; LAVENDER_HOUSE_1
+	EVENT_DISP LAVENDER_TOWN_WIDTH, $7, $f ; LAVENDER_HOUSE_2
+	EVENT_DISP LAVENDER_TOWN_WIDTH, $9, $7 ; LAVENDER_POKECENTER
+	EVENT_DISP LAVENDER_TOWN_WIDTH, $d, $3 ; NAME_RATERS_HOUSE
+	EVENT_DISP LAVENDER_TOWN_WIDTH, $d, $d ; LAVENDER_HOUSE_2
 
 LavenderTownBlocks: ; 44085 (11:4085)
 	INCBIN "maps/lavendertown.blk"
@@ -68331,35 +68324,10 @@ LavenderTownTextPointers: ; 4410e (11:410e)
 	dw LavenderTownText3
 	dw LavenderTownText4
 	dw LavenderTownText5
-	dw MartSignText
 	dw PokeCenterSignText
-	dw LavenderTownText8
-	dw LavenderTownText9
 
 LavenderTownText1: ; 44120 (11:4120)
-	db $08 ; asm
-	ld hl, UnnamedText_4413c
-	call PrintText
-	call YesNoChoice
-	ld a, [$cc26]
-	and a
-	ld hl, UnnamedText_44146
-	jr nz, .asm_40831 ; 0x44131
-	ld hl, UnnamedText_44141
-.asm_40831 ; 0x44136
-	call PrintText
-	jp TextScriptEnd
-
-UnnamedText_4413c: ; 4413c (11:413c)
-	TX_FAR _UnnamedText_4413c
-	db "@"
-
-UnnamedText_44141: ; 44141 (11:4141)
-	TX_FAR _UnnamedText_44141
-	db "@"
-
-UnnamedText_44146: ; 44146 (11:4146)
-	TX_FAR _UnnamedText_44146
+	TX_FAR _LavenderTownText1
 	db "@"
 
 LavenderTownText2: ; 4414b (11:414b)
@@ -82574,7 +82542,7 @@ Route21_h: ; 0x54fff to 0x55021 (34 bytes) (id=32)
 	dw Route21Blocks, Route21TextPointers, Route21Script ; blocks, texts, scripts
 	db NORTH | SOUTH ; connections
 	NORTH_MAP_CONNECTION VIRIDIAN_CITY, VIRIDIAN_CITY_WIDTH, VIRIDIAN_CITY_HEIGHT, -4, 0, VIRIDIAN_CITY_WIDTH, ViridianCityBlocks
-	SOUTH_MAP_CONNECTION CINNABAR_ISLAND, CINNABAR_ISLAND_WIDTH, 0, 0, CINNABAR_ISLAND_WIDTH, CinnabarIslandBlocks, ROUTE_21_WIDTH, ROUTE_21_HEIGHT
+	SOUTH_MAP_CONNECTION LAVENDER_TOWN, LAVENDER_TOWN_WIDTH, 0, 0, LAVENDER_TOWN_WIDTH, LavenderTownBlocks, ROUTE_21_WIDTH, ROUTE_21_HEIGHT
 	dw Route21Object ; objects
 
 Route21Object: ; 0x55021 (size=76)

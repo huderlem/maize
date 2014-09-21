@@ -1,55 +1,60 @@
-_UnnamedText_4413c:: ; a5482 (29:5482)
-	text "Do you believe in"
-	line "GHOSTs?"
-	done
+_LavenderTownText1:: ; a5482 (29:5482)
+	text "Everyone here is"
+	line "a skilled diver!"
 
-_UnnamedText_44141:: ; a549d (29:549d)
-	text "Really? So there"
-	line "are believers..."
-	done
+	para "I learned how to"
+	line "dive when I was"
+	cont "only 3 years old."
 
-_UnnamedText_44146:: ; a54c0 (29:54c0)
-	text "Hahaha, I guess"
-	line "not."
+	para "The bottom of the"
+	line "sea is full of"
+	cont "surprises!"
 
-	para "That white hand"
-	line "on your shoulder,"
-	cont "it's not real."
+	para "Did you know that"
+	line "humans have"
+	cont "explored less"
+	cont "than 5 percent of"
+	cont "the ocean?"
 	done
 
 _LavenderTownText2:: ; a5506 (29:5506)
-	text "This town is known"
-	line "as the grave site"
-	cont "of #MON."
+	text "I've lived on the"
+	line "RUBY DOCKS my"
+	cont "entire life!"
 
-	para "Memorial services"
-	line "are held in"
-	cont "#MON TOWER."
+	para "It sure is"
+	line "different from"
+	cont "the hustle and"
+	cont "bustle of a big"
+	cont "city."
 	done
 
 _LavenderTownText3:: ; a555f (29:555f)
-	text "GHOSTs appeared"
-	line "in #MON TOWER."
+	text "Ahh."
 
-	para "I think they're"
-	line "the spirits of"
-	cont "#MON that the"
-	cont "ROCKETs killed."
+	para "It feels good to"
+	line "go for a quick"
+	cont "swim and dive."
+
+	para "And it's a great"
+	line "way to stay in"
+	cont "shape!"
+
+	para "I just got back"
+	line "from diving into"
+	cont "that dark water"
+	cont "to the left."
 	done
 
 _LavenderTownText4:: ; a55bb (29:55bb)
-	text "LAVENDER TOWN"
-	line "The Noble Purple"
-	cont "Town"
+	text "RUBY DOCKS"
+	line "The floating home"
+	cont "of brave divers."
 	done
 
 _LavenderTownText5:: ; a55e0 (29:55e0)
-	text "New SILPH SCOPE!"
-
-	para "Make the Invisible"
-	line "Plain to See!"
-
-	para "SILPH CO."
+	text "RUBY DOCKS"
+	line "OUTPOST"
 	done
 
 _LavenderTownText8:: ; a561d (29:561d)

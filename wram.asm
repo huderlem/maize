@@ -1490,6 +1490,7 @@ W_NUZLOCKE_MAP_FLAGS::
 W_NEWFLAGS2::
 	ds 1
 	; 0: gave shrubber his glasses
+	
 
 W_COVENANT::
 	ds 1
