@@ -1,3 +1,64 @@
+RubyDocksOutpostText1_::
+	text "I find the bottom"
+	line "of the sea more"
+	cont "peaceful than"
+	cont "sailing up in the"
+	cont "clouds."
+
+	para "Excuse me."
+
+	para "I need to focus"
+	line "on my duty."
+
+	para "It would be my"
+	line "fault if RUBY"
+	cont "DOCKS were"
+	cont "destroyed by a"
+	cont "bunch of giant"
+	cont "TENACRUEL!"
+	done
+
+RubyDocksOutpostText2_::
+	text "Do you like RUBY"
+	line "DOCKS?"
+
+	para "I'm sure you've"
+	line "noticed that the"
+	cont "locals LOVE to"
+	cont "DIVE."
+
+	para "I'm surprised they"
+	line "haven't all grown"
+	cont "gills!"
+
+	para "One of my duties"
+	line "in this OUTPOST"
+	cont "is to make sure"
+	cont "everyone is safe"
+	cont "in the water."
+
+	para "..."
+
+	para "You look like you"
+	line "want to explore!"
+
+	para "You can take your"
+	line "adventures to the"
+	cont "bottom of the sea"
+	cont "with this!"
+	prompt
+
+RubyDocksOutpostFull_::
+	text "You have no room"
+	line "for it!"
+	done
+
+ReceivedHM06Text_::
+	text $52, " received"
+	line "@"
+	TX_RAM $cf4b
+	text "!@@"
+
 _UnnamedText_1dab3:: ; 9a308 (26:6308)
 	text "Hello, hello!"
 	line "I am the official"

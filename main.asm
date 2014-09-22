@@ -6001,7 +6001,7 @@ CeruleanMartText1:: ; 2453 (0:2453)
 	db $FE,7,POKE_BALL,POTION,REPEL,ANTIDOTE,BURN_HEAL,AWAKENING
 	db PARLYZ_HEAL,$FF
 
-; Bike shop
+; Bike shop TODO: can almost certainly remove this
 	db $FE,1,BICYCLE,$FF
 
 ; Vermilion
@@ -6010,9 +6010,9 @@ VermilionMartText1:: ; 2461 (0:2461)
 	db REPEL,$FF
 
 ; Lavender
-LavenderMartText1:: ; 246a (0:246a)
-	db $FE,9,GREAT_BALL,SUPER_POTION,REVIVE,ESCAPE_ROPE,SUPER_REPEL
-	db ANTIDOTE,BURN_HEAL,ICE_HEAL,PARLYZ_HEAL,$FF
+LavenderHouse2Text2: ; 246a (0:246a)
+	db $FE,7,GREAT_BALL,SUPER_POTION,SUPER_REPEL,HP_UP,PROTEIN,CARBOS,IRON,
+	db CALCIUM,$FF
 
 ; Celadon Dept. Store 2F (1)
 CeladonMart2Text1:: ; 2476 (0:2476)
@@ -7756,7 +7756,7 @@ GetItemName:: ; 2fcf (0:2fcf)
 	ld a,[$D11E]
 	cp DV_BALL ; is this past the machines?
 	jr nc, .nonMachine
-	cp HM_01 ; is this a TM/HM?
+	cp HM_06 ; is this a TM/HM?
 	jr nc,.Machine
 
 .nonMachine
@@ -7787,6 +7787,10 @@ GetMachineName:: ; 2ff3 (0:2ff3)
 	jr nc,.WriteTM
 ; if HM, then write "HM" and add 5 to the item ID, so we can reuse the
 ; TM printing code
+	cp a, HM_06
+	jr nz, .normal
+	add 6
+.normal
 	add 5
 	ld [$D11E],a
 	ld hl,HiddenPrefix ; points to "HM"
@@ -7837,7 +7841,7 @@ HiddenPrefix:: ; 303e (0:303e)
 ; sets carry if item is HM, clears carry if item is not HM
 ; Input: a = item ID
 IsItemHM:: ; 3040 (0:3040)
-	cp a,HM_01
+	cp a,HM_06
 	jr c,.notHM
 	cp a,TM_01
 	ret
@@ -9231,7 +9235,7 @@ GetItemPrice:: ; 37df (0:37df)
 	ld a, [$cf91]
 	cp DV_BALL
 	jr nc, .nonMachine
-	cp HM_01
+	cp HM_06
 	jr nc, .asm_3812
 .nonMachine
 	ld bc, $3
@@ -22151,7 +22155,7 @@ UseItem_: ; d5c7 (3:55c7)
 	sub DV_BALL
 	jr .foundTable
 .checkHM
-	cp a,HM_01
+	cp a,HM_06
 	jp nc,ItemUseTMHM
 	ld hl,ItemUsePtrTable
 	dec a
@@ -24423,6 +24427,12 @@ ItemUseTMHM: ; e479 (3:6479)
 	push af
 	jr nc,.skipAdding
 	add a,55 ; if item is an HM, add 55
+	ld b, a
+	ld a, [$cf91]
+	cp HM_06
+	ld a, b
+	jr nz, .skipAdding
+	add a, 6
 .skipAdding
 	inc a
 	ld [$d11e],a
@@ -24904,7 +24914,7 @@ IsKeyItem_: ; e764 (3:6764)
 	cp a,HUSTLE_RING
 	ret nc
 .checkForHM
-	cp a,HM_01 ; is the item an HM or TM?
+	cp a,HM_06 ; is the item an HM or TM?
 	jr nc,.checkIfItemIsHM
 ; if the item is not an HM or TM
 	push af
@@ -29380,7 +29390,7 @@ StartMenu_Item: ; 13302 (4:7302)
 .useItem
 	ld [$d152],a
 	ld a,[$cf91]
-	cp a,HM_01
+	cp a,HM_06
 	jr nc,.useItem_partyMenu
 	ld hl,UsableItems_CloseMenu
 	ld de,1
@@ -29444,12 +29454,12 @@ DisplayItemInfo:
 	cp a, MAX_ELIXER
 	jr c, .ready
 
-	cp a, HM_01 - 1
+	cp a, HM_06 - 1
 	jr nc, .TMHM
 	sub $e ; FOCUS_RING's id is now $54
 	jr .ready
 .TMHM
-	sub $70 - 9 ; HM_01's id is now $54 + 9 ; CHANGE THIS EVERY TIME YOU ADD A NEW ITEM AFTER ID $62
+	sub $6f - 9 ; HM_01's id is now $54 + 9 ; CHANGE THIS EVERY TIME YOU ADD A NEW ITEM AFTER ID $62
 .ready
 	ld hl,ItemInfoPointers
 	ld bc, 5
@@ -29647,6 +29657,8 @@ ItemInfoPointers:
     TX_FAR _ShinyRingDescription
     db "@"
     TX_FAR _ShinyBallDescription
+    db "@"
+    TX_FAR _HM06Description
     db "@"
 	TX_FAR _HM01Description
 	db "@"
@@ -30303,6 +30315,7 @@ TechnicalMachines: ; 13773 (4:7773)
 	db SURF
 	db STRENGTH
 	db FLASH
+	db DIVE
 
 Func_137aa: ; 137aa (4:77aa)
 	ld a, [W_ISLINKBATTLE] ; $d12b
@@ -36231,13 +36244,17 @@ SaffronHouse1Blocks: ; 1c1de (7:41de)
 SaffronHouse2Blocks: ; 1c1de (7:41de)
 VermilionHouse1Blocks: ; 1c1de (7:41de)
 NameRaterBlocks: ; 1c1de (7:41de)
-LavenderHouse1Blocks: ; 1c1de (7:41de)
-LavenderHouse2Blocks: ; 1c1de (7:41de)
 CeruleanHouseBlocks: ; 1c1de (7:41de)
 PewterHouse1Blocks: ; 1c1de (7:41de)
 PewterHouse2Blocks: ; 1c1de (7:41de)
 ViridianHouseBlocks: ; 0x1c1de 41DE size=16
 	INCBIN "maps/viridianhouse.blk"
+
+LavenderHouse1Blocks: ; 1c1de (7:41de)
+	INCBIN "maps/lavenderhouse1.blk"
+
+LavenderHouse2Blocks: ; 1c1de (7:41de)
+	INCBIN "maps/lavenderhouse2.blk"
 
 CeladonMansion5Blocks: ; 1c1ee (7:41ee)
 	INCBIN "maps/celadonmansion5.blk"
@@ -38729,64 +38746,91 @@ LavenderHouse1TextPointers: ; 1d8ac (7:58ac)
 	dw LavenderHouse1Text4
 	dw LavenderHouse1Text5
 	dw LavenderHouse1Text6
+	dw LavenderHouse1Text7
+
+LavenderHouse1Text7:
+	TX_FAR _LavenderHouse1Text7
+	db "@"
 
 LavenderHouse1Text1: ; 1d8b8 (7:58b8)
 	db $08 ; asm
-	ld a, [$d7e0]
-	bit 7, a
-	jr nz, .asm_72e5d ; 0x1d8be
-	ld hl, UnnamedText_1d8d1
-	call PrintText
-	jr .asm_6957f ; 0x1d8c6
-.asm_72e5d ; 0x1d8c8
-	ld hl, UnnamedText_1d8d6
-	call PrintText
-.asm_6957f ; 0x1d8ce
+	ld a, [W_NEWFLAGS2]
+	; found captain?
+	bit 1, a
+	ld hl, LavenderHouse1Text1_2
+	jr nz, .done
+	ld hl, LavenderHouse1Text1_1
+.done
+	call PrintText	
 	jp TextScriptEnd
 
-UnnamedText_1d8d1: ; 1d8d1 (7:58d1)
-	TX_FAR _UnnamedText_1d8d1
+LavenderHouse1Text1_1:
+	TX_FAR _LavenderHouse1Text1_1
 	db "@"
 
-UnnamedText_1d8d6: ; 1d8d6 (7:58d6)
-	TX_FAR _UnnamedText_1d8d6
+LavenderHouse1Text1_2:
+	TX_FAR _LavenderHouse1Text1_2
 	db "@"
 
-LavenderHouse1Text2: ; 1d8db (7:58db)
+LavenderHouse1Text2:
 	db $08 ; asm
-	ld a, [$d7e0]
-	bit 7, a
-	jr nz, .asm_06470 ; 0x1d8e1
-	ld hl, UnnamedText_1d8f4
-	call PrintText
-	jr .asm_3d208 ; 0x1d8e9
-.asm_06470 ; 0x1d8eb
-	ld hl, UnnamedText_1d8f9
-	call PrintText
-.asm_3d208 ; 0x1d8f1
+	ld a, [W_NEWFLAGS2]
+	; found captain?
+	bit 1, a
+	ld hl, LavenderHouse1Text2_2
+	jr nz, .done
+	ld hl, LavenderHouse1Text2_1
+.done
+	call PrintText	
 	jp TextScriptEnd
 
-UnnamedText_1d8f4: ; 1d8f4 (7:58f4)
-	TX_FAR _UnnamedText_1d8f4
+LavenderHouse1Text2_1:
+	TX_FAR _LavenderHouse1Text2_1
 	db "@"
 
-UnnamedText_1d8f9: ; 1d8f9 (7:58f9)
-	TX_FAR _UnnamedText_1d8f9
+LavenderHouse1Text2_2:
+	TX_FAR _LavenderHouse1Text2_2
 	db "@"
 
-LavenderHouse1Text3: ; 1d8fe (7:58fe)
-	TX_FAR _LavenderHouse1Text3
-	db $8
-	ld a, PSYDUCK
-	call PlayCry
+LavenderHouse1Text3:
+	db $08 ; asm
+	ld a, [W_NEWFLAGS2]
+	; found captain?
+	bit 1, a
+	ld hl, LavenderHouse1Text3_2
+	jr nz, .done
+	ld hl, LavenderHouse1Text3_1
+.done
+	call PrintText	
 	jp TextScriptEnd
 
-LavenderHouse1Text4: ; 1d90b (7:590b)
-	TX_FAR _LavenderHouse1Text4
-	db $8
-	ld a, NIDORINO
-	call PlayCry
+LavenderHouse1Text3_1:
+	TX_FAR _LavenderHouse1Text3_1
+	db "@"
+
+LavenderHouse1Text3_2:
+	TX_FAR _LavenderHouse1Text3_2
+	db "@"
+
+LavenderHouse1Text4:
+	db $08 ; asm
+	ld a, [W_NEWFLAGS2]
+	; found captain?
+	bit 1, a
+	ld hl, LavenderHouse1Text4_2
+	jr nz, .done
+	ld hl, LavenderHouse1Text4_1
+.done
+	call PrintText	
 	jp TextScriptEnd
+
+LavenderHouse1Text4_1:
+	TX_FAR _LavenderHouse1Text4_1
+	db "@"
+
+LavenderHouse1Text4_2:
+	TX_FAR _LavenderHouse1Text4_2
+	db "@"
 
 LavenderHouse1Text5: ; 1d918 (7:5918)
 	db $08 ; asm
@@ -38831,26 +38875,43 @@ MrFujiAfterFluteText: ; 1d960 (7:5960)
 	TX_FAR _MrFujiAfterFluteText
 	db "@"
 
-LavenderHouse1Text6: ; 1d965 (7:5965)
-	TX_FAR _LavenderHouse1Text6
+LavenderHouse1Text6:
+	db $08 ; asm
+	ld a, [W_NEWFLAGS2]
+	; found captain?
+	bit 1, a
+	ld hl, LavenderHouse1Text6_2
+	jr nz, .done
+	ld hl, LavenderHouse1Text6_1
+.done
+	call PrintText	
+	jp TextScriptEnd
+
+LavenderHouse1Text6_1:
+	TX_FAR _LavenderHouse1Text6_1
+	db "@"
+
+LavenderHouse1Text6_2:
+	TX_FAR _LavenderHouse1Text6_2
 	db "@"
 
 LavenderHouse1Object: ; 0x1d96a (size=56)
 	db $a ; border tile
 
 	db $2 ; warps
-	db $7, $2, $2, $ff
-	db $7, $3, $2, $ff
+	db $7, $2, $0, $ff
+	db $7, $3, $0, $ff
 
-	db $0 ; signs
+	db $1 ; signs
+	db $4, $3, $7
 
 	db $6 ; people
-	db SPRITE_BLACK_HAIR_BOY_2, $5 + 4, $3 + 4, $ff, $ff, $1 ; person
-	db SPRITE_LITTLE_GIRL, $3 + 4, $6 + 4, $ff, $d0, $2 ; person
-	db SPRITE_SLOWBRO, $4 + 4, $6 + 4, $ff, $d1, $3 ; person
-	db SPRITE_SLOWBRO, $3 + 4, $1 + 4, $ff, $ff, $4 ; person
-	db SPRITE_MR_FUJI, $1 + 4, $3 + 4, $ff, $ff, $5 ; person
-	db SPRITE_BOOK_MAP_DEX, $3 + 4, $3 + 4, $ff, $ff, $6 ; person
+	db SPRITE_SAILOR, $2 + 4, $3 + 4, $ff, $d0, $1 ; person
+	db SPRITE_SAILOR, $3 + 4, $2 + 4, $ff, $d3, $2 ; person
+	db SPRITE_SAILOR, $3 + 4, $5 + 4, $ff, $d2, $3 ; person
+	db SPRITE_SAILOR, $4 + 4, $2 + 4, $ff, $d3, $4 ; person
+	db SPRITE_SAILOR, $5 + 4, $3 + 4, $ff, $d1, $5 ; person
+	db SPRITE_SAILOR, $4 + 4, $5 + 4, $ff, $d2, $6 ; person
 
 	; warp-to
 	EVENT_DISP $4, $7, $2
@@ -38874,44 +38935,22 @@ LavenderHouse2TextPointers: ; 1d9b2 (7:59b2)
 LavenderHouse2Text1: ; 1d9b6 (7:59b6)
 	TX_FAR _LavenderHouse2Text1
 	db $8
-	ld a, CUBONE
+	ld a, DEWGONG
 	call PlayCry
 	jp TextScriptEnd
-
-LavenderHouse2Text2: ; 1d9c3 (7:59c3)
-	db $08 ; asm
-	ld a, [$d7e0]
-	bit 7, a
-	jr nz, .asm_65711 ; 0x1d9c9
-	ld hl, UnnamedText_1d9dc
-	call PrintText
-	jr .asm_64be1 ; 0x1d9d1
-.asm_65711 ; 0x1d9d3
-	ld hl, UnnamedText_1d9e1
-	call PrintText
-.asm_64be1 ; 0x1d9d9
-	jp TextScriptEnd
-
-UnnamedText_1d9dc: ; 1d9dc (7:59dc)
-	TX_FAR _UnnamedText_1d9dc
-	db "@"
-
-UnnamedText_1d9e1: ; 1d9e1 (7:59e1)
-	TX_FAR _UnnamedText_1d9e1
-	db "@"
 
 LavenderHouse2Object: ; 0x1d9e6 (size=32)
 	db $a ; border tile
 
 	db $2 ; warps
-	db $7, $2, $4, $ff
-	db $7, $3, $4, $ff
+	db $7, $2, $3, $ff
+	db $7, $3, $3, $ff
 
 	db $0 ; signs
 
 	db $2 ; people
-	db SPRITE_SLOWBRO, $5 + 4, $3 + 4, $ff, $d1, $1 ; person
-	db SPRITE_BRUNETTE_GIRL, $4 + 4, $2 + 4, $ff, $d3, $2 ; person
+	db SPRITE_SEEL, $3 + 4, $6 + 4, $ff, $ff, $1 ; person
+	db SPRITE_GIRL, $2 + 4, $4 + 4, $ff, $d0, $2 ; person
 
 	; warp-to
 	EVENT_DISP $4, $7, $2
@@ -38958,7 +38997,48 @@ Func_1da20: ; 1da20 (7:5a20)
 NameRaterTextPointers: ; 1da54 (7:5a54)
 	dw NameRaterText1
 
-NameRaterText1: ; 1da56 (7:5a56)
+NameRaterText1:
+	db $08 ; asm
+	ld a, [W_NEWFLAGS2]
+	bit 2, a
+	jr nz, .receivedHM06
+	ld hl, RubyDocksOutpostText2
+	call PrintText
+	ld bc,(HM_06 << 8) | 1
+	call GiveItem
+	jr nc, .BagFull
+	ld hl, ReceivedHM06Text
+	call PrintText
+	ld hl, W_NEWFLAGS2
+	set 2, [hl]
+	jr .done
+.BagFull
+	ld hl, RubyDocksOutpostFull
+	call PrintText
+	jr .done
+.receivedHM06
+	ld hl, RubyDocksOutpostText1
+	call PrintText
+.done
+	jp TextScriptEnd
+
+RubyDocksOutpostText1:
+	TX_FAR RubyDocksOutpostText1_
+	db "@"
+
+RubyDocksOutpostText2:
+	TX_FAR RubyDocksOutpostText2_
+	db "@"
+
+RubyDocksOutpostFull:
+	TX_FAR RubyDocksOutpostFull_
+	db "@"
+
+ReceivedHM06Text:
+	TX_FAR ReceivedHM06Text_
+	db "@"
+
+NameRaterText1Old: ; 1da56 (7:5a56)
 	db $8
 	call SaveScreenTilesToBuffer2
 	ld hl, UnnamedText_1dab3
@@ -39030,13 +39110,13 @@ NameRaterObject: ; 0x1dad6 (size=26)
 	db $a ; border tile
 
 	db $2 ; warps
-	db $7, $2, $5, $ff
-	db $7, $3, $5, $ff
+	db $7, $2, $1, $ff
+	db $7, $3, $1, $ff
 
 	db $0 ; signs
 
 	db $1 ; people
-	db SPRITE_MR_MASTERBALL, $3 + 4, $5 + 4, $ff, $d2, $1 ; person
+	db SPRITE_SAILOR, $1 + 4, $5 + 4, $ff, $d1, $1 ; person
 
 	; warp-to
 	EVENT_DISP $4, $7, $2
@@ -44456,7 +44536,7 @@ SquirtleBaseStats: ; 38486 (e:4486)
 	db %11001000
 	db %10000011
 	db %00001000
-	db %00110010
+	db %10110010
 
 	db Bank(SquirtlePicFront)
 
@@ -44493,7 +44573,7 @@ WartortleBaseStats: ; 384a2 (e:44a2)
 	db %11001000
 	db %10000011
 	db %00001000
-	db %00110010
+	db %10110010
 
 	db Bank(WartortlePicFront)
 
@@ -44530,7 +44610,7 @@ BlastoiseBaseStats: ; 384be (e:44be)
 	db %11001110
 	db %10000011
 	db %00001000
-	db %00110010
+	db %10110010
 
 	db Bank(BlastoisePicFront)
 
@@ -46195,7 +46275,7 @@ PsyduckBaseStats: ; 389aa (e:49aa)
 	db %11001000
 	db %11000010
 	db %00001000
-	db %00110010
+	db %10110010
 
 	db Bank(PsyduckPicFront)
 
@@ -46232,7 +46312,7 @@ GolduckBaseStats: ; 389c6 (e:49c6)
 	db %11001000
 	db %11000010
 	db %00001000
-	db %00110010
+	db %10110010
 
 	db Bank(GolduckPicFront)
 
@@ -46417,7 +46497,7 @@ PoliwagBaseStats: ; 38a52 (e:4a52)
 	db %11010000
 	db %10000010
 	db %00101000
-	db %00010010
+	db %10010010
 
 	db Bank(PoliwagPicFront)
 
@@ -46454,7 +46534,7 @@ PoliwhirlBaseStats: ; 38a6e (e:4a6e)
 	db %11010110
 	db %10000110
 	db %00101000
-	db %00110010
+	db %10110010
 
 	db Bank(PoliwhirlPicFront)
 
@@ -46491,7 +46571,7 @@ PoliwrathBaseStats: ; 38a8a (e:4a8a)
 	db %11010110
 	db %10000110
 	db %00101000
-	db %00110010
+	db %10110010
 
 	db Bank(PoliwrathPicFront)
 
@@ -46861,7 +46941,7 @@ TentacoolBaseStats: ; 38ba2 (e:4ba2)
 	db %11000000
 	db %10000011
 	db %00001000
-	db %00010110
+	db %10010110
 
 	db Bank(TentacoolPicFront)
 
@@ -46898,7 +46978,7 @@ TentacruelBaseStats: ; 38bbe (e:4bbe)
 	db %11000000
 	db %10000011
 	db %00001000
-	db %00010110
+	db %10010110
 
 	db Bank(TentacruelPicFront)
 
@@ -47120,7 +47200,7 @@ SlowpokeBaseStats: ; 38c66 (e:4c66)
 	db %11111110
 	db %11100011
 	db %00111000
-	db %01110011
+	db %11110011
 
 	db Bank(SlowpokePicFront)
 
@@ -47157,7 +47237,7 @@ SlowbroBaseStats: ; 38c82 (e:4c82)
 	db %11111110
 	db %11100011
 	db %00111000
-	db %01110011
+	db %11110011
 
 	db Bank(SlowbroPicFront)
 
@@ -47379,7 +47459,7 @@ SeelBaseStats: ; 38d2a (e:4d2a)
 	db %11000000
 	db %10000010
 	db %00001000
-	db %00110010
+	db %10110010
 
 	db Bank(SeelPicFront)
 
@@ -47416,7 +47496,7 @@ DewgongBaseStats: ; 38d46 (e:4d46)
 	db %11000000
 	db %10000010
 	db %00001000
-	db %00110010
+	db %10110010
 
 	db Bank(DewgongPicFront)
 
@@ -47527,7 +47607,7 @@ ShellderBaseStats: ; 38d9a (e:4d9a)
 	db %11100000
 	db %01001011
 	db %01001000
-	db %00010011
+	db %10010011
 
 	db Bank(ShellderPicFront)
 
@@ -47564,7 +47644,7 @@ CloysterBaseStats: ; 38db6 (e:4db6)
 	db %11100000
 	db %01001011
 	db %01001000
-	db %00010011
+	db %10010011
 
 	db Bank(CloysterPicFront)
 
@@ -47823,7 +47903,7 @@ KrabbyBaseStats: ; 38e7a (e:4e7a)
 	db %11000000
 	db %00000010
 	db %00001000
-	db %00110110
+	db %10110110
 
 	db Bank(KrabbyPicFront)
 
@@ -47860,7 +47940,7 @@ KinglerBaseStats: ; 38e96 (e:4e96)
 	db %11000000
 	db %00000010
 	db %00001000
-	db %00110110
+	db %10110110
 
 	db Bank(KinglerPicFront)
 
@@ -48489,7 +48569,7 @@ HorseaBaseStats: ; 39072 (e:5072)
 	db %11000000
 	db %11000010
 	db %00001000
-	db %00010010
+	db %10010010
 
 	db Bank(HorseaPicFront)
 
@@ -48526,7 +48606,7 @@ SeadraBaseStats: ; 3908e (e:508e)
 	db %11000000
 	db %11000010
 	db %00001000
-	db %00010010
+	db %10010010
 
 	db Bank(SeadraPicFront)
 
@@ -48563,7 +48643,7 @@ GoldeenBaseStats: ; 390aa (e:50aa)
 	db %11000000
 	db %11000010
 	db %00001000
-	db %00010010
+	db %10010010
 
 	db Bank(GoldeenPicFront)
 
@@ -48600,7 +48680,7 @@ SeakingBaseStats: ; 390c6 (e:50c6)
 	db %11000000
 	db %11000010
 	db %00001000
-	db %00010010
+	db %10010010
 
 	db Bank(SeakingPicFront)
 
@@ -48637,7 +48717,7 @@ StaryuBaseStats: ; 390e2 (e:50e2)
 	db %11110001
 	db %11000011
 	db %00111000
-	db %01010011
+	db %11010011
 
 	db Bank(StaryuPicFront)
 
@@ -48674,7 +48754,7 @@ StarmieBaseStats: ; 390fe (e:50fe)
 	db %11110001
 	db %11000011
 	db %00111000
-	db %01010011
+	db %11010011
 
 	db Bank(StarmiePicFront)
 
@@ -49007,7 +49087,7 @@ GyaradosBaseStats: ; 391fa (e:51fa)
 	db %11000001
 	db %10100011
 	db %00001000
-	db %00110010
+	db %10110010
 
 	db Bank(GyaradosPicFront)
 
@@ -49044,7 +49124,7 @@ LaprasBaseStats: ; 39216 (e:5216)
 	db %11010001
 	db %10000011
 	db %00101000
-	db %00110010
+	db %10110010
 
 	db Bank(LaprasPicFront)
 
@@ -49155,7 +49235,7 @@ VaporeonBaseStats: ; 3926a (e:526a)
 	db %11000000
 	db %11000011
 	db %00001000
-	db %00010010
+	db %10010010
 
 	db Bank(VaporeonPicFront)
 
@@ -49303,7 +49383,7 @@ OmanyteBaseStats: ; 392da (e:52da)
 	db %11000000
 	db %00000011
 	db %00001000
-	db %00010010
+	db %10010010
 
 	db Bank(OmanytePicFront)
 
@@ -49340,7 +49420,7 @@ OmastarBaseStats: ; 392f6 (e:52f6)
 	db %11000000
 	db %10000011
 	db %00001000
-	db %00010010
+	db %10010010
 
 	db Bank(OmastarPicFront)
 
@@ -49414,7 +49494,7 @@ KabutopsBaseStats: ; 3932e (e:532e)
 	db %11000000
 	db %10000011
 	db %00001000
-	db %00010010
+	db %10010010
 
 	db Bank(KabutopsPicFront)
 
@@ -49710,7 +49790,7 @@ DragoniteBaseStats: ; 3940e (e:540e)
 	db %11000001
 	db %11100011
 	db %00011000
-	db %00110010
+	db %10110010
 
 	db Bank(DragonitePicFront)
 
@@ -68281,10 +68361,10 @@ LavenderTownObject: ; 0x4402d (size=88)
 
 	db $5 ; warps
 	db $3, $3, $0, LAVENDER_HOUSE_1
-	db $7, $f, $0, LAVENDER_HOUSE_2
+	db $7, $f, $0, NAME_RATERS_HOUSE
 	db $9, $7, $0, LAVENDER_POKECENTER
-	db $d, $3, $0, NAME_RATERS_HOUSE
-	db $d, $d, $0, LAVENDER_HOUSE_2
+	db $d, $3, $0, LAVENDER_HOUSE_2
+	db $d, $d, $0, NAME_RATERS_HOUSE
 
 	db $3 ; signs
 	db $3, $7, $4 ; LavenderTownText4
@@ -68298,9 +68378,9 @@ LavenderTownObject: ; 0x4402d (size=88)
 
 	; warp-to
 	EVENT_DISP LAVENDER_TOWN_WIDTH, $3, $3 ; LAVENDER_HOUSE_1
-	EVENT_DISP LAVENDER_TOWN_WIDTH, $7, $f ; LAVENDER_HOUSE_2
+	EVENT_DISP LAVENDER_TOWN_WIDTH, $7, $f ; NAME_RATERS_HOUSE
 	EVENT_DISP LAVENDER_TOWN_WIDTH, $9, $7 ; LAVENDER_POKECENTER
-	EVENT_DISP LAVENDER_TOWN_WIDTH, $d, $3 ; NAME_RATERS_HOUSE
+	EVENT_DISP LAVENDER_TOWN_WIDTH, $d, $3 ; LAVENDER_HOUSE_2
 	EVENT_DISP LAVENDER_TOWN_WIDTH, $d, $d ; LAVENDER_HOUSE_2
 
 LavenderTownBlocks: ; 44085 (11:4085)
@@ -92267,7 +92347,7 @@ LavenderMartScript: ; 5c92c (17:492c)
 	jp EnableAutoTextBoxDrawing
 
 LavenderMartTextPointers: ; 5c92f (17:492f)
-	dw LavenderMartText1
+	dw LavenderMartText2
 	dw LavenderMartText2
 	dw LavenderMartText3
 
@@ -117483,6 +117563,13 @@ _MaxElixerDescription::
 	text "Fully restores PP"
 	line "of all moves of"
 	cont "one #MON."
+	prompt
+
+_HM06Description::
+	text "HM06 - DIVE"
+	line "Use out of battle"
+	cont "to dive into deep"
+	cont "water."
 	prompt
 
 _HM01Description::

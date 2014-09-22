@@ -76,7 +76,6 @@ EXP__ALL      EQU $4B
 OLD_ROD       EQU $4C
 GOOD_ROD      EQU $4D
 SUPER_ROD     EQU $4E
-; XXX todo: compare this to $32
 PP_UP         EQU $4F
 ETHER         EQU $50
 MAX_ETHER     EQU $51
@@ -106,6 +105,7 @@ BOOSTER_RING  EQU $68
 SHINY_RING    EQU $69
 SHINY_BALL    EQU $6A
 
+HM_06         EQU $C3
 HM_01         EQU $C4
 HM_02         EQU $C5
 HM_03         EQU $C6

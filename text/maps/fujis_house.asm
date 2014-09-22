@@ -1,37 +1,88 @@
-_UnnamedText_1d8d1:: ; 99e8d (26:5e8d)
-	text "That's odd, MR.FUJI"
-	line "isn't here."
-	cont "Where'd he go?"
+_LavenderHouse1Text1_1::
+	text "Ever since the"
+	line "Captain went"
+	cont "missing, we've"
+	cont "been lost!"
+
+	para "We SEAFARERs"
+	line "are nothing"
+	cont "without him!"
 	done
 
-_UnnamedText_1d8d6:: ; 99eba (26:5eba)
-	text "MR.FUJI had been"
-	line "praying alone for"
-	cont "CUBONE's mother."
+_LavenderHouse1Text1_2::
+	text "The Captain be"
+	line "back!"
+
+	para "We can sail all"
+	line "night and day"
+	cont "at long last!"
 	done
 
-_UnnamedText_1d8f4:: ; 99eee (26:5eee)
-	text "This is really"
-	line "MR.FUJI's house."
-
-	para "He's really kind!"
-
-	para "He looks after"
-	line "abandoned and"
-	cont "orphaned #MON!"
+_LavenderHouse1Text2_1::
+	text "Sailing without"
+	line "the Captain is"
+	cont "impossible!"
 	done
 
-_UnnamedText_1d8f9:: ; 99f4b (26:5f4b)
-	text "It's so warm!"
-	line "#MON are so"
-	cont "nice to hug!"
+_LavenderHouse1Text2_2::
+	text "Nothing is"
+	line "impossible when"
+	cont "the SEAFARER"
+	cont "Captain is here!"
+
+	para "Hip hip..."
+	line "HOORAH!"
 	done
 
-_LavenderHouse1Text3:: ; 99f72 (26:5f72)
-	text "PSYDUCK: Gwappa!@@"
+_LavenderHouse1Text3_1::
+	text "Ahoy, matey."
 
-_LavenderHouse1Text4:: ; 99f85 (26:5f85)
-	text "NIDORINO: Gaoo!@@"
+	para "We be lost in"
+	line "these endless"
+	cont "seas without our"
+	cont "Captain."
+
+	para "We don't know"
+	line "where he be, or"
+	cont "whether he will"
+	cont "come back!"
+	done
+
+_LavenderHouse1Text3_2::
+	text "Yaargh!"
+
+	para "Our Captain never"
+	line "abandoned us!"
+
+	para "Bless his scurvy"
+	line "heart!"
+	done
+
+_LavenderHouse1Text4_1::
+	text "Blast!"
+
+	para "This map be no"
+	line "use to us!"
+
+	para "There be no"
+	line "markings to the"
+	cont "west!"
+
+	para "Our Captain would"
+	line "know what to do,"
+	cont "but he vanished"
+	cont "not more than a"
+	cont "fortnight ago."
+	done
+
+_LavenderHouse1Text4_2::
+	text "Of course!"
+
+	para "The map is clear!"
+
+	para "We can finally"
+	line "sail westward!"
+	done
 
 _UnnamedText_1d94c:: ; 99f97 (26:5f97)
 	text "MR.FUJI: ", $52, "."
@@ -72,15 +123,37 @@ _MrFujiAfterFluteText:: ; 9a087 (26:6087)
 	line "FLUTE helped you?"
 	done
 
-_LavenderHouse1Text6:: ; 9a0aa (26:60aa)
-	text "#MON Monthly"
-	line "Grand Prize"
-	cont "Drawing!"
+_LavenderHouse1Text6_1::
+	text "We be the"
+	line "SEAFARER COVENANT"
+	cont "of RUBY DOCKS!"
 
-	para "The application"
-	line "form is..."
+	para "There be secrets"
+	line "to the west, but"
+	cont "the will of the"
+	cont "sea is unkind."
 
-	para "Gone! It's been"
-	line "clipped out!"
+	para "Our Captain would"
+	line "set our course"
+	cont "straight if he"
+	cont "were here."
 	done
 
+_LavenderHouse1Text6_2::
+	text "Neptune's beard!"
+
+	para "The Captain has"
+	line "returned!"
+
+	para "The will of the"
+	line "sea has changed!"
+	done
+
+_LavenderHouse1Text7::
+	text "It's a map of the"
+	line "SEA ROUTE west of"
+	cont "RUBY DOCKS."
+
+	para "The western half"
+	line "is uncharted."
+	done

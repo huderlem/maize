@@ -1490,6 +1490,8 @@ W_NUZLOCKE_MAP_FLAGS::
 W_NEWFLAGS2::
 	ds 1
 	; 0: gave shrubber his glasses
+	; 1: found the Seafarer Captain
+	; 2: received HM06 Dive
 	
 
 W_COVENANT::
