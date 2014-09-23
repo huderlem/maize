@@ -290,7 +290,7 @@ MapHeaderPointers:: ; 01ae (0:01ae)
 	dw SSAnne10_h
 	dw DeepSea1_h
 	dw DeepSea2_h
-	dw Lance_h ; unused
+	dw DeepSea3_h
 	dw VictoryRoad1_h
 	dw Lance_h ; unused
 	dw Lance_h ; unused ;id=110
@@ -15415,9 +15415,10 @@ DungeonWarpList: ; 63bf (1:63bf)
 	db MANSION_1,$01
 	db MANSION_1,$02
 	db MANSION_2,$03
-	db DEEP_SEA_1,$01
+	;db DEEP_SEA_1,$01
     db DEEP_SEA_2,$00
     db DEEP_SEA_2,$01
+    db DEEP_SEA_3,$00
 	db $FF
 
 DungeonWarpData: ; 63d8 (1:63d8)
@@ -15433,9 +15434,9 @@ DungeonWarpData: ; 63d8 (1:63d8)
 	FLYWARP_DATA MANSION_1_WIDTH,14,16
 	FLYWARP_DATA MANSION_1_WIDTH,14,16
 	FLYWARP_DATA MANSION_2_WIDTH,14,18
-	FLYWARP_DATA DEEP_SEA_1_WIDTH,13,15
     FLYWARP_DATA DEEP_SEA_2_WIDTH,3,5
     FLYWARP_DATA DEEP_SEA_2_WIDTH,23,7
+    FLYWARP_DATA DEEP_SEA_3_WIDTH,3, 25
 
 ;Format:
 ;	db Map_id
@@ -18917,7 +18918,7 @@ MapSongBanks: ; c04d (3:404d)
 	db MUSIC_SS_ANNE, BANK(Music_SSAnne) ; SSAnne10
 	db MUSIC_DUNGEON2, BANK(Music_Dungeon2) ; DeepSea1
 	db MUSIC_DUNGEON2, BANK(Music_Dungeon2) ; DeepSea2
-	db MUSIC_SS_ANNE, BANK(Music_SSAnne) ;unused
+	db MUSIC_DUNGEON2, BANK(Music_Dungeon2) ; DeepSea3
 	db MUSIC_DUNGEON3, BANK(Music_Dungeon3) ; VictoryRoad1
 	db MUSIC_POKEMON_TOWER, BANK(Music_PokemonTower) ;unused
 	db MUSIC_DUNGEON1, BANK(Music_Dungeon1) ;unused
@@ -19168,7 +19169,7 @@ MapHeaderBanks: ; c23d (3:423d)
 	db BANK(SSAnne10_h)
 	db BANK(DeepSea1_h)
 	db BANK(DeepSea2_h)
-	db $1D ;unused
+	db BANK(DeepSea3_h)
 	db BANK(VictoryRoad1_h)
 	db $1D ;unused
 	db $1D ;unused
@@ -19442,6 +19443,7 @@ ForcedBikeOrSurfMaps: ; c3e6 (3:43e6)
 ForceSurfMaps:
 	db DEEP_SEA_1
     db DEEP_SEA_2
+    db DEEP_SEA_3
 	db $FF ; terminator
 
 Func_c3ff: ; c3ff (3:43ff)
@@ -20200,7 +20202,7 @@ MapHSPointers: ; c8f5 (3:48f5)
 	dw MapHSXX
 	dw MapHS0D
 	dw MapHSXX
-	dw MapHS0F
+	dw MapHSXX
 	dw MapHSXX
 	dw MapHSXX
 	dw MapHSXX
@@ -20292,7 +20294,7 @@ MapHSPointers: ; c8f5 (3:48f5)
 	dw MapHS68
 	dw MapHSXX
 	dw MapHSXX
-	dw MapHSXX
+	dw MapHS6B
 	dw MapHS6C
 	dw MapHSXX
 	dw MapHSXX
@@ -20484,8 +20486,9 @@ MapHS0A: ; cb08 (3:4b08)
 MapHS0D: ; cb35 (3:4b35)
 	db ROUTE_2,$01,Show
 	db ROUTE_2,$02,Show
-MapHS0F: ; cb3b (3:4b3b)
-	db ROUTE_4,$03,Show
+; DEEP_SEA_3 item
+MapHS6B:
+	db DEEP_SEA_3,$01,Show
 MapHS14: ; cb3e (3:4b3e)
 	db ROUTE_9,$0A,Show
 MapHS17: ; cb41 (3:4b41)
@@ -29129,16 +29132,9 @@ StartMenu_Pokemon: ; 130a9 (4:70a9)
 	db "@"
 
 .DiveData:
-	dbw CELADON_CITY, .CeladonCityDive
     dbw ROUTE_21, .Route21Dive
+    dbw LAVENDER_TOWN, .RubyDocksDive
 	db $ff ; terminator
-
-.CeladonCityDive:
-	db $a, $c, DEEP_SEA_1, 1
-	db $b, $c, DEEP_SEA_1, 1
-	db $a, $d, DEEP_SEA_1, 1
-	db $b, $d, DEEP_SEA_1, 1
-	db $ff
 
 .Route21Dive:
     db $8, $36, DEEP_SEA_2, 0
@@ -29151,6 +29147,13 @@ StartMenu_Pokemon: ; 130a9 (4:70a9)
     db $a, $47, DEEP_SEA_2, 1
     db $b, $47, DEEP_SEA_2, 1
     db $ff
+
+.RubyDocksDive:
+	db $8, $12, DEEP_SEA_3, 0
+	db $9, $12, DEEP_SEA_3, 0
+	db $8, $13, DEEP_SEA_3, 0
+	db $9, $13, DEEP_SEA_3, 0
+	db $ff
 
 .surf
 	bit 4,a ; does the player have the Soul Badge?
@@ -68359,12 +68362,13 @@ LavenderTown_h: ; 0x44000 to 0x4402d (45 bytes) (bank=11) (id=4)
 LavenderTownObject: ; 0x4402d (size=88)
 	db $43 ; border tile
 
-	db $5 ; warps
+	db $6 ; warps
 	db $3, $3, $0, LAVENDER_HOUSE_1
 	db $7, $f, $0, NAME_RATERS_HOUSE
 	db $9, $7, $0, LAVENDER_POKECENTER
 	db $d, $3, $0, LAVENDER_HOUSE_2
 	db $d, $d, $0, NAME_RATERS_HOUSE
+	db $12, $8, $0, DEEP_SEA_3
 
 	db $3 ; signs
 	db $3, $7, $4 ; LavenderTownText4
@@ -68382,6 +68386,7 @@ LavenderTownObject: ; 0x4402d (size=88)
 	EVENT_DISP LAVENDER_TOWN_WIDTH, $9, $7 ; LAVENDER_POKECENTER
 	EVENT_DISP LAVENDER_TOWN_WIDTH, $d, $3 ; LAVENDER_HOUSE_2
 	EVENT_DISP LAVENDER_TOWN_WIDTH, $d, $d ; LAVENDER_HOUSE_2
+	EVENT_DISP LAVENDER_TOWN_WIDTH, $12, $8 ; DEEP_SEA_3
 
 LavenderTownBlocks: ; 44085 (11:4085)
 	INCBIN "maps/lavendertown.blk"
@@ -82405,8 +82410,6 @@ Route4Object: ; 0x543b2 (size=58)
 
 	db $1 ; people
 	db SPRITE_GIRL, $d + 4, $10 + 4, $fe, $0, $1 ; person
-	; db SPRITE_LASS, $3 + 4, $3f + 4, $ff, $d3, $42, LASS + $C8, $4 ; trainer
-	; db SPRITE_BALL, $3 + 4, $39 + 4, $ff, $ff, $83, TM_04 ; item TODO: unused item slot!
 
 	; warp-to
 	EVENT_DISP $2d, $2, $b ; MT_MOON_POKECENTER
@@ -109790,6 +109793,42 @@ DeepSea2Object:
     ; warp-to
     EVENT_DISP DEEP_SEA_2_WIDTH, $3, $5 ; ROUTE_21
     EVENT_DISP DEEP_SEA_2_WIDTH, $17, $7 ; ROUTE_21
+
+DeepSea3_h:
+    db $0c ; tileset
+    db DEEP_SEA_3_HEIGHT, DEEP_SEA_3_WIDTH ; dimensions (y, x)
+    dw DeepSea3Blocks, DeepSea3TextPointers, DeepSea3Script ; blocks, texts, scripts
+    db $00 ; connections
+    dw DeepSea3Object ; objects
+
+DeepSea3Blocks:
+	INCBIN "maps/deepsea3.blk"
+
+DeepSea3TextPointers:
+	dw Predef5CText
+
+DeepSea3Script:
+    ld a, [$d700]
+    cp 2
+    jr z, .done
+    ld a,2
+    ld [$d700],a ; change player state to surfing
+.done
+    jp EnableAutoTextBoxDrawing
+
+DeepSea3Object:
+    db $1d ; border tile
+
+    db $1 ; warps
+    db $3, $19, $5, LAVENDER_TOWN
+	
+    db $0 ; signs
+
+    db $1 ; people
+    db SPRITE_BALL, $18 + 4, $1a + 4, $ff, $ff, $81, FOCUS_RING
+
+    ; warp-to
+    EVENT_DISP DEEP_SEA_3_WIDTH, $3, $19 ; RUBY_DOCKS
 
 SECTION "bank1E",ROMX,BANK[$1E]
 
