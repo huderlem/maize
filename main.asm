@@ -92331,8 +92331,8 @@ LavenderPokecenterObject: ; 0x5c8f4 (size=44)
 
 	db $4 ; people
 	db SPRITE_NURSE, $1 + 4, $3 + 4, $ff, $d0, $1 ; person
-	db SPRITE_GENTLEMAN, $3 + 4, $5 + 4, $ff, $ff, $2 ; person
-	db SPRITE_LITTLE_GIRL, $6 + 4, $2 + 4, $fe, $1, $3 ; person
+	db SPRITE_SAILOR, $3 + 4, $5 + 4, $ff, $ff, $2 ; person  TODO: do the vaporeon event
+	db SPRITE_LITTLE_GIRL, $6 + 4, $2 + 4, $fe, $2, $3 ; person
 	db SPRITE_CABLE_CLUB_WOMAN, $2 + 4, $b + 4, $ff, $d0, $4 ; person
 
 	; warp-to

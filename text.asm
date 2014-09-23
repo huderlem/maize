@@ -416,11 +416,18 @@ _CeruleanPokecenterGuyText:: ; 88353 (22:4353)
 	done
 
 _LavenderPokecenterGuyText:: ; 88386 (22:4386)
-	text "CUBONEs wear"
-	line "skulls, right?"
+	text "Surfing west of"
+	line "here is tricky."
 
-	para "People will pay a"
-	line "lot for one!"
+	para "If you don't know"
+	line "know the waters,"
+	cont "you're not going"
+	cont "to find your way."
+
+	para "The SEAFARERs are"
+	line "the only people I"
+	cont "know that can"
+	cont "navigate through!"
 	done
 
 _MtMoonPokecenterBenchGuyText:: ; 883c2 (22:43c2)
