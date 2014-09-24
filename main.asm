@@ -15418,7 +15418,8 @@ DungeonWarpList: ; 63bf (1:63bf)
 	db MANSION_1,$01
 	db MANSION_1,$02
 	db MANSION_2,$03
-	;db DEEP_SEA_1,$01
+	db DEEP_SEA_1,$00
+	db DEEP_SEA_1,$01
     db DEEP_SEA_2,$00
     db DEEP_SEA_2,$01
     db DEEP_SEA_3,$00
@@ -15437,6 +15438,8 @@ DungeonWarpData: ; 63d8 (1:63d8)
 	FLYWARP_DATA MANSION_1_WIDTH,14,16
 	FLYWARP_DATA MANSION_1_WIDTH,14,16
 	FLYWARP_DATA MANSION_2_WIDTH,14,18
+	FLYWARP_DATA DEEP_SEA_1_WIDTH,13,15
+	FLYWARP_DATA DEEP_SEA_1_WIDTH,5,3
     FLYWARP_DATA DEEP_SEA_2_WIDTH,3,5
     FLYWARP_DATA DEEP_SEA_2_WIDTH,23,7
     FLYWARP_DATA DEEP_SEA_3_WIDTH,3, 25
@@ -18579,10 +18582,10 @@ Func_7aa5: ; 7aa5 (1:7aa5)
 	jp Func_7aa5
 
 PlayersPCMenuEntries: ; 7af5 (1:7af5)
-	db   "WITHDRAW ITEM"
-	next "DEPOSIT ITEM"
-	next "TOSS ITEM"
-	next "LOG OFF@"
+	db   "WITHDRAW"
+	next "DEPOSIT"
+	next "TOSS"
+	next "LOGOUT@"
 
 UnnamedText_7b22: ; 7b22 (1:7b22)
 	TX_FAR _UnnamedText_7b22
@@ -29135,9 +29138,22 @@ StartMenu_Pokemon: ; 130a9 (4:70a9)
 	db "@"
 
 .DiveData:
+	dbw ROUTE_7, .Route7Dive
     dbw ROUTE_21, .Route21Dive
     dbw LAVENDER_TOWN, .RubyDocksDive
 	db $ff ; terminator
+
+.Route7Dive:
+	db $10, $6, DEEP_SEA_1, 0
+    db $11, $6, DEEP_SEA_1, 0
+    db $10, $7, DEEP_SEA_1, 0
+    db $11, $7, DEEP_SEA_1, 0
+
+    db $6, $6, DEEP_SEA_1, 1
+    db $7, $6, DEEP_SEA_1, 1
+    db $6, $7, DEEP_SEA_1, 1
+    db $7, $7, DEEP_SEA_1, 1
+    db $ff
 
 .Route21Dive:
     db $8, $36, DEEP_SEA_2, 0
@@ -29451,339 +29467,11 @@ StartMenu_Item: ; 13302 (4:7302)
 	jp ItemMenuLoop
 .infoItem
 	ld a,[$cf91]
-	call DisplayItemInfo
+	ld d, a
+	ld hl, DisplayItemInfo
+	ld b, Bank(DisplayItemInfo)
+	call Bankswitch
 	jp ItemMenuLoop
-
-DisplayItemInfo:
-; a = item id
-	dec a
-	cp a, MAX_ELIXER
-	jr c, .ready
-
-	cp a, HM_06 - 1
-	jr nc, .TMHM
-	sub $e ; FOCUS_RING's id is now $54
-	jr .ready
-.TMHM
-	sub $6f - 9 ; HM_01's id is now $54 + 9 ; CHANGE THIS EVERY TIME YOU ADD A NEW ITEM AFTER ID $62
-.ready
-	ld hl,ItemInfoPointers
-	ld bc, 5
-.add
-	and a
-	jr z, .doneAdding
-	dec a
-	add hl, bc
-	jr .add
-.doneAdding
-	call PrintText
-	ret
-
-ItemInfoPointers:
-	TX_FAR _MasterBallDescription
-	db "@"
-	TX_FAR _UltraBallDescription
-	db "@"
-	TX_FAR _GreatBallDescription
-	db "@"
-	TX_FAR _PokeBallDescription
-	db "@"
-	TX_FAR _TownMapDescription
-	db "@"
-	TX_FAR _BicycleDescription
-	db "@"
-	TX_FAR _SurfboardDescription
-	db "@"
-	TX_FAR _SafariBallDescription
-	db "@"
-	TX_FAR _PokedexDescription
-	db "@"
-	TX_FAR _MoonStoneDescription
-	db "@"
-	TX_FAR _AntidoteDescription
-	db "@"
-	TX_FAR _BurnHealDescription
-	db "@"
-	TX_FAR _IceHealDescription
-	db "@"
-	TX_FAR _AwakeningDescription
-	db "@"
-	TX_FAR _ParalyzeHealDescription
-	db "@"
-	TX_FAR _FullRestoreDescription
-	db "@"
-	TX_FAR _MaxPotionDescription
-	db "@"
-	TX_FAR _HyperPotionDescription
-	db "@"
-	TX_FAR _SuperPotionDescription
-	db "@"
-	TX_FAR _PotionDescription
-	db "@"
-	TX_FAR _LostKeysDescription
-	db "@"
-	TX_FAR _SlaveBallDescription
-	db "@"
-	TX_FAR _ThunderBadgeDescription
-	db "@"
-	TX_FAR _RainbowBadgeDescription
-	db "@"
-	TX_FAR _SoulBadgeDescription
-	db "@"
-	TX_FAR _MarshBadgeDescription
-	db "@"
-	TX_FAR _VolcanoBadgeDescription
-	db "@"
-	TX_FAR _EarthBadgeDescription
-	db "@"
-	TX_FAR _EscapeRopeDescription
-	db "@"
-	TX_FAR _RepelDescription
-	db "@"
-	TX_FAR _OldAmberDescription
-	db "@"
-	TX_FAR _FireStoneDescription
-	db "@"
-	TX_FAR _ThunderStoneDescription
-	db "@"
-	TX_FAR _WaterStoneDescription
-	db "@"
-	TX_FAR _HPUpDescription
-	db "@"
-	TX_FAR _ProteinDescription
-	db "@"
-	TX_FAR _IronDescription
-	db "@"
-	TX_FAR _CarbosDescription
-	db "@"
-	TX_FAR _CalciumDescription
-	db "@"
-	TX_FAR _RareCandyDescription
-	db "@"
-	TX_FAR _DomeFossilDescription
-	db "@"
-	TX_FAR _HelixFossilDescription
-	db "@"
-	TX_FAR _SecretKeyDescription
-	db "@"
-	TX_FAR _ItemStoneDescription
-	db "@"
-	TX_FAR _BikeVoucherDescription
-	db "@"
-	TX_FAR _XAccuracyDescription
-	db "@"
-	TX_FAR _LeafStoneDescription
-	db "@"
-	TX_FAR _CardKeyDescription
-	db "@"
-	TX_FAR _NuggetDescription
-	db "@"
-	TX_FAR _ScouterRingDescription
-	db "@"
-	TX_FAR _PokeDollDescription
-	db "@"
-	TX_FAR _FullHealDescription
-	db "@"
-	TX_FAR _ReviveDescription
-	db "@"
-	TX_FAR _MaxReviveDescription
-	db "@"
-	TX_FAR _GuardSpecDescription
-	db "@"
-	TX_FAR _SuperRepelDescription
-	db "@"
-	TX_FAR _MaxRepelDescription
-	db "@"
-	TX_FAR _DireHitDescription
-	db "@"
-	TX_FAR _CoinDescription
-	db "@"
-	TX_FAR _FreshWaterDescription
-	db "@"
-	TX_FAR _SodaPopDescription
-	db "@"
-	TX_FAR _LemonadeDescription
-	db "@"
-	TX_FAR _SSTicketDescription
-	db "@"
-	TX_FAR _GoldTeethDescription
-	db "@"
-	TX_FAR _XAttackDescription
-	db "@"
-	TX_FAR _XDefendDescription
-	db "@"
-	TX_FAR _XSpeedDescription
-	db "@"
-	TX_FAR _XSpecialDescription
-	db "@"
-	TX_FAR _CoinCaseDescription
-	db "@"
-	TX_FAR _OaksParcelDescription
-	db "@"
-	TX_FAR _ItemFinderDescription
-	db "@"
-	TX_FAR _SilphScopeDescription
-	db "@"
-	TX_FAR _PokeFluteDescription
-	db "@"
-	TX_FAR _LiftKeyDescription
-	db "@"
-	TX_FAR _EXPAllDescription
-	db "@"
-	TX_FAR _OldRodDescription
-	db "@"
-	TX_FAR _GoodRodDescription
-	db "@"
-	TX_FAR _SuperRodDescription
-	db "@"
-	TX_FAR _PPUpDescription
-	db "@"
-	TX_FAR _EtherDescription
-	db "@"
-	TX_FAR _MaxEtherDescription
-	db "@"
-	TX_FAR _ElixerDescription
-	db "@"
-	TX_FAR _MaxElixerDescription
-	db "@"
-	TX_FAR _FocusRingDescription
-	db "@"
-	TX_FAR _BluntRingDescription
-	db "@"
-	TX_FAR _WizardRingDescription
-	db "@"
-	TX_FAR _ShieldRingDescription
-	db "@"
-	TX_FAR _BubbleRingDescription
-	db "@"
-	TX_FAR _AmuletRingDescription
-	db "@"
-	TX_FAR _BoosterRingDescription
-	db "@"
-    TX_FAR _ShinyRingDescription
-    db "@"
-    TX_FAR _ShinyBallDescription
-    db "@"
-    TX_FAR _HM06Description
-    db "@"
-	TX_FAR _HM01Description
-	db "@"
-	TX_FAR _HM02Description
-	db "@"
-	TX_FAR _HM03Description
-	db "@"
-	TX_FAR _HM04Description
-	db "@"
-	TX_FAR _HM05Description
-	db "@"
-	TX_FAR _TM01Description
-	db "@"
-	TX_FAR _TM02Description
-	db "@"
-	TX_FAR _TM03Description
-	db "@"
-	TX_FAR _TM04Description
-	db "@"
-	TX_FAR _TM05Description
-	db "@"
-	TX_FAR _TM06Description
-	db "@"
-	TX_FAR _TM07Description
-	db "@"
-	TX_FAR _TM08Description
-	db "@"
-	TX_FAR _TM09Description
-	db "@"
-	TX_FAR _TM10Description
-	db "@"
-	TX_FAR _TM11Description
-	db "@"
-	TX_FAR _TM12Description
-	db "@"
-	TX_FAR _TM13Description
-	db "@"
-	TX_FAR _TM14Description
-	db "@"
-	TX_FAR _TM15Description
-	db "@"
-	TX_FAR _TM16Description
-	db "@"
-	TX_FAR _TM17Description
-	db "@"
-	TX_FAR _TM18Description
-	db "@"
-	TX_FAR _TM19Description
-	db "@"
-	TX_FAR _TM20Description
-	db "@"
-	TX_FAR _TM21Description
-	db "@"
-	TX_FAR _TM22Description
-	db "@"
-	TX_FAR _TM23Description
-	db "@"
-	TX_FAR _TM24Description
-	db "@"
-	TX_FAR _TM25Description
-	db "@"
-	TX_FAR _TM26Description
-	db "@"
-	TX_FAR _TM27Description
-	db "@"
-	TX_FAR _TM28Description
-	db "@"
-	TX_FAR _TM29Description
-	db "@"
-	TX_FAR _TM30Description
-	db "@"
-	TX_FAR _TM31Description
-	db "@"
-	TX_FAR _TM32Description
-	db "@"
-	TX_FAR _TM33Description
-	db "@"
-	TX_FAR _TM34Description
-	db "@"
-	TX_FAR _TM35Description
-	db "@"
-	TX_FAR _TM36Description
-	db "@"
-	TX_FAR _TM37Description
-	db "@"
-	TX_FAR _TM38Description
-	db "@"
-	TX_FAR _TM39Description
-	db "@"
-	TX_FAR _TM40Description
-	db "@"
-	TX_FAR _TM41Description
-	db "@"
-	TX_FAR _TM42Description
-	db "@"
-	TX_FAR _TM43Description
-	db "@"
-	TX_FAR _TM44Description
-	db "@"
-	TX_FAR _TM45Description
-	db "@"
-	TX_FAR _TM46Description
-	db "@"
-	TX_FAR _TM47Description
-	db "@"
-	TX_FAR _TM48Description
-	db "@"
-	TX_FAR _TM49Description
-	db "@"
-	TX_FAR _TM50Description
-	db "@"
-	TX_FAR _DVBallDescription
-	db "@"
-	TX_FAR _HustleRingDescription
-	db "@"
-	TX_FAR _WonderRingDescription
-	db "@"
-	TX_FAR _HealingRingDescription
-	db "@"
 
 CannotUseItemsHereText: ; 1342a (4:742a)
 	TX_FAR _CannotUseItemsHereText
@@ -73220,12 +72908,9 @@ Route7_h: ; 0x48000 to 0x48022 (34 bytes) (bank=12) (id=18)
 Route7Object: ; 0x48022 (size=47)
 	db $f ; border tile
 
-	db $5 ; warps
-	db $9, $12, $2, ROUTE_7_GATE
-	db $a, $12, $3, ROUTE_7_GATE
-	db $9, $b, $0, ROUTE_7_GATE
-	db $a, $b, $1, ROUTE_7_GATE
-	db $d, $5, $0, PATH_ENTRANCE_ROUTE_7
+	db $2 ; warps
+	db $6, $6, $0, DEEP_SEA_1
+	db $7, $11, $3, DEEP_SEA_1
 
 	db $1 ; signs
 	db $7, $15, $2 ; Route7Text2
@@ -73234,11 +72919,8 @@ Route7Object: ; 0x48022 (size=47)
 	db SPRITE_FISHER2, $a + 4, $11 + 4, $ff, $d1, $1 ; person
 
 	; warp-to
-	EVENT_DISP $a, $9, $12 ; ROUTE_7_GATE
-	EVENT_DISP $a, $a, $12 ; ROUTE_7_GATE
-	EVENT_DISP $a, $9, $b ; ROUTE_7_GATE
-	EVENT_DISP $a, $a, $b ; ROUTE_7_GATE
-	EVENT_DISP $a, $d, $5 ; PATH_ENTRANCE_ROUTE_7
+	EVENT_DISP ROUTE_7_WIDTH, $6, $6 ; DEEP_SEA_1
+	EVENT_DISP ROUTE_7_WIDTH, $7, $11 ; DEEP_SEA_1
 
 Route7Blocks: ; 48051 (12:4051)
 	INCBIN "maps/route7.blk"
@@ -109450,8 +109132,8 @@ DeepSea1Object:
 	db $1d ; border tile
 
 	db $2 ; warps
-	db $5, $3, $0, CELADON_POKECENTER
-	db $d, $f, $0, CELADON_CITY
+	db $5, $3, $0, ROUTE_7
+	db $d, $f, $1, ROUTE_7
 	
 	db $0 ; signs
 
@@ -119523,3 +119205,335 @@ HandleEndlessRoute:
 	ld a, [W_CURMAP]
 	ld d, a
 	ret
+
+DisplayItemInfo:
+; d = item id
+	ld a, d
+	dec a
+	cp a, MAX_ELIXER
+	jr c, .ready
+
+	cp a, HM_06 - 1
+	jr nc, .TMHM
+	sub $e ; FOCUS_RING's id is now $54
+	jr .ready
+.TMHM
+	sub $6f - 9 ; HM_01's id is now $54 + 9 ; CHANGE THIS EVERY TIME YOU ADD A NEW ITEM AFTER ID $62
+.ready
+	ld hl,ItemInfoPointers
+	ld bc, 5
+.add
+	and a
+	jr z, .doneAdding
+	dec a
+	add hl, bc
+	jr .add
+.doneAdding
+	call PrintText
+	ret
+
+ItemInfoPointers:
+	TX_FAR _MasterBallDescription
+	db "@"
+	TX_FAR _UltraBallDescription
+	db "@"
+	TX_FAR _GreatBallDescription
+	db "@"
+	TX_FAR _PokeBallDescription
+	db "@"
+	TX_FAR _TownMapDescription
+	db "@"
+	TX_FAR _BicycleDescription
+	db "@"
+	TX_FAR _SurfboardDescription
+	db "@"
+	TX_FAR _SafariBallDescription
+	db "@"
+	TX_FAR _PokedexDescription
+	db "@"
+	TX_FAR _MoonStoneDescription
+	db "@"
+	TX_FAR _AntidoteDescription
+	db "@"
+	TX_FAR _BurnHealDescription
+	db "@"
+	TX_FAR _IceHealDescription
+	db "@"
+	TX_FAR _AwakeningDescription
+	db "@"
+	TX_FAR _ParalyzeHealDescription
+	db "@"
+	TX_FAR _FullRestoreDescription
+	db "@"
+	TX_FAR _MaxPotionDescription
+	db "@"
+	TX_FAR _HyperPotionDescription
+	db "@"
+	TX_FAR _SuperPotionDescription
+	db "@"
+	TX_FAR _PotionDescription
+	db "@"
+	TX_FAR _LostKeysDescription
+	db "@"
+	TX_FAR _SlaveBallDescription
+	db "@"
+	TX_FAR _ThunderBadgeDescription
+	db "@"
+	TX_FAR _RainbowBadgeDescription
+	db "@"
+	TX_FAR _SoulBadgeDescription
+	db "@"
+	TX_FAR _MarshBadgeDescription
+	db "@"
+	TX_FAR _VolcanoBadgeDescription
+	db "@"
+	TX_FAR _EarthBadgeDescription
+	db "@"
+	TX_FAR _EscapeRopeDescription
+	db "@"
+	TX_FAR _RepelDescription
+	db "@"
+	TX_FAR _OldAmberDescription
+	db "@"
+	TX_FAR _FireStoneDescription
+	db "@"
+	TX_FAR _ThunderStoneDescription
+	db "@"
+	TX_FAR _WaterStoneDescription
+	db "@"
+	TX_FAR _HPUpDescription
+	db "@"
+	TX_FAR _ProteinDescription
+	db "@"
+	TX_FAR _IronDescription
+	db "@"
+	TX_FAR _CarbosDescription
+	db "@"
+	TX_FAR _CalciumDescription
+	db "@"
+	TX_FAR _RareCandyDescription
+	db "@"
+	TX_FAR _DomeFossilDescription
+	db "@"
+	TX_FAR _HelixFossilDescription
+	db "@"
+	TX_FAR _SecretKeyDescription
+	db "@"
+	TX_FAR _ItemStoneDescription
+	db "@"
+	TX_FAR _BikeVoucherDescription
+	db "@"
+	TX_FAR _XAccuracyDescription
+	db "@"
+	TX_FAR _LeafStoneDescription
+	db "@"
+	TX_FAR _CardKeyDescription
+	db "@"
+	TX_FAR _NuggetDescription
+	db "@"
+	TX_FAR _ScouterRingDescription
+	db "@"
+	TX_FAR _PokeDollDescription
+	db "@"
+	TX_FAR _FullHealDescription
+	db "@"
+	TX_FAR _ReviveDescription
+	db "@"
+	TX_FAR _MaxReviveDescription
+	db "@"
+	TX_FAR _GuardSpecDescription
+	db "@"
+	TX_FAR _SuperRepelDescription
+	db "@"
+	TX_FAR _MaxRepelDescription
+	db "@"
+	TX_FAR _DireHitDescription
+	db "@"
+	TX_FAR _CoinDescription
+	db "@"
+	TX_FAR _FreshWaterDescription
+	db "@"
+	TX_FAR _SodaPopDescription
+	db "@"
+	TX_FAR _LemonadeDescription
+	db "@"
+	TX_FAR _SSTicketDescription
+	db "@"
+	TX_FAR _GoldTeethDescription
+	db "@"
+	TX_FAR _XAttackDescription
+	db "@"
+	TX_FAR _XDefendDescription
+	db "@"
+	TX_FAR _XSpeedDescription
+	db "@"
+	TX_FAR _XSpecialDescription
+	db "@"
+	TX_FAR _CoinCaseDescription
+	db "@"
+	TX_FAR _OaksParcelDescription
+	db "@"
+	TX_FAR _ItemFinderDescription
+	db "@"
+	TX_FAR _SilphScopeDescription
+	db "@"
+	TX_FAR _PokeFluteDescription
+	db "@"
+	TX_FAR _LiftKeyDescription
+	db "@"
+	TX_FAR _EXPAllDescription
+	db "@"
+	TX_FAR _OldRodDescription
+	db "@"
+	TX_FAR _GoodRodDescription
+	db "@"
+	TX_FAR _SuperRodDescription
+	db "@"
+	TX_FAR _PPUpDescription
+	db "@"
+	TX_FAR _EtherDescription
+	db "@"
+	TX_FAR _MaxEtherDescription
+	db "@"
+	TX_FAR _ElixerDescription
+	db "@"
+	TX_FAR _MaxElixerDescription
+	db "@"
+	TX_FAR _FocusRingDescription
+	db "@"
+	TX_FAR _BluntRingDescription
+	db "@"
+	TX_FAR _WizardRingDescription
+	db "@"
+	TX_FAR _ShieldRingDescription
+	db "@"
+	TX_FAR _BubbleRingDescription
+	db "@"
+	TX_FAR _AmuletRingDescription
+	db "@"
+	TX_FAR _BoosterRingDescription
+	db "@"
+    TX_FAR _ShinyRingDescription
+    db "@"
+    TX_FAR _ShinyBallDescription
+    db "@"
+    TX_FAR _HM06Description
+    db "@"
+	TX_FAR _HM01Description
+	db "@"
+	TX_FAR _HM02Description
+	db "@"
+	TX_FAR _HM03Description
+	db "@"
+	TX_FAR _HM04Description
+	db "@"
+	TX_FAR _HM05Description
+	db "@"
+	TX_FAR _TM01Description
+	db "@"
+	TX_FAR _TM02Description
+	db "@"
+	TX_FAR _TM03Description
+	db "@"
+	TX_FAR _TM04Description
+	db "@"
+	TX_FAR _TM05Description
+	db "@"
+	TX_FAR _TM06Description
+	db "@"
+	TX_FAR _TM07Description
+	db "@"
+	TX_FAR _TM08Description
+	db "@"
+	TX_FAR _TM09Description
+	db "@"
+	TX_FAR _TM10Description
+	db "@"
+	TX_FAR _TM11Description
+	db "@"
+	TX_FAR _TM12Description
+	db "@"
+	TX_FAR _TM13Description
+	db "@"
+	TX_FAR _TM14Description
+	db "@"
+	TX_FAR _TM15Description
+	db "@"
+	TX_FAR _TM16Description
+	db "@"
+	TX_FAR _TM17Description
+	db "@"
+	TX_FAR _TM18Description
+	db "@"
+	TX_FAR _TM19Description
+	db "@"
+	TX_FAR _TM20Description
+	db "@"
+	TX_FAR _TM21Description
+	db "@"
+	TX_FAR _TM22Description
+	db "@"
+	TX_FAR _TM23Description
+	db "@"
+	TX_FAR _TM24Description
+	db "@"
+	TX_FAR _TM25Description
+	db "@"
+	TX_FAR _TM26Description
+	db "@"
+	TX_FAR _TM27Description
+	db "@"
+	TX_FAR _TM28Description
+	db "@"
+	TX_FAR _TM29Description
+	db "@"
+	TX_FAR _TM30Description
+	db "@"
+	TX_FAR _TM31Description
+	db "@"
+	TX_FAR _TM32Description
+	db "@"
+	TX_FAR _TM33Description
+	db "@"
+	TX_FAR _TM34Description
+	db "@"
+	TX_FAR _TM35Description
+	db "@"
+	TX_FAR _TM36Description
+	db "@"
+	TX_FAR _TM37Description
+	db "@"
+	TX_FAR _TM38Description
+	db "@"
+	TX_FAR _TM39Description
+	db "@"
+	TX_FAR _TM40Description
+	db "@"
+	TX_FAR _TM41Description
+	db "@"
+	TX_FAR _TM42Description
+	db "@"
+	TX_FAR _TM43Description
+	db "@"
+	TX_FAR _TM44Description
+	db "@"
+	TX_FAR _TM45Description
+	db "@"
+	TX_FAR _TM46Description
+	db "@"
+	TX_FAR _TM47Description
+	db "@"
+	TX_FAR _TM48Description
+	db "@"
+	TX_FAR _TM49Description
+	db "@"
+	TX_FAR _TM50Description
+	db "@"
+	TX_FAR _DVBallDescription
+	db "@"
+	TX_FAR _HustleRingDescription
+	db "@"
+	TX_FAR _WonderRingDescription
+	db "@"
+	TX_FAR _HealingRingDescription
+	db "@"
