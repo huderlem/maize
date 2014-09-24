@@ -292,7 +292,7 @@ MapHeaderPointers:: ; 01ae (0:01ae)
 	dw DeepSea2_h
 	dw DeepSea3_h
 	dw VictoryRoad1_h
-	dw Lance_h ; unused
+	dw PyriteCityGate_h
 	dw Lance_h ; unused ;id=110
 	dw Lance_h ; unused
 	dw Lance_h ; unused
@@ -19177,7 +19177,7 @@ MapHeaderBanks: ; c23d (3:423d)
 	db BANK(DeepSea2_h)
 	db BANK(DeepSea3_h)
 	db BANK(VictoryRoad1_h)
-	db $1D ;unused
+	db BANK(PyriteCityGate_h)
 	db $1D ;unused
 	db $1D ;unused
 	db $1D ;unused
@@ -21460,16 +21460,16 @@ Route9Mons: ; d1d1 (3:51d1)
 
 Route5Mons: ; d1e7 (3:51e7)
 	db $0F
-	db 13,BELLSPROUT
-	db 13,MAREEP
+	db 18,BELLSPROUT
 	db 15,MAREEP
-	db 10,MANKEY
-	db 12,MANKEY
-	db 15,BELLSPROUT
-	db 16,BELLSPROUT
-	db 16,PIDGEY
-	db 14,MANKEY
-	db 16,MANKEY
+	db 17,MAREEP
+	db 15,MANKEY
+	db 17,MANKEY
+	db 17,BELLSPROUT
+	db 18,ODDISH
+	db 17,PIDGEY
+	db 18,BEEDRILL
+	db 19,BEEDRILL
 
 	db $00
 
@@ -31102,7 +31102,7 @@ SplitMapSpriteSets: ; 17a89 (5:7a89)
 	db $01,$22,$09,$0A ; $f7
 	db $01,$35,$01,$0A ; $f8
 	db $02,$21,$02,$07 ; $f9
-	db $02,$02,$02,$05 ; $fa
+	db $02,$5,$09,$05 ; $fa
 	db $01,$11,$05,$07 ; $fb
 	db $01,$03,$07,$02 ; $fc
 
@@ -31947,7 +31947,7 @@ CeladonCityObject: ; 0x18022 (size=189)
 	db $19, $13, $0, CELADON_MANSION_1
 	db $2, $6, $0, CELADON_MART_5 ; beta warp! no longer used
 	db $1f, $25, $0, CELADON_HOUSE
-	db $2, $4, $0, CELADON_DINER
+	db $1, $1b, $1, PYRITE_CITY_GATE
 	db $2, $5, $0, CELADON_HOUSE
 	db $17, $2b, $0, CELADON_HOTEL
 
@@ -31974,19 +31974,19 @@ CeladonCityObject: ; 0x18022 (size=189)
 	db SPRITE_OLD_PERSON, $f + 4, $2b + 4, $ff, $ff, $9 ; person
 
 	; warp-to
-	EVENT_DISP $19, $c, $a ; CELADON_MART_1
-	EVENT_DISP $19, $7, $19 ; CELADON_MART_1
-	EVENT_DISP $19, $15, $d ; CELADON_MANSION_1
-	EVENT_DISP $19, $7, $c ; CELADON_MANSION_1
-	EVENT_DISP $19, $13, $2b ; CELADON_MANSION_1
-	EVENT_DISP $19, $9, $29 ; CELADON_POKECENTER
-	EVENT_DISP $19, $17, $20 ; CELADON_GYM
-	EVENT_DISP $19, $19, $13 ; GAME_CORNER
-	EVENT_DISP $19, $2, $6 ; CELADON_MART_5
-	EVENT_DISP $19, $1f, $25 ; CELADONPRIZE_ROOM
-	EVENT_DISP $19, $2, $4 ; CELADON_DINER
-	EVENT_DISP $19, $2, $5 ; CELADON_HOUSE
-	EVENT_DISP $19, $17, $2b ; CELADON_HOTEL
+	EVENT_DISP CELADON_CITY_WIDTH, $c, $a ; CELADON_MART_1
+	EVENT_DISP CELADON_CITY_WIDTH, $7, $19 ; CELADON_MART_1
+	EVENT_DISP CELADON_CITY_WIDTH, $15, $d ; CELADON_MANSION_1
+	EVENT_DISP CELADON_CITY_WIDTH, $7, $c ; CELADON_MANSION_1
+	EVENT_DISP CELADON_CITY_WIDTH, $13, $2b ; CELADON_MANSION_1
+	EVENT_DISP CELADON_CITY_WIDTH, $9, $29 ; CELADON_POKECENTER
+	EVENT_DISP CELADON_CITY_WIDTH, $17, $20 ; CELADON_GYM
+	EVENT_DISP CELADON_CITY_WIDTH, $19, $13 ; GAME_CORNER
+	EVENT_DISP CELADON_CITY_WIDTH, $2, $6 ; CELADON_MART_5
+	EVENT_DISP CELADON_CITY_WIDTH, $1f, $25 ; CELADONPRIZE_ROOM
+	EVENT_DISP CELADON_CITY_WIDTH, $1, $1b ; PYRITE_CITY_GATE
+	EVENT_DISP CELADON_CITY_WIDTH, $2, $5 ; CELADON_HOUSE
+	EVENT_DISP CELADON_CITY_WIDTH, $17, $2b ; CELADON_HOTEL
 
 CeladonCityBlocks: ; 180df (6:40df)
 	INCBIN "maps/celadoncity.blk"
@@ -86407,12 +86407,14 @@ Route6_h: ; 0x58000 to 0x58022 (34 bytes) (id=17)
 Route6Object: ; 0x58022 (size=87)
 	db $f ; border tile
 
-	db $5 ; warps
+	db $7 ; warps
 	db $1, $a, $2, ROUTE_5_GATE
 	db $1, $b, $2, ROUTE_5_GATE
 	db $7, $a, $0, ROUTE_5_GATE
 	db $1d, $c, $1, UNDERGROUND_PATH_NS
 	db $9, $3, $0, VIRIDIAN_FOREST
+	db $21, $5, $0, PYRITE_CITY_GATE
+	db $21, $6, $0, PYRITE_CITY_GATE
 
 	db $2 ; signs
 	db $11, $13, $7 ; Route6Text7
@@ -86426,24 +86428,14 @@ Route6Object: ; 0x58022 (size=87)
 	db SPRITE_ROCKER, $18 + 4, $10 + 4, $ff, $d1, $45, TAMER + $C8, $1 ; trainer
 	db SPRITE_GAMBLER, $1c + 4, $6 + 4, $ff, $d0, $46, GAMBLER + $C8, $1 ; trainer
 
-	;db SPRITE_BIKER
-	;db SPRITE_BLACK_HAIR_BOY_1
-	;db SPRITE_LAPRAS_GIVER
-	;db SPRITE_FISHER2
-	;db SPRITE_ROCKER
-	;db SPRITE_HIKER
-	;db SPRITE_GAMBLER
-	;db SPRITE_FAT_BALD_GUY
-	;db SPRITE_BLACK_HAIR_BOY_2
-	;db SPRITE_BALL
-	;db SPRITE_SNORLAX
-
 	; warp-to
 	EVENT_DISP $a, $1, $a ; ROUTE_6_GATE
 	EVENT_DISP $a, $1, $b ; ROUTE_6_GATE
 	EVENT_DISP $a, $7, $a ; ROUTE_6_GATE
 	EVENT_DISP $a, $1d, $c ; PATH_ENTRANCE_ROUTE_6
-	EVENT_DISP $a, $9, $3, ; VIRIDIAN_FOREST
+	EVENT_DISP $a, $9, $3 ; VIRIDIAN_FOREST
+	EVENT_DISP $a, $21, $5 ; PYRITE_CITY_GATE
+	EVENT_DISP $a, $21, $6 ; PYRITE_CITY_GATE
 
 Route6Blocks: ; 58079 (16:4079)
 	INCBIN "maps/route6.blk"
@@ -109215,6 +109207,40 @@ DeepSea3Object:
 
     ; warp-to
     EVENT_DISP DEEP_SEA_3_WIDTH, $3, $19 ; RUBY_DOCKS
+
+PyriteCityGate_h:
+	db $09 ; tileset
+    db PYRITE_CITY_GATE_HEIGHT, PYRITE_CITY_GATE_WIDTH ; dimensions (y, x)
+    dw PyriteCityGateBlocks, PyriteCityGateTextPointers, PyriteCityGateScript ; blocks, texts, scripts
+    db $00 ; connections
+    dw PyriteCityGateObject ; objects
+
+PyriteCityGateBlocks:
+	INCBIN "maps/pyritecitygate.blk"
+
+PyriteCityGateTextPointers:
+	db "@"
+
+PyriteCityGateScript:
+	jp EnableAutoTextBoxDrawing
+
+PyriteCityGateObject:
+	db $a ; border tile
+
+    db $3 ; warps
+    db $0, $3, $6, ROUTE_6
+    db $5, $2, $a, CELADON_CITY
+    db $5, $3, $a, CELADON_CITY
+	
+    db $0 ; signs
+
+    db $0 ; people
+
+    ; warp-to
+    EVENT_DISP PYRITE_CITY_GATE_WIDTH, $0, $3 ; ROUTE_6
+    EVENT_DISP PYRITE_CITY_GATE_WIDTH, $5, $2 ; ROUTE_6
+    EVENT_DISP PYRITE_CITY_GATE_WIDTH, $5, $3 ; ROUTE_6
+
 
 SECTION "bank1E",ROMX,BANK[$1E]
 
