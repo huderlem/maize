@@ -32242,42 +32242,33 @@ FuchsiaCity_h: ; 0x18ba7 to 0x18bd4 (45 bytes) (bank=6) (id=7)
 	db $00 ; tileset
 	db FUCHSIA_CITY_HEIGHT, FUCHSIA_CITY_WIDTH ; dimensions (y, x)
 	dw FuchsiaCityBlocks, FuchsiaCityTextPointers, FuchsiaCityScript ; blocks, texts, scripts
-	db SOUTH | WEST | EAST ; connections
-	SOUTH_MAP_CONNECTION ROUTE_19, ROUTE_19_WIDTH, 5, 0, ROUTE_19_WIDTH, Route19Blocks, FUCHSIA_CITY_WIDTH, FUCHSIA_CITY_HEIGHT
-	WEST_MAP_CONNECTION ROUTE_18, ROUTE_18_WIDTH, 4, 0, ROUTE_18_HEIGHT, Route18Blocks, FUCHSIA_CITY_WIDTH
-	EAST_MAP_CONNECTION ROUTE_15, ROUTE_15_WIDTH, 4, 0, ROUTE_15_HEIGHT, Route15Blocks, FUCHSIA_CITY_WIDTH
+	db EAST ; connections
+	EAST_MAP_CONNECTION ROUTE_7, ROUTE_7_WIDTH, 4, 0, ROUTE_7_HEIGHT, Route7Blocks, FUCHSIA_CITY_WIDTH
 	dw FuchsiaCityObject ; objects
 
 FuchsiaCityObject: ; 0x18bd4 (size=178)
 	db $f ; border tile
 
-	db $9 ; warps
-	db $d, $5, $0, FUCHSIA_MART
-	db $1b, $b, $0, FUCHSIA_HOUSE_1
-	db $1b, $13, $0, FUCHSIA_POKECENTER
-	db $1b, $1b, $0, FUCHSIA_HOUSE_2
-	db $3, $12, $0, SAFARIZONEENTRANCE
-	db $1b, $5, $0, FUCHSIA_GYM
-	db $d, $16, $0, FUCHSIAMEETINGROOM
-	db $1b, $1f, $1, FUCHSIA_HOUSE_3
-	db $18, $1f, $0, FUCHSIA_HOUSE_3
+	db $8 ; warps
+	db $7, $1e, $0, FUCHSIA_GYM
+	db $9, $11, $0, FUCHSIA_HOUSE_1
+	db $11, $f, $0, FUCHSIA_MART
+	db $11, $15, $0, FUCHSIA_POKECENTER
+	db $17, $13, $0, FUCHSIA_HOUSE_2
+	db $17, $19, $0, FUCHSIA_HOUSE_3
+	db $19, $9, $0, FUCHSIAMEETINGROOM
+	db $1f, $14, $1, SAFARIZONEENTRANCE
 
-	db $e ; signs
-	db $17, $f, $b ; FuchsiaCityText11
-	db $f, $19, $c ; FuchsiaCityText12
-	db $5, $11, $d ; FuchsiaCityText13
-	db $d, $6, $e ; MartSignText
-	db $1b, $14, $f ; PokeCenterSignText
-	db $1d, $1b, $10 ; FuchsiaCityText16
-	db $f, $15, $11 ; FuchsiaCityText17
-	db $1d, $5, $12 ; FuchsiaCityText18
-	db $7, $21, $13 ; FuchsiaCityText19
-	db $7, $1b, $14 ; FuchsiaCityText20
-	db $7, $d, $15 ; FuchsiaCityText21
-	db $d, $1f, $16 ; FuchsiaCityText22
-	db $f, $d, $17 ; FuchsiaCityText23
-	db $7, $7, $18 ; FuchsiaCityText24
-
+	db $8 ; signs
+	db $9, $1f, $b ; FuchsiaCityText11
+	db $b, $1d, $c ; FuchsiaCityText12
+	db $11, $10, $d ; FuchsiaCityText13
+	db $11, $16, $e ; MartSignText
+	db $17, $11, $f ; PokeCenterSignText
+	db $17, $17, $10 ; FuchsiaCityText16
+	db $19, $7, $11 ; FuchsiaCityText17
+	db $1f, $11, $12 ; FuchsiaCityText18
+	
 	db $a ; people
 	db SPRITE_BUG_CATCHER, $c + 4, $a + 4, $fe, $2, $1 ; person
 	db SPRITE_GAMBLER, $11 + 4, $1c + 4, $fe, $2, $2 ; person
@@ -32291,15 +32282,14 @@ FuchsiaCityObject: ; 0x18bd4 (size=178)
 	db SPRITE_OMANYTE, $5 + 4, $6 + 4, $ff, $ff, $a ; person
 
 	; warp-to
-	EVENT_DISP $14, $d, $5 ; FUCHSIA_MART
-	EVENT_DISP $14, $1b, $b ; FUCHSIA_HOUSE_1
-	EVENT_DISP $14, $1b, $13 ; FUCHSIA_POKECENTER
-	EVENT_DISP $14, $1b, $1b ; FUCHSIA_HOUSE_2
-	EVENT_DISP $14, $3, $12 ; SAFARIZONEENTRANCE
-	EVENT_DISP $14, $1b, $5 ; FUCHSIA_GYM
-	EVENT_DISP $14, $d, $16 ; FUCHSIAMEETINGROOM
-	EVENT_DISP $14, $1b, $1f ; FUCHSIA_HOUSE_3
-	EVENT_DISP $14, $18, $1f ; FUCHSIA_HOUSE_3
+	EVENT_DISP $14, $7, $1e ; FUCHSIA_GYM
+	EVENT_DISP $14, $9, $11 ; FUCHSIA_HOUSE_1
+	EVENT_DISP $14, $11, $f ; FUCHSIA_MART
+	EVENT_DISP $14, $11, $15 ; FUCHSIA_POKECENTER
+	EVENT_DISP $14, $17, $13 ; SAFARIZONEENTRANCE
+	EVENT_DISP $14, $17, $19 ; FUCHSIA_HOUSE_3
+	EVENT_DISP $14, $19, $9 ; FUCHSIAMEETINGROOM
+	EVENT_DISP $14, $1f, $14 ; FUCHSIA_HOUSE_3
 
 FuchsiaCityBlocks: ; 18c86 (6:4c86)
 	INCBIN "maps/fuchsiacity.blk"
@@ -72901,7 +72891,8 @@ Route7_h: ; 0x48000 to 0x48022 (34 bytes) (bank=12) (id=18)
 	db $00 ; tileset
 	db ROUTE_7_HEIGHT, ROUTE_7_WIDTH ; dimensions (y, x)
 	dw Route7Blocks, Route7TextPointers, Route7Script ; blocks, texts, scripts
-	db EAST ; connections
+	db WEST | EAST ; connections
+	WEST_MAP_CONNECTION FUCHSIA_CITY, FUCHSIA_CITY_WIDTH, -4, 0, FUCHSIA_CITY_HEIGHT, FuchsiaCityBlocks, ROUTE_7_WIDTH
 	EAST_MAP_CONNECTION ROUTE_6, ROUTE_6_WIDTH, -4, 0, 12, Route6Blocks, ROUTE_7_WIDTH
 	dw Route7Object ; objects
 
