@@ -4043,8 +4043,8 @@ PlaceNextChar:: ; 1956 (0:1956)
 	jp z,Char54
 	cp $5B
 	jp z,Char5B
-	cp $5E
-	jp z,Char5E
+	;cp $5E
+	;jp z,Char5E
 	cp $5C
 	jp z,Char5C
 	cp $5D
@@ -4108,10 +4108,10 @@ Char5B:: ; 1a11 (0:1a11) ; PC
 	ld de,Char5BText
 	jr FinishDTE
 
-Char5E:: ; 1a17 (0:1a17) ; ROCKET
-	push de
-	ld de,Char5EText
-	jr FinishDTE
+;Char5E:: ; 1a17 (0:1a17) ; ROCKET
+;	push de
+;	ld de,Char5BText ; unused
+;	jr FinishDTE
 
 Char54:: ; 1a1d (0:1a1d) ; POKé
 	push de
@@ -4174,8 +4174,8 @@ Char5DText:: ; 1a58 (0:1a58)
 	db "TRAINER@"
 Char5BText:: ; 1a60 (0:1a60)
 	db "PC@"
-Char5EText:: ; 1a63 (0:1a63)
-	db "ROCKET@"
+;Char5EText:: ; 1a63 (0:1a63)
+	;db "@" ; TODO Unused
 Char54Text:: ; 1a6a (0:1a6a)
 	db "POKé@"
 Char56Text:: ; 1a6f (0:1a6f)
@@ -7095,8 +7095,11 @@ RedisplayStartMenu:: ; 2adf (0:2adf)
 	jp z,StartMenu_SaveReset
 	cp a,5
 	jp z,StartMenu_Option
+	; fall through to GO HOME
+	ld hl, GoHome
+	ld b, Bank(GoHome)
+	call Bankswitch
 
-; EXIT falls through to here
 CloseStartMenu:: ; 2b70 (0:2b70)
 	call GetJoypadState
 	ld a,[H_NEWLYPRESSEDBUTTONS]
@@ -9126,7 +9129,7 @@ WaitForSoundToFinish:: ; 3748 (0:3748)
 NamePointers:: ; 375d (0:375d)
 	dw MonsterNames
 	dw MoveNames
-	dw UnusedNames
+	dw MoveNames ; used to be UnusedNames
 	dw ItemNames
 	dw W_PARTYMON1OT ; player's OT names list
 	dw W_ENEMYMON1OT ; enemy's OT names list
@@ -11863,27 +11866,6 @@ ItemNames: ; 472b (1:472b)
 	db "HUSTLE RING@"
 	db "WONDER RING@"
 	db "HEALING RING@"
-
-UnusedNames: ; 4a92 (1:4a92)
-	db "かみなりバッヂ@"
-	db "かいがらバッヂ@"
-	db "おじぞうバッヂ@"
-	db "はやぶさバッヂ@"
-	db "ひんやりバッヂ@"
-	db "なかよしバッヂ@"
-	db "バラバッヂ@"
-	db "ひのたまバッヂ@"
-	db "ゴールドバッヂ@"
-	db "たまご@"
-	db "ひよこ@"
-	db "ブロンズ@"
-	db "シルバー@"
-	db "ゴールド@"
-	db "プチキャプテン@"
-	db "キャプテン@"
-	db "プチマスター@"
-	db "マスター@"
-	db "エクセレント"
 
 ; calculates the OAM data for all currently visible sprites and writes it to wOAMBuffer
 PrepareOAMData: ; 4b0f (1:4b0f)
@@ -17301,7 +17283,12 @@ DrawStartMenu: ; 710b (1:710b)
 	call PrintStartMenuItem
 	ld de,StartMenuOptionText
 	call PrintStartMenuItem
+	ld a, [W_NEWFLAGS1]
+	bit 2, a
+	ld de, StartMenuGoHomeText
+	jr nz, .printLastMenuItemText
 	ld de,StartMenuExitText
+.printLastMenuItemText
 	call PlaceString
 	ld hl,$d730
 	res 6,[hl] ; turn pauses between printing letters back on
@@ -17322,8 +17309,11 @@ StartMenuSaveText: ; 71a4 (1:71a4)
 StartMenuResetText: ; 71a9 (1:71a9)
 	db "RESET@"
 
-StartMenuExitText: ; 71af (1:71af)
+StartMenuExitText:
 	db "EXIT@"
+
+StartMenuGoHomeText: ; 71af (1:71af)
+	db "GO HOME@"
 
 StartMenuOptionText: ; 71b4 (1:71b4)
 	db "OPTION@"
@@ -22371,7 +22361,7 @@ ItemUseBall: ; d687 (3:5687)
 	cp a,MASTER_BALL
 	jp z,.BallSuccess
 	cp a,SLAVE_BALL
-	jp z,.BallSuccess
+	jp z,.checkForAilments
 	cp a,POKE_BALL
 	jr z,.checkForAilments
 	cp a,DV_BALL
@@ -22485,6 +22475,8 @@ ItemUseBall: ; d687 (3:5687)
 	cp a,POKE_BALL
 	jr z,.next11
 	cp a,DV_BALL
+	jr z,.next11
+	cp a,SLAVE_BALL
 	jr z,.next11
 	ld b,200
 	cp a,GREAT_BALL
@@ -100770,7 +100762,7 @@ Func_70fd6: ; 70fd6 (1c:4fd6)
 	ld a, [$FF00+$b5]
 	ld b, a
 	pop hl
-	and $c3
+	and $c3 ; 1100 0111
 	jr z, .asm_71004
 	bit 0, b
 	jr nz, .asm_71026
@@ -100781,7 +100773,7 @@ Func_70fd6: ; 70fd6 (1c:4fd6)
 	bit 7, b
 	jr nz, .asm_71058
 	jr .asm_71037
-.asm_71026
+.asm_71026 ; pressed A on Town Map
 	ld a, $8e
 	call PlaySound
 	ld a, [hl]
@@ -116382,6 +116374,31 @@ Tset0C_Block:
 
 SECTION "New Text", ROMX, BANK[$33]
 
+_GoHomeText::
+	text "In Nuzlocke Mode,"
+	line "this will warp"
+	cont "you back to LAPIS"
+	cont "TOWN, which is"
+	cont "the first town in"
+	cont "the game."
+
+	para "It's possible to"
+	line "get stuck in"
+	cont "Nuzlocke Mode if"
+	cont "you lack an HM"
+	cont "to get out of an"
+	cont "area due to your"
+	cont "#MON dying."
+
+	para "Warping to LAPIS"
+	line "TOWN will get you"
+	cont "un-stuck."
+
+	para "Do you want to"
+	line "go home to LAPIS"
+	cont "TOWN?"
+	done
+
 _VermilionGymAfterBattleStep1::
 	text "Watch your step."
 	done
@@ -118920,6 +118937,31 @@ WriteMonMoves_ShiftMoveData_2:
 	dec c
 	jr nz, .asm_3b050
 	ret
+
+GoHome:
+; make player sacrifice pokemon if they want to go home
+	ld a, [W_NEWFLAGS1]
+	bit 2, a
+	ret z
+	ld hl, GoHomeText
+	call PrintText
+	call YesNoChoice
+	ld a, [wCurrentMenuItem] ; $cc26
+	and a
+	jr nz, .done
+	; set appropriate flags for flying to Lapis Town
+	xor a
+	ld [$d71a], a
+	ld hl, $d732
+	set 3, [hl]
+	inc hl
+	set 7, [hl]
+.done
+	ret
+
+GoHomeText:
+	TX_FAR _GoHomeText
+	db "@"
 
 SECTION "Random Stuff", ROMX, BANK[$37]
 
