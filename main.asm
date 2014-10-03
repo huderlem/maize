@@ -5988,78 +5988,75 @@ UpdateSprites:: ; 2429 (0:2429)
 
 ; mart inventories are below
 ; they are texts
-; first byte $FE, next byte # of items, last byte $FF
+; first byte $FE, last byte $FF
 
 ; Viridian
 ViridianMartText6:: ; 2442 (0:2442)
-	db $FE,4,POKE_BALL,ANTIDOTE,PARLYZ_HEAL,BURN_HEAL,$FF
+	db $FE,SLAVE_BALL,POKE_BALL,ANTIDOTE,PARLYZ_HEAL,BURN_HEAL,$FF
 
 ; Pewter
 PewterMartText1:: ; 2449 (0:2449)
-	db $FE,8,POKE_BALL,POTION,ESCAPE_ROPE,ANTIDOTE,BURN_HEAL,AWAKENING
+	db $FE,SLAVE_BALL,POKE_BALL,POTION,ESCAPE_ROPE,ANTIDOTE,BURN_HEAL,AWAKENING
 	db PARLYZ_HEAL,REPEL,$FF
 
 ; Cerulean
 CeruleanMartText1:: ; 2453 (0:2453)
-	db $FE,7,POKE_BALL,POTION,REPEL,ANTIDOTE,BURN_HEAL,AWAKENING
+	db $FE,SLAVE_BALL,POKE_BALL,POTION,REPEL,ANTIDOTE,BURN_HEAL,AWAKENING
 	db PARLYZ_HEAL,$FF
 
 ; Bike shop TODO: can almost certainly remove this
-	db $FE,1,BICYCLE,$FF
+	db $FE,SLAVE_BALL,BICYCLE,$FF
 
 ; Vermilion
 VermilionMartText1:: ; 2461 (0:2461)
-	db $FE,6,POKE_BALL,SUPER_POTION,ICE_HEAL,AWAKENING,PARLYZ_HEAL
+	db $FE,SLAVE_BALL,POKE_BALL,SUPER_POTION,ICE_HEAL,AWAKENING,PARLYZ_HEAL
 	db REPEL,$FF
 
 ; Lavender
 LavenderHouse2Text2: ; 246a (0:246a)
-	db $FE,8,GREAT_BALL,SUPER_POTION,SUPER_REPEL,HP_UP,PROTEIN,CARBOS,IRON
+	db $FE,SLAVE_BALL,GREAT_BALL,SUPER_POTION,SUPER_REPEL,HP_UP,PROTEIN,CARBOS,IRON
 	db CALCIUM,$FF
 
 ; Celadon Dept. Store 2F (1)
 CeladonMart2Text1:: ; 2476 (0:2476)
-	db $FE,9,GREAT_BALL,SUPER_POTION,REVIVE,SUPER_REPEL,ANTIDOTE
+	db $FE,SLAVE_BALL,GREAT_BALL,SUPER_POTION,REVIVE,SUPER_REPEL,ANTIDOTE
 	db BURN_HEAL,ICE_HEAL,AWAKENING,PARLYZ_HEAL,$FF
 
 ; Celadon Dept. Store 2F (2)
 CeladonMart2Text2:: ; 2482 (0:2482)
-	db $FE,9,TM_32,TM_33,TM_02,TM_07,TM_37,TM_01,TM_05,TM_09,TM_17,$FF
+	db $FE,SLAVE_BALL,TM_32,TM_33,TM_02,TM_07,TM_37,TM_01,TM_05,TM_09,TM_17,$FF
 
 ; Celadon Dept. Store 4F
 CeladonMart4Text1:: ; 248e (0:248e)
-	db $FE,5,POKE_DOLL,FIRE_STONE,THUNDER_STONE,WATER_STONE,LEAF_STONE,$FF
+	db $FE,SLAVE_BALL,POKE_DOLL,FIRE_STONE,THUNDER_STONE,WATER_STONE,LEAF_STONE,$FF
 
 ; Celadon Dept. Store 5F (1)
 CeladonMart5Text3:: ; 2496 (0:2496)
-	db $FE,7,X_ACCURACY,GUARD_SPEC_,DIRE_HIT,X_ATTACK,X_DEFEND,X_SPEED
+	db $FE,SLAVE_BALL,X_ACCURACY,GUARD_SPEC_,DIRE_HIT,X_ATTACK,X_DEFEND,X_SPEED
 	db X_SPECIAL,$FF
 
 ; Celadon Dept. Store 5F (2)
 CeladonMart5Text4:: ; 24a0 (0:24a0)
-	db $FE,5,HP_UP,PROTEIN,IRON,CARBOS,CALCIUM,$FF
+	db $FE,SLAVE_BALL,HP_UP,PROTEIN,IRON,CARBOS,CALCIUM,$FF
 
 ; Fuchsia
 FuchsiaMartText1:: ; 24a8 (0:24a8)
-	db $FE,6,ULTRA_BALL,GREAT_BALL,SUPER_POTION,REVIVE,FULL_HEAL
+	db $FE,SLAVE_BALL,ULTRA_BALL,GREAT_BALL,SUPER_POTION,REVIVE,FULL_HEAL
 	db SUPER_REPEL,$FF
-
-; unused? 24b1
-	db $FE,5,GREAT_BALL,HYPER_POTION,SUPER_POTION,FULL_HEAL,REVIVE,$FF
 
 ; Cinnabar
 CinnabarMartText1:: ; 24b9 (0:24b9)
-	db $FE,7,ULTRA_BALL,GREAT_BALL,HYPER_POTION,MAX_REPEL,ESCAPE_ROPE
+	db $FE,SLAVE_BALL,ULTRA_BALL,GREAT_BALL,HYPER_POTION,MAX_REPEL,ESCAPE_ROPE
 	db FULL_HEAL,REVIVE,$FF
 
 ; Saffron
 SaffronMartText1:: ; 24c3 (0:24c3)
-	db $FE,6,GREAT_BALL,HYPER_POTION,MAX_REPEL,ESCAPE_ROPE,FULL_HEAL
+	db $FE,SLAVE_BALL,GREAT_BALL,HYPER_POTION,MAX_REPEL,ESCAPE_ROPE,FULL_HEAL
 	db REVIVE,$FF
 
 ; Indigo
 IndigoPlateauLobbyText4:: ; 24cc (0:24cc)
-	db $FE,7,ULTRA_BALL,GREAT_BALL,FULL_RESTORE,MAX_POTION,FULL_HEAL
+	db $FE,SLAVE_BALL,ULTRA_BALL,GREAT_BALL,FULL_RESTORE,MAX_POTION,FULL_HEAL
 	db REVIVE,MAX_REPEL,$FF
 
 TextScriptEndingChar:: ; 24d6 (0:24d6)
@@ -6935,19 +6932,29 @@ PokemartGreetingText:: ; 2a55 (0:2a55)
 	db "@"
 
 LoadItemList:: ; 2a5a (0:2a5a)
+	ld a, [W_NEWFLAGS1]
+	bit 2, a
+	jr nz, .continue
+	inc hl ; skip over SLAVE_BALL
+.continue
 	ld a,$01
 	ld [$cfcb],a
 	ld a,h
 	ld [$d128],a
 	ld a,l
 	ld [$d129],a
-	ld de,$cf7b
+	ld de,$cf7c
+	ld b, 0
 .loop
+	inc b
 	ld a,[hli]
 	ld [de],a
 	inc de
 	cp a,$ff
 	jr nz,.loop
+	dec b
+	ld a, b
+	ld [$cf7b], a
 	ret
 
 DisplayPokemonCenterDialogue:: ; 2a72 (0:2a72)
@@ -11377,7 +11384,7 @@ ItemPrices: ; 4608 (1:4608)
 	db $00,$07,$00
 	db $00,$03,$00
 	db $00,$00,$00
-	db $00,$00,$00
+	db $00,$00,$50
 	db $00,$00,$00
 	db $00,$00,$00
 	db $00,$00,$00
@@ -116615,15 +116622,14 @@ _SlaveBallDescription::
 	cont "permanently set"
 	cont "to 2."
 
-	para "This BALL never"
-	line "fails, and it can"
+	para "This BALL can"
 	cont "be used in areas"
 	cont "where you've"
 	cont "already had a"
 	cont "chance to catch"
 	cont "a #MON."
 
-	para "This item is only"
+	para "This BALL is only"
 	line "meant to be used"
 	cont "when playing in"
 	cont "Nuzlocke Mode."
