@@ -91718,7 +91718,7 @@ LavenderMartScript: ; 5c92c (17:492c)
 	jp EnableAutoTextBoxDrawing
 
 LavenderMartTextPointers: ; 5c92f (17:492f)
-	dw LavenderMartText2
+	dw CeladonMart2Text1
 	dw LavenderMartText2
 	dw LavenderMartText3
 
