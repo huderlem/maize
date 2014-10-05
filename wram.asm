@@ -1503,3 +1503,8 @@ W_COVENANT::
 ; SaveSAVtoSRAM0
 ; SaveSAVtoSRAM1
 
+; FREE SPACE
+; 
+; $d792: bits 2, 3
+; 
+

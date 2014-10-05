@@ -1,194 +1,214 @@
-_UnnamedText_7558b:: ; a0000 (28:4000)
-	text "When afflicted by"
-	line "TOXIC, #MON"
-	cont "suffer more and"
-	cont "more as battle"
-	cont "progresses!"
-
-	para "It will surely"
-	line "terrorize foes!"
-	done
-
 _UnnamedText_75590:: ; a0069 (28:4069)
-	text "Now that you have"
-	line "the SOULBADGE,"
-	cont "the DEFENSE of"
-	cont "your #MON"
-	cont "increases!"
+	text "Excuse me."
 
-	para "It also lets you"
-	line "SURF outside of"
-	cont "battle!"
+	para "I must go."
 
-	para "Ah! Take this"
-	line "too!"
-	done
-
-_ReceivedTM06Text:: ; a00eb (28:40eb)
-	text $52, " received"
-	line "@"
-	TX_RAM $cf4b
-	text "!@@"
-
-_TM06ExplanationText:: ; a00ff (28:40ff)
-	db $0
-	para "TM06 contains"
-	line "TOXIC!"
-
-	para "It is a secret"
-	line "technique over"
-	cont "400 years old!"
-	done
-
-_TM06NoRoomText:: ; a0143 (28:4143)
-	text "Make space for"
-	line "this, child!"
+	para "There are certain"
+	line "matters I must"
+	cont "attend to."
 	done
 
 _FuchsiaGymBattleText1:: ; a0160 (28:4160)
-	text "Strength isn't"
-	line "the key for"
-	cont "#MON!"
-
-	para "It's strategy!"
-
-	para "I'll show you how"
-	line "strategy can beat"
-	cont "brute strength!"
+	text "I suppose I could"
+	line "battle you while"
+	cont "I wait for the"
+	cont "incubation"
+	cont "process results."
 	done
 
 _FuchsiaGymEndBattleText1:: ; a01c2 (28:41c2)
-	text "What?"
-	line "Extraordinary!"
+	text "No!"
+	line "I ripped a hole"
+	cont "in my genes!"
 	prompt
 
 _FuchsiaGymAfterBattleText1:: ; a01d8 (28:41d8)
-	text "So, you mix brawn"
-	line "with brains?"
-	cont "Good strategy!"
-	done
+	text "I get nervous"
+	line "when battles are"
+	cont "going on."
 
-_FuchsiaGymBattleText2:: ; a0207 (28:4207)
-	text "I wanted to become"
-	line "a ninja, so I"
-	cont "joined this GYM!"
+	para "There are so many"
+	line "fragile"
+	cont "experiments going"
+	cont "on in here!"
 	done
 
 _FuchsiaGymEndBattleText2:: ; a023a (28:423a)
-	text "I'm done"
-	line "for!"
+	text "My"
+	line "#MON!"
+
+	para "I need to Helium"
+	line "at a #CENTER!"
 	prompt
 
 _FuchsiaGymAfterBattleText2:: ; a0248 (28:4248)
-	text "I will keep on"
-	line "training under"
-	cont "KOGA, my ninja"
-	cont "master!"
+	text "If you mess up"
+	line "any of our"
+	cont "experiments, I'll"
+	cont "make sure that"
+	cont "you Sulfur the"
+	cont "consequences!"
+	done
+
+_FuchsiaGymBattleText2:: ; a0207 (28:4207)
+	text "Ack!"
+
+	para "You made me spill"
+	line "chemicals on"
+	cont "myself!"
+
+	para "You Argon pay for"
+	line "for this!"
 	done
 
 _FuchsiaGymBattleText3:: ; a027e (28:427e)
-	text "Let's see you"
-	line "beat my special"
-	cont "techniques!"
+	text "This lab focuses"
+	line "on # genetics."
+
+	para "With the right"
+	line "tweaks to a DNA"
+	cont "sequence, #MON"
+	cont "battling could be"
+	cont "revolutionized!"
 	done
 
 _FuchsiaGymEndBattleText3:: ; a02a8 (28:42a8)
-	text "You"
-	line "had me fooled!"
+	text "Ah!"
+	line "You spliced me!"
 	prompt
-
+	
 _FuchsiaGymAfterBattleText3:: ; a02bc (28:42bc)
-	text "I like poison and"
-	line "sleep techniques,"
-	cont "as they linger"
-	cont "after battle!"
+	text "DR. ROOT has"
+	line "perfected a"
+	cont "serum that adapts"
+	cont "his #MON to"
+	cont "become as strong"
+	cont "as his opponent's."
 	done
 
 _FuchsiaGymBattleText4:: ; a02fe (28:42fe)
-	text "Stop right there!"
+	text "I know you're not"
+	line "a genius like me."
 
-	para "Our invisible"
-	line "walls have you"
-	cont "frustrated?"
+	para "Perhaps your IQ"
+	line "for battling is"
+	cont "higher!"
 	done
 
 _FuchsiaGymEndBattleText4:: ; a033a (28:433a)
-	text "Whoa!"
-	line "He's got it!"
+	text "My"
+	line "theory has been"
+	cont "proven correct."
+
+	para "Battling is your"
+	line "strength."
 	prompt
 
 _FuchsiaGymAfterBattleText4:: ; a034d (28:434d)
-	text "You impressed me!"
-	line "Here's a hint!"
+	text "This lab doubles"
+	line "as a GYM!"
 
-	para "Look very closely"
-	line "for gaps in the"
-	cont "invisible walls!"
+	para "It's only logical"
+	line "that QUARTZ CITY"
+	cont "has a GYM"
+	cont "dedicated to"
+	cont "research."
 	done
 
 _FuchsiaGymBattleText5:: ; a03a1 (28:43a1)
-	text "I also study the"
-	line "way of the ninja"
-	cont "with master KOGA!"
+	text "This lab focuses"
+	line "on # genetics."
 
-	para "Ninja have a long"
-	line "history of using"
-	cont "animals!"
+	para "With the right"
+	line "tweaks to a DNA"
+	cont "sequence, #MON"
+	cont "battling could be"
+	cont "revolutionized!"
 	done
 
 _FuchsiaGymEndBattleText5:: ; a0402 (28:4402)
-	text "Awoo!"
+	text "Ah!"
+	line "You spliced me!"
 	prompt
 
 _FuchsiaGymAfterBattleText5:: ; a0409 (28:4409)
-	text "I still have much"
-	line "to learn!"
+	text "DR. ROOT has"
+	line "perfected a"
+	cont "serum that adapts"
+	cont "his #MON to"
+	cont "become as strong"
+	cont "as his opponent's."
 	done
 
 _FuchsiaGymBattleText6:: ; a0426 (28:4426)
-	text "Master KOGA comes"
-	line "from a long line"
-	cont "of ninjas!"
-
-	para "What did you"
-	line "descend from?"
+	text "I suppose I could"
+	line "battle you while"
+	cont "I wait for the"
+	cont "incubation"
+	cont "process results."
 	done
 
 _FuchsiaGymEndBattleText6:: ; a0470 (28:4470)
-	text "Dropped"
-	line "my balls!"
+	text "No!"
+	line "I ripped a hole"
+	cont "in my genes!"
 	prompt
 
 _FuchsiaGymAfterBattleText6:: ; a0483 (28:4483)
-	text "Where there is"
-	line "light, there is"
-	cont "shadow!"
+	text "I get nervous"
+	line "when battles are"
+	cont "going on."
 
-	para "Light and shadow!"
-	line "Which do you"
-	cont "choose?"
+	para "There are so many"
+	line "fragile"
+	cont "experiments going"
+	cont "on in here!"
 	done
 
 _UnnamedText_7564e:: ; a04d2 (28:44d2)
-	text "Yo! Champ in"
-	line "making!"
+	text "QUARTZ TOWN is"
+	line "home to many of"
+	cont "the prominent"
+	cont "researchers in"
+	cont "BOLDOR!"
 
-	para "FUCHSIA GYM is"
-	line "riddled with"
-	cont "invisible walls!"
+	para "The battle-minded"
+	line "researchers got"
+	cont "together and made"
+	cont "a GYM!"
 
-	para "KOGA might appear"
-	line "close, but he's"
-	cont "blocked off!"
+	para "I don't understand"
+	line "anything they do,"
+	cont "but I know they"
+	cont "have some tricks"
+	cont "up their sleeves."
 
-	para "You have to find"
-	line "gaps in the walls"
-	cont "to reach him!"
+	para "DR.ROOT has"
+	line "developed a"
+	cont "special serum to"
+	cont "make his #MON"
+	cont "as strong as any"
+	cont "opponent!"
+
+	para "He's also a pretty"
+	line "shady fellow, and"
+	cont "I don't trust him"
+	cont "one bit."
 	done
 
 _UnnamedText_75653:: ; a0574 (28:4574)
-	text "It's amazing how"
-	line "ninja can terrify"
-	cont "even now!"
+	text "DR.ROOT ran off!"
+
+	para "I sure hope he"
+	line "isn't some kind of"
+	cont "mad scientist!"
 	done
 
+_FuchsiaGymBallText:: ; a0160 (28:4160)
+	text "A #BALL used"
+	line "for research."
+
+	para "It appears to be"
+	line "incubating a"
+	cont "#MON."
+	done

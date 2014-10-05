@@ -20347,7 +20347,7 @@ MapHSPointers: ; c8f5 (3:48f5)
 	dw MapHSXX
 	dw MapHS9B
 	dw MapHSXX
-	dw MapHSXX
+	dw MapHS9D
 	dw MapHSXX
 	dw MapHS9F
 	dw MapHSA0
@@ -20763,6 +20763,9 @@ MapHSA2: ; cd8d (3:4d8d)
 ; BASALT CAVE GUY
 MapHS2E:
 	db DIGLETTS_CAVE_EXIT,$01,Show
+; Dr. Root in Quartz City Gym
+MapHS9D:
+	db FUCHSIA_GYM,$01,Show
 
 	db $FF,$01,Show
 
@@ -51115,7 +51118,7 @@ TrainerNames: ; 399ff (e:59ff)
 	db "TARA@"
 	db "LT.SURGE@"
 	db "ELDA@"
-	db "KOGA@"
+	db "DR.ROOT@"
 	db "BLAINE@"
 	db "STELLA@"
 	db "GENTLEMAN@"
@@ -51930,10 +51933,10 @@ ProfOakData: ; 3a21d (e:621d)
 ChiefData: ; 3a241 (e:6241)
 ; none
 ScientistData: ; 3a241 (e:6241)
-	db 34,KOFFING,VOLTORB,0
-	db 26,GRIMER,WEEZING,KOFFING,WEEZING,0
-	db 28,MAGNEMITE,VOLTORB,MAGNETON,0
-	db 29,ELECTRODE,WEEZING,0
+	db 35,EEVEE,WEEPINBELL,FARFETCH_D,0 ; Quartz City Gym
+	db 34,GRIMER,PRIMEAPE,SUDOWOODO,GOLBAT,0 ; Quartz City Gym
+	db 34,GLIGAR,NIDORINO,TANGELA,0 ; Quartz City Gym
+	db 37,FEAROW,WEEZING,0 ; Quartz City Gym
 	db 33,ELECTRODE,0
 	db 26,MAGNETON,KOFFING,WEEZING,MAGNEMITE,0
 	db 25,VOLTORB,KOFFING,MAGNETON,MAGNEMITE,KOFFING,0
@@ -52045,11 +52048,7 @@ endc
 ErikaData: ; 3a3c9 (e:63c9)
 	db $FF,22,HOUNDOUR,22,PONYTA,26,CHARMELEON,0
 KogaData: ; 3a3d1 (e:63d1)
-if _YELLOW
-	db $FF,44,VENONAT,46,VENONAT,48,VENONAT,50,VENOMOTH,0
-else
-	db $FF,37,KOFFING,39,MUK,37,KOFFING,43,WEEZING,0
-endc
+	db $FF,2,KOFFING,2,MUK,2,KOFFING,2,WEEZING,0
 BlaineData: ; 3a3db (e:63db)
 if _YELLOW
 	db $FF,48,NINETALES,50,RAPIDASH,54,ARCANINE,0
@@ -106432,9 +106431,9 @@ FuchsiaGymScript_75453: ; 75453 (1d:5453)
 	ret
 
 Gym5CityName: ; 75465 (1d:5465)
-	db "FUCHSIA CITY@"
+	db "QUARTZ CITY@"
 Gym5LeaderName: ; 75472 (1d:5472)
-	db "KOGA@"
+	db "DR.ROOT@"
 
 Func_75477: ; 75477 (1d:5477)
 	xor a
@@ -106461,19 +106460,8 @@ FuchsiaGymScript3_75497: ; 75497 (1d:5497)
 	call DisplayTextID
 	ld hl, $d792
 	set 1, [hl]
-	ld bc, (TM_06 << 8) | 1
-	call GiveItem
-	jr nc, .BagFull
-	ld a, $a
-	ld [H_DOWNARROWBLINKCNT2], a ; $FF00+$8c
-	call DisplayTextID
 	ld hl, $d792
 	set 0, [hl]
-	jr .asm_754c0
-.BagFull
-	ld a, $b
-	ld [H_DOWNARROWBLINKCNT2], a ; $FF00+$8c
-	call DisplayTextID
 .asm_754c0
 	ld hl, W_OBTAINEDBADGES ; $d356
 	set 4, [hl]
@@ -106482,6 +106470,18 @@ FuchsiaGymScript3_75497: ; 75497 (1d:5497)
 	ld a, [$d792]
 	or $fc
 	ld [$d792], a
+	
+	; hide his sprite
+	call GBFadeOut2
+	call ReloadMapData
+	ld a, $e5
+	ld [$cc4d], a
+	ld a, $11
+	call Predef ; indirect jump to RemoveMissableObject (f1d7 (3:71d7))
+	call GBFadeIn2
+	xor a
+	ld [wJoypadForbiddenButtonsMask], a
+
 	jp Func_75477
 
 FuchsiaGymTextPointers: ; 754d5 (1d:54d5)
@@ -106490,17 +106490,15 @@ FuchsiaGymTextPointers: ; 754d5 (1d:54d5)
 	dw FuchsiaGymText3
 	dw FuchsiaGymText4
 	dw FuchsiaGymText5
-	dw FuchsiaGymText6
-	dw FuchsiaGymText7
+	dw FuchsiaGymBallText
+	dw FuchsiaGymBallText
 	dw FuchsiaGymText8
 	dw FuchsiaGymText9
-	dw FuchsiaGymText10
-	dw FuchsiaGymText11
-
+	
 FuchsiaGymTrainerHeaders: ; 754eb (1d:54eb)
 FuchsiaGymTrainerHeader0: ; 754eb (1d:54eb)
 	db $2 ; flag's bit
-	db ($2 << 4) ; trainer's view range
+	db ($0 << 4) ; trainer's view range
 	dw $d792 ; flag's byte
 	dw FuchsiaGymBattleText1 ; 0x55ae TextBeforeBattle
 	dw FuchsiaGymAfterBattleText1 ; 0x55b8 TextAfterBattle
@@ -106509,7 +106507,7 @@ FuchsiaGymTrainerHeader0: ; 754eb (1d:54eb)
 
 FuchsiaGymTrainerHeader2: ; 754f7 (1d:54f7)
 	db $3 ; flag's bit
-	db ($2 << 4) ; trainer's view range
+	db ($0 << 4) ; trainer's view range
 	dw $d792 ; flag's byte
 	dw FuchsiaGymBattleText2 ; 0x55c7 TextBeforeBattle
 	dw FuchsiaGymAfterBattleText2 ; 0x55d1 TextAfterBattle
@@ -106518,7 +106516,7 @@ FuchsiaGymTrainerHeader2: ; 754f7 (1d:54f7)
 
 FuchsiaGymTrainerHeader3: ; 75503 (1d:5503)
 	db $4 ; flag's bit
-	db ($4 << 4) ; trainer's view range
+	db ($2 << 4) ; trainer's view range
 	dw $d792 ; flag's byte
 	dw FuchsiaGymBattleText3 ; 0x55e0 TextBeforeBattle
 	dw FuchsiaGymAfterBattleText3 ; 0x55ea TextAfterBattle
@@ -106534,24 +106532,6 @@ FuchsiaGymTrainerHeader4: ; 7550f (1d:550f)
 	dw FuchsiaGymEndBattleText4 ; 0x55fe TextEndBattle
 	dw FuchsiaGymEndBattleText4 ; 0x55fe TextEndBattle
 
-FuchsiaGymTrainerHeader5: ; 7551b (1d:551b)
-	db $6 ; flag's bit
-	db ($2 << 4) ; trainer's view range
-	dw $d792 ; flag's byte
-	dw FuchsiaGymBattleText5 ; 0x5612 TextBeforeBattle
-	dw FuchsiaGymAfterBattleText5 ; 0x561c TextAfterBattle
-	dw FuchsiaGymEndBattleText5 ; 0x5617 TextEndBattle
-	dw FuchsiaGymEndBattleText5 ; 0x5617 TextEndBattle
-
-FuchsiaGymTrainerHeader6: ; 75527 (1d:5527)
-	db $7 ; flag's bit
-	db ($2 << 4) ; trainer's view range
-	dw $d792 ; flag's byte
-	dw FuchsiaGymBattleText6 ; 0x562b TextBeforeBattle
-	dw FuchsiaGymAfterBattleText6 ; 0x5635 TextAfterBattle
-	dw FuchsiaGymEndBattleText6 ; 0x5630 TextEndBattle
-	dw FuchsiaGymEndBattleText6 ; 0x5630 TextEndBattle
-
 	db $ff
 
 FuchsiaGymText1: ; 75534 (1d:5534)
@@ -106559,15 +106539,9 @@ FuchsiaGymText1: ; 75534 (1d:5534)
 	ld a, [$d792]
 	bit 1, a
 	jr z, .asm_181b6 ; 0x7553a
-	bit 0, a
-	jr nz, .asm_adc3b ; 0x7553e
 	call z, FuchsiaGymScript3_75497
 	call DisableWaitingAfterTextDisplay
 	jr .asm_e84c6 ; 0x75546
-.asm_adc3b ; 0x75548
-	ld hl, UnnamedText_7558b
-	call PrintText
-	jr .asm_e84c6 ; 0x7554e
 .asm_181b6 ; 0x75550
 	ld hl, UnnamedText_75581
 	call PrintText
@@ -106598,24 +106572,8 @@ UnnamedText_75586: ; 75586 (1d:5586)
 	TX_FAR _UnnamedText_75586
 	db "@"
 
-UnnamedText_7558b: ; 7558b (1d:558b)
-	TX_FAR _UnnamedText_7558b
-	db "@"
-
 FuchsiaGymText9: ; 75590 (1d:5590)
 	TX_FAR _UnnamedText_75590
-	db "@"
-
-FuchsiaGymText10: ; 75595 (1d:5595)
-	TX_FAR _ReceivedTM06Text ; 0xa00eb
-	db $11
-
-TM06ExplanationText: ; 7559a (1d:559a)
-	TX_FAR _TM06ExplanationText
-	db "@"
-
-FuchsiaGymText11: ; 7559f (1d:559f)
-	TX_FAR _TM06NoRoomText
 	db "@"
 
 FuchsiaGymText2: ; 755a4 (1d:55a4)
@@ -106623,6 +106581,10 @@ FuchsiaGymText2: ; 755a4 (1d:55a4)
 	ld hl, FuchsiaGymTrainerHeader0
 	call TalkToTrainer
 	jp TextScriptEnd
+
+FuchsiaGymBallText:
+	TX_FAR _FuchsiaGymBallText
+	db "@"
 
 FuchsiaGymBattleText1: ; 755ae (1d:55ae)
 	TX_FAR _FuchsiaGymBattleText1
@@ -106653,6 +106615,7 @@ FuchsiaGymEndBattleText2: ; 755cc (1d:55cc)
 FuchsiaGymAfterBattleText2: ; 755d1 (1d:55d1)
 	TX_FAR _FuchsiaGymAfterBattleText2
 	db "@"
+
 
 FuchsiaGymText4: ; 755d6 (1d:55d6)
 	db $08 ; asm
@@ -106690,12 +106653,6 @@ FuchsiaGymAfterBattleText4: ; 75603 (1d:5603)
 	TX_FAR _FuchsiaGymAfterBattleText4
 	db "@"
 
-FuchsiaGymText6: ; 75608 (1d:5608)
-	db $08 ; asm
-	ld hl, FuchsiaGymTrainerHeader5
-	call TalkToTrainer
-	jp TextScriptEnd
-
 FuchsiaGymBattleText5: ; 75612 (1d:5612)
 	TX_FAR _FuchsiaGymBattleText5
 	db "@"
@@ -106706,24 +106663,6 @@ FuchsiaGymEndBattleText5: ; 75617 (1d:5617)
 
 FuchsiaGymAfterBattleText5: ; 7561c (1d:561c)
 	TX_FAR _FuchsiaGymAfterBattleText5
-	db "@"
-
-FuchsiaGymText7: ; 75621 (1d:5621)
-	db $08 ; asm
-	ld hl, FuchsiaGymTrainerHeader6
-	call TalkToTrainer
-	jp TextScriptEnd
-
-FuchsiaGymBattleText6: ; 7562b (1d:562b)
-	TX_FAR _FuchsiaGymBattleText6
-	db "@"
-
-FuchsiaGymEndBattleText6: ; 75630 (1d:5630)
-	TX_FAR _FuchsiaGymEndBattleText6
-	db "@"
-
-FuchsiaGymAfterBattleText6: ; 75635 (1d:5635)
-	TX_FAR _FuchsiaGymAfterBattleText6
 	db "@"
 
 FuchsiaGymText8: ; 7563a (1d:563a)
@@ -106749,19 +106688,19 @@ FuchsiaGymObject: ; 0x75658 (size=82)
 	db $3 ; border tile
 
 	db $2 ; warps
-	db $11, $4, $5, $ff
-	db $11, $5, $5, $ff
+	db $11, $4, $0, $ff
+	db $11, $5, $0, $ff
 
 	db $0 ; signs
 
 	db $8 ; people
-	db SPRITE_BLACKBELT, $a + 4, $4 + 4, $ff, $d0, $41, KOGA + $C8, $1 ; trainer
-	db SPRITE_ROCKER, $d + 4, $8 + 4, $ff, $d0, $42, JUGGLER + $C8, $7 ; trainer
-	db SPRITE_ROCKER, $8 + 4, $7 + 4, $ff, $d3, $43, JUGGLER + $C8, $3 ; trainer
-	db SPRITE_ROCKER, $c + 4, $1 + 4, $ff, $d0, $44, JUGGLER + $C8, $8 ; trainer
-	db SPRITE_ROCKER, $5 + 4, $3 + 4, $ff, $d1, $45, TAMER + $C8, $1 ; trainer
-	db SPRITE_ROCKER, $2 + 4, $8 + 4, $ff, $d0, $46, TAMER + $C8, $2 ; trainer
-	db SPRITE_ROCKER, $7 + 4, $2 + 4, $ff, $d2, $47, JUGGLER + $C8, $4 ; trainer
+	db SPRITE_GIOVANNI, $2 + 4, $8 + 4, $ff, $d1, $41, KOGA + $C8, $1 ; trainer
+	db SPRITE_OAK_AIDE, $6 + 4, $7 + 4, $ff, $d1, $42, SCIENTIST + $C8, $1 ; trainer
+	db SPRITE_OAK_AIDE, $8 + 4, $2 + 4, $ff, $d1, $43, SCIENTIST + $C8, $2 ; trainer
+	db SPRITE_OAK_AIDE, $c + 4, $3 + 4, $ff, $d3, $44, SCIENTIST + $C8, $3 ; trainer
+	db SPRITE_OAK_AIDE, $d + 4, $6 + 4, $ff, $d2, $45, SCIENTIST + $C8, $4 ; trainer
+	db SPRITE_BALL, $5 + 4, $7 + 4, $ff, $ff, $6 ; person
+	db SPRITE_BALL, $7 + 4, $2 + 4, $ff, $ff, $7 ; person
 	db SPRITE_GYM_HELPER, $f + 4, $7 + 4, $ff, $d0, $8 ; person
 
 	; warp-to
