@@ -51289,23 +51289,29 @@ ReadTrainer: ; 39c53 (e:5c53)
 .inner
 	ld a,[hli]
 	and a
-	jr nz,.inner
+	jr nz,.inner ; march until terminator 0 is found
 	jr .outer
 
 ; if the first byte of trainer data is FF,
 ; - each pokemon has a specific level
 ;      (as opposed to the whole team being of the same level)
 ; - if [W_LONEATTACKNO] != 0, one pokemon on the team has a special move
+; elseif the first byte of trainer data is FE
+; - levels are set accordng to player's max level in party
+; - the second byte is the minimum level
+; - each pair of bytes is [levels below][pokemon id]
 ; else the first byte is the level of every pokemon on the team
 .IterateTrainer
 	ld a,[hli]
 	cp $FF ; is the trainer special?
 	jr z,.SpecialTrainer ; if so, check for special moves
+	cp $FE ; does trainer have levels related to player's pokemon?
+	jr z,.MaxPlayerLevelTrainer
 	ld [W_CURENEMYLVL],a
 .LoopTrainerData
 	ld a,[hli]
 	and a ; have we reached the end of the trainer data?
-	jr z,.FinishUp
+	jp z,.FinishUp
 	ld [$CF91],a ; write species somewhere (XXX why?)
 	ld a,1
 	ld [$CC49],a
@@ -51313,6 +51319,47 @@ ReadTrainer: ; 39c53 (e:5c53)
 	call AddPokemonToParty
 	pop hl
 	jr .LoopTrainerData
+
+.MaxPlayerLevelTrainer
+	ld a, [hli]
+	ld b, a ; b contains minimum base level for pokemon
+	call GetMaxLevelInParty ; register a contains max level
+	cp b
+	jr c, .GotMinLevel
+	ld b, a
+.GotMinLevel
+; b contains min level
+	ld a, [hli]
+	and a ; reached end of pokemon list?
+	jp z, .FinishUp
+	push bc
+	; a contains level offset from base level
+	add a, b
+	cp 2
+	jr nc, .checkHigh
+	ld a, 2
+	jr .loadLevel
+.checkHigh
+	cp 155
+	jr c, .check100
+	ld a, 2
+	jr .loadLevel
+.check100
+	cp 101
+	jr c, .loadLevel
+	ld a, 100
+.loadLevel
+	ld [W_CURENEMYLVL], a
+	ld a, [hli] ; a contain pokemon id
+	ld [$CF91], a
+	ld a,1
+	ld [$CC49], a
+	push hl
+	call AddPokemonToParty
+	pop hl
+	pop bc
+	jr .GotMinLevel
+
 .SpecialTrainer
 ; if this code is being run:
 ; - each pokemon has a specific level
@@ -51414,6 +51461,34 @@ ReadTrainer: ; 39c53 (e:5c53)
 	inc de
 	dec b
 	jr nz,.LastLoop
+	ret
+
+GetMaxLevelInParty:
+; returns max level in register a
+	push bc
+	push hl
+	push de
+	ld a, [W_NUMINPARTY]
+	ld d, a
+	ld bc, 44
+	ld hl, W_PARTYMON1_LEVEL
+	ld a, [hl]
+	ld e, a
+	; keep track of max in e
+.loop
+	ld a, [hl]
+	cp e
+	jr c, .smaller
+	; update max
+	ld e, a
+.smaller
+	add hl, bc
+	dec d
+	jr nz, .loop
+	ld a, e 
+	pop de
+	pop hl
+	pop bc
 	ret
 
 LoneMoves: ; 39d22 (e:5d22)
@@ -52048,7 +52123,7 @@ endc
 ErikaData: ; 3a3c9 (e:63c9)
 	db $FF,22,HOUNDOUR,22,PONYTA,26,CHARMELEON,0
 KogaData: ; 3a3d1 (e:63d1)
-	db $FF,2,KOFFING,2,MUK,2,KOFFING,2,WEEZING,0
+	db $FE,37,1,POLIWHIRL,1,MR_MIME,-2,DODRIO,2,DUGTRIO,0
 BlaineData: ; 3a3db (e:63db)
 if _YELLOW
 	db $FF,48,NINETALES,50,RAPIDASH,54,ARCANINE,0

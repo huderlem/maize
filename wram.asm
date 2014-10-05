@@ -1505,6 +1505,6 @@ W_COVENANT::
 
 ; FREE SPACE
 ; 
-; $d792: bits 2, 3
+; $d792: bits 6, 7 (from Quartz City Gym)
 ; 
 
