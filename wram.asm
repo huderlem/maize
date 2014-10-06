@@ -1493,8 +1493,10 @@ W_NEWFLAGS2::
 	; 1: found the Seafarer Captain
 	; 2: received HM06 Dive
 	
-
 W_COVENANT::
+	ds 1
+
+W_FUCHSIAHOUSE1CURSCRIPT::
 	ds 1
 
 ; if you ever add more here, you have to modify 

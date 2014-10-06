@@ -3256,6 +3256,17 @@ _LostChampionshipText::
 	text "..."
 	prompt
 
+_BeatTimmyText::
+	text "What?"
+	line "This is so cheap!"	
+	prompt
+
+_LostToTimmyText::
+	text "I..."
+	line "I can't believe I"
+	cont "won!"
+	prompt
+
 _EnteringText2::
 	text "So, we meet"
 	line "again..."

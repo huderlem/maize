@@ -790,7 +790,7 @@ OverworldLoopLessDelay:: ; 0402 (0:0402)
 	set 5,[hl]
 	ld a,[W_CURMAP]
 	cp a,OAKS_LAB
-	jp z,.noFaintCheck
+	jr z,.noFaintCheck
 	cp a,REDS_HOUSE_2F
 	jr nz,.resume
 	; is this the first battle in the game? just look at badges owned, I guess
@@ -20343,7 +20343,7 @@ MapHSPointers: ; c8f5 (3:48f5)
 	dw MapHSXX
 	dw MapHSXX
 	dw MapHSXX
-	dw MapHSXX
+	dw MapHS99
 	dw MapHSXX
 	dw MapHS9B
 	dw MapHSXX
@@ -20766,6 +20766,9 @@ MapHS2E:
 ; Dr. Root in Quartz City Gym
 MapHS9D:
 	db FUCHSIA_GYM,$01,Show
+; Little Timmy
+MapHS99:
+    db FUCHSIA_HOUSE_1,$02,Show
 
 	db $FF,$01,Show
 
@@ -32259,7 +32262,7 @@ FuchsiaCityObject: ; 0x18bd4 (size=178)
 	db $17, $13, $0, FUCHSIA_HOUSE_2
 	db $17, $19, $0, FUCHSIA_HOUSE_3
 	db $19, $9, $0, FUCHSIAMEETINGROOM
-	db $1f, $14, $1, SAFARIZONEENTRANCE
+	db $1f, $14, $1, FUCHSIA_HOUSE_1 ; the lab with the wimpy kid
 
 	db $8 ; signs
 	db $9, $1f, $b ; FuchsiaCityText11
@@ -52142,32 +52145,8 @@ else
 endc
 	db 48,PRIMEAPE,0
 	db 17,GROWLITHE,PONYTA,0
-Green2Data: ; 3a401 (e:6401)
-if _YELLOW
-	db $FF,19,SPEAROW,16,RATTATA,18,SANDSHREW,20,EEVEE,0
-	db $FF,25,FEAROW,23,SHELLDER,22,VULPIX,20,SANDSHREW,25,EEVEE,0
-	db $FF,25,FEAROW,23,MAGNEMITE,22,SHELLDER,20,SANDSHREW,25,EEVEE,0
-	db $FF,25,FEAROW,23,VULPIX,22,MAGNEMITE,20,SANDSHREW,25,EEVEE,0
-	db $FF,38,SANDSLASH,35,NINETALES,37,CLOYSTER,35,KADABRA,40,JOLTEON,0
-	db $FF,38,SANDSLASH,35,CLOYSTER,37,MAGNETON,35,KADABRA,40,FLAREON,0
-	db $FF,38,SANDSLASH,35,MAGNETON,37,NINETALES,35,KADABRA,40,VAPOREON,0
-	db $FF,47,SANDSLASH,45,EXEGGCUTE,45,NINETALES,47,CLOYSTER,50,KADABRA,53,JOLTEON,0
-	db $FF,47,SANDSLASH,45,EXEGGCUTE,45,CLOYSTER,47,MAGNETON,50,KADABRA,53,FLAREON,0
-	db $FF,47,SANDSLASH,45,EXEGGCUTE,45,MAGNETON,47,NINETALES,50,KADABRA,53,VAPOREON,0
-else
-	db $FF,17,PIDGEOTTO,16,RATICATE,18,KADABRA,20,WARTORTLE,0
-	db $FF,17,PIDGEOTTO,16,RATICATE,18,KADABRA,20,IVYSAUR,0
-	db $FF,17,PIDGEOTTO,16,RATICATE,18,KADABRA,20,CHARMELEON,0
-	db $FF,25,PIDGEOTTO,23,GROWLITHE,22,EXEGGCUTE,20,KADABRA,25,WARTORTLE,0
-	db $FF,25,PIDGEOTTO,23,GYARADOS,22,GROWLITHE,20,KADABRA,25,IVYSAUR,0
-	db $FF,25,PIDGEOTTO,23,EXEGGCUTE,22,GYARADOS,20,KADABRA,25,CHARMELEON,0
-	db $FF,37,PIDGEOT,38,GROWLITHE,35,EXEGGCUTE,35,ALAKAZAM,40,BLASTOISE,0
-	db $FF,37,PIDGEOT,38,GYARADOS,35,GROWLITHE,35,ALAKAZAM,40,VENUSAUR,0
-	db $FF,37,PIDGEOT,38,EXEGGCUTE,35,GYARADOS,35,ALAKAZAM,40,CHARIZARD,0
-	db $FF,47,PIDGEOT,45,RHYHORN,45,GROWLITHE,47,EXEGGCUTE,50,ALAKAZAM,53,BLASTOISE,0
-	db $FF,47,PIDGEOT,45,RHYHORN,45,GYARADOS,47,GROWLITHE,50,ALAKAZAM,53,VENUSAUR,0
-	db $FF,47,PIDGEOT,45,RHYHORN,45,EXEGGCUTE,47,GYARADOS,50,ALAKAZAM,53,CHARIZARD,0
-endc
+Green2Data: ; 3a401 (e:6401) Little Timmy rival
+	db 5,EEVEE,0
 Green3Data: ; 3a491 (e:6491)
 if _YELLOW
 	db $FF,61,SANDSLASH,59,ALAKAZAM,61,EXEGGUTOR,61,CLOYSTER,63,NINETALES,65,JOLTEON,0
@@ -105934,7 +105913,7 @@ VendingPrices: ; 75000 (1d:5000)
 	db LEMONADE,   $00,$03,$50
 
 FuchsiaHouse1_h: ; 0x7500c to 0x75018 (12 bytes) (id=153)
-	db $08 ; tileset
+	db $07 ; tileset
 	db FUCHSIA_HOUSE_1_HEIGHT, FUCHSIA_HOUSE_1_WIDTH ; dimensions (y, x)
 	dw FuchsiaHouse1Blocks, FuchsiaHouse1TextPointers, FuchsiaHouse1Script ; blocks, texts, scripts
 	db $00 ; connections
@@ -105942,14 +105921,193 @@ FuchsiaHouse1_h: ; 0x7500c to 0x75018 (12 bytes) (id=153)
 
 FuchsiaHouse1Script: ; 75018 (1d:5018)
 	call EnableAutoTextBoxDrawing
+	ld hl, FuchsiaHouse1ScriptPointers
+	ld a, [W_FUCHSIAHOUSE1CURSCRIPT]
+	jp CallFunctionInTable
+
+FuchsiaHouse1ScriptPointers: ; 19243 (6:5243)
+	dw FuchsiaHouse1Script0
+	dw FuchsiaHouse1Script1
+	dw FuchsiaHouse1Script2
+	dw FuchsiaHouse1Script3
+	dw FuchsiaHouse1Script4
+	dw FuchsiaHouse1Script5
+    dw FuchsiaHouse1Script5
+
+FuchsiaHouse1Script0:
+	; walk forward
+	ld hl, $ccd3
+	ld de, FuchsiaPlayerEntryMovementRLE
+	call DecodeRLEList
+	dec a
+	ld [$cd38], a
+	call Func_3486
+	ld a, $2
+	ld [$ff00+$8c], a
+	xor a
+	ld [$ff00+$8d], a
+	call Func_34a6 ; face object
+	ld a, $1
+	ld [$ff00+$8c], a
+	xor a
+	ld [$ff00+$8d], a
+	call Func_34a6 ; face object
+
+	ld a, $1
+	ld [W_FUCHSIAHOUSE1CURSCRIPT], a
 	ret
 
+FuchsiaPlayerEntryMovementRLE:
+	db $40, $8, $FF ; up 8 times
+
+FuchsiaHouse1Script1: ; 1cbd2 (7:4bd2)
+	ld a, [$cd38]
+	and a
+	ret nz
+	call Func_2307
+	ld a, $2
+	ld [W_FUCHSIAHOUSE1CURSCRIPT], a
+	ret
+
+FuchsiaHouse1Script2:
+    ld a, $fc
+    ld [wJoypadForbiddenButtonsMask], a
+    ld a, $6
+    ld [$ff00+$8c], a
+    call DisplayTextID
+    call Delay3
+    ld a, $7
+    ld [$ff00+$8c], a
+    call DisplayTextID
+    call Delay3
+    ld c, BANK(Music_MeetRival)
+    ld a, MUSIC_MEET_RIVAL
+    call PlayMusic ; play music
+    ld a, $8
+    ld [$ff00+$8c], a
+    call DisplayTextID
+    call Delay3
+    xor a
+    ld [wJoypadForbiddenButtonsMask], a
+    ld hl, $d72d
+    set 6, [hl]
+    set 7, [hl]
+    ld hl, BeatTimmyText
+    ld de, LostToTimmyText
+    call PreBattleSaveRegisters
+    ld a, SONY2 + $C8
+    ld [$d059], a
+    ld a, $1
+    ld [W_TRAINERNO], a
+    xor a
+    ld [H_CURRENTPRESSEDBUTTONS], a
+    ld a, $8
+    ld [$d528], a
+
+    ld a, $3
+    ld [W_FUCHSIAHOUSE1CURSCRIPT], a
+    ret
+
+BeatTimmyText:
+    TX_FAR _BeatTimmyText
+    db "@"
+
+LostToTimmyText:
+    TX_FAR _LostToTimmyText    
+    db "@"
+
+FuchsiaHouse1Script3:
+    ld a, $f0
+    ld [wJoypadForbiddenButtonsMask], a
+    ld a, $8
+    ld [$d528], a
+    call UpdateSprites
+    ld a, $9
+    ld [$ff00+$8c], a
+    call DisplayTextID
+    call Delay3
+    ld a, $2
+    ld [$ff00+$8c], a
+    ld de, TimmyExitMovement
+    call MoveSprite
+
+    ld a, $4
+    ld [W_FUCHSIAHOUSE1CURSCRIPT], a
+    ret
+
+TimmyExitMovement:
+    db $00,$00,$00,$00,$00,$FF
+
+FuchsiaHouse1Script4:
+    ld a, [$d730]
+    bit 0, a
+    ret nz
+    ld a, $e6
+    ld [$cc4d], a
+    ld a, $11
+    call Predef
+    xor a
+    ld [wJoypadForbiddenButtonsMask], a
+    call Func_2307 ; reset to map music
+    ld a, $5
+    ld [W_FUCHSIAHOUSE1CURSCRIPT], a
+    ret
+
+FuchsiaHouse1Script5:
+    ret
+
 FuchsiaHouse1TextPointers: ; 7501c (1d:501c)
-	dw FuchsiaHouse1Text1
+	dw FuchsiaHouse1Text1_
 	dw FuchsiaHouse1Text2
 	dw FuchsiaHouse1Text3
+	dw FuchsiaHouse1Text4
+	dw FuchsiaHouse1Text4
+    dw FuchsiaHouse1Text6
+    dw FuchsiaHouse1Text7
+    dw FuchsiaHouse1Text8
+    dw FuchsiaHouse1Text9
 
-FuchsiaHouse1Text1: ; 75022 (1d:5022)
+FuchsiaHouse1Text1_: ; 75022 (1d:5022)
+    db $08 ; asm
+    ld a, [W_FUCHSIAHOUSE1CURSCRIPT]
+    cp 6
+    jr z, .gaveItem
+    ld hl, FuchsiaHouse1Text1
+    call PrintText
+    ld bc,(AMULET_RING << 8) | 1
+    call GiveItem
+    jr nc, .BagFull
+    ld hl, FuchsiaHouse1GotItem
+    call PrintText
+    ld a, 6
+    ld [W_FUCHSIAHOUSE1CURSCRIPT], a
+    jr .done
+.BagFull
+    ld hl, FuchsiaHouse1NoRoom
+    call PrintText
+    jr .done
+.gaveItem
+    ld hl, FuchsiaHouse1Text1_2
+    call PrintText
+.done
+    jp TextScriptEnd
+
+FuchsiaHouse1Text1:
+    TX_FAR _FuchsiaHouse1Text1
+    db "@"
+
+FuchsiaHouse1GotItem:
+    TX_FAR _FuchsiaHouse1GotItem
+    db "@"
+
+FuchsiaHouse1NoRoom:
+    TX_FAR _FuchsiaHouse1NoRoom
+    db "@"
+
+FuchsiaHouse1Text1_2:
+    TX_FAR _FuchsiaHouse1Text1_2
+    db "@"
+
 	TX_FAR _FuchsiaHouse1Text1
 	db "@"
 
@@ -105961,23 +106119,45 @@ FuchsiaHouse1Text3: ; 7502c (1d:502c)
 	TX_FAR _FuchsiaHouse1Text3
 	db "@"
 
+FuchsiaHouse1Text4: ; 7502c (1d:502c)
+	TX_FAR _FuchsiaHouse1Text4
+	db "@"
+
+FuchsiaHouse1Text6: ; 7502c (1d:502c)
+    TX_FAR _FuchsiaHouse1Text6
+    db "@"
+
+FuchsiaHouse1Text7: ; 7502c (1d:502c)
+    TX_FAR _FuchsiaHouse1Text7
+    db "@"
+
+FuchsiaHouse1Text8: ; 7502c (1d:502c)
+    TX_FAR _FuchsiaHouse1Text8
+    db "@"
+
+FuchsiaHouse1Text9: ; 7502c (1d:502c)
+    TX_FAR _FuchsiaHouse1Text9
+    db "@"
+
 FuchsiaHouse1Object: ; 0x75031 (size=38)
-	db $a ; border tile
+	db $3 ; border tile
 
 	db $2 ; warps
-	db $7, $2, $1, $ff
-	db $7, $3, $1, $ff
+	db $b, $4, $7, $ff
+	db $b, $5, $7, $ff
 
 	db $0 ; signs
 
-	db $3 ; people
-	db SPRITE_MOM_GEISHA, $3 + 4, $2 + 4, $ff, $d3, $1 ; person
-	db SPRITE_GAMBLER, $2 + 4, $7 + 4, $ff, $d1, $2 ; person
-	db SPRITE_BUG_CATCHER, $5 + 4, $5 + 4, $ff, $ff, $3 ; person
+	db $5 ; people
+	db SPRITE_OAK, $2 + 4, $4 + 4, $ff, $d0, $1 ; person
+	db SPRITE_BUG_CATCHER, $3 + 4, $4 + 4, $ff, $d1, $2 ; person
+	db SPRITE_OAK_AIDE, $8 + 4, $6 + 4, $ff, $ff, $3 ; person
+	db SPRITE_BALL, $3 + 4, $7 + 4, $ff, $ff, $4 ; person
+	db SPRITE_BALL, $3 + 4, $8 + 4, $ff, $ff, $5
 
 	; warp-to
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP FUCHSIA_HOUSE_1_WIDTH, $b, $4
+	EVENT_DISP FUCHSIA_HOUSE_1_WIDTH, $b, $5
 
 FuchsiaPokecenter_h: ; 0x75057 to 0x75063 (12 bytes) (id=154)
 	db $06 ; tileset
