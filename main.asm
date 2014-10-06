@@ -53015,6 +53015,8 @@ Func_3ad71: ; 3ad71 (e:6d71)
 	jp z, .mossRock
 	cp EV_ICE_ROCK
 	jp z, .iceRock
+	cp EV_MOVE
+	jp z, .evoMove
 	cp EV_ITEM
 	jp z, .asm_3ada4
 	ld a, [$ccd4]
@@ -53049,7 +53051,7 @@ Func_3ad71: ; 3ad71 (e:6d71)
 	pop hl
 	cp 220
 	jp c, Func_3aed9
-	jr .asm_3adad
+	jp .asm_3adad
 .happinessNightEvo
 	; is it night?
 	ld a, [W_PLAYTIMEMINUTES + 1]
@@ -53099,6 +53101,33 @@ Func_3ad71: ; 3ad71 (e:6d71)
 	jp c, Func_3aed9
 	cp ICE_ROCK_Y + ICE_ROCK_HEIGHT
 	jp nc, Func_3aed9
+	jr .asm_3adad
+.evoMove
+	; does mon know the right move?
+	ld a, [hli]
+	ld e, a ; a contains move required to evolve
+	push hl
+	ld bc, 44
+	ld a, [wWhichPokemon]
+	ld hl, W_PARTYMON1_MOVE1
+	call AddNTimes ; hl points to happiness byte
+	ld a, [hli]
+	cp e
+	jr z, .hasMove
+	ld a, [hli]
+	cp e
+	jr z, .hasMove
+	ld a, [hli]
+	cp e
+	jr z, .hasMove
+	ld a, [hl]
+	cp e
+	jr z, .hasMove
+	; doesn't have the required move
+	pop hl
+	jp Func_3aed9
+.hasMove
+	pop hl
 	jr .asm_3adad
 .asm_3ada4
 	ld a, [W_ISINBATTLE]
@@ -55192,11 +55221,12 @@ Mon087_EvosMoves: ; 3b732 (e:7732)
 Mon171_EvosMoves: ; 3b73e (e:773e)
 ;BONSLY
 ;Evolutions
+	db EV_MOVE,MIMIC,1,SUDOWOODO
 	db 0
 ;Learnset
 	db 8,TACKLE
 	db 15,LOW_KICK
-	db 21,MIMIC
+	db 22,MIMIC
 	db 24,ROCK_THROW
 	db 31,FEINT_ATTACK
 	db 35,ROCK_SLIDE
@@ -55211,9 +55241,11 @@ Mon172_EvosMoves: ; 3b740 (e:7740)
 ;Learnset
 	db 10,TACKLE
 	db 17,LOW_KICK
-	db 25,ROCK_SLIDE
+	db 22,MIMIC
+	db 25,ROCK_THROW
 	db 30,COUNTER
 	db 35,FEINT_ATTACK
+	db 30,ROCK_SLIDE
 	db 46,SLAM
 	db 57,DOUBLE_EDGE
 	db 0
@@ -118562,6 +118594,8 @@ Func_3ad71_2: ; 3ad71 (e:6d71)
 	jp z, .mossRock_2
 	cp EV_ICE_ROCK
 	jp z, .iceRock_2
+	cp EV_MOVE
+	jp z, .evoMove2
 	cp EV_ITEM
 	jp z, .asm_3ada4_2
 	ld a, [$ccd4]
@@ -118596,7 +118630,7 @@ Func_3ad71_2: ; 3ad71 (e:6d71)
 	pop hl
 	cp 220
 	jp c, Func_3aed9_2
-	jr .asm_3adad_2
+	jp .asm_3adad_2
 .happinessNightEvo_2
 	; is it day?
 	ld a, [W_PLAYTIMEMINUTES + 1]
@@ -118646,6 +118680,33 @@ Func_3ad71_2: ; 3ad71 (e:6d71)
 	jp c, Func_3aed9_2
 	cp ICE_ROCK_Y + ICE_ROCK_HEIGHT
 	jp nc, Func_3aed9_2
+	jr .asm_3adad_2
+.evoMove2
+	; does mon know the right move?
+	ld a, [hli]
+	ld e, a ; a contains move required to evolve
+	push hl
+	ld bc, 44
+	ld a, [wWhichPokemon]
+	ld hl, W_PARTYMON1_MOVE1
+	call AddNTimes ; hl points to happiness byte
+	ld a, [hli]
+	cp e
+	jr z, .hasMove2
+	ld a, [hli]
+	cp e
+	jr z, .hasMove2
+	ld a, [hli]
+	cp e
+	jr z, .hasMove2
+	ld a, [hl]
+	cp e
+	jr z, .hasMove2
+	; doesn't have the required move
+	pop hl
+	jp Func_3aed9_2
+.hasMove2
+	pop hl
 	jr .asm_3adad_2
 .asm_3ada4_2
 	ld a, [W_ISINBATTLE]
