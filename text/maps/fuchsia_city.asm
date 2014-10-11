@@ -32,19 +32,19 @@ _FuchsiaCityText5:: ; a5f96 (29:5f96)
 	done
 
 _FuchsiaCityText11:: ; a5f99 (29:5f99)
-	text "FUCHSIA CITY"
-	line "Behold! It's"
-	cont "Passion Pink!"
+	text "QUARTZ CITY"
+	line "The epicenter of"
+	cont "knowledge and"
+	cont "progress."
 	done
 
 _FuchsiaCityText13:: ; a5fc1 (29:5fc1)
-	text "SAFARI GAME"
-	line "#MON-U-CATCH!"
+	text "RAINEY LABS"
 	done
 
 _FuchsiaCityText16:: ; a5fdc (29:5fdc)
-	text "SAFARI ZONE"
-	line "WARDEN's HOME"
+	text "PINE #MON"
+	line "RESEARCH LAB"
 	done
 
 _FuchsiaCityText17:: ; a5ff6 (29:5ff6)
@@ -53,20 +53,17 @@ _FuchsiaCityText17:: ; a5ff6 (29:5ff6)
 	done
 
 _FuchsiaCityText18:: ; a6011 (29:6011)
-	text "FUCHSIA CITY"
+	text "QUARTZ CITY"
 	line "#MON GYM"
-	cont "LEADER: KOGA"
+	cont "LEADER: DR.ROOT"
 
-	para "The Poisonous"
-	line "Ninja Master"
+	para "The Possibly-Evil"
+	line "Genius Scientist!"
 	done
 
-_FuchsiaCityChanseyText:: ; a6050 (29:6050)
-	text "Name: CHANSEY"
-
-	para "Catching one is"
-	line "all up to chance."
-	prompt
+_FuchsiaCityTimmyText:: ; a6050 (29:6050)
+	text "TIMMY's HOUSE"
+	done
 
 _FuchsiaCityVoltorbText:: ; a6081 (29:6081)
 	text "Name: VOLTORB"

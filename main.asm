@@ -32268,15 +32268,14 @@ FuchsiaCityObject: ; 0x18bd4 (size=178)
 	db $19, $9, $0, SILPH_CO_1F
 	db $1f, $14, $1, FUCHSIA_HOUSE_1 ; the lab with the wimpy kid
 
-	db $8 ; signs
-	db $9, $1f, $b ; FuchsiaCityText11
-	db $b, $1d, $c ; FuchsiaCityText12
-	db $11, $10, $d ; FuchsiaCityText13
-	db $11, $16, $e ; MartSignText
-	db $17, $11, $f ; PokeCenterSignText
-	db $17, $17, $10 ; FuchsiaCityText16
-	db $19, $7, $11 ; FuchsiaCityText17
-	db $1f, $11, $12 ; FuchsiaCityText18
+	db $7 ; signs
+	db $9, $1f, $12 ; FuchsiaCityText18
+	db $b, $1d, $b ; FuchsiaCityText11
+	db $11, $10, $e ; MartSignText
+	db $11, $16, $f ; PokeCenterSignText
+	db $17, $11, $13 ; FuchsiaCityText19
+	db $19, $7, $d ; FuchsiaCityText13
+	db $1f, $11, $10 ; FuchsiaCityText16
 	
 	db $a ; people
 	db SPRITE_BUG_CATCHER, $c + 4, $a + 4, $fe, $2, $1 ; person
@@ -34297,15 +34296,7 @@ FuchsiaCityText18: ; 19a8b (6:5a8b)
 	db "@"
 
 FuchsiaCityText19: ; 19a90 (6:5a90)
-	db $08 ; asm
-	ld hl, FuchsiaCityChanseyText
-	call PrintText
-	ld a, CHANSEY
-	call DisplayPokedex
-	jp TextScriptEnd
-
-FuchsiaCityChanseyText: ; 19a9f (6:5a9f)
-	TX_FAR _FuchsiaCityChanseyText
+	TX_FAR _FuchsiaCityTimmyText
 	db "@"
 
 FuchsiaCityText20: ; 19aa4 (6:5aa4)
