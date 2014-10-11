@@ -1467,6 +1467,7 @@ W_BOXMON2NAME:: ; de11
 
 ; extra bytes begin here. REMEMBER TO UPDATE THE CONSTANT "EXTRA_WRAM_BYTES"
 
+W_FIRST_NEW_BYTE::
 W_NEWFLAGS1:: ; dee2
 	ds 1
 	; 0: Beat Shadow of Copper Town 
@@ -1497,6 +1498,7 @@ W_COVENANT::
 	ds 1
 
 W_FUCHSIAHOUSE1CURSCRIPT::
+W_LAST_NEW_BYTE::
 	ds 1
 
 ; if you ever add more here, you have to modify 

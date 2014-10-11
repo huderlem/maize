@@ -95,7 +95,8 @@ _FuchsiaHouse1Text7::
 	done
 
 _FuchsiaHouse1Text8::
-	text "Nonsense, TIMMY!"
+	text "PROF.PINE:" 
+	line "Nonsense, TIMMY!"
 
 	para "This guy looks"
 	line "looks easy!"

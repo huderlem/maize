@@ -47,3 +47,4 @@ CHANNELER     EQU $2D
 AGATHA        EQU $2E
 LANCE         EQU $2F
 SHADOW        EQU $30
+TIMMY         EQU $31

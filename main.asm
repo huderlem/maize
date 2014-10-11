@@ -27146,6 +27146,10 @@ InitializePlayerData: ; f850 (3:7850)
 	ld hl, W_GAMEPROGRESSFLAGS ; $d5f0
 	ld bc, $c8
 	call FillMemory               ; clear all game progress flags
+	ld hl, W_FIRST_NEW_BYTE
+	ld bc, 1 + W_LAST_NEW_BYTE - W_FIRST_NEW_BYTE
+	xor a
+	call FillMemory
 	jp InitializeMissableObjectsFlags
 
 ; writes two bytes $00 $ff to hl
@@ -41499,6 +41503,7 @@ TrainerNamePointers: ; 27e64 (9:7e64)
 	dw W_TRAINERNAME
 	dw W_TRAINERNAME
 	dw W_TRAINERNAME
+    dw W_TRAINERNAME
 
 YoungsterName: ; 27ec2 (9:7ec2)
 	db "YOUNGSTER@"
@@ -51083,6 +51088,9 @@ TrainerPicAndMoneyPointers: ; 39914 (e:5914)
 	dw ShadowPic
 	db 0,0,0
 
+    dw YoungsterPic
+    db 0,$10,0
+
 TrainerNames: ; 399ff (e:59ff)
 	db "YOUNGSTER@"
 	db "BUG CATCHER@"
@@ -51132,6 +51140,7 @@ TrainerNames: ; 399ff (e:59ff)
 	db "AGATHA@"
 	db "LANCE@"
 	db "???@"
+    db "TIMMY@"
 
 Func_39b87: ; 39b87 (e:5b87)
 	ld hl, $d0dc
@@ -51699,7 +51708,7 @@ TrainerDataPointers: ; 39d3b (e:5d3b)
 	dw CooltrainerMData,CooltrainerFData,BrunoData,BrockData,MistyData
 	dw LtSurgeData,ErikaData,KogaData,BlaineData,SabrinaData
 	dw GentlemanData,Green2Data,Green3Data,LoreleiData,ChannelerData
-	dw AgathaData,LanceData,ShadowData
+	dw AgathaData,LanceData,ShadowData,TimmyData
 
 ; if first byte != FF, then
 	; first byte is level (of all pokemon on this team)
@@ -52191,6 +52200,9 @@ LanceData: ; 3a522 (e:6522)
 ShadowData:
 	db $FF,100,SKARMORY,100,DRAGONITE,100,ALAKAZAM,0
 	db $FF,25,FLAAFFY,26,HAUNTER,27,FEAROW,0
+TimmyData:
+    db $5,EEVEE,0
+
 
 TrainerAI: ; 3a52e (e:652e)
 ;XXX called at 34964, 3c342, 3c398
@@ -105995,7 +106007,7 @@ FuchsiaHouse1Script2:
     ld hl, BeatTimmyText
     ld de, LostToTimmyText
     call PreBattleSaveRegisters
-    ld a, SONY2 + $C8
+    ld a, TIMMY + $C8
     ld [$d059], a
     ld a, $1
     ld [W_TRAINERNO], a
