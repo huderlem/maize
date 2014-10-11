@@ -20565,7 +20565,7 @@ MapHSB1: ; cbc8 (3:4bc8)
 	db FIGHTINGDOJO,$06,Show
 	db FIGHTINGDOJO,$07,Show
 MapHSB5: ; cbce (3:4bce)
-	db SILPH_CO_1F,$01,Hide
+	db SILPH_CO_1F,$04,Show
 MapHS53: ; cbd1 (3:4bd1)
 	db POWER_PLANT,$01,Show
 	db POWER_PLANT,$02,Show
@@ -32265,7 +32265,7 @@ FuchsiaCityObject: ; 0x18bd4 (size=178)
 	db $11, $15, $0, FUCHSIA_POKECENTER
 	db $17, $13, $0, FUCHSIA_HOUSE_2
 	db $17, $19, $0, FUCHSIA_HOUSE_3
-	db $19, $9, $0, FUCHSIAMEETINGROOM
+	db $19, $9, $0, SILPH_CO_1F
 	db $1f, $14, $1, FUCHSIA_HOUSE_1 ; the lab with the wimpy kid
 
 	db $8 ; signs
@@ -32297,7 +32297,7 @@ FuchsiaCityObject: ; 0x18bd4 (size=178)
 	EVENT_DISP $14, $11, $15 ; FUCHSIA_POKECENTER
 	EVENT_DISP $14, $17, $13 ; SAFARIZONEENTRANCE
 	EVENT_DISP $14, $17, $19 ; FUCHSIA_HOUSE_3
-	EVENT_DISP $14, $19, $9 ; FUCHSIAMEETINGROOM
+	EVENT_DISP $14, $19, $9 ; SILPH_CO_1F
 	EVENT_DISP $14, $1f, $14 ; FUCHSIA_HOUSE_3
 
 FuchsiaCityBlocks: ; 18c86 (6:4c86)
@@ -93408,47 +93408,50 @@ SilphCo1_h: ; 0x5d442 to 0x5d44e (12 bytes) (id=181)
 	dw SilphCo1Object ; objects
 
 SilphCo1Script: ; 5d44e (17:544e)
-	call EnableAutoTextBoxDrawing
-	ld a, [$d838]
-	bit 7, a
-	ret z
-	ld hl, $d7b9
-	bit 7, [hl]
-	set 7, [hl]
-	ret nz
-	ld a, $4c
-	ld [$cc4d], a
-	ld a, $15
-	jp Predef
+	jp EnableAutoTextBoxDrawing
 
 SilphCo1TextPointers: ; 5d469 (17:5469)
 	dw SilphCo1Text1
+	dw SilphCo1Text2
+	dw SilphCo1Text3
+	dw SilphCo1Text4
 
 SilphCo1Text1: ; 5d46b (17:546b)
 	TX_FAR _SilphCo1Text1
 	db "@"
 
+SilphCo1Text2: ; 5d46b (17:546b)
+	TX_FAR _SilphCo1Text2
+	db "@"
+
+SilphCo1Text3: ; 5d46b (17:546b)
+	TX_FAR _SilphCo1Text3
+	db "@"
+
+SilphCo1Text4: ; 5d46b (17:546b)
+	TX_FAR _SilphCo1Text4
+	db "@"
+
 SilphCo1Object: ; 0x5d470 (size=50)
 	db $2e ; border tile
 
-	db $5 ; warps
-	db $11, $a, $5, $ff
-	db $11, $b, $5, $ff
-	db $0, $1a, $0, SILPH_CO_2F
-	db $0, $14, $0, SILPH_CO_ELEVATOR
-	db $a, $10, $6, SILPH_CO_3F
+	db $3 ; warps
+	db $f, $6, $6, $ff
+	db $f, $7, $6, $ff
+	db $0, $c, $0, SILPH_CO_2F
 
 	db $0 ; signs
 
-	db $1 ; people
+	db $4 ; people
 	db SPRITE_CABLE_CLUB_WOMAN, $2 + 4, $4 + 4, $ff, $d0, $1 ; person
+	db SPRITE_OAK_AIDE, $9 + 4, $9 + 4, $ff, $ff, $2 ; person
+	db SPRITE_OAK_AIDE, $a + 4, $b + 4, $ff, $ff, $3 ; person
+	db SPRITE_OAK_AIDE, $1 + 4, $c + 4, $ff, $d0, $4 ; person
 
 	; warp-to
-	EVENT_DISP $f, $11, $a
-	EVENT_DISP $f, $11, $b
-	EVENT_DISP $f, $0, $1a ; SILPH_CO_2F
-	EVENT_DISP $f, $0, $14 ; SILPH_CO_ELEVATOR
-	EVENT_DISP $f, $a, $10 ; SILPH_CO_3F
+	EVENT_DISP SILPH_CO_1F_WIDTH, $f, $6
+	EVENT_DISP SILPH_CO_1F_WIDTH, $f, $7
+	EVENT_DISP SILPH_CO_1F_WIDTH, $0, $c ; SILPH_CO_2F
 
 SilphCo1Blocks: ; 5d4a2 (17:54a2)
 	INCBIN "maps/silphco1.blk"
