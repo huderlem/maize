@@ -197,6 +197,9 @@ SWEET_KISS   EQU $C4
 DIVE         EQU $C5
 STRUGGLE     EQU $C6
 
+RUN_AWAY     EQU $FE
+
+
 ; these do double duty as animation identifiers
 SHOWPIC_ANIM EQU $A6 ; redraw monster pic
 STATUS_AFFECTED_ANIM EQU $A7 ; effect when monster receives a status aliment

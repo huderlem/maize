@@ -1132,6 +1132,9 @@ CheckMapConnections:: ; 07ba (0:07ba)
 	ld [$d360],a
 .loadNewMap ; load the connected map that was entered
 	call LoadMapHeader
+	ld b, Bank(UpdateRoamingPokemon)
+	ld hl, UpdateRoamingPokemon
+	call Bankswitch
 	call Func_2312 ; music
 	ld b,$09
 	call GoPAL_SET
@@ -7870,7 +7873,7 @@ IsMoveHM:: ; 3049 (0:3049)
 	jp IsInArray
 
 HMMoves:: ; 3052 (0:3052)
-	db CUT,FLY,SURF,STRENGTH,FLASH
+	db CUT,FLY,SURF,STRENGTH,FLASH,DIVE
 	db $ff ; terminator
 
 GetMoveName:: ; 3058 (0:3058)
@@ -7915,14 +7918,6 @@ ReloadTilesetTilePatterns:: ; 3090 (0:3090)
 	ld [H_LOADEDROMBANK],a
 	ld [$2000],a
 	ret
-
-; shows the town map and lets the player choose a destination to fly to
-ChooseFlyDestination:: ; 30a9 (0:30a9)
-	ld hl,$d72e
-	res 4,[hl]
-	ld b, BANK(Func_70f90)
-	ld hl, Func_70f90
-	jp Bankswitch
 
 ; causes the text box to close waithout waiting for a button press after displaying text
 DisableWaitingAfterTextDisplay:: ; 30b6 (0:30b6)
@@ -25335,7 +25330,43 @@ ItemUseReloadOverworldData: ; e9c5 (3:69c5)
 	call LoadCurrentMapView
 	jp UpdateSprites
 
+
+RoamingMonIDsCopy:
+	db ZAPDOS, ARTICUNO, MOLTRES, $ff
+
+RoamingMonRAMByteMap:
+	db ZAPDOS, 0
+	db ARTICUNO, 1
+	db MOLTRES, 2
+
 Func_e9cb: ; e9cb (3:69cb)
+	; check for roaming pokemon
+	ld a, [$d11e]
+	ld hl,RoamingMonIDsCopy
+	ld de,1
+	call IsInArray
+	jr nc, .normalMon
+	ld hl, RoamingMonRAMByteMap
+	ld a, [$d11e]
+	ld d, a
+.monLoop
+	ld a, [hli]
+	cp d
+	inc hl
+	jr nz, .monLoop
+	dec hl
+	ld a, [hl]
+	ld hl, W_ROAMING1_MAP
+	ld c, a
+	ld b, 0
+	add hl, bc
+	ld a, [hl] ; a contains the roaming mon's current map
+	ld hl, $cee9
+	ld [hli], a
+	ld a, $ff
+	ld [hl], a
+	ret
+.normalMon
 	ld hl, WildDataPointers ; $4eeb
 	ld de, $cee9
 	ld c, $0
@@ -29056,7 +29087,12 @@ StartMenu_Pokemon: ; 130a9 (4:70a9)
 	call PrintText
 	jp .loop
 .canFly
-	call ChooseFlyDestination
+	ld hl,$d72e
+	res 4,[hl]
+	ld b, BANK(Func_70f90)
+	ld hl, Func_70f90
+	call Bankswitch
+
 	ld a,[$d732]
 	bit 3,a ; did the player decide to fly?
 	jp nz,.goBackToMap
@@ -30211,6 +30247,59 @@ Func_13870: ; 13870 (4:7870)
 
 	push hl
 
+	; check for roaming pokemon
+	call GenRandom
+	cp 153 ; 60% chance of roaming pokemon
+	jr nc, .swarm 
+	ld hl, W_NEWFLAGS2
+	ld c, 3 + 1
+.monLoop
+	dec c
+	jr z, .swarm
+	ld a, c
+	cp 3
+	jr z, .check2
+	bit 5, [hl]
+	jr z, .monLoop
+	jr .monIsActive
+.check2
+	cp 2
+	jr z, .check1
+	bit 4, [hl]
+	jr z, .monLoop
+	jr .monIsActive
+.check1
+	bit 3, [hl]
+	jr z, .monLoop
+.monIsActive
+	push hl
+	push bc
+	ld b, 0
+	dec c
+	ld hl, W_ROAMING1_MAP
+	add hl, bc
+	ld a, [W_CURMAP]
+	cp [hl]
+	jr z, .ranIntoRoamingMon
+	pop bc
+	pop hl
+	jr .monLoop
+.ranIntoRoamingMon
+	sla c
+	ld b, 0
+	ld hl, RoamingPokemon
+	add hl, bc ; hl points to mon-id/level pair
+	ld a, [hli]
+	ld [$cf91], a
+	ld [W_ENEMYMONID], a
+	ld a, [hl]
+	ld [W_CURENEMYLVL], a
+	pop bc
+	pop hl
+	pop bc ; junk
+	jr .notSure
+
+.swarm
 	; check for swarm
 	; TODO: fishing rod swarm stuff here or somewhere else?
 	; 40% chance of running into swarm pokemon
@@ -30267,6 +30356,12 @@ Func_13870: ; 13870 (4:7870)
 .asm_13916
 	xor a
 	ret
+
+RoamingPokemon:
+; mon id, level
+	db ZAPDOS,   50
+	db ARTICUNO, 50
+	db MOLTRES,  50
 
 WildMonEncounterSlotChances: ; 13918 (4:7918)
 ; There are 10 slots for wild pokemon, and this is the table that defines how common each of
@@ -58626,10 +58721,30 @@ SelectEnemyMove: ; 3d564 (f:5564)
 	jr z, .chooseRandomMove ; move non-existant, try again
 .done
 	ld [wEnemySelectedMove], a
+
+	ld a, [W_ENEMYMONID]
+	ld hl,RoamingMonIDs
+	ld de,1
+	call IsInArray
+	ret nc
+	call GenRandom
+	and 1
+	ret z
+
+	; update the maps of the roaming pokemon
+	ld hl, UpdateRoamingPokemon
+	ld b, Bank(UpdateRoamingPokemon)
+	call Bankswitch
+
+	ld a, RUN_AWAY
+	ld [wEnemySelectedMove], a
 	ret
 .asm_3d601
 	ld a, $a5
 	jr .done
+
+RoamingMonIDs:
+	db ZAPDOS, ARTICUNO, MOLTRES, $ff
 
 Func_3d605: ; 3d605 (f:5605)
 	ld a, $ff
@@ -61455,6 +61570,12 @@ Func_3e6bc: ; 3e6bc (f:66bc)
 	jr nz, .asm_3e6f2
 	jp [hl]
 .asm_3e6f2
+	ld a, [wEnemySelectedMove]
+	cp RUN_AWAY
+	pop hl ; junk
+	jp z, asm_3c202
+	push hl
+
 	ld hl, W_ENEMYBATTSTATUS1 ; $d067
 	bit 4, [hl]
 	jr nz, asm_3e70b
@@ -119863,3 +119984,105 @@ ItemInfoPointers:
 	db "@"
 	TX_FAR _HealingRingDescription
 	db "@"
+
+RoamingMapPointers:
+	dbw ROUTE_1, Route1AdjRoutes
+	dbw ROUTE_2, Route2AdjRoutes
+	dbw ROUTE_3, Route3AdjRoutes
+	dbw ROUTE_25, Route25AdjRoutes
+	dbw ROUTE_24, Route24AdjRoutes
+	dbw ROUTE_5, Route5AdjRoutes
+	dbw ROUTE_8, Route8AdjRoutes
+	dbw ROUTE_6, Route6AdjRoutes
+	db $ff ; terminator
+
+Route1AdjRoutes:
+	db 0, ROUTE_2
+Route2AdjRoutes:
+	db 1, ROUTE_1, ROUTE_3
+Route3AdjRoutes:
+	db 1, ROUTE_25, ROUTE_2
+Route25AdjRoutes:
+	db 1, ROUTE_3, ROUTE_24
+Route24AdjRoutes:
+	db 3, ROUTE_25, ROUTE_5, ROUTE_6, ROUTE_8
+Route5AdjRoutes:
+	db 3, ROUTE_3, ROUTE_24, ROUTE_5, ROUTE_6
+Route8AdjRoutes:
+	db 3, ROUTE_8, ROUTE_5, ROUTE_6, ROUTE_24 ; TODO, shouldn't connect to itself
+Route6AdjRoutes:
+	db 3, ROUTE_8, ROUTE_24, ROUTE_5, ROUTE_7
+
+UpdateRoamingPokemon:
+; update the current maps of the roaming pokemon
+	push hl
+	push de
+	push bc
+	ld hl, W_ROAMING1_MAP
+	ld c, 3 + 1 ; 3 mons to loop through
+.monLoop
+	dec c
+	jr z, .done
+	ld a, [W_NEWFLAGS2]
+	ld b, a
+	ld a, c
+	cp 1
+	jr z, .mon1Check
+	cp 2
+	jr z, .mon2Check
+.mon3Check
+	bit 5, b
+	jr z, .monLoop
+	jr .updateMap
+.mon2Check
+	bit 4, b
+	jr z, .monLoop
+	jr .updateMap
+.mon1Check
+	bit 3, b
+	jr z, .monLoop
+.updateMap
+	ld b, 0 ; bc = mon index (1, 2, or 3)
+	ld hl, W_ROAMING1_MAP - 1
+	add hl, bc
+	push hl
+	ld a, [hl] ; a contains current map of roaming mon
+	ld d, a
+	ld hl, RoamingMapPointers
+	push bc
+	ld bc, 3
+.findMapEntryLoop
+	ld a, [hl]
+	cp d
+	jr z, .foundMapEntry
+	cp $ff
+	jr z, .mapEntryNotFound
+	add hl, bc
+	jr .findMapEntryLoop
+.mapEntryNotFound
+	; fall back to route 1 if something has goes horribly wrong
+	ld hl, RoamingMapPointers
+.foundMapEntry
+	inc hl
+	ld a, [hli]
+	ld e, a
+	ld a, [hl]
+	ld h, a
+	ld l, e ; hl points to adjacent routes entry
+	ld a, [hli]
+	ld e, a
+	call GenRandom
+	and e
+	ld c, a
+	ld b, 0
+	add hl, bc
+	pop bc
+	ld a, [hl] ; a contains next map
+	pop hl ; hl points to roaming map in wram
+	ld [hl], a
+	jr .monLoop
+.done
+	pop bc
+	pop de
+	pop hl
+	ret

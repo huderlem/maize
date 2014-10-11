@@ -1493,11 +1493,23 @@ W_NEWFLAGS2::
 	; 0: gave shrubber his glasses
 	; 1: found the Seafarer Captain
 	; 2: received HM06 Dive
+	; 3: roaming pokemon 1 (if bit is set, then it's actively roaming)
+	; 4: roaming pokemon 2 (if bit is set, then it's actively roaming)
+	; 5: roaming pokemon 3 (if bit is set, then it's actively roaming)
 	
 W_COVENANT::
 	ds 1
 
 W_FUCHSIAHOUSE1CURSCRIPT::
+	ds 1
+
+W_ROAMING1_MAP::
+	ds 1
+
+W_ROAMING2_MAP::
+	ds 1
+
+W_ROAMING3_MAP::
 W_LAST_NEW_BYTE::
 	ds 1
 
@@ -1510,5 +1522,6 @@ W_LAST_NEW_BYTE::
 ; FREE SPACE
 ; 
 ; $d792: bits 6, 7 (from Quartz City Gym)
+; bit 7 from byte in silph co 1 script
 ; 
 
