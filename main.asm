@@ -22649,6 +22649,26 @@ ItemUseBall: ; d687 (3:5687)
 	ld [W_ENEMYMONLEVEL], a
 	ld [W_CURENEMYLVL], a
 .pastSpecialBalls
+; handle roaming pokemon
+	ld a, [$cfe5]
+	ld d, a
+	ld hl, RoamingMonBitMapCopy
+.monLoop
+	ld a, [hli]
+	cp d
+	jr z, .foundMon
+	cp $ff
+	jr z, .pastRoaming
+	inc hl
+	jr .monLoop
+.foundMon
+	ld a, [hl]
+	ld d, a ; d contains the bitmask
+	ld hl, W_NEWFLAGS2
+	ld a, [hl]
+	and d
+	ld [hl], a
+.pastRoaming
 	ld a,[$cfe5]	;enemy
 	ld [$d11c],a
 	ld [$cf91],a
@@ -22718,6 +22738,13 @@ ItemUseBall: ; d687 (3:5687)
 	inc a
 	ld [$cf96],a
 	jp RemoveItemFromInventory	;remove ITEM (XXX)
+
+RoamingMonBitMapCopy:
+	db ZAPDOS,   %11110111
+	db ARTICUNO, %11101111
+	db MOLTRES,  %11011111
+	db $ff ; terminator
+
 ItemUseBallText00: ; d937 (3:5937)
 ;"It dodged the thrown ball!"
 ;"This pokemon can't be caught"
@@ -25335,9 +25362,9 @@ RoamingMonIDsCopy:
 	db ZAPDOS, ARTICUNO, MOLTRES, $ff
 
 RoamingMonRAMByteMap:
-	db ZAPDOS, 0
-	db ARTICUNO, 1
-	db MOLTRES, 2
+	db ZAPDOS,   %00001000, 0
+	db ARTICUNO, %00010000, 1
+	db MOLTRES,  %00100000, 2
 
 Func_e9cb: ; e9cb (3:69cb)
 	; check for roaming pokemon
@@ -25353,7 +25380,16 @@ Func_e9cb: ; e9cb (3:69cb)
 	ld a, [hli]
 	cp d
 	inc hl
+	inc hl
 	jr nz, .monLoop
+	dec hl
+	dec hl
+	; hl points to second byte in entry
+	ld a, [W_NEWFLAGS2]
+	and [hl]
+	inc hl
+	inc hl
+	jr z, .normalMon
 	dec hl
 	ld a, [hl]
 	ld hl, W_ROAMING1_MAP
@@ -30249,7 +30285,7 @@ Func_13870: ; 13870 (4:7870)
 
 	; check for roaming pokemon
 	call GenRandom
-	cp 153 ; 60% chance of roaming pokemon
+	cp 255;153 ; 60% chance of roaming pokemon
 	jr nc, .swarm 
 	ld hl, W_NEWFLAGS2
 	ld c, 3 + 1
@@ -30258,13 +30294,13 @@ Func_13870: ; 13870 (4:7870)
 	jr z, .swarm
 	ld a, c
 	cp 3
-	jr z, .check2
+	jr nz, .check2
 	bit 5, [hl]
 	jr z, .monLoop
 	jr .monIsActive
 .check2
 	cp 2
-	jr z, .check1
+	jr nz, .check1
 	bit 4, [hl]
 	jr z, .monLoop
 	jr .monIsActive
@@ -30359,9 +30395,9 @@ Func_13870: ; 13870 (4:7870)
 
 RoamingPokemon:
 ; mon id, level
-	db ZAPDOS,   50
-	db ARTICUNO, 50
-	db MOLTRES,  50
+	db ZAPDOS,   40
+	db ARTICUNO, 40
+	db MOLTRES,  40
 
 WildMonEncounterSlotChances: ; 13918 (4:7918)
 ; There are 10 slots for wild pokemon, and this is the table that defines how common each of
@@ -56461,6 +56497,27 @@ FaintEnemyPokemon ; 0x3c567
 	call PrintText
 	call Func_3ee94
 	call SaveScreenTilesToBuffer1
+
+; handle roaming pokemon
+	ld a, [W_ENEMYMONID]
+	ld d, a
+	ld hl, RoamingMonBitMap
+.monLoop
+	ld a, [hli]
+	cp d
+	jr z, .foundMon
+	cp $ff
+	jr z, .pastRoaming
+	inc hl
+	jr .monLoop
+.foundMon
+	ld a, [hl]
+	ld d, a ; d contains the bitmask
+	ld hl, W_NEWFLAGS2
+	ld a, [hl]
+	and d
+	ld [hl], a
+.pastRoaming
 	xor a
 	ld [$cf0b], a
 	ld b, EXP__ALL
@@ -56496,6 +56553,12 @@ FaintEnemyPokemon ; 0x3c567
 	ld hl, Func_5524f
 	ld b, BANK(Func_5524f)
 	jp Bankswitch ; indirect jump to Func_5524f (5524f (15:524f))
+
+RoamingMonBitMap:
+	db ZAPDOS,   %11110111
+	db ARTICUNO, %11101111
+	db MOLTRES,  %11011111
+	db $ff ; terminator
 
 EnemyMonFainted: ; 0x3c63e
 	TX_FAR _EnemyMonFainted
@@ -64859,7 +64922,7 @@ HandlePokedexListMenu: ; 40111 (10:4111)
 	ld hl,Coord
 	call DrawPokedexVerticalLine
 	ld hl,wPokedexSeen
-	ld b,30
+	ld b,28
 	call CountSetBits
 	ld de,$d11e
 	FuncCoord 16,3
@@ -64867,7 +64930,7 @@ HandlePokedexListMenu: ; 40111 (10:4111)
 	ld bc,$0103
 	call PrintNumber ; print number of seen pokemon
 	ld hl,wPokedexOwned
-	ld b,30
+	ld b,28
 	call CountSetBits
 	ld de,$d11e
 	FuncCoord 16,6
@@ -64891,7 +64954,7 @@ HandlePokedexListMenu: ; 40111 (10:4111)
 	ld de,PokedexMenuItemsText
 	call PlaceString
 ; find the highest pokedex number among the pokemon the player has seen
-	ld hl,wPokedexSeen + 30
+	ld hl,wPokedexSeen + 28
 	ld b,249
 .maxSeenPokemonLoop
 	ld a,[hld]
@@ -64907,6 +64970,8 @@ HandlePokedexListMenu: ; 40111 (10:4111)
 	ld a,b
 	ld [$cd3d],a ; max seen pokemon
 .loop
+	ld hl, $d730
+	set 6, [hl]
 	xor a
 	ld [H_AUTOBGTRANSFERENABLED],a
 	FuncCoord 4,2
