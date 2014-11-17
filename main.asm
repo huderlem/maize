@@ -31207,7 +31207,7 @@ MapSpriteSets: ; 17a64 (5:7a64)
 	db $09 ; ROUTE_6
 	db $09 ; ROUTE_7
 	db $fc ; ROUTE_8
-	db $02 ; ROUTE_9
+	db $0a ; ROUTE_9
 	db $f2 ; ROUTE_10
 	db $01 ; ROUTE_11
 	db $f4 ; ROUTE_12
@@ -31371,7 +31371,7 @@ SpriteSets: ; 17ab9 (5:7ab9)
 	db SPRITE_FISHER2
 	db SPRITE_GAMBLER
 	db SPRITE_SLOWBRO
-	db SPRITE_SEEL
+	db SPRITE_HIKER
 	db SPRITE_SWIMMER
 	db SPRITE_BUG_CATCHER
 	db SPRITE_BALL
@@ -32382,7 +32382,8 @@ FuchsiaCity_h: ; 0x18ba7 to 0x18bd4 (45 bytes) (bank=6) (id=7)
 	db $00 ; tileset
 	db FUCHSIA_CITY_HEIGHT, FUCHSIA_CITY_WIDTH ; dimensions (y, x)
 	dw FuchsiaCityBlocks, FuchsiaCityTextPointers, FuchsiaCityScript ; blocks, texts, scripts
-	db EAST ; connections
+	db WEST | EAST ; connections
+	WEST_MAP_CONNECTION ROUTE_9, ROUTE_9_WIDTH, 3, 0, ROUTE_9_HEIGHT, Route9Blocks, FUCHSIA_CITY_WIDTH
 	EAST_MAP_CONNECTION ROUTE_7, ROUTE_7_WIDTH, 4, 0, ROUTE_7_HEIGHT, Route7Blocks, FUCHSIA_CITY_WIDTH
 	dw FuchsiaCityObject ; objects
 
@@ -82406,30 +82407,30 @@ Route9_h: ; 0x54686 to 0x546a8 (34 bytes) (id=20)
 	db $00 ; tileset
 	db ROUTE_9_HEIGHT, ROUTE_9_WIDTH ; dimensions (y, x)
 	dw Route9Blocks, Route9TextPointers, Route9Script ; blocks, texts, scripts
-	db WEST | EAST ; connections
-	WEST_MAP_CONNECTION CERULEAN_CITY, CERULEAN_CITY_WIDTH, -3, 1, CERULEAN_CITY_HEIGHT - 3, CeruleanCityBlocks, ROUTE_9_WIDTH
-	EAST_MAP_CONNECTION ROUTE_10, ROUTE_10_WIDTH, 0, 0, ROUTE_10_HEIGHT - 24, Route10Blocks, ROUTE_9_WIDTH
+	db EAST ; connections
+	EAST_MAP_CONNECTION FUCHSIA_CITY, FUCHSIA_CITY_WIDTH, -3, 0, $a, FuchsiaCityBlocks, ROUTE_9_WIDTH
 	dw Route9Object ; objects
 
 Route9Object: ; 0x546a8 (size=86)
-	db $2c ; border tile
+	db $a ; border tile
 
 	db $0 ; warps
 
-	db $1 ; signs
-	db $7, $19, $b ; Route9Text11
+	db $2 ; signs
+	db $7, $b, $b ; Route9Text11
+	db $7, $19, $b
 
 	db $a ; people
-	db SPRITE_LASS, $a + 4, $d + 4, $ff, $d2, $41, JR__TRAINER_F + $C8, $5 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_1, $7 + 4, $18 + 4, $ff, $d2, $42, JR__TRAINER_M + $C8, $7 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_1, $7 + 4, $1f + 4, $ff, $d3, $43, JR__TRAINER_M + $C8, $8 ; trainer
-	db SPRITE_LASS, $8 + 4, $30 + 4, $ff, $d3, $44, JR__TRAINER_F + $C8, $6 ; trainer
-	db SPRITE_HIKER, $f + 4, $10 + 4, $ff, $d2, $45, HIKER + $C8, $b ; trainer
-	db SPRITE_HIKER, $3 + 4, $2b + 4, $ff, $d2, $46, HIKER + $C8, $6 ; trainer
-	db SPRITE_BUG_CATCHER, $2 + 4, $16 + 4, $ff, $d0, $47, BUG_CATCHER + $C8, $d ; trainer
-	db SPRITE_HIKER, $f + 4, $2d + 4, $ff, $d3, $48, HIKER + $C8, $5 ; trainer
-	db SPRITE_BUG_CATCHER, $8 + 4, $28 + 4, $ff, $d3, $49, BUG_CATCHER + $C8, $e ; trainer
-	db SPRITE_BALL, $f + 4, $a + 4, $ff, $ff, $8a, TM_30 ; item
+	db SPRITE_HIKER, $3 + 4, $28 + 4, $ff, $d0, $41, JR__TRAINER_F + $C8, $5 ; trainer
+	db SPRITE_HIKER, $4 + 4, $26 + 4, $ff, $d3, $42, JR__TRAINER_M + $C8, $7 ; trainer
+	db SPRITE_HIKER, $4 + 4, $2a + 4, $ff, $d2, $43, JR__TRAINER_M + $C8, $8 ; trainer
+	db SPRITE_HIKER, $5 + 4, $28 + 4, $ff, $d1, $44, JR__TRAINER_F + $C8, $6 ; trainer
+	db SPRITE_HIKER, $5 + 4, $2d + 4, $ff, $d2, $45, HIKER + $C8, $b ; trainer
+	db SPRITE_HIKER, $8 + 4, $20 + 4, $ff, $d2, $46, HIKER + $C8, $6 ; trainer
+	db SPRITE_HIKER, $a + 4, $18 + 4, $ff, $d2, $47, BUG_CATCHER + $C8, $d ; trainer
+	db SPRITE_HIKER, $a + 4, $29 + 4, $ff, $d3, $48, HIKER + $C8, $5 ; trainer
+	db SPRITE_HIKER, $c + 4, $1d + 4, $ff, $d3, $49, BUG_CATCHER + $C8, $e ; trainer
+	db SPRITE_BALL, $e + 4, $6 + 4, $ff, $ff, $8a, TM_30 ; item
 
 Route9Blocks: ; 546fe (15:46fe)
 	INCBIN "maps/route9.blk"
