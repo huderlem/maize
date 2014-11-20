@@ -1714,3 +1714,13 @@ _SudowoodoDexEntry::
 	next "It hates"
 	next "SQUIRTBOTTLES"
 	dex
+
+_TyrogueDexEntry::
+	text "It will never run"
+	next "from a fight."
+	next "Its one true"
+
+	page "desire in life is"
+	next "to beat KAKAROT"
+	next "in a battle"
+	dex

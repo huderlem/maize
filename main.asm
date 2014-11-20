@@ -3073,7 +3073,7 @@ LoadFrontSpriteByMonIndex:: ; 1389 (0:1389)
 	and a
 	pop hl
 	jr z, .invalidDexNumber  ; dex #0 invalid
-	cp 173 ; num mons in dex + 1
+	cp 174 ; num mons in dex + 1
 	jr c, .validDexNumber    ; dex >#151 invalid
 .invalidDexNumber
 	ld a, RHYDON ; $1
@@ -21442,17 +21442,17 @@ Route25Mons: ; d1bb (3:51bb)
 	db $00
 
 Route9Mons: ; d1d1 (3:51d1)
-	db $0F
-	db 16,RATTATA
-	db 16,SPEAROW
-	db 14,RATTATA
-	db 11,EKANS
-	db 13,SPEAROW
-	db 15,EKANS
-	db 17,RATTATA
-	db 17,SPEAROW
-	db 13,EKANS
-	db 17,EKANS
+	db $19
+	db 18,TYROGUE
+	db 17,TYROGUE
+	db 17,TYROGUE
+	db 18,TYROGUE
+	db 16,TYROGUE
+	db 22,MACHOP
+	db 21,MANKEY
+	db 19,TYROGUE
+	db 18,TYROGUE
+	db 24,MACHOKE
 
 	db $00
 
@@ -36212,7 +36212,7 @@ MonsterNames: ; 1c21e (7:421e)
 	db "METAPOD@@@"
 	db "BUTTERFREE"
 	db "MACHAMP@@@"
-	db "MISSINGNO."
+	db "TYROGUE@@@"
 	db "GOLDUCK@@@"
 	db "HYPNO@@@@@"
 	db "GOLBAT@@@@"
@@ -50432,6 +50432,43 @@ SudowoodoBaseStats:
 
 	db Bank(SudowoodoPicFront)
 
+TyrogueBaseStats:
+	db DEX_TYROGUE ; pokedex id
+	db 35    ; base hp
+	db 35   ; base attack
+	db 35   ; base defense
+	db 35    ; base speed
+	db 35    ; base special
+
+	db FIGHTING     ; species type 1
+	db FIGHTING     ; species type 2
+
+	db 75  ; catch rate
+	db 91 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw TyroguePicFront
+	dw TyroguePicBack
+
+	; attacks known at lvl 0
+	db TACKLE
+	db 0
+	db 0
+	db 0
+
+	db 0 ; growth rate
+
+	; learnset
+	db %10110101
+	db %00000010
+	db %00001111
+	db %11000010
+	db %01000010
+	db %10001000
+	db %00100010
+
+	db Bank(TyroguePicFront)
+
 
 CryData: ; 39446 (e:5446)
 	;$BaseCry, $Pitch, $Length
@@ -50561,7 +50598,7 @@ CryData: ; 39446 (e:5446)
 	db $1C, $CC, $01; Metapod
 	db $16, $77, $40; Butterfree
 	db $1F, $08, $C0; Machamp
-	db $11, $20, $10; MissingNo.
+	db $0C, $70, $40; Tyrogue
 	db $21, $FF, $40; Golduck
 	db $0D, $EE, $40; Hypno
 	db $1D, $FA, $80; Golbat
@@ -65514,7 +65551,7 @@ PokedexEntryPointers: ; 4047e (10:447e)
 	dw MetapodDexEntry
 	dw ButterfreeDexEntry
 	dw MachampDexEntry
-	dw MissingNoDexEntry
+	dw TyrogueDexEntry
 	dw GolduckDexEntry
 	dw HypnoDexEntry
 	dw GolbatDexEntry
@@ -66788,6 +66825,13 @@ SudowoodoDexEntry:
 	TX_FAR _SudowoodoDexEntry
 	db "@"
 
+TyrogueDexEntry:
+	db "SCUFFLE@"
+	db 2, 4
+	dw 463
+	TX_FAR _TyrogueDexEntry
+	db "@"
+
 MissingNoDexEntry: ; 40fe5 (10:4fe5)
 	db "???@"
 	db 10 ; 1.0 m
@@ -66958,7 +67002,7 @@ PokedexOrder: ; 41024 (10:5024)
 	db DEX_METAPOD
 	db DEX_BUTTERFREE
 	db DEX_MACHAMP
-	db 0 ; MISSINGNO.
+	db DEX_TYROGUE
 	db DEX_GOLDUCK
 	db DEX_HYPNO
 	db DEX_GOLBAT
@@ -102255,6 +102299,7 @@ MonOverworldData: ; 7190d (1c:590d)
 	dn SPRITE_QUADRUPED, SPRITE_QUADRUPED   ;Umbreon/Leafeon
 	dn SPRITE_QUADRUPED, SPRITE_QUADRUPED   ;Glaceon/Sylveon
 	dn SPRITE_MON, SPRITE_MON               ;Bonsly/Sudowoodo
+	dn SPRITE_MON, SPRITE_MON               ;Tyrogue/Hitmontop
 	db 0
 
 MonOverworldSprites: ; 71959 (1c:5959)
@@ -103587,6 +103632,7 @@ MonsterPalettes: ; 725c8 (1c:65c8)
 	db PAL_PINKMON   ; SYLVEON
 	db PAL_BROWNMON  ; BONSLY
 	db PAL_BROWNMON  ; SUDOWOODO
+	db PAL_PINKMON   ; TYROGUE
 
 ; palettes for overworlds, title screen, monsters
 SuperPalettes: ; 72660 (1c:6660)
@@ -116786,7 +116832,10 @@ SudowoodoPicFront:
 	INCBIN "pic/bmon/sudowoodo.pic"
 SudowoodoPicBack:
 	INCBIN "pic/monback/sudowoodob.pic"
-
+TyroguePicFront:
+	INCBIN "pic/bmon/tyrogue.pic"
+TyroguePicBack:
+	INCBIN "pic/monback/tyrogueb.pic"
 
 Tset00_GFX: ; 64000 (19:4000)
 	INCBIN "gfx/tilesets/00.2bpp"
@@ -118196,7 +118245,7 @@ Mon068_EvosMoves: ; 3b75c (e:775c)
 	db 0
 
 Mon173_EvosMoves: ; 3b768 (e:7768)
-;MISSINGNO
+;TYROGUE
 ;Evolutions
 	db 0
 ;Learnset
