@@ -3073,7 +3073,7 @@ LoadFrontSpriteByMonIndex:: ; 1389 (0:1389)
 	and a
 	pop hl
 	jr z, .invalidDexNumber  ; dex #0 invalid
-	cp 174 ; num mons in dex + 1
+	cp 175 ; num mons in dex + 1
 	jr c, .validDexNumber    ; dex >#151 invalid
 .invalidDexNumber
 	ld a, RHYDON ; $1
@@ -36219,7 +36219,7 @@ MonsterNames: ; 1c21e (7:421e)
 	db "MEWTWO@@@@"
 	db "SNORLAX@@@"
 	db "MAGIKARP@@"
-	db "MISSINGNO."
+	db "HITMONTOP@"
 	db "MISSINGNO."
 	db "MUK@@@@@@@"
 	db "MISSINGNO."
@@ -50469,6 +50469,44 @@ TyrogueBaseStats:
 
 	db Bank(TyroguePicFront)
 
+HitmontopBaseStats:
+	db DEX_HITMONTOP ; pokedex id
+	db 50    ; base hp
+	db 95   ; base attack
+	db 95   ; base defense
+	db 70    ; base speed
+	db 100    ; base special
+
+	db FIGHTING     ; species type 1
+	db FIGHTING     ; species type 2
+
+	db 45  ; catch rate
+	db 138 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw HitmontopPicFront
+	dw HitmontopPicBack
+
+	; attacks known at lvl 0
+	db DOUBLE_KICK
+	db 0
+	db 0
+	db 0
+
+	db 0 ; growth rate
+
+	; learnset
+	db %10110101
+	db %00000010
+	db %00001111
+	db %11001010
+	db %01000010
+	db %10001000
+	db %00100010
+
+	db Bank(HitmontopPicFront)
+
+
 
 CryData: ; 39446 (e:5446)
 	;$BaseCry, $Pitch, $Length
@@ -50605,7 +50643,7 @@ CryData: ; 39446 (e:5446)
 	db $1E, $99, $FF; Mewtwo
 	db $05, $55, $01; Snorlax
 	db $17, $80, $00; Magikarp
-	db $00, $00, $00; MissingNo.
+	db $0C, $40, $B0; Hitmontop
 	db $00, $00, $00; MissingNo.
 	db $07, $EF, $FF; Muk
 	db $0F, $40, $80; MissingNo.
@@ -54394,17 +54432,19 @@ Mon106_EvosMoves: ; 3b409 (e:7409)
 ;Evolutions
 	db 0
 ;Learnset
-	db 33,ROLLING_KICK
-	db 38,JUMP_KICK
-	db 43,FOCUS_ENERGY
-	db 48,HI_JUMP_KICK
-	db 53,MEGA_KICK
+	db 21,FOCUS_ENERGY
+	db 25,ROLLING_KICK
+	db 33,JUMP_KICK
+	db 39,FOCUS_ENERGY
+	db 45,HI_JUMP_KICK
+	db 51,MEGA_KICK
 	db 0
 Mon107_EvosMoves: ; 3b415 (e:7415)
 ;HITMONCHAN
 ;Evolutions
 	db 0
 ;Learnset
+	db 25,DRAIN_PUNCH
 	db 33,FIRE_PUNCH
 	db 35,DRAIN_PUNCH
 	db 38,ICE_PUNCH
@@ -65558,7 +65598,7 @@ PokedexEntryPointers: ; 4047e (10:447e)
 	dw MewtwoDexEntry
 	dw SnorlaxDexEntry
 	dw MagikarpDexEntry
-	dw MissingNoDexEntry
+	dw HitmontopDexEntry
 	dw MissingNoDexEntry
 	dw MukDexEntry
 	dw MissingNoDexEntry
@@ -66832,6 +66872,13 @@ TyrogueDexEntry:
 	TX_FAR _TyrogueDexEntry
 	db "@"
 
+HitmontopDexEntry:
+	db "HANDSTAND@"
+	db 4, 7
+	dw 1058
+	TX_FAR _HitmontopDexEntry
+	db "@"
+
 MissingNoDexEntry: ; 40fe5 (10:4fe5)
 	db "???@"
 	db 10 ; 1.0 m
@@ -67009,7 +67056,7 @@ PokedexOrder: ; 41024 (10:5024)
 	db DEX_MEWTWO
 	db DEX_SNORLAX
 	db DEX_MAGIKARP
-	db 0 ; MISSINGNO.
+	db DEX_HITMONTOP
 	db 0 ; MISSINGNO.
 	db DEX_MUK
 	db 0 ; MISSINGNO.
@@ -103633,6 +103680,7 @@ MonsterPalettes: ; 725c8 (1c:65c8)
 	db PAL_BROWNMON  ; BONSLY
 	db PAL_BROWNMON  ; SUDOWOODO
 	db PAL_PINKMON   ; TYROGUE
+	db PAL_BROWNMON  ; HITMONTOP
 
 ; palettes for overworlds, title screen, monsters
 SuperPalettes: ; 72660 (1c:6660)
@@ -116836,6 +116884,10 @@ TyroguePicFront:
 	INCBIN "pic/bmon/tyrogue.pic"
 TyroguePicBack:
 	INCBIN "pic/monback/tyrogueb.pic"
+HitmontopPicFront:
+	INCBIN "pic/bmon/hitmontop.pic"
+HitmontopPicBack:
+	INCBIN "pic/monback/hitmontopb.pic"
 
 Tset00_GFX: ; 64000 (19:4000)
 	INCBIN "gfx/tilesets/00.2bpp"
@@ -118317,10 +118369,18 @@ Mon129_EvosMoves: ; 3b7a6 (e:77a6)
 	db 0
 
 Mon174_EvosMoves: ; 3b7ad (e:77ad)
-;MISSINGNO
+;HITMONTOP
 ;Evolutions
 	db 0
 ;Learnset
+	db 7,FOCUS_ENERGY
+	db 21,QUICK_ATTACK
+	db 25,ROLLING_KICK
+	db 28,FEINT_ATTACK
+	db 33,COUNTER
+	db 37,AGILITY
+	db 45,MEGA_KICK
+	db 52,DIG
 	db 0
 
 Mon175_EvosMoves: ; 3b7af (e:77af)

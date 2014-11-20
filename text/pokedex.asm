@@ -1724,3 +1724,13 @@ _TyrogueDexEntry::
 	next "to beat KAKAROT"
 	next "in a battle"
 	dex
+
+_HitmontopDexEntry::
+	text "This guy would"
+	next "make a great"
+	next "Beyblade."
+
+	page "It spins at fast"
+	next "as a quality"
+	next "drying machine"
+	dex
