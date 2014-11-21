@@ -53208,6 +53208,12 @@ Func_3ad71: ; 3ad71 (e:6d71)
 	jp z, .evoMove
 	cp EV_ITEM
 	jp z, .asm_3ada4
+	cp EV_TYROGUE_CHAN
+	jp z, .tyrogueChanEvo
+	cp EV_TYROGUE_LEE
+	jp z, .tyrogueLeeEvo
+	cp EV_TYROGUE_TOP
+	jp z, .tyrogueTopEvo
 	ld a, [$ccd4]
 	and a
 	jp nz, asm_3ad2e
@@ -53256,7 +53262,7 @@ Func_3ad71: ; 3ad71 (e:6d71)
 	pop hl
 	cp 220
 	jp c, Func_3aed9
-	jr .asm_3adad
+	jp .asm_3adad
 .mossRock
 	; is the map right?
 	ld a, [W_CURMAP]
@@ -53273,7 +53279,7 @@ Func_3ad71: ; 3ad71 (e:6d71)
 	jp c, Func_3aed9
 	cp MOSS_ROCK_Y + MOSS_ROCK_HEIGHT
 	jp nc, Func_3aed9
-	jr .asm_3adad
+	jp .asm_3adad
 .iceRock
 	; is the map right?
 	ld a, [W_CURMAP]
@@ -53290,7 +53296,71 @@ Func_3ad71: ; 3ad71 (e:6d71)
 	jp c, Func_3aed9
 	cp ICE_ROCK_Y + ICE_ROCK_HEIGHT
 	jp nc, Func_3aed9
-	jr .asm_3adad
+	jp .asm_3adad
+
+.SetupTyrogueRegisters:
+	ld bc, 44
+	ld a, [wWhichPokemon]
+	ld hl, W_PARTYMON1_ATACK
+	call AddNTimes ; hl points to attack high byte
+	ld a, [hli]
+	ld d, a
+	ld a, [hli]
+	ld e, a ; de contains attack
+	ld a, [hli]
+	ld b, a
+	ld a, [hl]
+	ld c, a ; bc contains defense
+	ret
+
+.tyrogueChanEvo
+	; is mon's defense greater than attack?
+	push hl
+	call .SetupTyrogueRegisters
+	; first compare high bytes
+	ld a, b
+	cp a, d
+	jr c, .noTyrogueEvo
+	jr nz, .evolveTyrogue
+	; high bytes were equal, now compare low bytes
+	ld a, c
+	cp a, e
+	jr c, .noTyrogueEvo
+	jr nz, .evolveTyrogue
+.noTyrogueEvo
+	pop hl
+	jp Func_3aed9
+.evolveTyrogue
+	pop hl
+	jp .asm_3adad
+.tyrogueLeeEvo
+	; is mon's attack greater than defense?
+	push hl
+	call .SetupTyrogueRegisters
+	; first compare high bytes
+	ld a, d
+	cp a, b
+	jr c, .noTyrogueEvo
+	jr nz, .evolveTyrogue
+	; high bytes were equal, now compare low bytes
+	ld a, e
+	cp a, c
+	jr c, .noTyrogueEvo
+	jr nz, .evolveTyrogue
+	jr .noTyrogueEvo
+.tyrogueTopEvo
+	; is mon's defense greater than attack?
+	push hl
+	call .SetupTyrogueRegisters
+	; first compare high bytes
+	ld a, b
+	cp a, d
+	jr nz, .noTyrogueEvo
+	; high bytes were equal, now compare low bytes
+	ld a, c
+	cp a, e
+	jr nz, .noTyrogueEvo
+	jr .evolveTyrogue
 .evoMove
 	; does mon know the right move?
 	ld a, [hli]
@@ -118299,6 +118369,9 @@ Mon068_EvosMoves: ; 3b75c (e:775c)
 Mon173_EvosMoves: ; 3b768 (e:7768)
 ;TYROGUE
 ;Evolutions
+	db EV_TYROGUE_CHAN,20,HITMONCHAN
+	db EV_TYROGUE_LEE,20,HITMONLEE
+	db EV_TYROGUE_TOP,20,HITMONTOP
 	db 0
 ;Learnset
 	db 0
@@ -119080,6 +119153,12 @@ Func_3ad71_2: ; 3ad71 (e:6d71)
 	jp z, .evoMove2
 	cp EV_ITEM
 	jp z, .asm_3ada4_2
+	cp EV_TYROGUE_CHAN
+	jp z, .tyrogueChanEvo_2
+	cp EV_TYROGUE_LEE
+	jp z, .tyrogueLeeEvo_2
+	cp EV_TYROGUE_TOP
+	jp z, .tyrogueTopEvo_2
 	ld a, [$ccd4]
 	and a
 	jp nz, asm_3ad2e_2
@@ -119128,7 +119207,7 @@ Func_3ad71_2: ; 3ad71 (e:6d71)
 	pop hl
 	cp 220
 	jp c, Func_3aed9_2
-	jr .asm_3adad_2
+	jp .asm_3adad_2
 .mossRock_2
 	; is the map right?
 	ld a, [W_CURMAP]
@@ -119145,7 +119224,7 @@ Func_3ad71_2: ; 3ad71 (e:6d71)
 	jp c, Func_3aed9_2
 	cp MOSS_ROCK_Y + MOSS_ROCK_HEIGHT
 	jp nc, Func_3aed9_2
-	jr .asm_3adad_2
+	jp .asm_3adad_2
 .iceRock_2
 	; is the map right?
 	ld a, [W_CURMAP]
@@ -119162,7 +119241,72 @@ Func_3ad71_2: ; 3ad71 (e:6d71)
 	jp c, Func_3aed9_2
 	cp ICE_ROCK_Y + ICE_ROCK_HEIGHT
 	jp nc, Func_3aed9_2
-	jr .asm_3adad_2
+	jp .asm_3adad_2
+
+.SetupTyrogueRegisters_2:
+	ld bc, 44
+	ld a, [wWhichPokemon]
+	ld hl, W_PARTYMON1_ATACK
+	call AddNTimes ; hl points to attack high byte
+	ld a, [hli]
+	ld d, a
+	ld a, [hli]
+	ld e, a ; de contains attack
+	ld a, [hli]
+	ld b, a
+	ld a, [hl]
+	ld c, a ; bc contains defense
+	ret
+
+.tyrogueChanEvo_2
+	; is mon's defense greater than attack?
+	push hl
+	call .SetupTyrogueRegisters_2
+	; first compare high bytes
+	ld a, b
+	cp a, d
+	jr c, .noTyrogueEvo_2
+	jr nz, .evolveTyrogue_2
+	; high bytes were equal, now compare low bytes
+	ld a, c
+	cp a, e
+	jr c, .noTyrogueEvo_2
+	jr nz, .evolveTyrogue_2
+.noTyrogueEvo_2
+	pop hl
+	jp Func_3aed9_2
+.evolveTyrogue_2
+	pop hl
+	jp .asm_3adad_2
+.tyrogueLeeEvo_2
+	; is mon's attack greater than defense?
+	push hl
+	call .SetupTyrogueRegisters_2
+	; first compare high bytes
+	ld a, d
+	cp a, b
+	jr c, .noTyrogueEvo_2
+	jr nz, .evolveTyrogue_2
+	; high bytes were equal, now compare low bytes
+	ld a, e
+	cp a, c
+	jr c, .noTyrogueEvo_2
+	jr nz, .evolveTyrogue_2
+	jr .noTyrogueEvo_2
+.tyrogueTopEvo_2
+	; is mon's defense greater than attack?
+	push hl
+	call .SetupTyrogueRegisters_2
+	; first compare high bytes
+	ld a, b
+	cp a, d
+	jr nz, .noTyrogueEvo_2
+	; high bytes were equal, now compare low bytes
+	ld a, c
+	cp a, e
+	jr nz, .noTyrogueEvo_2
+	jr .evolveTyrogue_2
+
 .evoMove2
 	; does mon know the right move?
 	ld a, [hli]
