@@ -483,12 +483,15 @@ _CeladonCityPokecenterGuyText:: ; 88531 (22:4531)
 	done
 
 _FuchsiaCityPokecenterGuyText:: ; 8855f (22:455f)
-	text "If you're studying "
-	line "#MON, visit"
-	cont "the SAFARI ZONE."
+	text "Hummm..."
 
-	para "It has all sorts"
-	line "of rare #MON."
+	para "I've heard tales"
+	line "of a great trio"
+	cont "west of here..."
+
+	para "Bottled up..."
+
+	para "Why...?"
 	done
 
 _CinnabarPokecenterGuyText:: ; 885af (22:45af)
