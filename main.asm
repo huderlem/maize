@@ -52035,7 +52035,7 @@ HikerData: ; 39f5e (e:5f5e)
 	db 14,GEODUDE,GEODUDE,MACHOP,ONIX,0 ; Route 4 (south of Agate)
 	db 15,MACHOP,0 ; Route 4 (south of Agate)
 	db 18,MACHOP,ZUBAT,0 ; Rocky Point 1 (MT_MOON_1)
-	db 21,GEODUDE,ONIX,0
+	db 32,GRAVELER,MACHOKE,GOLBAT,0 ; Fighting Club Route (West of Quartz City)
 	db 20,GEODUDE,MACHOP,GEODUDE,0
 	db 21,GEODUDE,ONIX,0
 	db 19,ONIX,GRAVELER,0
@@ -52117,7 +52117,7 @@ CueBallData: ; 3a08d (e:608d)
 	db 31,TENTACOOL,TENTACOOL,TENTACRUEL,0
 GamblerData: ; 3a0b3 (e:60b3)
 	db 22,MEOWTH,MAGNEMITE,0 ; Route 6 (North of Pyrite City)
-	db 18,BELLSPROUT,ODDISH,0
+	db 32,MACHOKE,AMPHAROS,0 ; Fighting Club Route (West of Quartz City)
 	db 18,VOLTORB,MAGNEMITE,0
 	db 18,GROWLITHE,VULPIX,0
 	db 22,POLIWAG,POLIWAG,POLIWHIRL,0
@@ -52162,8 +52162,8 @@ JugglerData: ; 3a130 (e:6130)
 	db 34,DROWZEE,KADABRA,0
 TamerData: ; 3a151 (e:6151)
 	db 22,NIDORINO,NIDORINA,FEAROW,0 ; Route 6 (North of Pyrite City)
-	db 33,ARBOK,SANDSLASH,ARBOK,0
-	db 43,RHYHORN,0
+	db 30,MACHOP,MACHOKE,SUDOWOODO,0 ; Fighting Club Route (West of Quartz City)
+	db 33,TYROGUE,TYROGUE,TYROGUE,MANKEY,0 ; Fighting Club Route (West of Quartz City)
 	db 39,ARBOK,TAUROS,0
 	db 44,PERSIAN,GOLDUCK,0
 	db 42,RHYHORN,PRIMEAPE,ARBOK,TAUROS,0
@@ -52186,21 +52186,16 @@ BirdKeeperData: ; 3a16b (e:616b)
 	db 29,PIDGEOTTO,FEAROW,0
 	db 28,SPEAROW,DODUO,FEAROW,0
 BlackbeltData: ; 3a1be (e:61be)
-	db 37,HITMONLEE,HITMONCHAN,0
-	db 31,MANKEY,MANKEY,PRIMEAPE,0
-	db 32,MACHOP,MACHOKE,0
-	db 36,PRIMEAPE,0
-	db 31,MACHOP,MANKEY,PRIMEAPE,0
+	db 31,MANKEY,PRIMEAPE,MANKEY,0 ; Fighting Club Route (West of Quartz City)
+	db 34,HITMONCHAN,0 ; Fighting Club Route (West of Quartz City)
+	db 34,HITMONLEE,0 ; Fighting Club Route (West of Quartz City)
+	db 34,HITMONTOP,0 ; Fighting Club Route (West of Quartz City)
+	db 33,POLIWRATH,MACHOKE,HITMONTOP,0; Fighting Club Route (West of Quartz City)
 	db 40,MACHOP,MACHOKE,0
 	db 43,MACHOKE,0
 	db 38,MACHOKE,MACHOP,MACHOKE,0
 	db 43,MACHOKE,MACHOP,MACHOKE,0
 Green1Data: ; 3a1e4 (e:61e4)
-if _YELLOW
-	db 5,EEVEE,0
-	db $FF,9,SPEAROW,8,EEVEE,0
-	db $FF,18,SPEAROW,15,SANDSHREW,15,RATTATA,17,EEVEE,0
-else
 	db 5,STARYU,0
 	db 5,EXEGGCUTE,0
 	db 5,GROWLITHE,0
@@ -52210,7 +52205,6 @@ else
 	db $FF,17,GASTLY,18,POLIWAG,18,ONIX,19,STARYU,0
 	db $FF,17,GASTLY,18,POLIWAG,18,ONIX,19,EXEGGCUTE,0
 	db $FF,17,GASTLY,18,POLIWAG,18,ONIX,19,GROWLITHE,0
-endc
 ProfOakData: ; 3a21d (e:621d)
 	db $FF,66,TAUROS,67,EXEGGUTOR,68,ARCANINE,69,BLASTOISE,70,GYARADOS,0
 	db $FF,66,TAUROS,67,EXEGGUTOR,68,ARCANINE,69,VENUSAUR,70,GYARADOS,0
@@ -82582,15 +82576,15 @@ Route9Object: ; 0x546a8 (size=86)
 	db $7, $19, $b
 
 	db $a ; people
-	db SPRITE_HIKER, $3 + 4, $28 + 4, $ff, $d0, $41, JR__TRAINER_F + $C8, $5 ; trainer
-	db SPRITE_HIKER, $4 + 4, $26 + 4, $ff, $d3, $42, JR__TRAINER_M + $C8, $7 ; trainer
-	db SPRITE_HIKER, $4 + 4, $2a + 4, $ff, $d2, $43, JR__TRAINER_M + $C8, $8 ; trainer
-	db SPRITE_HIKER, $5 + 4, $28 + 4, $ff, $d1, $44, JR__TRAINER_F + $C8, $6 ; trainer
-	db SPRITE_HIKER, $5 + 4, $2d + 4, $ff, $d2, $45, HIKER + $C8, $b ; trainer
-	db SPRITE_HIKER, $8 + 4, $20 + 4, $ff, $d2, $46, HIKER + $C8, $6 ; trainer
-	db SPRITE_HIKER, $a + 4, $18 + 4, $ff, $d2, $47, BUG_CATCHER + $C8, $d ; trainer
-	db SPRITE_HIKER, $a + 4, $29 + 4, $ff, $d3, $48, HIKER + $C8, $5 ; trainer
-	db SPRITE_HIKER, $c + 4, $1d + 4, $ff, $d3, $49, BUG_CATCHER + $C8, $e ; trainer
+	db SPRITE_HIKER, $3 + 4, $28 + 4, $ff, $d0, $41, HIKER + $C8, $5 ; trainer
+	db SPRITE_GAMBLER, $4 + 4, $26 + 4, $ff, $d3, $42, GAMBLER + $C8, $2 ; trainer
+	db SPRITE_HIKER, $4 + 4, $2a + 4, $ff, $d2, $43, TAMER + $C8, $3 ; trainer
+	db SPRITE_HIKER, $5 + 4, $28 + 4, $ff, $d1, $44, BLACKBELT + $C8, $4 ; trainer
+	db SPRITE_HIKER, $5 + 4, $2d + 4, $ff, $d1, $45, BLACKBELT + $C8, $5 ; trainer
+	db SPRITE_HIKER, $8 + 4, $20 + 4, $ff, $d2, $46, BLACKBELT + $C8, $3 ; trainer
+	db SPRITE_HIKER, $a + 4, $18 + 4, $ff, $d2, $47, BLACKBELT + $C8, $2 ; trainer
+	db SPRITE_BLACK_HAIR_BOY_1, $a + 4, $29 + 4, $ff, $d3, $48, TAMER + $C8, $2 ; trainer
+	db SPRITE_HIKER, $c + 4, $1d + 4, $ff, $d3, $49, BLACKBELT + $C8, $1 ; trainer
 	db SPRITE_BALL, $e + 4, $6 + 4, $ff, $ff, $8a, TM_30 ; item
 
 Route9Blocks: ; 546fe (15:46fe)
@@ -83592,34 +83586,34 @@ Route9TextPointers: ; 556d5 (15:56d5)
 Route9TrainerHeaders: ; 556eb (15:56eb)
 Route9TrainerHeader0: ; 556eb (15:56eb)
 	db $1 ; flag's bit
-	db ($3 << 4) ; trainer's view range
+	db ($0 << 4) ; trainer's view range
 	dw $d7cf ; flag's byte
-	dw Route9BattleText1 ; 0x5792 TextBeforeBattle
-	dw Route9AfterBattleText1 ; 0x579c TextAfterBattle
-	dw Route9EndBattleText1 ; 0x5797 TextEndBattle
-	dw Route9EndBattleText1 ; 0x5797 TextEndBattle
+	dw Route9BattleText9 ; 0x5792 TextBeforeBattle
+	dw Route9AfterBattleText9 ; 0x579c TextAfterBattle
+	dw Route9EndBattleText9 ; 0x5797 TextEndBattle
+	dw Route9EndBattleText9 ; 0x5797 TextEndBattle
 
 Route9TrainerHeader2: ; 556f7 (15:56f7)
 	db $2 ; flag's bit
-	db ($2 << 4) ; trainer's view range
+	db ($0 << 4) ; trainer's view range
 	dw $d7cf ; flag's byte
-	dw Route9BattleText2 ; 0x57a1 TextBeforeBattle
-	dw Route9AfterBattleText2 ; 0x57ab TextAfterBattle
-	dw Route9EndBattleText2 ; 0x57a6 TextEndBattle
-	dw Route9EndBattleText2 ; 0x57a6 TextEndBattle
+	dw Route9BattleText7 ; 0x57a1 TextBeforeBattle
+	dw Route9AfterBattleText7 ; 0x57ab TextAfterBattle
+	dw Route9EndBattleText7 ; 0x57a6 TextEndBattle
+	dw Route9EndBattleText7 ; 0x57a6 TextEndBattle
 
 Route9TrainerHeader3: ; 55703 (15:5703)
 	db $3 ; flag's bit
-	db ($4 << 4) ; trainer's view range
+	db ($0 << 4) ; trainer's view range
 	dw $d7cf ; flag's byte
-	dw Route9BattleText3 ; 0x57b0 TextBeforeBattle
-	dw Route9AfterBattleText3 ; 0x57ba TextAfterBattle
-	dw Route9EndBattleText3 ; 0x57b5 TextEndBattle
-	dw Route9EndBattleText3 ; 0x57b5 TextEndBattle
+	dw Route9BattleText6 ; 0x57b0 TextBeforeBattle
+	dw Route9AfterBattleText6 ; 0x57ba TextAfterBattle
+	dw Route9EndBattleText6 ; 0x57b5 TextEndBattle
+	dw Route9EndBattleText6 ; 0x57b5 TextEndBattle
 
 Route9TrainerHeader4: ; 5570f (15:570f)
 	db $4 ; flag's bit
-	db ($2 << 4) ; trainer's view range
+	db ($0 << 4) ; trainer's view range
 	dw $d7cf ; flag's byte
 	dw Route9BattleText4 ; 0x57bf TextBeforeBattle
 	dw Route9AfterBattleText4 ; 0x57c9 TextAfterBattle
@@ -83628,48 +83622,48 @@ Route9TrainerHeader4: ; 5570f (15:570f)
 
 Route9TrainerHeader5: ; 5571b (15:571b)
 	db $5 ; flag's bit
-	db ($2 << 4) ; trainer's view range
+	db ($1 << 4) ; trainer's view range
 	dw $d7cf ; flag's byte
-	dw Route9BattleText5 ; 0x57ce TextBeforeBattle
-	dw Route9AfterBattleText5 ; 0x57d8 TextAfterBattle
-	dw Route9EndBattleText5 ; 0x57d3 TextEndBattle
-	dw Route9EndBattleText5 ; 0x57d3 TextEndBattle
+	dw Route9BattleText8 ; 0x57ce TextBeforeBattle
+	dw Route9AfterBattleText8 ; 0x57d8 TextAfterBattle
+	dw Route9EndBattleText8 ; 0x57d3 TextEndBattle
+	dw Route9EndBattleText8 ; 0x57d3 TextEndBattle
 
 Route9TrainerHeader6: ; 55727 (15:5727)
 	db $6 ; flag's bit
-	db ($3 << 4) ; trainer's view range
+	db ($2 << 4) ; trainer's view range
 	dw $d7cf ; flag's byte
-	dw Route9BattleText6 ; 0x57dd TextBeforeBattle
-	dw Route9AfterBattleText6 ; 0x57e7 TextAfterBattle
-	dw Route9EndBattleText6 ; 0x57e2 TextEndBattle
-	dw Route9EndBattleText6 ; 0x57e2 TextEndBattle
+	dw Route9BattleText3 ; 0x57dd TextBeforeBattle
+	dw Route9AfterBattleText3 ; 0x57e7 TextAfterBattle
+	dw Route9EndBattleText3 ; 0x57e2 TextEndBattle
+	dw Route9EndBattleText3 ; 0x57e2 TextEndBattle
 
 Route9TrainerHeader7: ; 55733 (15:5733)
 	db $7 ; flag's bit
-	db ($4 << 4) ; trainer's view range
+	db ($1 << 4) ; trainer's view range
 	dw $d7cf ; flag's byte
-	dw Route9BattleText7 ; 0x57ec TextBeforeBattle
-	dw Route9AfterBattleText7 ; 0x57f6 TextAfterBattle
-	dw Route9EndBattleText7 ; 0x57f1 TextEndBattle
-	dw Route9EndBattleText7 ; 0x57f1 TextEndBattle
+	dw Route9BattleText5 ; 0x57ec TextBeforeBattle
+	dw Route9AfterBattleText5 ; 0x57f6 TextAfterBattle
+	dw Route9EndBattleText5 ; 0x57f1 TextEndBattle
+	dw Route9EndBattleText5 ; 0x57f1 TextEndBattle
 
 Route9TrainerHeader8: ; 5573f (15:573f)
 	db $8 ; flag's bit
 	db ($2 << 4) ; trainer's view range
 	dw $d7cf ; flag's byte
-	dw Route9BattleText8 ; 0x57fb TextBeforeBattle
-	dw Route9AfterBattleText8 ; 0x5805 TextAfterBattle
-	dw Route9EndBattleText8 ; 0x5800 TextEndBattle
-	dw Route9EndBattleText8 ; 0x5800 TextEndBattle
+	dw Route9BattleText2 ; 0x57fb TextBeforeBattle
+	dw Route9AfterBattleText2 ; 0x5805 TextAfterBattle
+	dw Route9EndBattleText2 ; 0x5800 TextEndBattle
+	dw Route9EndBattleText2 ; 0x5800 TextEndBattle
 
 Route9TrainerHeader9: ; 5574b (15:574b)
 	db $9 ; flag's bit
-	db ($2 << 4) ; trainer's view range
+	db ($3 << 4) ; trainer's view range
 	dw $d7cf ; flag's byte
-	dw Route9BattleText9 ; 0x580a TextBeforeBattle
-	dw Route9AfterBattleText9 ; 0x5814 TextAfterBattle
-	dw Route9EndBattleText9 ; 0x580f TextEndBattle
-	dw Route9EndBattleText9 ; 0x580f TextEndBattle
+	dw Route9BattleText1 ; 0x580a TextBeforeBattle
+	dw Route9AfterBattleText1 ; 0x5814 TextAfterBattle
+	dw Route9EndBattleText1 ; 0x580f TextEndBattle
+	dw Route9EndBattleText1 ; 0x580f TextEndBattle
 
 	db $ff
 

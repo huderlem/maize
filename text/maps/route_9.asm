@@ -20,7 +20,7 @@ _Route9AfterBattleText1:: ; 8e2c8 (23:62c8)
 
 _Route9BattleText2:: ; 8e2ff (23:62ff)
 	text "Rule number 2?"
-	para "Nah, forget"
+	line "Nah, forget"
 	cont "about 2."
 	done
 
@@ -36,6 +36,7 @@ _Route9AfterBattleText2:: ; 8e343 (23:6343)
 
 _Route9BattleText3:: ; 8e352 (23:6352)
 	text "Rule number 4."
+
 	para "Only two trainers"
 	line "per battle."
 
@@ -62,13 +63,14 @@ _Route9AfterBattleText3:: ; 8e390 (23:6390)
 
 _Route9BattleText4:: ; 8e3b1 (23:63b1)
 	text "Rule 5."
+
 	para "One battle at a"
-	cont "time."
+	line "time."
 	done
 
 _Route9EndBattleText4:: ; 8e3cf (23:63cf)
-	text "My hands"
-	line "are full."
+	text "My"
+	line "hands are full."
 	prompt
 
 _Route9AfterBattleText4:: ; 8e3e4 (23:63e4)
