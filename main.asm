@@ -1766,6 +1766,10 @@ CheckForTilePairCollisions:: ; 0c4a (0:0c4a)
 	ld c,a
 .tilePairCollisionLoop
 	ld a,[W_CURMAPTILESET] ; tileset number
+	cp $0a
+	jr nz, .continue
+	ld a, $11 ; tilesets $a and $11 are the cave/ice cave tilesets.  Treat them the same here
+.continue
 	ld b,a
 	ld a,[hli]
 	cp a,$ff
@@ -1814,6 +1818,7 @@ CheckForTilePairCollisions:: ; 0c4a (0:0c4a)
 TilePairCollisionsLand:: ; 0c7e (0:0c7e)
 	db $11, $20, $05;
 	db $11, $41, $05;
+	db $11, $38, $05;
 	db $03, $30, $2E;
 	db $11, $2A, $05;
 	db $11, $05, $21;
@@ -6006,9 +6011,6 @@ PewterMartText1:: ; 2449 (0:2449)
 CeruleanMartText1:: ; 2453 (0:2453)
 	db $FE,SLAVE_BALL,POKE_BALL,POTION,REPEL,ANTIDOTE,BURN_HEAL,AWAKENING
 	db PARLYZ_HEAL,$FF
-
-; Bike shop TODO: can almost certainly remove this
-	db $FE,SLAVE_BALL,BICYCLE,$FF
 
 ; Vermilion
 VermilionMartText1:: ; 2461 (0:2461)
@@ -12404,6 +12406,10 @@ NoMoreRoomForItemText: ; 4e2c (1:4e2c)
 	db "@"
 
 UpdatePlayerSprite: ; 4e31 (1:4e31)
+	; only update if not sliding on ice
+	ld a, [W_NEWFLAGS2]
+	bit 6, a
+	ret nz
 	ld a, [wSpriteStateData2]
 	and a
 	jr z, .asm_4e41
@@ -19430,8 +19436,6 @@ ForcedBikeOrSurfMaps: ; c3e6 (3:43e6)
 ; map id, y, x
 	db ROUTE_16,$0A,$11 
 	db ROUTE_16,$0B,$11
-	db ROUTE_18,$08,$21
-	db ROUTE_18,$09,$21
 	db SEAFOAM_ISLANDS_4,$07,$12 
 	db SEAFOAM_ISLANDS_4,$07,$13 
 	db SEAFOAM_ISLANDS_5,$0E,$04 
@@ -20144,7 +20148,7 @@ TilesetsHeadPtr: ; c7be (3:47be)
 	TSETHEAD Tset05_Block,Tset05_GFX,Tset05_Coll,$3A,$FF,$FF,$FF,2
 	TSETHEAD Tset08_Block,Tset08_GFX,Tset08_Coll,$FF,$FF,$FF,$FF,0
 	TSETHEAD Tset09_Block,Tset09_GFX,Tset09_Coll,$17,$32,$FF,$FF,0
-	TSETHEAD Tset09_Block,Tset09_GFX,Tset09_Coll,$17,$32,$FF,$FF,0
+	TSETHEAD Tset0A_Block,Tset11_GFX,Tset11_Coll,$17,$32,$FF,$FF,0 ; ICE CAVE
 	TSETHEAD Tset0B_Block,Tset0B_GFX,Tset0B_Coll,$FF,$FF,$FF,$FF,0
 	TSETHEAD Tset0C_Block,Tset0C_GFX,Tset0C_Coll,$FF,$FF,$FF,$36,0
 	TSETHEAD Tset0D_Block,Tset0D_GFX,Tset0D_Coll,$FF,$FF,$FF,$FF,1
@@ -21602,17 +21606,7 @@ TowerMons2: ; d2af (3:52af)
 	db $00
 
 TowerMons3: ; d2b1 (3:52b1)
-	db $0A
-	db 20,GASTLY
-	db 21,GASTLY
-	db 22,GASTLY
-	db 23,GASTLY
-	db 19,GASTLY
-	db 18,GASTLY
-	db 24,GASTLY
-	db 20,CUBONE
-	db 22,CUBONE
-	db 25,HAUNTER
+	db $00
 
 	db $00
 
@@ -87132,8 +87126,8 @@ Route18Object: ; 0x58c5a (size=66)
 	db $2c ; border tile
 
 	db $2 ; warps
-	db $25, $d, $0, ROUTE_18_GATE_1F
-	db $2b, $8, $0, ROUTE_18_GATE_1F
+	db $25, $d, $0, POKEMONTOWER_3
+	db $2b, $8, $0, POKEMONTOWER_3
 	
 	db $2 ; signs
 	db $1f, $9, $4 ; Route18Text4
@@ -87145,8 +87139,8 @@ Route18Object: ; 0x58c5a (size=66)
 	db SPRITE_BLACK_HAIR_BOY_1, $2d + 4, $a + 4, $ff, $ff, $43, BIRD_KEEPER + $C8, $a ; trainer
 
 	; warp-to
-	EVENT_DISP ROUTE_18_WIDTH, $25, $d ; ROUTE_18_GATE_1F
-	EVENT_DISP ROUTE_18_WIDTH, $2b, $8 ; ROUTE_18_GATE_1F
+	EVENT_DISP ROUTE_18_WIDTH, $25, $d ; POKEMONTOWER_3
+	EVENT_DISP ROUTE_18_WIDTH, $2b, $8 ; POKEMONTOWER_3
 
 Route18Blocks: ; 58c9c (16:4c9c)
 	INCBIN "maps/route18.blk"
@@ -90948,7 +90942,7 @@ MuseumF1Object: ; 0x5c2c1 (size=74)
 	EVENT_DISP MUSEUM_1F_WIDTH, $d, $f
 
 MuseumF2_h: ; 0x5c30b to 0x5c317 (12 bytes) (id=53)
-	db $0a ; tileset
+	db $09 ; tileset
 	db MUSEUM_2F_HEIGHT, MUSEUM_2F_WIDTH ; dimensions (y, x)
 	dw MuseumF2Blocks, MuseumF2TextPointers, MuseumF2Script ; blocks, texts, scripts
 	db $00 ; connections
@@ -95235,7 +95229,7 @@ PokemonTower2Blocks: ; 60666 (18:4666)
 	INCBIN "maps/pokemontower2.blk"
 
 PokemonTower3_h: ; 0x606c0 to 0x606cc (12 bytes) (id=144)
-	db $0f ; tileset
+	db $0a ; tileset
 	db POKEMONTOWER_3_HEIGHT, POKEMONTOWER_3_WIDTH ; dimensions (y, x)
 	dw PokemonTower3Blocks, PokemonTower3TextPointers, PokemonTower3Script ; blocks, texts, scripts
 	db $00 ; connections
@@ -95251,9 +95245,61 @@ PokemonTower3Script: ; 606cc (18:46cc)
 	ret
 
 PokemonTower3ScriptPointers: ; 606df (18:46df)
-	dw CheckFightingMapTrainers
+	dw PokemonTower3Script0
 	dw Func_324c
 	dw EndTrainerBattle
+
+PokemonTower3Script0:
+	; check if current tile is ice
+	FuncCoord 9, 9 ; $c45d
+	ld hl, Coord
+	ld a, [hl]
+	cp $38 ; ice tile
+	jr nz, .notSliding
+	; check if block ahead of player isn't ice, and stop sliding if it isn't
+	ld a,[$cfc6] ; tile in front of player
+	cp $38 ; ice tile
+	jr nz, .notSliding
+.startSliding
+	; disable input, press appropriate directional button
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a,[$c109] ; direction the player is facing
+	cp $04 ; facing up
+	jr z, .facingUp
+	cp $08 ; facing left
+	jr z, .facingLeft
+	cp $0C ; facing right
+	jr z, .facingRight
+.facingDown
+	ld a, BTN_DOWN
+	jr .pressButton
+.facingUp
+	ld a, BTN_UP
+	jr .pressButton
+.facingLeft
+	ld a, BTN_LEFT
+	jr .pressButton
+.facingRight
+	ld a, BTN_RIGHT
+.pressButton
+	or BTN_B
+	ld [$ccd3],a ; base address of simulated button presses
+	xor a
+	ld [$cd39],a
+	inc a
+	ld [$cd38],a ; index of current simulated button press
+	ld hl,$d730
+	set 7,[hl]
+	ld hl, W_NEWFLAGS2
+	set 6, [hl]
+	ret
+.notSliding
+	ld hl, W_NEWFLAGS2
+	res 6, [hl]
+	jp CheckFightingMapTrainers
 
 PokemonTower3TextPointers: ; 606e5 (18:46e5)
 	dw PokemonTower3Text1
@@ -95348,20 +95394,20 @@ PokemonTower3Object: ; 0x6075d (size=51)
 	db $1 ; border tile
 
 	db $2 ; warps
-	db $9, $3, $0, POKEMONTOWER_2
-	db $9, $12, $1, POKEMONTOWER_4
+	db $13, $a, $1, ROUTE_18
+	db $13, $b, $1, ROUTE_18
 
 	db $0 ; signs
 
 	db $4 ; people
-	db SPRITE_MEDIUM, $3 + 4, $c + 4, $ff, $d2, $41, CHANNELER + $C8, $5 ; trainer
-	db SPRITE_MEDIUM, $8 + 4, $9 + 4, $ff, $d0, $42, CHANNELER + $C8, $6 ; trainer
-	db SPRITE_MEDIUM, $d + 4, $a + 4, $ff, $d0, $43, CHANNELER + $C8, $8 ; trainer
+	db SPRITE_MEDIUM, $0 + 4, $0 + 4, $ff, $d2, $41, CHANNELER + $C8, $5 ; trainer
+	db SPRITE_MEDIUM, $0 + 4, $0 + 4, $ff, $d0, $42, CHANNELER + $C8, $6 ; trainer
+	db SPRITE_MEDIUM, $0 + 4, $0 + 4, $ff, $d0, $43, CHANNELER + $C8, $8 ; trainer
 	db SPRITE_BALL, $1 + 4, $c + 4, $ff, $ff, $84, ESCAPE_ROPE ; item
 
 	; warp-to
-	EVENT_DISP $a, $9, $3 ; POKEMONTOWER_2
-	EVENT_DISP $a, $9, $12 ; POKEMONTOWER_4
+	EVENT_DISP POKEMONTOWER_3_WIDTH, $13, $a ; ROUTE_18
+	EVENT_DISP POKEMONTOWER_3_WIDTH, $13, $b ; ROUTE_18
 
 PokemonTower3Blocks: ; 60790 (18:4790)
 	INCBIN "maps/pokemontower3.blk"
@@ -98873,10 +98919,6 @@ Tset0F_GFX: ; 6c000 (1b:4000)
 	INCBIN "gfx/tilesets/0f.2bpp"
 Tset0F_Block: ; 6c5c0 (1b:45c0)
 	INCBIN "gfx/blocksets/0f.bst"
-Tset11_GFX: ; 6cca0 (1b:4ca0)
-	INCBIN "gfx/tilesets/11.2bpp"
-Tset11_Block: ; 6d0c0 (1b:50c0)
-	INCBIN "gfx/blocksets/11.bst"
 Tset12_GFX: ; 6d8c0 (1b:58c0)
 	INCBIN "gfx/tilesets/12.2bpp"
 Tset12_Block: ; 6dea0 (1b:5ea0)
@@ -98897,6 +98939,7 @@ Tset0B_GFX: ; 6fd60 (1b:7d60)
 	INCBIN "gfx/tilesets/0b.2bpp"
 Tset0B_Block: ; 6fef0 (1b:7ef0)
 	INCBIN "gfx/blocksets/0b.bst"
+
 
 SECTION "bank1C",ROMX,BANK[$1C]
 
@@ -116958,7 +117001,6 @@ Tset0C_GFX:
 Tset0C_Block:
 	INCBIN "gfx/blocksets/0c.bst"
 
-
 SECTION "New Text", ROMX, BANK[$33]
 
 _GoHomeText::
@@ -119659,6 +119701,13 @@ GoHome:
 GoHomeText:
 	TX_FAR _GoHomeText
 	db "@"
+
+Tset11_GFX: ; 6cca0 (1b:4ca0)
+	INCBIN "gfx/tilesets/11.2bpp"
+Tset11_Block: ; 6d0c0 (1b:50c0)
+	INCBIN "gfx/blocksets/11.bst"
+Tset0A_Block:
+	INCBIN "gfx/blocksets/0a.bst"
 
 SECTION "Random Stuff", ROMX, BANK[$37]
 
