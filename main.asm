@@ -82562,7 +82562,8 @@ Route9_h: ; 0x54686 to 0x546a8 (34 bytes) (id=20)
 	db $00 ; tileset
 	db ROUTE_9_HEIGHT, ROUTE_9_WIDTH ; dimensions (y, x)
 	dw Route9Blocks, Route9TextPointers, Route9Script ; blocks, texts, scripts
-	db EAST ; connections
+	db WEST | EAST ; connections
+	WEST_MAP_CONNECTION ROUTE_18, ROUTE_18_WIDTH, 0, 0, ROUTE_9_HEIGHT, Route18Blocks, ROUTE_9_WIDTH
 	EAST_MAP_CONNECTION FUCHSIA_CITY, FUCHSIA_CITY_WIDTH, -3, 0, $c, FuchsiaCityBlocks, ROUTE_9_WIDTH
 	dw Route9Object ; objects
 
@@ -87123,34 +87124,29 @@ Route18_h: ; 0x58c38 to 0x58c5a (34 bytes) (id=29)
 	db $00 ; tileset
 	db ROUTE_18_HEIGHT, ROUTE_18_WIDTH ; dimensions (y, x)
 	dw Route18Blocks, Route18TextPointers, Route18Script ; blocks, texts, scripts
-	db NORTH | EAST ; connections
-	NORTH_MAP_CONNECTION ROUTE_17, ROUTE_17_WIDTH, ROUTE_17_HEIGHT, 0, 0, ROUTE_17_WIDTH, Route17Blocks
-	EAST_MAP_CONNECTION FUCHSIA_CITY, FUCHSIA_CITY_WIDTH, -3, 1, FUCHSIA_CITY_HEIGHT - 3, FuchsiaCityBlocks, ROUTE_18_WIDTH
+	db EAST ; connections
+	EAST_MAP_CONNECTION ROUTE_9, ROUTE_9_WIDTH, 0, 0, ROUTE_9_HEIGHT, Route9Blocks, ROUTE_18_WIDTH
 	dw Route18Object ; objects
 
 Route18Object: ; 0x58c5a (size=66)
-	db $43 ; border tile
+	db $2c ; border tile
 
-	db $4 ; warps
-	db $8, $21, $0, ROUTE_18_GATE_1F
-	db $9, $21, $1, ROUTE_18_GATE_1F
-	db $8, $28, $2, ROUTE_18_GATE_1F
-	db $9, $28, $3, ROUTE_18_GATE_1F
-
+	db $2 ; warps
+	db $25, $d, $0, ROUTE_18_GATE_1F
+	db $2b, $8, $0, ROUTE_18_GATE_1F
+	
 	db $2 ; signs
-	db $7, $2b, $4 ; Route18Text4
-	db $5, $21, $5 ; Route18Text5
+	db $1f, $9, $4 ; Route18Text4
+	db $27, $d, $5 ; Route18Text5
 
 	db $3 ; people
-	db SPRITE_BLACK_HAIR_BOY_1, $b + 4, $24 + 4, $ff, $d3, $41, BIRD_KEEPER + $C8, $8 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_1, $f + 4, $28 + 4, $ff, $d2, $42, BIRD_KEEPER + $C8, $9 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_1, $d + 4, $2a + 4, $ff, $d2, $43, BIRD_KEEPER + $C8, $a ; trainer
+	db SPRITE_BLACK_HAIR_BOY_1, $14 + 4, $9 + 4, $ff, $d1, $41, BIRD_KEEPER + $C8, $8 ; trainer
+	db SPRITE_BLACK_HAIR_BOY_1, $24 + 4, $8 + 4, $ff, $d2, $42, BIRD_KEEPER + $C8, $9 ; trainer
+	db SPRITE_BLACK_HAIR_BOY_1, $2d + 4, $a + 4, $ff, $ff, $43, BIRD_KEEPER + $C8, $a ; trainer
 
 	; warp-to
-	EVENT_DISP $19, $8, $21 ; ROUTE_18_GATE_1F
-	EVENT_DISP $19, $9, $21 ; ROUTE_18_GATE_1F
-	EVENT_DISP $19, $8, $28 ; ROUTE_18_GATE_1F
-	EVENT_DISP $19, $9, $28 ; ROUTE_18_GATE_1F
+	EVENT_DISP ROUTE_18_WIDTH, $25, $d ; ROUTE_18_GATE_1F
+	EVENT_DISP ROUTE_18_WIDTH, $2b, $8 ; ROUTE_18_GATE_1F
 
 Route18Blocks: ; 58c9c (16:4c9c)
 	INCBIN "maps/route18.blk"
@@ -89270,7 +89266,7 @@ Route18TrainerHeader0: ; 59aea (16:5aea)
 
 Route18TrainerHeader1: ; 59af6 (16:5af6)
 	db $2 ; flag's bit
-	db ($3 << 4) ; trainer's view range
+	db ($4 << 4) ; trainer's view range
 	dw $d7e3 ; flag's byte
 	dw Route18BattleText2 ; 0x5b32 TextBeforeBattle
 	dw Route18AfterBattleText2 ; 0x5b3c TextAfterBattle
@@ -89279,7 +89275,7 @@ Route18TrainerHeader1: ; 59af6 (16:5af6)
 
 Route18TrainerHeader2: ; 59b02 (16:5b02)
 	db $3 ; flag's bit
-	db ($4 << 4) ; trainer's view range
+	db ($0 << 4) ; trainer's view range
 	dw $d7e3 ; flag's byte
 	dw Route18BattleText3 ; 0x5b4b TextBeforeBattle
 	dw Route18AfterBattleText3 ; 0x5b55 TextAfterBattle
