@@ -87126,8 +87126,8 @@ Route18Object: ; 0x58c5a (size=66)
 	db $2c ; border tile
 
 	db $2 ; warps
-	db $25, $d, $0, POKEMONTOWER_3
-	db $2b, $8, $0, POKEMONTOWER_3
+	db $25, $d, $1, POKEMONTOWER_3
+	db $2b, $8, $1, POKEMONTOWER_3
 	
 	db $2 ; signs
 	db $1f, $9, $4 ; Route18Text4
@@ -95306,6 +95306,7 @@ PokemonTower3TextPointers: ; 606e5 (18:46e5)
 	dw PokemonTower3Text2
 	dw PokemonTower3Text3
 	dw Predef5CText
+	dw PokemonTower3Text5
 
 PokemonTower3TrainerHeaders: ; 606ed (18:46ed)
 PokemonTower3TrainerHeader0: ; 606ed (18:46ed)
@@ -95390,22 +95391,29 @@ PokemonTower3AfterBattleText3: ; 60758 (18:4758)
 	TX_FAR _PokemonTower3AfterBattleText3
 	db "@"
 
-PokemonTower3Object: ; 0x6075d (size=51)
-	db $1 ; border tile
+PokemonTower3Text5:
+	TX_FAR _PokemonTower3Text5
+	db "@"
 
-	db $2 ; warps
+PokemonTower3Object: ; 0x6075d (size=51)
+	db $3 ; border tile
+
+	db $3 ; warps
+	db $3,  $9, $0, POKEMONTOWER_2
 	db $13, $a, $1, ROUTE_18
 	db $13, $b, $1, ROUTE_18
 
-	db $0 ; signs
+	db $1 ; signs
+	db $11, $9, $5
 
 	db $4 ; people
-	db SPRITE_MEDIUM, $0 + 4, $0 + 4, $ff, $d2, $41, CHANNELER + $C8, $5 ; trainer
-	db SPRITE_MEDIUM, $0 + 4, $0 + 4, $ff, $d0, $42, CHANNELER + $C8, $6 ; trainer
-	db SPRITE_MEDIUM, $0 + 4, $0 + 4, $ff, $d0, $43, CHANNELER + $C8, $8 ; trainer
-	db SPRITE_BALL, $1 + 4, $c + 4, $ff, $ff, $84, ESCAPE_ROPE ; item
+	db SPRITE_MEDIUM, $9 + 4, $c + 4, $ff, $d2, $41, CHANNELER + $C8, $5 ; trainer
+	db SPRITE_MEDIUM, $b + 4, $7 + 4, $ff, $d2, $42, CHANNELER + $C8, $6 ; trainer
+	db SPRITE_MEDIUM, $10 + 4, $d + 4, $ff, $d3, $43, CHANNELER + $C8, $8 ; trainer
+	db SPRITE_BALL, $6 + 4, $12 + 4, $ff, $ff, $84, ITEM_STONE ; item
 
 	; warp-to
+	EVENT_DISP POKEMONTOWER_3_WIDTH, $3,  $9 ; POKEMONTOWER_2
 	EVENT_DISP POKEMONTOWER_3_WIDTH, $13, $a ; ROUTE_18
 	EVENT_DISP POKEMONTOWER_3_WIDTH, $13, $b ; ROUTE_18
 
@@ -102973,6 +102981,8 @@ GetMapPaletteID: ; 71ec7 (1c:5ec7)
 	ld a, [W_CURMAPTILESET]
 	cp $f
 	jr z, .PokemonTowerOrAgatha
+	cp $0a
+	jr z, .iceCave
 	cp $11
 	jr z, .caveOrBruno
 	ld a, [W_CURMAP]
@@ -103013,6 +103023,9 @@ GetMapPaletteID: ; 71ec7 (1c:5ec7)
 	ret
 .PokemonTowerOrAgatha
 	ld a, PAL_GREYMON - 1
+	jr .town
+.iceCave
+	ld a, PAL_BLUEMON - 1
 	jr .town
 .caveOrBruno
 	ld a, PAL_CAVE - 1
@@ -103897,31 +103910,15 @@ SuperPalettes: ; 72660 (1c:6660)
 	RGB 3,2,2
 	RGB 31,29,31 ; PAL_SLOTS2
 	RGB 31,31,17
-IF _RED
 	RGB 25,17,21
-ENDC
-IF _BLUE
-	RGB 16,19,29
-ENDC
 	RGB 3,2,2
 	RGB 31,29,31 ; PAL_SLOTS3
 	RGB 22,31,16
-IF _RED
 	RGB 25,17,21
-ENDC
-IF _BLUE
-	RGB 16,19,29
-ENDC
 	RGB 3,2,2
 	RGB 31,29,31 ; PAL_SLOTS4
-IF _RED
 	RGB 16,19,29
 	RGB 25,17,21
-ENDC
-IF _BLUE
-	RGB 25,17,21
-	RGB 16,19,29
-ENDC
 	RGB 3,2,2
 	RGB 31,29,31 ; PAL_BLACK
 	RGB 7,7,7

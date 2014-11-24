@@ -44,3 +44,9 @@ _PokemonTower3AfterBattleText3:: ; 99849 (26:5849)
 	line "possessed too!"
 	done
 
+_PokemonTower3Text5::
+	text "HARDWATER HOLE"
+
+	para "DANGER -"
+	line "SLIPPERY ICE"
+	done
