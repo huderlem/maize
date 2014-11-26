@@ -19609,7 +19609,7 @@ WarpTileIDPointers: ; c4cc (3:44cc)
 	dw Tileset07WarpTileIDs
 	dw Tileset08WarpTileIDs
 	dw Tileset09WarpTileIDs
-	dw Tileset0AWarpTileIDs
+	dw Tileset11WarpTileIDs
 	dw Tileset0BWarpTileIDs
 	dw Tileset0CWarpTileIDs
 	dw Tileset0DWarpTileIDs
@@ -21611,17 +21611,7 @@ TowerMons3: ; d2b1 (3:52b1)
 	db $00
 
 TowerMons4: ; d2c7 (3:52c7)
-	db $0A
-	db 20,GASTLY
-	db 21,GASTLY
-	db 22,GASTLY
-	db 23,GASTLY
-	db 19,GASTLY
-	db 18,GASTLY
-	db 25,HAUNTER
-	db 20,CUBONE
-	db 22,CUBONE
-	db 24,GASTLY
+	db $00
 
 	db $00
 
@@ -94959,9 +94949,9 @@ SSAnne9Blocks: ; 603c0 (18:43c0)
 	INCBIN "maps/ssanne9.blk"
 
 PokemonTower1_h: ; 0x60420 to 0x6042c (12 bytes) (id=142)
-	db $0f ; tileset
+	db $0a ; tileset
 	db POKEMONTOWER_1_HEIGHT, POKEMONTOWER_1_WIDTH ; dimensions (y, x)
-	dw PokemonTower1Blocks, PokemonTower1TextPointers, PokemonTower1Script ; blocks, texts, scripts
+	dw PokemonTower1Blocks, PokemonTower1TextPointers, PokemonTower3Script ; blocks, texts, scripts
 	db $00 ; connections
 	dw PokemonTower1Object ; objects
 
@@ -94969,59 +94959,28 @@ PokemonTower1Script: ; 6042c (18:442c)
 	jp EnableAutoTextBoxDrawing
 
 PokemonTower1TextPointers: ; 6042f (18:442f)
-	dw PokemonTower1Text1
-	dw PokemonTower1Text2
-	dw PokemonTower1Text3
-	dw PokemonTower1Text4
-	dw PokemonTower1Text5
-
-PokemonTower1Text1: ; 60439 (18:4439)
-	TX_FAR _PokemonTower1Text1
-	db "@"
-
-PokemonTower1Text2: ; 6043e (18:443e)
-	TX_FAR _PokemonTower1Text2
-	db "@"
-
-PokemonTower1Text3: ; 60443 (18:4443)
-	TX_FAR _PokemonTower1Text3
-	db "@"
-
-PokemonTower1Text4: ; 60448 (18:4448)
-	TX_FAR _PokemonTower1Text4
-	db "@"
-
-PokemonTower1Text5: ; 6044d (18:444d)
-	TX_FAR _PokemonTower1Text5
 	db "@"
 
 PokemonTower1Object: ; 0x60452 (size=58)
-	db $1 ; border tile
+	db $3 ; border tile
 
-	db $3 ; warps
-	db $11, $a, $1, $ff
-	db $11, $b, $1, $ff
-	db $9, $12, $1, POKEMONTOWER_2
+	db $2 ; warps
+	db $3, $3, $0, POKEMONTOWER_4
+	db $a, $8, $0, POKEMONTOWER_2
 
 	db $0 ; signs
 
-	db $5 ; people
-	db SPRITE_CABLE_CLUB_WOMAN, $d + 4, $f + 4, $ff, $d1, $1 ; person
-	db SPRITE_MOM_GEISHA, $8 + 4, $6 + 4, $ff, $ff, $2 ; person
-	db SPRITE_BALDING_GUY, $c + 4, $8 + 4, $ff, $ff, $3 ; person
-	db SPRITE_GIRL, $7 + 4, $d + 4, $ff, $ff, $4 ; person
-	db SPRITE_MEDIUM, $7 + 4, $11 + 4, $ff, $d2, $5 ; person
+	db $0 ; people
 
 	; warp-to
-	EVENT_DISP $a, $11, $a
-	EVENT_DISP $a, $11, $b
-	EVENT_DISP $a, $9, $12 ; POKEMONTOWER_2
+	EVENT_DISP POKEMONTOWER_1_WIDTH, $3, $3
+	EVENT_DISP POKEMONTOWER_1_WIDTH, $a, $8
 
 PokemonTower1Blocks: ; 6048c (18:448c)
 	INCBIN "maps/pokemontower1.blk"
 
 PokemonTower2_h: ; 0x604e6 to 0x604f2 (12 bytes) (id=143)
-	db $0f ; tileset
+	db $0a ; tileset
 	db POKEMONTOWER_2_HEIGHT, POKEMONTOWER_2_WIDTH ; dimensions (y, x)
 	dw PokemonTower2Blocks, PokemonTower2TextPointers, PokemonTower2Script ; blocks, texts, scripts
 	db $00 ; connections
@@ -95112,19 +95071,19 @@ PokemonTower2Script1: ; 60563 (18:4563)
 	ld a, $ff
 	ld [$c0ee], a
 	call PlaySound
-	ld b, BANK(Music_MeetRival)
-	ld hl, Music_MeetRival
-	call Bankswitch
+	ld c, BANK(Music_MeetRival)
+	ld a, MUSIC_MEET_RIVAL
+	call PlayMusic
 	ld a, $2
 	ld [W_POKEMONTOWER2CURSCRIPT], a
 	ld [W_CURMAPSCRIPT], a
 	ret
 
 MovementData_605a9: ; 605a9 (18:45a9)
-	db $C0,$00,$00,$C0,$00,$00,$C0,$C0,$FF
+	db $C0,$C0,$C0,$C0,$C0,$C0,$C0,$FF
 
 MovementData_605b2: ; 605b2 (18:45b2)
-	db $00,$00,$C0,$C0,$C0,$C0,$00,$00,$FF
+	db $00,$C0,$C0,$C0,$C0,$C0,$C0,$C0,$FF
 
 PokemonTower2Script2: ; 605bb (18:45bb)
 	ld a, [$d730]
@@ -95209,21 +95168,25 @@ PokemonTower2Text2: ; 60641 (18:4641)
 	db "@"
 
 PokemonTower2Object: ; 0x60646 (size=32)
-	db $1 ; border tile
+	db $3 ; border tile
 
-	db $2 ; warps
-	db $9, $3, $0, POKEMONTOWER_3
-	db $9, $12, $2, POKEMONTOWER_1
+	db $3 ; warps
+	db $8, $1c, $1, POKEMONTOWER_1
+	db $b, $2, $1, POKEMONTOWER_1
+	db $b, $3, $1, POKEMONTOWER_1
 
 	db $0 ; signs
 
-	db $2 ; people
+	db $4 ; people
 	db SPRITE_BLUE, $5 + 4, $e + 4, $ff, $ff, $1 ; person
-	db SPRITE_MEDIUM, $7 + 4, $3 + 4, $ff, $d3, $2 ; person
+	db SPRITE_BIRD, $1 + 4, $5 + 4, $ff, $d0, $2 ; person
+	db SPRITE_BIRD, $2 + 4, $4 + 4, $ff, $d0, $2 ; person
+	db SPRITE_BIRD, $3 + 4, $5 + 4, $ff, $d0, $2 ; person
 
 	; warp-to
-	EVENT_DISP $a, $9, $3 ; POKEMONTOWER_3
-	EVENT_DISP $a, $9, $12 ; POKEMONTOWER_1
+	EVENT_DISP POKEMONTOWER_2_WIDTH, $8, $1c ; POKEMONTOWER_3
+	EVENT_DISP POKEMONTOWER_2_WIDTH, $b, $2 ; POKEMONTOWER_1
+	EVENT_DISP POKEMONTOWER_2_WIDTH, $b, $3 ; POKEMONTOWER_1
 
 PokemonTower2Blocks: ; 60666 (18:4666)
 	INCBIN "maps/pokemontower2.blk"
@@ -95399,7 +95362,7 @@ PokemonTower3Object: ; 0x6075d (size=51)
 	db $3 ; border tile
 
 	db $3 ; warps
-	db $3,  $9, $0, POKEMONTOWER_2
+	db $3,  $9, $1, POKEMONTOWER_4
 	db $13, $a, $1, ROUTE_18
 	db $13, $b, $1, ROUTE_18
 
@@ -95421,25 +95384,11 @@ PokemonTower3Blocks: ; 60790 (18:4790)
 	INCBIN "maps/pokemontower3.blk"
 
 PokemonTower4_h: ; 0x607ea to 0x607f6 (12 bytes) (id=145)
-	db $0f ; tileset
+	db $0a ; tileset
 	db POKEMONTOWER_4_HEIGHT, POKEMONTOWER_4_WIDTH ; dimensions (y, x)
-	dw PokemonTower4Blocks, PokemonTower4TextPointers, PokemonTower4Script ; blocks, texts, scripts
+	dw PokemonTower4Blocks, PokemonTower4TextPointers, PokemonTower3Script ; blocks, texts, scripts
 	db $00 ; connections
 	dw PokemonTower4Object ; objects
-
-PokemonTower4Script: ; 607f6 (18:47f6)
-	call EnableAutoTextBoxDrawing
-	ld hl, PokemonTower4TrainerHeaders
-	ld de, PokemonTower4ScriptPointers
-	ld a, [W_POKEMONTOWER4CURSCRIPT]
-	call ExecuteCurMapScriptInTable
-	ld [W_POKEMONTOWER4CURSCRIPT], a
-	ret
-
-PokemonTower4ScriptPointers: ; 60809 (18:4809)
-	dw CheckFightingMapTrainers
-	dw Func_324c
-	dw EndTrainerBattle
 
 PokemonTower4TextPointers: ; 6080f (18:480f)
 	dw PokemonTower4Text1
@@ -95534,25 +95483,25 @@ PokemonTower4AfterBattleText3: ; 60886 (18:4886)
 	db "@"
 
 PokemonTower4Object: ; 0x6088b (size=65)
-	db $1 ; border tile
+	db $3 ; border tile
 
 	db $2 ; warps
-	db $9, $3, $0, POKEMONTOWER_5
-	db $9, $12, $1, POKEMONTOWER_3
+	db $3, $3, $0, POKEMONTOWER_1
+	db $3, $9, $0, POKEMONTOWER_3
 
 	db $0 ; signs
 
 	db $6 ; people
-	db SPRITE_MEDIUM, $a + 4, $5 + 4, $ff, $d3, $41, CHANNELER + $C8, $9 ; trainer
-	db SPRITE_MEDIUM, $7 + 4, $f + 4, $ff, $d0, $42, CHANNELER + $C8, $a ; trainer
-	db SPRITE_MEDIUM, $c + 4, $e + 4, $ff, $d2, $43, CHANNELER + $C8, $c ; trainer
-	db SPRITE_BALL, $a + 4, $c + 4, $ff, $ff, $84, ELIXER ; item
-	db SPRITE_BALL, $a + 4, $9 + 4, $ff, $ff, $85, AWAKENING ; item
-	db SPRITE_BALL, $10 + 4, $c + 4, $ff, $ff, $86, HP_UP ; item
+	db SPRITE_MEDIUM, $1 + 4, $11 + 4, $ff, $d0, $41, CHANNELER + $C8, $9 ; trainer
+	db SPRITE_MEDIUM, $9 + 4, $12 + 4, $ff, $d3, $42, CHANNELER + $C8, $a ; trainer
+	db SPRITE_MEDIUM, $13 + 4, $5 + 4, $ff, $d0, $43, CHANNELER + $C8, $c ; trainer
+	db SPRITE_BALL, $2 + 4, $6 + 4, $ff, $ff, $84, ELIXER ; item
+	db SPRITE_BALL, $6 + 4, $5 + 4, $ff, $ff, $85, AWAKENING ; item
+	db SPRITE_BALL, $13 + 4, $6 + 4, $ff, $ff, $86, HP_UP ; item
 
 	; warp-to
-	EVENT_DISP $a, $9, $3 ; POKEMONTOWER_5
-	EVENT_DISP $a, $9, $12 ; POKEMONTOWER_3
+	EVENT_DISP POKEMONTOWER_4_WIDTH, $3, $3 ; POKEMONTOWER_1
+	EVENT_DISP POKEMONTOWER_4_WIDTH, $3, $9 ; POKEMONTOWER_3
 
 PokemonTower4Blocks: ; 608cc (18:48cc)
 	INCBIN "maps/pokemontower4.blk"
