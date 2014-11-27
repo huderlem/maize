@@ -20417,7 +20417,7 @@ MapHSPointers: ; c8f5 (3:48f5)
 	dw MapHSXX
 	dw MapHSE2
 	dw MapHSE3
-	dw MapHSE4
+	dw MapHSXX
 	dw MapHSXX
 	dw MapHSXX
 	dw MapHSXX
@@ -20527,11 +20527,10 @@ MapHS2D: ; cb80 (3:4b80)
 	db VIRIDIAN_GYM,$0B,Show
 MapHS34: ; cb86 (3:4b86)
 	db MUSEUM_1F,$05,Show
-MapHSE4: ; cb89 (3:4b89)
-	db UNKNOWN_DUNGEON_1,$01,Show
-	db UNKNOWN_DUNGEON_1,$02,Show
-	db UNKNOWN_DUNGEON_1,$03,Show
-MapHS8F: ; cb92 (3:4b92)
+MapHS8F: ; cb89 (3:4b89)
+	db POKEMONTOWER_2,$02,Show
+	db POKEMONTOWER_2,$03,Show
+	db POKEMONTOWER_2,$04,Show
 	db POKEMONTOWER_2,$01,Show
 MapHS90: ; cb95 (3:4b95)
 	db POKEMONTOWER_3,$04,Show
@@ -95164,7 +95163,123 @@ UnnamedText_6063c: ; 6063c (18:463c)
 	db "@"
 
 PokemonTower2Text2: ; 60641 (18:4641)
-	TX_FAR _PokemonTower2Text2
+	db $08 ; asm
+	ld hl, TrappedBirdText1
+	call PrintText
+	call GBFadeOut2
+	; hide the bird sprites permanently
+	ld a, $35
+	ld [$cc4d], a
+	ld a, $11
+	call Predef
+	ld a, $36
+	ld [$cc4d], a
+	ld a, $11
+	call Predef
+	ld a, $37
+	ld [$cc4d], a
+	ld a, $11
+	call Predef
+	call Delay3
+
+	; white out the background
+	call ClearScreen
+
+	call Delay3
+	call GBFadeIn2
+
+	ld b, $0
+	; move the bird sprites
+.sceneLoop
+	inc b
+	ld a, b
+	cp $A8 ; right edge of screen, I think
+	jr nc, .sceneComplete
+	push bc
+	; copy OAM data
+	ld de, BirdSceneOAM
+	ld hl, wOAMBuffer + (4 * 4) ; first OAM object after player
+	ld c, 0
+.copyLoop
+	ld a, c
+	cp 3 ; three 4-byte OAM objects to copy
+	jr nc, .afterCopyLoop
+	inc c
+	call CopyObjectLeftHalfOAM
+	call CopyObjectRightHalfOAM
+	call CopyObjectLeftHalfOAM
+	call CopyObjectRightHalfOAM
+	jr .copyLoop
+.afterCopyLoop
+	call DelayFrame
+	pop bc
+	jr .sceneLoop
+.sceneComplete
+	; set the roaming pokemon bits
+	ld a, [W_NEWFLAGS2]
+	or %00111000 ; bits 3, 4, and 5 are the roaming bits
+	ld [W_NEWFLAGS2], a
+
+	call GBFadeOut2
+	call ReloadMapData
+	call Delay3
+	call GBFadeIn2
+	ld hl, TrappedBirdText2
+	call PrintText
+	jp TextScriptEnd
+
+CopyObjectLeftHalfOAM:
+	ld a, [de]
+	inc de
+	ld [hli], a
+	ld a, b 
+	ld [hli], a
+	ld a, [de]
+	inc de
+	ld [hli], a
+	ld a, [de]
+	inc de
+	ld [hli], a
+	ret
+
+CopyObjectRightHalfOAM:
+	ld a, [de]
+	inc de
+	ld [hli], a
+	ld a, b
+	add $8
+	ld [hli], a
+	ld a, [de]
+	inc de
+	ld [hli], a
+	ld a, [de]
+	inc de
+	ld [hli], a
+	ret
+
+BirdSceneOAM:
+	; OAM structure without the x coordinate because it's calculated on the fly. hah. birds.
+	db $3C,      $21, $20
+	db $3C,      $20, $20
+	db $44,      $23, $23
+	db $44,      $22, $22
+
+	db $2C,      $21, $20
+	db $2C,      $20, $20
+	db $34,      $23, $23
+	db $34,      $22, $22
+
+	db $1C,      $21, $20
+	db $1C,      $20, $20
+	db $24,      $23, $23
+	db $24,      $22, $22
+
+TrappedBirdText1:
+	TX_FAR _TrappedBirdText1
+	db "@"
+
+TrappedBirdText2:
+	TX_FAR _TrappedBirdText2
 	db "@"
 
 PokemonTower2Object: ; 0x60646 (size=32)
@@ -106031,11 +106146,8 @@ UnknownDungeon1Object: ; 0x74d15 (size=97)
 
 	db $0 ; signs
 
-	db $3 ; people
-	db SPRITE_BALL, $d + 4, $7 + 4, $ff, $ff, $81, FULL_RESTORE ; item
-	db SPRITE_BALL, $3 + 4, $13 + 4, $ff, $ff, $82, MAX_ELIXER ; item
-	db SPRITE_BALL, $0 + 4, $5 + 4, $ff, $ff, $83, NUGGET ; item
-
+	db $0 ; people
+	
 	; warp-to
 	EVENT_DISP $f, $11, $18
 	EVENT_DISP $f, $11, $19

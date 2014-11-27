@@ -46,13 +46,21 @@ _UnnamedText_6063c:: ; 99657 (26:5657)
 	para "Smell ya later!"
 	done
 
-_PokemonTower2Text2:: ; 9971a (26:571a)
-	text "Even we could not"
-	line "identify the"
-	cont "wayward GHOSTs!"
+_TrappedBirdText1:: ; 9971a (26:571a)
+	text "ZADPOS, MOLTRES,"
+	line "and ARTICUNO are"
+	cont "cruelly chained"
+	cont "to the rocks."
 
-	para "A SILPH SCOPE"
-	line "might be able to"
-	cont "unmask them."
+	para $52, " unlocked"
+	line "the chains and"
+	cont "set the legendary"
+	cont "trio free!"
 	done
 
+_TrappedBirdText2::
+	text "The birds flew"
+	line "out of HARDWATER"
+	cont "HOLE to roam the"
+	cont "region of BOLDOR."
+	done
