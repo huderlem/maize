@@ -51,8 +51,10 @@ _Route18Text4:: ; 9189d (24:589d)
 	done
 
 _Route18Text5:: ; 918c3 (24:58c3)
-	text "CYCLING ROAD"
-	line "No pedestrians"
-	cont "permitted!"
+	text "PRIVATE ELEVATOR"
 	done
 
+_Route18Text6:: ; 918c3 (24:58c3)
+	text "The elevator door"
+	line "is locked..."
+	done

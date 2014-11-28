@@ -1,49 +1,66 @@
 _UnnamedText_6062d:: ; 9957b (26:557b)
-	text $53, ": Hey,"
-	line $52, "! What"
-	cont "brings you here?"
-	cont "Your #MON"
-	cont "don't look dead!"
+	text $53, ": Hah!"
 
-	para "I can at least"
-	line "make them faint!"
-	cont "Let's go, pal!"
+	para $52, " are you"
+	line "kidding me?!"
+
+	para "What are you"
+	line "doing here?"
+
+	para "You need to learn"
+	line "some manners"
+	cont "because you're"
+	cont "really harshing"
+	cont "my mellow right"
+	cont "now!"
+
+	para "I've joined forces"
+	line "with TEAM QUARRY!"
+
+	para "They LOVE ME!"
+
+	para "I even captured"
+	line "three weapons for"
+	cont "them!"
+
+	para "They're sitting"
+	line "quite obediently"
+	cont "over there, but"
+	cont "I won't let you"
+	cont "see them!"
 	done
 
 _UnnamedText_60632:: ; 995e5 (26:55e5)
-	text "What?"
-	line "You stinker!"
+	text "Grrrr!"
 
-	para "I took it easy on"
-	line "you too!"
+	para "What's the matter"
+	line "with you?!"
+
+	para "I wish you were"
+	line "never born!"
 	prompt
 
 _UnnamedText_60637:: ; 99614 (26:5614)
-	text $53, ": Well,"
-	line "look at all your"
-	cont "wimpy #MON!"
+	text $53, ": Ugh."
 
-	para "Toughen them up a"
-	line "bit more!"
+	para "You're pathetic."
 	prompt
 
 _UnnamedText_6063c:: ; 99657 (26:5657)
-	text "How's your #DEX"
-	line "coming, pal?"
-	cont "I just caught a"
-	cont "CUBONE!"
+	text $53, ": Ugh."
 
-	para "I can't find the"
-	line "grown-up MAROWAK"
-	cont "yet!"
+	para "My head hurts."
 
-	para "I doubt there are"
-	line "any left! Well, I"
-	cont "better get going!"
-	cont "I've got a lot to"
-	cont "accomplish, pal!"
+	para "I gotta get outta"
+	line "here!"
 
-	para "Smell ya later!"
+	para "The Doc won't like"
+	line "it when he finds"
+	cont "out I failed him!"
+
+	para "Crush ya later..."
+
+	para "CREEP!"
 	done
 
 _TrappedBirdText1:: ; 9971a (26:571a)

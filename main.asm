@@ -52188,6 +52188,9 @@ Green1Data: ; 3a1e4 (e:61e4)
 	db $FF,17,GASTLY,18,POLIWAG,18,ONIX,19,STARYU,0
 	db $FF,17,GASTLY,18,POLIWAG,18,ONIX,19,EXEGGCUTE,0
 	db $FF,17,GASTLY,18,POLIWAG,18,ONIX,19,GROWLITHE,0
+	db $FF,33,HAUNTER,34,POLIWHIRL,33,STEELIX,32,DRATINI,38,STARYU,0
+	db $FF,33,HAUNTER,34,POLIWHIRL,33,STEELIX,32,DRATINI,38,EXEGGCUTE,0
+	db $FF,33,HAUNTER,34,POLIWHIRL,33,STEELIX,32,DRATINI,38,GROWLITHE,0
 ProfOakData: ; 3a21d (e:621d)
 	db $FF,66,TAUROS,67,EXEGGUTOR,68,ARCANINE,69,BLASTOISE,70,GYARADOS,0
 	db $FF,66,TAUROS,67,EXEGGUTOR,68,ARCANINE,69,VENUSAUR,70,GYARADOS,0
@@ -52240,11 +52243,11 @@ RocketData: ; 3a29c (e:629c)
 	db 19,DIGLETT,DIGLETT,SANDSHREW,0 ; Rocky Point 2 (MT_MOON_3)
 	db 19,DRILBUR,MACHOP,0 ; Rocky Point 2 (MT_MOON_3)
 	db 19,ONIX,ONIX,GEODUDE,DRILBUR,0 ; Rocky Point 2 (MT_MOON_3)
-	db 26,DROWZEE,KOFFING,0 ; GO BACK LIKE 6 FROM HERE!!!!
-	db 29,CUBONE,ZUBAT,0
-	db 25,GOLBAT,ZUBAT,ZUBAT,RATICATE,ZUBAT,0
-	db 28,RATICATE,HYPNO,RATICATE,0
-	db 29,MACHOP,DROWZEE,0
+	db 29,MAROWAK,MACHOKE,0 ; Hardwater Hole 1F
+	db 29,GRAVELER,SANDSLASH,0 ; Hardwater Hole 1F
+	db 28,NIDORINO,ONIX,MACHOP,RATICATE,GOLBAT,0 ; Hardwater Hole 1F
+	db 30,HOUNDOOM,GLIGAR,RATICATE,0 ; Hardwater Hole B1F
+	db 30,MAROWAK,ARBOK,0 ; Hardwater Hole B1F
 	db 28,EKANS,ZUBAT,CUBONE,0
 	db 33,ARBOK,0
 	db 33,HYPNO,0
@@ -52344,7 +52347,7 @@ endc
 LoreleiData: ; 3a4bb (e:64bb)
 	db $FF,54,DEWGONG,53,CLOYSTER,54,SLOWBRO,56,JYNX,56,LAPRAS,0
 ChannelerData: ; 3a4c7 (e:64c7)
-	db 22,GASTLY,0
+	db 36,EEVEE,GLACEON,0 ; Hardwater Hole B1F (ice rock)
 	db 24,GASTLY,0
 	db 23,GASTLY,GASTLY,0
 	db 24,GASTLY,0
@@ -52353,7 +52356,7 @@ ChannelerData: ; 3a4c7 (e:64c7)
 	db 24,HAUNTER,0
 	db 22,GASTLY,0
 	db 24,GASTLY,0
-	db 23,GASTLY,GASTLY,0
+	db 23,GASTLY,0
 	db 24,GASTLY,0
 	db 22,GASTLY,0
 	db 24,GASTLY,0
@@ -55281,7 +55284,7 @@ Mon134_EvosMoves: ; 3b67e (e:767e)
 Mon066_EvosMoves: ; 3b690 (e:7690)
 ;MACHOP
 ;Evolutions
-	db EV_LEVEL,38,MACHOKE
+	db EV_LEVEL,28,MACHOKE
 	db 0
 ;Learnset
 	db 20,LOW_KICK
@@ -74070,19 +74073,16 @@ CeladonMartElevatorScript_48631: ; 48631 (12:4631)
 	jp CopyData
 
 CeladonMartElavatorFloors: ; 48643 (12:4643)
-	db $05 ; num elements in list
-	db $56, $57, $58, $59, $5A ; "1F", "2F", "3F", "4F, "5F"
+	db $02 ; num elements in list
+	db $56, $61 ; "1F", "B4F"
 	db $FF ; terminator
 
 CeldaonMartElevatorWarpMaps: ; 4864a (12:464a)
 ; first byte is warp number
 ; second byte is map number
 ; These specify where the player goes after getting out of the elevator.
-	db $05, CELADON_MART_1
-	db $02, CELADON_MART_2
-	db $02, CELADON_MART_3
-	db $02, CELADON_MART_4
-	db $02, CELADON_MART_5
+	db $00, ROUTE_18
+	db $01, POKEMONTOWER_2
 
 Func_48654: ; 48654 (12:4654)
 	ld b, BANK(Func_7bf15)
@@ -87115,7 +87115,7 @@ Route18Object: ; 0x58c5a (size=66)
 	db $2c ; border tile
 
 	db $2 ; warps
-	db $25, $d, $1, POKEMONTOWER_3
+	db $25, $d, $1, CELADON_MART_ELEVATOR
 	db $2b, $8, $1, POKEMONTOWER_3
 	
 	db $2 ; signs
@@ -87128,7 +87128,7 @@ Route18Object: ; 0x58c5a (size=66)
 	db SPRITE_BLACK_HAIR_BOY_1, $2d + 4, $a + 4, $ff, $ff, $43, BIRD_KEEPER + $C8, $a ; trainer
 
 	; warp-to
-	EVENT_DISP ROUTE_18_WIDTH, $25, $d ; POKEMONTOWER_3
+	EVENT_DISP ROUTE_18_WIDTH, $25, $d ; CELADON_MART_ELEVATOR
 	EVENT_DISP ROUTE_18_WIDTH, $2b, $8 ; POKEMONTOWER_3
 
 Route18Blocks: ; 58c9c (16:4c9c)
@@ -89226,9 +89226,42 @@ Route18Script: ; 59ac7 (16:5ac7)
 	ret
 
 Route18ScriptPointers: ; 59ada (16:5ada)
-	dw CheckFightingMapTrainers
+	dw Route18Script0
 	dw Func_324c
 	dw EndTrainerBattle
+
+Route18Script0:
+	; check to see if player has already done hardwater hole event
+	ld a, [$d764] ; set after you've beaten rival
+	bit 7, a
+	jr nz, .done
+	; check if player is in front of elevator door
+	ld hl, ElevatorDoorCoords ; $455e
+	call ArePlayerCoordsInArray
+	jr nc, .done
+	ld a, $6
+	ld [$ff00+$8c], a
+	call DisplayTextID
+	; move player one space to the left
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_LEFT
+	ld [$ccd3],a ; base address of simulated button presses
+	xor a
+	ld [$cd39],a
+	inc a
+	ld [$cd38],a ; index of current simulated button press
+	ld hl,$d730
+	set 7,[hl]
+	ret
+.done
+	jp CheckFightingMapTrainers
+
+ElevatorDoorCoords:
+	db $26, $d
+	db $ff ; terminator
 
 Route18TextPointers: ; 59ae0 (16:5ae0)
 	dw Route18Text1
@@ -89236,6 +89269,7 @@ Route18TextPointers: ; 59ae0 (16:5ae0)
 	dw Route18Text3
 	dw Route18Text4
 	dw Route18Text5
+	dw Route18Text6
 
 Route18TrainerHeaders: ; 59aea (16:5aea)
 Route18TrainerHeader0: ; 59aea (16:5aea)
@@ -89327,6 +89361,10 @@ Route18Text4: ; 59b5a (16:5b5a)
 
 Route18Text5: ; 59b5f (16:5b5f)
 	TX_FAR _Route18Text5
+	db "@"
+
+Route18Text6:
+	TX_FAR _Route18Text6
 	db "@"
 
 FanClub_h: ; 0x59b64 to 0x59b70 (12 bytes) (id=90)
@@ -95045,7 +95083,7 @@ PokemonTower2Script0: ; 6050f (18:450f)
 CoordsData_6055e: ; 6055e (18:455e)
 	db $05,$0F
 	db $06,$0E
-	db $0F ; isn't this supposed to end in $ff?
+	db $FF
 
 PokemonTower2Script1: ; 60563 (18:4563)
 	ld a, [$d057]
@@ -95121,22 +95159,22 @@ PokemonTower2Text1: ; 605df (18:45df)
 	ld hl, UnnamedText_60632
 	ld de, UnnamedText_60637 ; XXX $4637
 	call PreBattleSaveRegisters
-	ld a, $f2
+	ld a, SONY1 + $C8
 	ld [$d059], a
 
 	; select which team to use during the encounter
 	ld a, [W_RIVALSTARTER]
-	cp SQUIRTLE
-	jr nz, .NotSquirtle ; 0x6060f
-	ld a, $4
+	cp STARYU
+	jr nz, .NotStaryu ; 0x6060f
+	ld a, $a
 	jr .done
-.NotSquirtle ; 0x60615
-	cp BULBASAUR
-	jr nz, .Charmander ; 0x60617
-	ld a, $5
+.NotStaryu ; 0x60615
+	cp EXEGGCUTE
+	jr nz, .Growlithe ; 0x60617
+	ld a, $b
 	jr .done
-.Charmander ; 0x6061d
-	ld a, $6
+.Growlithe ; 0x6061d
+	ld a, $c
 .done
 	ld [W_TRAINERNO], a
 
@@ -95287,8 +95325,8 @@ PokemonTower2Object: ; 0x60646 (size=32)
 
 	db $3 ; warps
 	db $8, $1c, $1, POKEMONTOWER_1
-	db $b, $2, $1, POKEMONTOWER_1
-	db $b, $3, $1, POKEMONTOWER_1
+	db $b, $2, $1, CELADON_MART_ELEVATOR
+	db $b, $3, $1, CELADON_MART_ELEVATOR
 
 	db $0 ; signs
 
@@ -95300,8 +95338,8 @@ PokemonTower2Object: ; 0x60646 (size=32)
 
 	; warp-to
 	EVENT_DISP POKEMONTOWER_2_WIDTH, $8, $1c ; POKEMONTOWER_3
-	EVENT_DISP POKEMONTOWER_2_WIDTH, $b, $2 ; POKEMONTOWER_1
-	EVENT_DISP POKEMONTOWER_2_WIDTH, $b, $3 ; POKEMONTOWER_1
+	EVENT_DISP POKEMONTOWER_2_WIDTH, $b, $2 ; CELADON_MART_ELEVATOR
+	EVENT_DISP POKEMONTOWER_2_WIDTH, $b, $3 ; CELADON_MART_ELEVATOR
 
 PokemonTower2Blocks: ; 60666 (18:4666)
 	INCBIN "maps/pokemontower2.blk"
@@ -95485,9 +95523,9 @@ PokemonTower3Object: ; 0x6075d (size=51)
 	db $11, $9, $5
 
 	db $4 ; people
-	db SPRITE_MEDIUM, $9 + 4, $c + 4, $ff, $d2, $41, CHANNELER + $C8, $5 ; trainer
-	db SPRITE_MEDIUM, $b + 4, $7 + 4, $ff, $d2, $42, CHANNELER + $C8, $6 ; trainer
-	db SPRITE_MEDIUM, $10 + 4, $d + 4, $ff, $d3, $43, CHANNELER + $C8, $8 ; trainer
+	db SPRITE_ROCKET, $9 + 4, $c + 4, $ff, $d2, $41, ROCKET + $C8, $16 ; trainer
+	db SPRITE_ROCKET, $b + 4, $7 + 4, $ff, $d2, $42, ROCKET + $C8, $17 ; trainer
+	db SPRITE_ROCKET, $10 + 4, $d + 4, $ff, $d3, $43, ROCKET + $C8, $18 ; trainer
 	db SPRITE_BALL, $6 + 4, $12 + 4, $ff, $ff, $84, ITEM_STONE ; item
 
 	; warp-to
@@ -95501,9 +95539,18 @@ PokemonTower3Blocks: ; 60790 (18:4790)
 PokemonTower4_h: ; 0x607ea to 0x607f6 (12 bytes) (id=145)
 	db $0a ; tileset
 	db POKEMONTOWER_4_HEIGHT, POKEMONTOWER_4_WIDTH ; dimensions (y, x)
-	dw PokemonTower4Blocks, PokemonTower4TextPointers, PokemonTower3Script ; blocks, texts, scripts
+	dw PokemonTower4Blocks, PokemonTower4TextPointers, PokemonTower4Script ; blocks, texts, scripts
 	db $00 ; connections
 	dw PokemonTower4Object ; objects
+
+PokemonTower4Script: ; 606cc (18:46cc)
+	call EnableAutoTextBoxDrawing
+	ld hl, PokemonTower4TrainerHeaders
+	ld de, PokemonTower3ScriptPointers
+	ld a, [W_POKEMONTOWER3CURSCRIPT]
+	call ExecuteCurMapScriptInTable
+	ld [W_POKEMONTOWER3CURSCRIPT], a
+	ret
 
 PokemonTower4TextPointers: ; 6080f (18:480f)
 	dw PokemonTower4Text1
@@ -95512,11 +95559,12 @@ PokemonTower4TextPointers: ; 6080f (18:480f)
 	dw Predef5CText
 	dw Predef5CText
 	dw Predef5CText
+	dw IceRockText
 
 PokemonTower4TrainerHeaders: ; 6081b (18:481b)
 PokemonTower4TrainerHeader0: ; 6081b (18:481b)
 	db $1 ; flag's bit
-	db ($2 << 4) ; trainer's view range
+	db ($0 << 4) ; trainer's view range
 	dw $d766 ; flag's byte
 	dw PokemonTower4BattleText1 ; 0x485e TextBeforeBattle
 	dw PokemonTower4AfterBattleText1 ; 0x4868 TextAfterBattle
@@ -95525,7 +95573,7 @@ PokemonTower4TrainerHeader0: ; 6081b (18:481b)
 
 PokemonTower4TrainerHeader1: ; 60827 (18:4827)
 	db $2 ; flag's bit
-	db ($2 << 4) ; trainer's view range
+	db ($0 << 4) ; trainer's view range
 	dw $d766 ; flag's byte
 	dw PokemonTower4BattleText2 ; 0x486d TextBeforeBattle
 	dw PokemonTower4AfterBattleText2 ; 0x4877 TextAfterBattle
@@ -95534,7 +95582,7 @@ PokemonTower4TrainerHeader1: ; 60827 (18:4827)
 
 PokemonTower4TrainerHeader2: ; 60833 (18:4833)
 	db $3 ; flag's bit
-	db ($2 << 4) ; trainer's view range
+	db ($0 << 4) ; trainer's view range
 	dw $d766 ; flag's byte
 	dw PokemonTower4BattleText3 ; 0x487c TextBeforeBattle
 	dw PokemonTower4AfterBattleText3 ; 0x4886 TextAfterBattle
@@ -95597,6 +95645,10 @@ PokemonTower4AfterBattleText3: ; 60886 (18:4886)
 	TX_FAR _PokemonTower4AfterBattleText3
 	db "@"
 
+IceRockText:
+	TX_FAR _IceRockText
+	db "@"
+
 PokemonTower4Object: ; 0x6088b (size=65)
 	db $3 ; border tile
 
@@ -95604,15 +95656,19 @@ PokemonTower4Object: ; 0x6088b (size=65)
 	db $3, $3, $0, POKEMONTOWER_1
 	db $3, $9, $0, POKEMONTOWER_3
 
-	db $0 ; signs
+	db $4 ; signs
+	db $2, $10, $7 ; ice rock
+	db $2, $11, $7 ; ice rock
+	db $3, $10, $7 ; ice rock
+	db $3, $11, $7 ; ice rock
 
 	db $6 ; people
-	db SPRITE_MEDIUM, $1 + 4, $11 + 4, $ff, $d0, $41, CHANNELER + $C8, $9 ; trainer
-	db SPRITE_MEDIUM, $9 + 4, $12 + 4, $ff, $d3, $42, CHANNELER + $C8, $a ; trainer
-	db SPRITE_MEDIUM, $13 + 4, $5 + 4, $ff, $d0, $43, CHANNELER + $C8, $c ; trainer
+	db SPRITE_MEDIUM, $1 + 4, $11 + 4, $ff, $d0, $41, CHANNELER + $C8, $1 ; trainer
+	db SPRITE_ROCKET, $9 + 4, $12 + 4, $ff, $d3, $42, ROCKET + $C8, $19 ; trainer
+	db SPRITE_ROCKET, $13 + 4, $5 + 4, $ff, $d0, $43, ROCKET + $C8, $1a ; trainer
 	db SPRITE_BALL, $2 + 4, $6 + 4, $ff, $ff, $84, ELIXER ; item
-	db SPRITE_BALL, $6 + 4, $5 + 4, $ff, $ff, $85, AWAKENING ; item
-	db SPRITE_BALL, $13 + 4, $6 + 4, $ff, $ff, $86, HP_UP ; item
+	db SPRITE_BALL, $6 + 4, $5 + 4, $ff, $ff, $85, TM_13 ; item
+	db SPRITE_BALL, $13 + 4, $6 + 4, $ff, $ff, $86, SUPER_POTION ; item
 
 	; warp-to
 	EVENT_DISP POKEMONTOWER_4_WIDTH, $3, $3 ; POKEMONTOWER_1
@@ -117060,6 +117116,14 @@ Tset0C_Block:
 	INCBIN "gfx/blocksets/0c.bst"
 
 SECTION "New Text", ROMX, BANK[$33]
+
+INCLUDE "text/maps/pokemon_tower_1f.asm"
+INCLUDE "text/maps/pokemon_tower_2f.asm"
+INCLUDE "text/maps/pokemon_tower_3f.asm"
+INCLUDE "text/maps/pokemon_tower_4f.asm"
+INCLUDE "text/maps/pokemon_tower_5f.asm"
+INCLUDE "text/maps/pokemon_tower_6f.asm"
+INCLUDE "text/maps/pokemon_tower_7f.asm"
 
 _GoHomeText::
 	text "In Nuzlocke Mode,"
