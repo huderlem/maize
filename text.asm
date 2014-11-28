@@ -3298,3 +3298,24 @@ _FlameChargeText2::
 	text "'s"
 	line "SPEED rose!"
 	prompt
+
+_SneaselDexEntry::
+	text "Its claws can be"
+	next "extended like"
+	next "WOLVERINE's."
+
+	page "It uses them to"
+	next "stab anything in"
+	next "its path"
+	dex
+
+_WeavileDexEntry::
+	text "It carves images"
+	next "on cave walls to"
+	next "spite historians"
+
+	page "who believe they"
+	next "were drawn by"
+	next "cavemen"
+	dex
+

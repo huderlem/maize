@@ -3078,7 +3078,7 @@ LoadFrontSpriteByMonIndex:: ; 1389 (0:1389)
 	and a
 	pop hl
 	jr z, .invalidDexNumber  ; dex #0 invalid
-	cp 175 ; num mons in dex + 1
+	cp 177 ; num mons in dex + 1
 	jr c, .validDexNumber    ; dex >#151 invalid
 .invalidDexNumber
 	ld a, RHYDON ; $1
@@ -21736,16 +21736,16 @@ Route17Mons: ; d377 (3:5377)
 
 Route18Mons: ; d38d (3:538d)
 	db $19
-	db 20,SPEAROW
-	db 22,SPEAROW
-	db 25,RATICATE
-	db 24,DODUO
-	db 25,FEAROW
-	db 26,DODUO
-	db 28,DODUO
-	db 29,RATICATE
-	db 27,FEAROW
-	db 29,FEAROW
+	db 20,SNEASEL
+	db 22,SNEASEL
+	db 25,SNEASEL
+	db 24,WEAVILE
+	db 25,WEAVILE
+	db 26,WEAVILE
+	db 28,WEAVILE
+	db 29,WEAVILE
+	db 27,WEAVILE
+	db 29,WEAVILE
 
 	db $00
 
@@ -28731,6 +28731,7 @@ RedrawPartyMenu_:
 	jr c, .carryOn
 	ld d, Bank(EvosMovesPointerTable2)
 	ld hl,EvosMovesPointerTable2
+	sub CATERPIE - 1
 .carryOn
 	dec a
 	add a
@@ -36203,9 +36204,9 @@ MonsterNames: ; 1c21e (7:421e)
 	db "SNORLAX@@@"
 	db "MAGIKARP@@"
 	db "HITMONTOP@"
-	db "MISSINGNO."
+	db "SNEASEL@@@"
 	db "MUK@@@@@@@"
-	db "MISSINGNO."
+	db "WEAVILE@@@"
 	db "KINGLER@@@"
 	db "CLOYSTER@@"
 	db "MISSINGNO."
@@ -50489,6 +50490,80 @@ HitmontopBaseStats:
 
 	db Bank(HitmontopPicFront)
 
+SneaselBaseStats:
+	db DEX_SNEASEL ; pokedex id
+	db 55    ; base hp
+	db 95   ; base attack
+	db 55   ; base defense
+	db 115    ; base speed
+	db 55    ; base special
+
+	db DARK     ; species type 1
+	db ICE     ; species type 2
+
+	db 60  ; catch rate
+	db 132 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw SneaselPicFront
+	dw SneaselPicBack
+
+	; attacks known at lvl 0
+	db SCRATCH
+	db LEER
+	db 0
+	db 0
+
+	db 3 ; growth rate
+
+	; learnset
+	db %00101100
+	db %00110010
+	db %00001010
+	db %11001000
+	db %01000011
+	db %00001010
+	db %00110110
+
+	db Bank(SneaselPicFront)
+
+WeavileBaseStats:
+	db DEX_WEAVILE ; pokedex id
+	db 70    ; base hp
+	db 120   ; base attack
+	db 65   ; base defense
+	db 125    ; base speed
+	db 65    ; base special
+
+	db DARK     ; species type 1
+	db ICE     ; species type 2
+
+	db 45  ; catch rate
+	db 199 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw WeavilePicFront
+	dw WeavilePicBack
+
+	; attacks known at lvl 0
+	db SCRATCH
+	db LEER
+	db QUICK_ATTACK
+	db 0
+
+	db 3 ; growth rate
+
+	; learnset
+	db %00101100
+	db %00110010
+	db %00001010
+	db %11001000
+	db %01000011
+	db %00001010
+	db %00110110
+
+	db Bank(SneaselPicFront)
+
 
 
 CryData: ; 39446 (e:5446)
@@ -50627,9 +50702,9 @@ CryData: ; 39446 (e:5446)
 	db $05, $55, $01; Snorlax
 	db $17, $80, $00; Magikarp
 	db $0C, $40, $B0; Hitmontop
-	db $00, $00, $00; MissingNo.
+	db $19, $40, $70; Sneasel
 	db $07, $EF, $FF; Muk
-	db $0F, $40, $80; MissingNo.
+	db $19, $A0, $C0; Weavile
 	db $20, $EE, $E0; Kingler
 	db $18, $6F, $E0; Cloyster
 	db $00, $00, $00; MissingNo.
@@ -65649,9 +65724,9 @@ PokedexEntryPointers: ; 4047e (10:447e)
 	dw SnorlaxDexEntry
 	dw MagikarpDexEntry
 	dw HitmontopDexEntry
-	dw MissingNoDexEntry
+	dw SneaselDexEntry
 	dw MukDexEntry
-	dw MissingNoDexEntry
+	dw WeavileDexEntry
 	dw KinglerDexEntry
 	dw CloysterDexEntry
 	dw MissingNoDexEntry
@@ -66929,6 +67004,20 @@ HitmontopDexEntry:
 	TX_FAR _HitmontopDexEntry
 	db "@"
 
+SneaselDexEntry:
+	db "SHARP CLAW@"
+	db 2, 11
+	dw 617
+	TX_FAR _SneaselDexEntry
+	db "@"
+
+WeavileDexEntry:
+	db "SHARP CLAW@"
+	db 3, 7
+	dw 750
+	TX_FAR _WeavileDexEntry
+	db "@"
+
 MissingNoDexEntry: ; 40fe5 (10:4fe5)
 	db "???@"
 	db 10 ; 1.0 m
@@ -67107,9 +67196,9 @@ PokedexOrder: ; 41024 (10:5024)
 	db DEX_SNORLAX
 	db DEX_MAGIKARP
 	db DEX_HITMONTOP
-	db 0 ; MISSINGNO.
+	db DEX_SNEASEL
 	db DEX_MUK
-	db 0 ; MISSINGNO.
+	db DEX_WEAVILE
 	db DEX_KINGLER
 	db DEX_CLOYSTER
 	db 0 ; MISSINGNO.
@@ -102578,6 +102667,7 @@ MonOverworldData: ; 7190d (1c:590d)
 	dn SPRITE_QUADRUPED, SPRITE_QUADRUPED   ;Glaceon/Sylveon
 	dn SPRITE_MON, SPRITE_MON               ;Bonsly/Sudowoodo
 	dn SPRITE_MON, SPRITE_MON               ;Tyrogue/Hitmontop
+	dn SPRITE_MON, SPRITE_MON               ;Sneasel/Weavile
 	db 0
 
 MonOverworldSprites: ; 71959 (1c:5959)
@@ -103917,6 +104007,8 @@ MonsterPalettes: ; 725c8 (1c:65c8)
 	db PAL_BROWNMON  ; SUDOWOODO
 	db PAL_PINKMON   ; TYROGUE
 	db PAL_BROWNMON  ; HITMONTOP
+	db PAL_GREYMON   ; Sneasel
+	db PAL_GREYMON   ; Weavile
 
 ; palettes for overworlds, title screen, monsters
 SuperPalettes: ; 72660 (1c:6660)
@@ -117105,6 +117197,14 @@ HitmontopPicFront:
 	INCBIN "pic/bmon/hitmontop.pic"
 HitmontopPicBack:
 	INCBIN "pic/monback/hitmontopb.pic"
+SneaselPicFront:
+	INCBIN "pic/bmon/sneasel.pic"
+SneaselPicBack:
+	INCBIN "pic/monback/sneaselb.pic"
+WeavilePicFront:
+	INCBIN "pic/bmon/weavile.pic"
+WeavilePicBack:
+	INCBIN "pic/monback/weavileb.pic"
 
 Tset00_GFX: ; 64000 (19:4000)
 	INCBIN "gfx/tilesets/00.2bpp"
@@ -118611,10 +118711,19 @@ Mon174_EvosMoves: ; 3b7ad (e:77ad)
 	db 0
 
 Mon175_EvosMoves: ; 3b7af (e:77af)
-;MISSINGNO
+;SNEASEL
 ;Evolutions
+	db EV_ITEM,ITEM_STONE,1,WEAVILE
 	db 0
 ;Learnset
+	db 9,QUICK_ATTACK
+	db 17,SCREECH
+	db 21,ICY_WIND
+	db 25,FEINT_ATTACK
+	db 29,METAL_CLAW
+	db 34,FURY_SWIPES
+	db 40,AGILITY
+	db 44,SLASH
 	db 0
 Mon089_EvosMoves: ; 3b7b1 (e:77b1)
 ;MUK
@@ -118632,10 +118741,19 @@ Mon089_EvosMoves: ; 3b7b1 (e:77b1)
 	db 0
 
 Mon176_EvosMoves: ; 3b7bf (e:77bf)
-;MISSINGNO
+;WEAVILE
 ;Evolutions
 	db 0
 ;Learnset
+	db 9,QUICK_ATTACK
+	db 17,SCREECH
+	db 21,ICY_WIND
+	db 25,FEINT_ATTACK
+	db 29,METAL_CLAW
+	db 34,FURY_SWIPES
+	db 40,AGILITY
+	db 44,NIGHT_SLASH
+	db 51,DARK_PULSE
 	db 0
 Mon099_EvosMoves: ; 3b7c1 (e:77c1)
 ;KINGLER
