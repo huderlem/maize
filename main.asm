@@ -31200,7 +31200,7 @@ MapSpriteSets: ; 17a64 (5:7a64)
 	db $f5 ; ROUTE_15
 	db $f6 ; ROUTE_16
 	db $09 ; ROUTE_17
-	db $f7 ; ROUTE_18
+	db $0a ; ROUTE_18
 	db $0a ; ROUTE_19
 	db $f8 ; ROUTE_20
 	db $01 ; ROUTE_21
@@ -51517,945 +51517,6 @@ Func_39c37: ; 39c37 (e:5c37)
 	ld a, [hl]
 	ld [$cf91], a
 	ret
-
-ReadTrainer: ; 39c53 (e:5c53)
-
-; don't change any moves in a link battle
-	ld a,[W_ISLINKBATTLE]
-	and a
-	ret nz
-
-; set [wEnemyPartyCount] to 0, [$D89D] to FF
-; XXX first is total enemy pokemon?
-; XXX second is species of first pokemon?
-	ld hl,wEnemyPartyCount
-	xor a
-	ld [hli],a
-	dec a
-	ld [hl],a
-
-; get the pointer to trainer data for this class
-	ld a,[W_CUROPPONENT]
-	sub $C9 ; convert value from pokemon to trainer
-	add a,a
-	ld hl,TrainerDataPointers
-	ld c,a
-	ld b,0
-	add hl,bc ; hl points to trainer class
-	ld a,[hli]
-	ld h,[hl]
-	ld l,a
-	ld a,[W_TRAINERNO]
-	ld b,a
-; At this point b contains the trainer number,
-; and hl points to the trainer class.
-; Our next task is to iterate through the trainers,
-; decrementing b each time, until we get to the right one.
-.outer
-	dec b
-	jr z,.IterateTrainer
-.inner
-	ld a,[hli]
-	and a
-	jr nz,.inner ; march until terminator 0 is found
-	jr .outer
-
-; if the first byte of trainer data is FF,
-; - each pokemon has a specific level
-;      (as opposed to the whole team being of the same level)
-; - if [W_LONEATTACKNO] != 0, one pokemon on the team has a special move
-; elseif the first byte of trainer data is FE
-; - levels are set accordng to player's max level in party
-; - the second byte is the minimum level
-; - each pair of bytes is [levels below][pokemon id]
-; else the first byte is the level of every pokemon on the team
-.IterateTrainer
-	ld a,[hli]
-	cp $FF ; is the trainer special?
-	jr z,.SpecialTrainer ; if so, check for special moves
-	cp $FE ; does trainer have levels related to player's pokemon?
-	jr z,.MaxPlayerLevelTrainer
-	ld [W_CURENEMYLVL],a
-.LoopTrainerData
-	ld a,[hli]
-	and a ; have we reached the end of the trainer data?
-	jp z,.FinishUp
-	ld [$CF91],a ; write species somewhere (XXX why?)
-	ld a,1
-	ld [$CC49],a
-	push hl
-	call AddPokemonToParty
-	pop hl
-	jr .LoopTrainerData
-
-.MaxPlayerLevelTrainer
-	ld a, [hli]
-	ld b, a ; b contains minimum base level for pokemon
-	call GetMaxLevelInParty ; register a contains max level
-	cp b
-	jr c, .GotMinLevel
-	ld b, a
-.GotMinLevel
-; b contains min level
-	ld a, [hli]
-	and a ; reached end of pokemon list?
-	jp z, .FinishUp
-	push bc
-	; a contains level offset from base level
-	add a, b
-	cp 2
-	jr nc, .checkHigh
-	ld a, 2
-	jr .loadLevel
-.checkHigh
-	cp 155
-	jr c, .check100
-	ld a, 2
-	jr .loadLevel
-.check100
-	cp 101
-	jr c, .loadLevel
-	ld a, 100
-.loadLevel
-	ld [W_CURENEMYLVL], a
-	ld a, [hli] ; a contain pokemon id
-	ld [$CF91], a
-	ld a,1
-	ld [$CC49], a
-	push hl
-	call AddPokemonToParty
-	pop hl
-	pop bc
-	jr .GotMinLevel
-
-.SpecialTrainer
-; if this code is being run:
-; - each pokemon has a specific level
-;      (as opposed to the whole team being of the same level)
-; - if [W_LONEATTACKNO] != 0, one pokemon on the team has a special move
-	ld a,[hli]
-	and a ; have we reached the end of the trainer data?
-	jr z,.AddLoneMove
-	ld [W_CURENEMYLVL],a
-	ld a,[hli]
-	ld [$CF91],a
-	ld a,1
-	ld [$CC49],a
-	push hl
-	call AddPokemonToParty
-	pop hl
-	jr .SpecialTrainer
-.AddLoneMove
-; does the trainer have a single monster with a different move
-	ld a,[W_LONEATTACKNO] ; Brock is 01, Misty is 02, Erika is 04, etc
-	and a
-	jr z,.AddTeamMove
-	dec a
-	add a,a
-	ld c,a
-	ld b,0
-	ld hl,LoneMoves
-	add hl,bc
-	ld a,[hli]
-	ld d,[hl]
-	ld hl,W_ENEMYMON1MOVE3
-	ld bc,W_ENEMYMON2MOVE3 - W_ENEMYMON1MOVE3
-	call AddNTimes
-	ld [hl],d
-	jr .FinishUp
-.AddTeamMove
-; check if our trainer's team has special moves
-
-; get trainer class number
-	ld a,[$D059]
-	sub $C8
-	ld b,a
-	ld hl,TeamMoves
-
-; iterate through entries in TeamMoves, checking each for our trainer class
-.IterateTeamMoves
-	ld a,[hli]
-	cp b
-	jr z,.GiveTeamMoves ; is there a match?
-	inc hl ; if not, go to the next entry
-	inc a
-	jr nz,.IterateTeamMoves
-
-	; no matches found. is this trainer champion rival?
-	ld a,b
-	cp SONY3
-	jr z,.ChampionRival
-	jr .FinishUp ; nope
-.GiveTeamMoves
-	ld a,[hl]
-	ld [$D95E],a
-	jr .FinishUp
-.ChampionRival ; give moves to his team
-
-; pidgeot
-	ld a,SKY_ATTACK
-	ld [W_ENEMYMON1MOVE3],a
-
-; starter
-	ld a,[W_RIVALSTARTER]
-	cp BULBASAUR
-	ld b,MEGA_DRAIN
-	jr z,.GiveStarterMove
-	cp CHARMANDER
-	ld b,FIRE_BLAST
-	jr z,.GiveStarterMove
-	ld b,BLIZZARD ; must be squirtle
-.GiveStarterMove
-	ld a,b
-	ld [W_ENEMYMON6MOVE3],a
-.FinishUp ; XXX this needs documenting
-	xor a       ; clear D079-D07B
-	ld de,$D079
-	ld [de],a
-	inc de
-	ld [de],a
-	inc de
-	ld [de],a
-	ld a,[W_CURENEMYLVL]
-	ld b,a
-.LastLoop
-	ld hl,$D047
-	ld c,2
-	push bc
-	ld a,$B
-	call Predef
-	pop bc
-	inc de
-	inc de
-	dec b
-	jr nz,.LastLoop
-	ret
-
-GetMaxLevelInParty:
-; returns max level in register a
-	push bc
-	push hl
-	push de
-	ld a, [W_NUMINPARTY]
-	ld d, a
-	ld bc, 44
-	ld hl, W_PARTYMON1_LEVEL
-	ld a, [hl]
-	ld e, a
-	; keep track of max in e
-.loop
-	ld a, [hl]
-	cp e
-	jr c, .smaller
-	; update max
-	ld e, a
-.smaller
-	add hl, bc
-	dec d
-	jr nz, .loop
-	ld a, e 
-	pop de
-	pop hl
-	pop bc
-	ret
-
-LoneMoves: ; 39d22 (e:5d22)
-; these are used for gym leaders.
-; this is not automatic! you have to write the number you want to W_LONEATTACKNO
-; first. e.g., erika's script writes 4 to W_LONEATTACKNO to get mega drain,
-; the fourth entry in the list.
-
-; first byte:  pokemon in the trainer's party that gets the move
-; second byte: move
-; unterminated
-	db 1,SWIFT
-	db 1,DIG
-	db 2,FIRE_BLAST
-	db 3,IRON_HEAD
-	db 3,TOXIC
-	db 3,PSYWAVE
-	db 3,FIRE_BLAST
-	db 4,FISSURE
-
-TeamMoves: ; 39d32 (e:5d32)
-; these are used for elite four.
-; this is automatic, based on trainer class.
-; don't be confused by LoneMoves above, the two data structures are
-	; _completely_ unrelated.
-
-; first byte: trainer (all trainers in this class have this move)
-; second byte: move
-; ff-terminated
-	db LORELEI,BLIZZARD
-	db BRUNO,FISSURE
-	db AGATHA,TOXIC
-	db LANCE,BARRIER
-	db $FF
-
-if _YELLOW
-; different format from above.
-
-; entry ≔ trainerclass, trainerid, moveset+, 0
-; moveset ≔ partymon, partymon'smove, moveid
-
-	db BUG_CATCHER,$f
-	db 2,2,TACKLE
-	db 2,3,STRING_SHOT
-	db 0
-
-	db YOUNGSTER,$e
-	db 1,4,FISSURE
-	db 0
-
-	db BROCK,$1
-	db 2,3,BIND
-	db 2,4,BIDE
-	db 0
-
-	db MISTY,$1
-	db 2,4,BUBBLEBEAM
-	db 0
-
-	db LT__SURGE,$1
-	db 1,1,THUNDERBOLT
-	db 1,2,MEGA_PUNCH
-	db 1,3,MEGA_KICK
-	db 1,4,GROWL
-	db 0
-
-	db ERIKA,$1
-	db 1,3,MEGA_DRAIN
-	db 2,1,RAZOR_LEAF
-	db 3,1,PETAL_DANCE
-	db 0
-
-	db KOGA,$1
-	db 1,1,TOXIC
-	db 1,2,TACKLE
-	db 2,1,TOXIC
-	db 2,3,SUPERSONIC
-	db 3,1,TOXIC
-	db 3,2,DOUBLE_EDGE
-	db 4,1,LEECH_LIFE
-	db 4,2,DOUBLE_TEAM
-	db 4,3,PSYCHIC_M
-	db 4,4,TOXIC
-	db 0
-
-	db BLAINE,$1
-	db 1,1,FLAMETHROWER
-	db 1,4,CONFUSE_RAY
-	db 3,1,FLAMETHROWER
-	db 3,2,FIRE_BLAST
-	db 3,3,REFLECT
-	db 0
-
-	db SABRINA,$1
-	db 1,1,FLASH
-	db 2,1,KINESIS
-	db 2,4,PSYWAVE
-	db 3,1,PSYWAVE
-	db 0
-
-	db GIOVANNI,$3
-	db 1,3,FISSURE
-	db 2,2,DOUBLE_TEAM
-	db 3,1,EARTHQUAKE
-	db 3,3,THUNDER
-	db 4,1,EARTHQUAKE
-	db 4,2,LEER
-	db 4,3,THUNDER
-	db 5,1,ROCK_SLIDE
-	db 5,4,EARTHQUAKE
-	db 0
-
-	db LORELEI,$1
-	db 1,1,BUBBLEBEAM
-	db 2,3,ICE_BEAM
-	db 3,1,PSYCHIC_M
-	db 3,2,SURF
-	db 4,3,LOVELY_KISS
-	db 5,3,BLIZZARD
-	db 0
-
-	db BRUNO,$1
-	db 1,1,ROCK_SLIDE
-	db 1,2,SCREECH
-	db 1,4,DIG
-	db 2,3,FIRE_PUNCH
-	db 2,4,DOUBLE_TEAM
-	db 3,1,DOUBLE_KICK
-	db 3,2,MEGA_KICK
-	db 3,4,DOUBLE_TEAM
-	db 4,1,ROCK_SLIDE
-	db 4,2,SCREECH
-	db 4,4,EARTHQUAKE
-	db 5,2,KARATE_CHOP
-	db 5,3,STRENGTH
-	db 0
-
-	db AGATHA,$1
-	db 1,2,SUBSTITUTE
-	db 1,3,LICK
-	db 1,4,MEGA_DRAIN
-	db 2,2,TOXIC
-	db 2,4,LEECH_LIFE
-	db 3,2,LICK
-	db 4,1,WRAP
-	db 5,2,PSYCHIC_M
-	db 0
-
-	db LANCE,$1
-	db 1,1,DRAGON_RAGE
-	db 2,1,THUNDER_WAVE
-	db 2,3,THUNDERBOLT
-	db 3,1,BUBBLEBEAM
-	db 3,2,WRAP
-	db 3,3,ICE_BEAM
-	db 4,1,WING_ATTACK
-	db 4,2,SWIFT
-	db 4,3,FLY
-	db 5,1,BLIZZARD
-	db 5,2,FIRE_BLAST
-	db 5,3,THUNDER
-	db 0
-
-	db SONY3,$1
-	db 1,3,EARTHQUAKE
-	db 2,4,KINESIS
-	db 3,4,LEECH_SEED
-	db 4,1,ICE_BEAM
-	db 5,1,CONFUSE_RAY
-	db 5,4,FIRE_SPIN
-	db 6,3,QUICK_ATTACK
-	db 0
-
-	db SONY3,$2
-	db 1,3,EARTHQUAKE
-	db 2,4,KINESIS
-	db 3,4,LEECH_SEED
-	db 4,1,THUNDERBOLT
-	db 5,1,ICE_BEAM
-	db 6,2,REFLECT
-	db 6,3,QUICK_ATTACK
-	db 0
-
-	db SONY3,$3
-	db 1,3,EARTHQUAKE
-	db 2,4,KINESIS
-	db 3,4,LEECH_SEED
-	db 4,1,CONFUSE_RAY
-	db 4,4,FIRE_SPIN
-	db 5,1,THUNDERBOLT
-	db 6,1,AURORA_BEAM
-	db 6,3,QUICK_ATTACK
-	db 0
-
-	db $ff
-endc
-
-TrainerDataPointers: ; 39d3b (e:5d3b)
-	dw YoungsterData,BugCatcherData,LassData,SailorData,JrTrainerMData
-	dw JrTrainerFData,PokemaniacData,SuperNerdData,HikerData,BikerData
-	dw BurglarData,EngineerData,Juggler1Data,FisherData,SwimmerData
-	dw CueBallData,GamblerData,BeautyData,PsychicData,RockerData
-	dw JugglerData,TamerData,BirdKeeperData,BlackbeltData,Green1Data
-	dw ProfOakData,ChiefData,ScientistData,GiovanniData,RocketData
-	dw CooltrainerMData,CooltrainerFData,BrunoData,BrockData,MistyData
-	dw LtSurgeData,ErikaData,KogaData,BlaineData,SabrinaData
-	dw GentlemanData,Green2Data,Green3Data,LoreleiData,ChannelerData
-	dw AgathaData,LanceData,ShadowData,TimmyData
-
-; if first byte != FF, then
-	; first byte is level (of all pokemon on this team)
-	; all the next bytes are pokemon species
-	; null-terminated
-; if first byte == FF, then
-	; first byte is FF (obviously)
-	; every next two bytes are a level and species
-	; null-terminated
-
-YoungsterData: ; 39d99 (e:5d99)
-	db 6,WEEDLE,RATTATA,0 ; trainer house (Nickel City)
-	db 8,PSYDUCK,RATTATA,RATTATA,0 ; Route 3
-	db 13,NIDORAN_M,NIDORAN_F,RATTATA,0 ; Route 4 (south of Agate)
-	db 14,DIGLETT,DIGLETT,0 ; Route 4 (south of Agate)
-	db 16,RATTATA,0 ; Route 4 (south of Agate)
-	db 17,SLOWPOKE,0
-	db 14,EKANS,SANDSHREW,0
-	db 21,NIDORAN_M,0
-	db 21,EKANS,0
-	db 19,SANDSHREW,ZUBAT,0
-	db 17,RATTATA,RATTATA,RATICATE,0
-	db 18,NIDORAN_M,NIDORINO,0
-	db 17,SPEAROW,RATTATA,RATTATA,SPEAROW,0
-BugCatcherData: ; 39dce (e:5dce)
-	db 12,CATERPIE,METAPOD,0 ; Route 3
-	db 11,WEEDLE,KAKUNA,WEEDLE,WEEDLE,0 ; Route 3
-	db 10,CATERPIE,WEEDLE,BUTTERFREE,0 ; Route 3
-	db 12,PARAS,METAPOD,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
-	db 12,KAKUNA,KAKUNA,BEEDRILL,0 ; Route 4 (south of Agate)
-	db 16,BUTTERFREE,BEEDRILL,0 ; Route 5 (east of Copper Town)
-	db 11,WEEDLE,KAKUNA,0 ; Route 6 (south of Copper Town)
-	db 10,CATERPIE,METAPOD,CATERPIE,0 ; Route 6 (south of Copper Town)
-	db 14,CATERPIE,WEEDLE,0
-	db 16,WEEDLE,CATERPIE,WEEDLE,0
-	db 20,BUTTERFREE,0
-	db 18,METAPOD,CATERPIE,VENONAT,0
-	db 19,BEEDRILL,BEEDRILL,0
-	db 20,CATERPIE,WEEDLE,VENONAT,0
-LassData: ; 39e0c (e:5e0c)
-	db 10,JIGGLYPUFF,0 ; Route 3
-	db 10,CLEFAIRY,SPEAROW,0 ; Blandy's gym
-	db 10,VULPIX,JIGGLYPUFF,0 ; Route 3
-	db 11,NIDORAN_F,PIKACHU,0 ; Route 3
-	db 14,GRIMER,GRIMER,GRIMER,0 ; Route 4 (south of Agate)
-	db 14,JIGGLYPUFF,CLEFAIRY,0 ; Route 4 (south of Agate)
-	db 16,NIDORAN_F,NIDORINA,0 ; Route 5 (east of Copper Town)
-	db 15,POLIWAG,0 ; Route 5 (east of Copper Town)
-	db 21,SKARMORY,MAGNEMITE,0 ; Pyrite City Gym
-	db 24,MAGNEMITE,MAGNEMITE,0 ; Pyrite City Gym
-	db 18,PIDGEY,NIDORAN_F,0
-	db 18,RATTATA,PIKACHU,0
-	db 23,NIDORAN_F,NIDORINA,0
-	db 24,MEOWTH,MEOWTH,MEOWTH,0
-	db 19,PIDGEY,RATTATA,NIDORAN_M,MEOWTH,PIKACHU,0
-	db 22,CLEFAIRY,CLEFAIRY,0
-	db 23,BELLSPROUT,WEEPINBELL,0
-	db 23,ODDISH,GLOOM,0
-SailorData: ; 39e58 (e:5e58)
-	db 18,MACHOP,SHELLDER,0
-	db 17,MACHOP,TENTACOOL,0
-	db 21,SHELLDER,0
-	db 17,HORSEA,SHELLDER,TENTACOOL,0
-	db 18,TENTACOOL,STARYU,0
-	db 17,HORSEA,HORSEA,HORSEA,0
-	db 20,MACHOP,0
-	db 21,PIKACHU,PIKACHU,0
-JrTrainerMData: ; 39e78 (e:5e78)
-	db 11,MACHOP,EKANS,0 ; Route 3
-	db 13,PIDGEY,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
-	db 14,PIDGEY,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
-	db 17,SANDSHREW,0 ; Route 4 (south of Agate)
-	db 16,MACHOP,FLAAFFY,0 ; Route 5 (east of Copper Town)
-	db 17,BELLSPROUT,VULPIX,0 ; Route 5 (east of Copper Town)
-	db 21,GROWLITHE,CHARMANDER,0 ; Route 6 (south of Copper Town)
-	db 19,RATTATA,DIGLETT,EKANS,SANDSHREW,0 ; Route 6 (south of Copper Town)
-	db 29,NIDORAN_M,NIDORINO,0
-JrTrainerFData: ; 39e9d (e:5e9d)
-	db 14,VULPIX,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
-	db 16,SANDSHREW,DIGLETT,0 ; Agate City Gym
-	db 16,PIDGEY,PIDGEY,PIDGEY,0 ; Route 6 (south of Copper Town)
-	db 22,BULBASAUR,0 ; Route 6 (south of Copper Town)
-	db 26,STEELIX,0 ; Pyrite City Gym
-	db 23,MEOWTH,0
-	db 20,PIKACHU,CLEFAIRY,0
-	db 21,PIDGEY,PIDGEOTTO,0
-	db 21,JIGGLYPUFF,PIDGEY,MEOWTH,0
-	db 22,ODDISH,BULBASAUR,0
-	db 24,BULBASAUR,IVYSAUR,0
-	db 24,PIDGEY,MEOWTH,RATTATA,PIKACHU,MEOWTH,0
-	db 30,POLIWAG,POLIWAG,0
-	db 27,PIDGEY,MEOWTH,PIDGEY,PIDGEOTTO,0
-	db 28,GOLDEEN,POLIWAG,HORSEA,0
-	db 31,GOLDEEN,SEAKING,0
-	db 22,BELLSPROUT,CLEFAIRY,0
-	db 20,MEOWTH,ODDISH,PIDGEY,0
-	db 19,PIDGEY,RATTATA,RATTATA,BELLSPROUT,0
-	db 28,GLOOM,ODDISH,ODDISH,0
-	db 29,PIKACHU,RAICHU,0
-	db 33,CLEFAIRY,0
-	db 29,BELLSPROUT,ODDISH,TANGELA,0
-	db 30,TENTACOOL,HORSEA,SEEL,0
-PokemaniacData: ; 39f09 (e:5f09)
-	db 12,ODDISH,BELLSPROUT,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
-	db 16,DIGLETT,SANDSHREW,0 ; Route 5 (east of Copper Town)
-	db 23,BONSLY,SUDOWOODO,0 ; Route 6 (North of Pyrite City)
-	db 22,CHARMANDER,CUBONE,0
-	db 25,SLOWPOKE,0
-	db 40,CHARMELEON,LAPRAS,LICKITUNG,0
-	db 23,CUBONE,SLOWPOKE,0
-SuperNerdData: ; 39f26 (e:5f26)
-	db 12,KOFFING,GRIMER,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
-	db 19,FLAAFFY,GLIGAR,PARAS,0 ; Rocky Point 2 (MT_MOON_3)
-	db 20,VOLTORB,KOFFING,VOLTORB,MAGNEMITE,0
-	db 22,GRIMER,MUK,GRIMER,0
-	db 26,KOFFING,0
-	db 22,KOFFING,MAGNEMITE,WEEZING,0
-	db 20,MAGNEMITE,MAGNEMITE,KOFFING,MAGNEMITE,0
-	db 24,MAGNEMITE,VOLTORB,0
-	db 36,VULPIX,VULPIX,NINETALES,0
-	db 34,PONYTA,CHARMANDER,VULPIX,GROWLITHE,0
-	db 41,RAPIDASH,0
-	db 37,GROWLITHE,VULPIX,0
-HikerData: ; 39f5e (e:5f5e)
-	db 10,GEODUDE,ONIX,GEODUDE,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
-	db 14,GEODUDE,GEODUDE,MACHOP,ONIX,0 ; Route 4 (south of Agate)
-	db 15,MACHOP,0 ; Route 4 (south of Agate)
-	db 18,MACHOP,ZUBAT,0 ; Rocky Point 1 (MT_MOON_1)
-	db 32,GRAVELER,MACHOKE,GOLBAT,0 ; Fighting Club Route (West of Quartz City)
-	db 20,GEODUDE,MACHOP,GEODUDE,0
-	db 21,GEODUDE,ONIX,0
-	db 19,ONIX,GRAVELER,0
-	db 21,GEODUDE,GEODUDE,GRAVELER,0
-	db 25,GEODUDE,0
-	db 20,MACHOP,ONIX,0
-	db 19,GEODUDE,MACHOP,GEODUDE,GEODUDE,0
-	db 20,ONIX,ONIX,GEODUDE,0
-	db 21,GEODUDE,GRAVELER,0
-BikerData: ; 39f9c (e:5f9c)
-	db 23,KOFFING,ARBOK,GLOOM,0 ; Route 6 (North of Pyrite City)
-	db 29,KOFFING,GRIMER,0
-	db 25,KOFFING,KOFFING,WEEZING,KOFFING,GRIMER,0
-	db 28,KOFFING,GRIMER,WEEZING,0
-	db 29,GRIMER,KOFFING,0
-	db 33,WEEZING,0
-	db 26,GRIMER,GRIMER,GRIMER,GRIMER,0
-	db 28,WEEZING,KOFFING,WEEZING,0
-	db 33,MUK,0
-	db 29,VOLTORB,VOLTORB,0
-	db 29,WEEZING,MUK,0
-	db 25,KOFFING,WEEZING,KOFFING,KOFFING,WEEZING,0
-	db 26,KOFFING,KOFFING,GRIMER,KOFFING,0
-	db 28,GRIMER,GRIMER,KOFFING,0
-	db 29,KOFFING,MUK,0
-BurglarData: ; 39fe4 (e:5fe4)
-	db 23,MURKROW,GOLBAT,0 ; Route 6 (North of Pyrite City)
-	db 33,GROWLITHE,0
-	db 28,VULPIX,CHARMANDER,PONYTA,0
-	db 36,GROWLITHE,VULPIX,NINETALES,0
-	db 41,PONYTA,0
-	db 37,VULPIX,GROWLITHE,0
-	db 34,CHARMANDER,CHARMELEON,0
-	db 38,NINETALES,0
-	db 34,GROWLITHE,PONYTA,0
-EngineerData: ; 3a007 (e:6007)
-	db 21,VOLTORB,MAGNEMITE,0
-	db 21,MAGNEMITE,0
-	db 18,MAGNEMITE,MAGNEMITE,MAGNETON,0
-Juggler1Data: ; 3a013 (e:6013)
-; none
-FisherData: ; 3a013 (e:6013)
-	db  4,MAGIKARP,MAGIKARP,GOLDEEN,0 ; route south of Jade Village
-	db 27,SEAKING,SEAKING,0 ; route 21 (south of Jade Village)
-	db 26,GOLDEEN,POLIWHIRL,TENTACOOL,0 ; Route 21 (south of Jade Village)
-	db 28,STARYU,KRABBY,GYARADOS,0 ; Route 21 (south of Jade Village)
-	db 32,KINGLER,GOLDUCK,0 ; Route 21 (south of Jade Village)
-	db 21,POLIWAG,SHELLDER,GOLDEEN,HORSEA,0
-	db 28,SEAKING,GOLDEEN,SEAKING,SEAKING,0
-	db 31,SHELLDER,CLOYSTER,0
-	db 27,MAGIKARP,MAGIKARP,MAGIKARP,MAGIKARP,MAGIKARP,MAGIKARP,0
-	db 33,SEAKING,GOLDEEN,0
-	db 24,MAGIKARP,MAGIKARP,0
-SwimmerData: ; 3a049 (e:6049)
-	db 21,GROWLITHE,HOUNDOUR,GROWLITHE,0 ; Copper Town Gym
-	db 23,MAGMAR,0 ; Copper Town Gym
-	db 26,HORSEA,SHELLDER,SLOWPOKE,TENTACOOL,0 ; Route 21 (south of Jade Village)
-	db 27,TENTACOOL,TENTACOOL,TENTACOOL,TENTACRUEL,0 ; Route 21 (south of Jade Village)
-	db 33,GRAVELER,0 ; Route 21 (south of Jade Village)
-	db 29,GOLDEEN,SHELLDER,SEAKING,0
-	db 30,HORSEA,HORSEA,0
-	db 27,TENTACOOL,TENTACOOL,STARYU,HORSEA,TENTACRUEL,0
-	db 31,SHELLDER,CLOYSTER,0
-	db 35,STARYU,0
-	db 28,HORSEA,HORSEA,SEADRA,HORSEA,0
-	db 33,SEADRA,TENTACRUEL,0
-	db 37,STARMIE,0
-	db 33,STARYU,WARTORTLE,0
-	db 32,POLIWHIRL,TENTACOOL,SEADRA,0
-CueBallData: ; 3a08d (e:608d)
-	db 21,PONYTA,CHARMANDER,CHARMELEON,0 ; Copper Town Gym
-	db 29,MANKEY,MACHOP,0
-	db 33,MACHOP,0
-	db 29,MANKEY,PRIMEAPE,0
-	db 29,MACHOP,MACHOKE,0
-	db 33,MACHOKE,0
-	db 26,MANKEY,MANKEY,MACHOKE,MACHOP,0
-	db 29,PRIMEAPE,MACHOKE,0
-	db 31,TENTACOOL,TENTACOOL,TENTACRUEL,0
-GamblerData: ; 3a0b3 (e:60b3)
-	db 22,MEOWTH,MAGNEMITE,0 ; Route 6 (North of Pyrite City)
-	db 32,MACHOKE,AMPHAROS,0 ; Fighting Club Route (West of Quartz City)
-	db 18,VOLTORB,MAGNEMITE,0
-	db 18,GROWLITHE,VULPIX,0
-	db 22,POLIWAG,POLIWAG,POLIWHIRL,0
-	db 22,ONIX,GEODUDE,GRAVELER,0
-	db 24,GROWLITHE,VULPIX,0
-BeautyData: ; 3a0d1 (e:60d1)
-	db 4,NIDORAN_M,NIDORAN_F,SPEAROW,SPEAROW,0 ; trainer house (Nickel city)
-	db 25,STEELIX,0 ; Pyrite City Gym
-	db 23,DRILBUR,DRILBUR,0 ; Pyrite City Gym
-	db 23,MAGNEMITE,MAGNEMITE,DRILBUR,0 ; Pyrite City Gym
-	db 23,EEVEE,FLAAFFY,PONYTA,0
-	db 35,SEAKING,0
-	db 30,SHELLDER,SHELLDER,CLOYSTER,0
-	db 31,POLIWAG,SEAKING,0
-	db 29,PIDGEOTTO,WIGGLYTUFF,0
-	db 29,BULBASAUR,IVYSAUR,0
-	db 33,WEEPINBELL,BELLSPROUT,WEEPINBELL,0
-	db 27,POLIWAG,GOLDEEN,SEAKING,GOLDEEN,POLIWAG,0
-	db 30,GOLDEEN,SEAKING,0
-	db 29,STARYU,STARYU,STARYU,0
-	db 30,SEADRA,HORSEA,SEADRA,0
-PsychicData: ; 3a115 (e:6115)
-	db 31,KADABRA,SLOWPOKE,MR_MIME,KADABRA,0
-	db 34,MR_MIME,KADABRA,0
-	db 33,SLOWPOKE,SLOWPOKE,SLOWBRO,0
-	db 38,SLOWBRO,0
-RockerData: ; 3a127 (e:6127)
-if _YELLOW
-	db 20,VOLTORB,VOLTORB,VOLTORB,0
-else
-	db 20,VOLTORB,MAGNEMITE,VOLTORB,0
-endc
-	db 29,VOLTORB,ELECTRODE,0
-JugglerData: ; 3a130 (e:6130)
-	db 29,KADABRA,MR_MIME,0
-	db 41,DROWZEE,HYPNO,KADABRA,KADABRA,0
-	db 31,DROWZEE,DROWZEE,KADABRA,DROWZEE,0
-	db 34,DROWZEE,HYPNO,0
-	db 48,MR_MIME,0
-	db 33,HYPNO,0
-	db 38,HYPNO,0
-	db 34,DROWZEE,KADABRA,0
-TamerData: ; 3a151 (e:6151)
-	db 22,NIDORINO,NIDORINA,FEAROW,0 ; Route 6 (North of Pyrite City)
-	db 30,MACHOP,MACHOKE,SUDOWOODO,0 ; Fighting Club Route (West of Quartz City)
-	db 33,TYROGUE,TYROGUE,TYROGUE,MANKEY,0 ; Fighting Club Route (West of Quartz City)
-	db 39,ARBOK,TAUROS,0
-	db 44,PERSIAN,GOLDUCK,0
-	db 42,RHYHORN,PRIMEAPE,ARBOK,TAUROS,0
-BirdKeeperData: ; 3a16b (e:616b)
-	db 22,PIDGEOTTO,FEAROW,MURKROW,0 ; Route 6 (North of Pyrite City)
-	db 25,SPEAROW,PIDGEY,PIDGEY,SPEAROW,SPEAROW,0
-	db 26,PIDGEY,PIDGEOTTO,SPEAROW,FEAROW,0
-	db 33,FARFETCH_D,0
-	db 29,SPEAROW,FEAROW,0
-	db 26,PIDGEOTTO,FARFETCH_D,DODUO,PIDGEY,0
-	db 28,DODRIO,DODUO,DODUO,0
-	db 29,SPEAROW,FEAROW,0
-	db 34,DODRIO,0
-	db 26,SPEAROW,SPEAROW,FEAROW,SPEAROW,0
-	db 30,FEAROW,FEAROW,PIDGEOTTO,0
-	db 39,PIDGEOTTO,PIDGEOTTO,PIDGEY,PIDGEOTTO,0
-	db 42,FARFETCH_D,FEAROW,0
-	db 28,PIDGEY,DODUO,PIDGEOTTO,0
-	db 26,PIDGEY,SPEAROW,PIDGEY,FEAROW,0
-	db 29,PIDGEOTTO,FEAROW,0
-	db 28,SPEAROW,DODUO,FEAROW,0
-BlackbeltData: ; 3a1be (e:61be)
-	db 31,MANKEY,PRIMEAPE,MANKEY,0 ; Fighting Club Route (West of Quartz City)
-	db 34,HITMONCHAN,0 ; Fighting Club Route (West of Quartz City)
-	db 34,HITMONLEE,0 ; Fighting Club Route (West of Quartz City)
-	db 34,HITMONTOP,0 ; Fighting Club Route (West of Quartz City)
-	db 33,POLIWRATH,MACHOKE,HITMONTOP,0; Fighting Club Route (West of Quartz City)
-	db 40,MACHOP,MACHOKE,0
-	db 43,MACHOKE,0
-	db 38,MACHOKE,MACHOP,MACHOKE,0
-	db 43,MACHOKE,MACHOP,MACHOKE,0
-Green1Data: ; 3a1e4 (e:61e4)
-	db 5,STARYU,0
-	db 5,EXEGGCUTE,0
-	db 5,GROWLITHE,0
-	db $FF,9,PIDGEY,8,SQUIRTLE,0
-	db $FF,9,PIDGEY,8,BULBASAUR,0
-	db $FF,9,PIDGEY,8,CHARMANDER,0
-	db $FF,17,GASTLY,18,POLIWAG,18,ONIX,19,STARYU,0
-	db $FF,17,GASTLY,18,POLIWAG,18,ONIX,19,EXEGGCUTE,0
-	db $FF,17,GASTLY,18,POLIWAG,18,ONIX,19,GROWLITHE,0
-	db $FF,33,HAUNTER,34,POLIWHIRL,33,STEELIX,32,DRATINI,38,STARYU,0
-	db $FF,33,HAUNTER,34,POLIWHIRL,33,STEELIX,32,DRATINI,38,EXEGGCUTE,0
-	db $FF,33,HAUNTER,34,POLIWHIRL,33,STEELIX,32,DRATINI,38,GROWLITHE,0
-ProfOakData: ; 3a21d (e:621d)
-	db $FF,66,TAUROS,67,EXEGGUTOR,68,ARCANINE,69,BLASTOISE,70,GYARADOS,0
-	db $FF,66,TAUROS,67,EXEGGUTOR,68,ARCANINE,69,VENUSAUR,70,GYARADOS,0
-	db $FF,66,TAUROS,67,EXEGGUTOR,68,ARCANINE,69,CHARIZARD,70,GYARADOS,0
-ChiefData: ; 3a241 (e:6241)
-; none
-ScientistData: ; 3a241 (e:6241)
-	db 35,EEVEE,WEEPINBELL,FARFETCH_D,0 ; Quartz City Gym
-	db 34,GRIMER,PRIMEAPE,SUDOWOODO,GOLBAT,0 ; Quartz City Gym
-	db 34,GLIGAR,NIDORINO,TANGELA,0 ; Quartz City Gym
-	db 37,FEAROW,WEEZING,0 ; Quartz City Gym
-	db 33,ELECTRODE,0
-	db 26,MAGNETON,KOFFING,WEEZING,MAGNEMITE,0
-	db 25,VOLTORB,KOFFING,MAGNETON,MAGNEMITE,KOFFING,0
-	db 29,ELECTRODE,MUK,0
-	db 29,GRIMER,ELECTRODE,0
-	db 28,VOLTORB,KOFFING,MAGNETON,0
-	db 29,MAGNEMITE,KOFFING,0
-	db 33,MAGNEMITE,MAGNETON,VOLTORB,0
-	db 34,MAGNEMITE,ELECTRODE,0
-GiovanniData: ; 3a27e (e:627e)
-if _YELLOW
-	db $FF,25,ONIX,24,RHYHORN,29,PERSIAN,0
-	db $FF,37,NIDORINO,35,PERSIAN,37,RHYHORN,41,NIDOQUEEN,0
-	db $FF,50,DUGTRIO,53,PERSIAN,53,NIDOQUEEN,55,NIDOKING,55,RHYDON,0
-else
-	db $FF,25,ONIX,24,RHYHORN,29,KANGASKHAN,0
-	db $FF,37,NIDORINO,35,KANGASKHAN,37,RHYHORN,41,NIDOQUEEN,0
-	db $FF,45,RHYHORN,42,DUGTRIO,44,NIDOQUEEN,45,NIDOKING,50,RHYDON,0
-endc
-RocketData: ; 3a29c (e:629c)
-	db 11,CUBONE,MACHOP,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
-	db 12,DIGLETT,DIGLETT,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
-	db 12,SANDSHREW,RATTATA,SANDSHREW,0 ; Arbor Hollow 1bf (ROCK_TUNNEL_2)
-	db 12,RATTATA,ZUBAT,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
-	db 14,MACHOP,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
-	db 12,ZUBAT,CUBONE,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
-	db 11,ONIX,GEODUDE,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
-	db 12,RATTATA,MACHOP,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
-	db 11,DIGLETT,GEODUDE,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
-	db 17,NIDORINO,KOFFING,CUBONE,0 ; Agate City coupon guy
-	db 18,SANDSHREW,SANDSHREW,MACHOP,SANDSHREW,0 ; Rocky Point 1 (MT_MOON_1)
-	db 19,DIGLETT,DRILBUR,0 ; Rocky Point 1 (MT_MOON_1)
-	db 18,GEODUDE,GEODUDE,SANDSHREW,SANDSHREW,RATICATE,0 ; Rocky Point 1 (MT_MOON_1)
-	db 19,RATTATA,RATICATE,CUBONE,0 ; Rocky Point 1 (MT_MOON_1)
-	db 20,DRILBUR,SANDSHREW,0 ; Rocky Point 1 (MT_MOON_1)
-	db 19,DIGLETT,DIGLETT,MACHOP,0 ; Rocky Point 1 (MT_MOON_1)
-	db 23,EKANS,SANDSHREW,ARBOK,0 ; GO BACK TO THIS ONE!!!
-	db 18,CLEFAIRY,JIGGLYPUFF,0 ; Rocky Point 2 (MT_MOON_3)
-	db 19,DIGLETT,DIGLETT,SANDSHREW,0 ; Rocky Point 2 (MT_MOON_3)
-	db 19,DRILBUR,MACHOP,0 ; Rocky Point 2 (MT_MOON_3)
-	db 19,ONIX,ONIX,GEODUDE,DRILBUR,0 ; Rocky Point 2 (MT_MOON_3)
-	db 29,MAROWAK,MACHOKE,0 ; Hardwater Hole 1F
-	db 29,GRAVELER,SANDSLASH,0 ; Hardwater Hole 1F
-	db 28,NIDORINO,ONIX,MACHOP,RATICATE,GOLBAT,0 ; Hardwater Hole 1F
-	db 30,HOUNDOOM,GLIGAR,RATICATE,0 ; Hardwater Hole B1F
-	db 30,MAROWAK,ARBOK,0 ; Hardwater Hole B1F
-	db 28,EKANS,ZUBAT,CUBONE,0
-	db 33,ARBOK,0
-	db 33,HYPNO,0
-	db 29,MACHOP,MACHOKE,0
-	db 28,ZUBAT,ZUBAT,GOLBAT,0
-	db 26,RATICATE,ARBOK,KOFFING,GOLBAT,0
-	db 29,CUBONE,CUBONE,0
-	db 29,SANDSHREW,SANDSLASH,0
-	db 26,RATICATE,ZUBAT,GOLBAT,RATTATA,0
-	db 28,WEEZING,GOLBAT,KOFFING,0
-	db 28,DROWZEE,GRIMER,MACHOP,0
-	db 28,GOLBAT,DROWZEE,HYPNO,0
-	db 33,MACHOKE,0
-	db 25,RATTATA,RATTATA,ZUBAT,RATTATA,EKANS,0
-	db 32,CUBONE,DROWZEE,MAROWAK,0
-if _YELLOW
-JessieJamesData:
-	db 14,EKANS,MEOWTH,KOFFING,0
-	db 25,KOFFING,MEOWTH,EKANS,0
-	db 27,MEOWTH,ARBOK,WEEZING,0
-	db 31,WEEZING,ARBOK,MEOWTH,0
-	db 16,KOFFING,0
-	db 27,KOFFING,0
-	db 29,WEEZING,0
-	db 33,WEEZING,0
-endc
-CooltrainerMData: ; 3a35a (e:635a)
-	db 39,NIDORINO,NIDOKING,0
-	db 43,EXEGGUTOR,CLOYSTER,ARCANINE,0
-	db 43,KINGLER,TENTACRUEL,BLASTOISE,0
-	db 45,KINGLER,STARMIE,0
-	db 42,IVYSAUR,WARTORTLE,CHARMELEON,CHARIZARD,0
-	db 44,IVYSAUR,WARTORTLE,CHARMELEON,0
-	db 49,NIDOKING,0
-	db 44,KINGLER,CLOYSTER,0
-	db 39,SANDSLASH,DUGTRIO,0
-	db 43,RHYHORN,0
-CooltrainerFData: ; 3a385 (e:6385)
-	db 16,CUBONE,GEODUDE,CUBONE,0 ; Agate City Gym
-	db 24,ONIX,MAGNEMITE,STEELIX,0 ; Pyrite City Gym
-	db 43,PARASECT,DEWGONG,CHANSEY,0
-	db 46,VILEPLUME,BUTTERFREE,0
-	db 44,PERSIAN,NINETALES,0
-	db 45,IVYSAUR,VENUSAUR,0
-	db 45,NIDORINA,NIDOQUEEN,0
-	db 43,PERSIAN,NINETALES,RAICHU,0
-BrunoData: ; 3a3a9 (e:63a9)
-	db $FF,53,ONIX,55,HITMONCHAN,55,HITMONLEE,56,ONIX,58,MACHAMP,0
-BrockData: ; 3a3b5 (e:63b5)
-if _YELLOW
-	db $FF,10,GEODUDE,12,ONIX,0
-else
-	db $FF,9,CLEFAIRY,10,PORYGON,11,SPEAROW,0 ; Blandy
-endc
-MistyData: ; 3a3bb (e:63bb)
-	db $FF,20,ONIX,22,RHYHORN,0
-LtSurgeData: ; 3a3c1 (e:63c1)
-if _YELLOW
-	db $FF,28,RAICHU,0
-else
-	db $FF,21,VOLTORB,18,PIKACHU,24,RAICHU,0
-endc
-ErikaData: ; 3a3c9 (e:63c9)
-	db $FF,22,HOUNDOUR,22,PONYTA,26,CHARMELEON,0
-KogaData: ; 3a3d1 (e:63d1)
-	db $FE,37,1,POLIWHIRL,1,MR_MIME,-2,DODRIO,2,DUGTRIO,0
-BlaineData: ; 3a3db (e:63db)
-if _YELLOW
-	db $FF,48,NINETALES,50,RAPIDASH,54,ARCANINE,0
-else
-	db $FF,42,GROWLITHE,40,PONYTA,42,RAPIDASH,47,ARCANINE,0
-endc
-SabrinaData: ; 3a3e5 (e:63e5)
-	db $FF,24,MAGNEMITE,27,STEELIX,28,EXCADRILL,29,SCIZOR,0
-GentlemanData: ; 3a3ef (e:63ef)
-	db 7,MANKEY,GEODUDE,0 ; trainer house (Nickel City)
-	db 19,NIDORAN_M,NIDORAN_F,0
-if _YELLOW
-	db 22,VOLTORB,MAGNEMITE,0
-else
-	db 23,PIKACHU,0
-endc
-	db 48,PRIMEAPE,0
-	db 17,GROWLITHE,PONYTA,0
-Green2Data: ; 3a401 (e:6401) Little Timmy rival
-	db 5,EEVEE,0
-Green3Data: ; 3a491 (e:6491)
-if _YELLOW
-	db $FF,61,SANDSLASH,59,ALAKAZAM,61,EXEGGUTOR,61,CLOYSTER,63,NINETALES,65,JOLTEON,0
-	db $FF,61,SANDSLASH,59,ALAKAZAM,61,EXEGGUTOR,61,MAGNETON,63,CLOYSTER,65,FLAREON,0
-	db $FF,61,SANDSLASH,59,ALAKAZAM,61,EXEGGUTOR,61,NINETALES,63,MAGNETON,65,VAPOREON,0
-else
-	db $FF,61,PIDGEOT,59,ALAKAZAM,61,RHYDON,61,ARCANINE,63,EXEGGUTOR,65,BLASTOISE,0
-	db $FF,61,PIDGEOT,59,ALAKAZAM,61,RHYDON,61,GYARADOS,63,ARCANINE,65,VENUSAUR,0
-	db $FF,61,PIDGEOT,59,ALAKAZAM,61,RHYDON,61,EXEGGUTOR,63,GYARADOS,65,CHARIZARD,0
-endc
-LoreleiData: ; 3a4bb (e:64bb)
-	db $FF,54,DEWGONG,53,CLOYSTER,54,SLOWBRO,56,JYNX,56,LAPRAS,0
-ChannelerData: ; 3a4c7 (e:64c7)
-	db 36,EEVEE,GLACEON,0 ; Hardwater Hole B1F (ice rock)
-	db 24,GASTLY,0
-	db 23,GASTLY,GASTLY,0
-	db 24,GASTLY,0
-	db 23,GASTLY,0
-	db 24,GASTLY,0
-	db 24,HAUNTER,0
-	db 22,GASTLY,0
-	db 24,GASTLY,0
-	db 23,GASTLY,0
-	db 24,GASTLY,0
-	db 22,GASTLY,0
-	db 24,GASTLY,0
-	db 23,HAUNTER,0
-	db 24,GASTLY,0
-	db 22,GASTLY,0
-	db 24,GASTLY,0
-	db 22,HAUNTER,0
-	db 22,GASTLY,GASTLY,GASTLY,0
-	db 24,GASTLY,0
-	db 24,GASTLY,0
-	db 34,GASTLY,HAUNTER,0
-	db 38,HAUNTER,0
-	db 33,GASTLY,GASTLY,HAUNTER,0
-AgathaData: ; 3a516 (e:6516)
-	db $FF,56,GENGAR,56,GOLBAT,55,HAUNTER,58,ARBOK,60,GENGAR,0
-LanceData: ; 3a522 (e:6522)
-	db $FF,58,GYARADOS,56,DRAGONAIR,56,DRAGONAIR,60,AERODACTYL,62,DRAGONITE,0
-ShadowData:
-	db $FF,100,SKARMORY,100,DRAGONITE,100,ALAKAZAM,0
-	db $FF,25,FLAAFFY,26,HAUNTER,27,FEAROW,0
-TimmyData:
-    db $5,EEVEE,0
-
 
 TrainerAI: ; 3a52e (e:652e)
 ;XXX called at 34964, 3c342, 3c398
@@ -87212,7 +86273,7 @@ Route18Object: ; 0x58c5a (size=66)
 	db $27, $d, $5 ; Route18Text5
 
 	db $3 ; people
-	db SPRITE_BLACK_HAIR_BOY_1, $14 + 4, $9 + 4, $ff, $d1, $41, BIRD_KEEPER + $C8, $8 ; trainer
+	db SPRITE_GAMBLER, $14 + 4, $9 + 4, $ff, $d1, $41, GAMBLER + $C8, $3 ; trainer
 	db SPRITE_BLACK_HAIR_BOY_1, $24 + 4, $8 + 4, $ff, $d2, $42, BIRD_KEEPER + $C8, $9 ; trainer
 	db SPRITE_BLACK_HAIR_BOY_1, $2d + 4, $a + 4, $ff, $ff, $43, BIRD_KEEPER + $C8, $a ; trainer
 
@@ -120684,3 +119745,1080 @@ UpdateRoamingPokemon:
 	pop de
 	pop hl
 	ret
+
+SECTION "Read Trainer Relocation", ROMX, BANK[$38]
+
+ReadTrainer: ; 39c53 (e:5c53)
+
+; don't change any moves in a link battle
+	ld a,[W_ISLINKBATTLE]
+	and a
+	ret nz
+
+; set [wEnemyPartyCount] to 0, [$D89D] to FF
+; XXX first is total enemy pokemon?
+; XXX second is species of first pokemon?
+	ld hl,wEnemyPartyCount
+	xor a
+	ld [hli],a
+	dec a
+	ld [hl],a
+
+; get the pointer to trainer data for this class
+	ld a,[W_CUROPPONENT]
+	sub $C9 ; convert value from pokemon to trainer
+	add a,a
+	ld hl,TrainerDataPointers
+	ld c,a
+	ld b,0
+	add hl,bc ; hl points to trainer class
+	ld a,[hli]
+	ld h,[hl]
+	ld l,a
+	ld a,[W_TRAINERNO]
+	ld b,a
+; At this point b contains the trainer number,
+; and hl points to the trainer class.
+; Our next task is to iterate through the trainers,
+; decrementing b each time, until we get to the right one.
+.outer
+	dec b
+	jr z,.IterateTrainer
+.inner
+	ld a,[hli]
+	and a
+	jr nz,.inner ; march until terminator 0 is found
+	jr .outer
+
+; if the first byte of trainer data is FF,
+; - each pokemon has a specific level
+;      (as opposed to the whole team being of the same level)
+; - if [W_LONEATTACKNO] != 0, one pokemon on the team has a special move
+; elseif the first byte of trainer data is FE
+; - levels are set accordng to player's max level in party
+; - the second byte is the minimum level
+; - each pair of bytes is [levels below][pokemon id]
+; else the first byte is the level of every pokemon on the team
+.IterateTrainer
+	ld a,[hli]
+	cp $FF ; is the trainer special?
+	jp z,.SpecialTrainer ; if so, check for special moves
+	cp $FE ; does trainer have levels related to player's pokemon?
+	jr z,.MaxPlayerLevelTrainer
+	cp $FD ; does trainer have random team?
+	jr z, .RandomTeamTrainer
+	ld [W_CURENEMYLVL],a
+.LoopTrainerData
+	ld a,[hli]
+	and a ; have we reached the end of the trainer data?
+	jp z,.FinishUp
+	ld [$CF91],a ; write species somewhere (XXX why?)
+	ld a,1
+	ld [$CC49],a
+	push hl
+	call AddPokemonToParty
+	pop hl
+	jr .LoopTrainerData
+
+.MaxPlayerLevelTrainer
+	ld a, [hli]
+	ld b, a ; b contains minimum base level for pokemon
+	call GetMaxLevelInParty ; register a contains max level
+	cp b
+	jr c, .GotMinLevel
+	ld b, a
+.GotMinLevel
+; b contains min level
+	ld a, [hli]
+	and a ; reached end of pokemon list?
+	jp z, .FinishUp
+	push bc
+	; a contains level offset from base level
+	add a, b
+	cp 2
+	jr nc, .checkHigh
+	ld a, 2
+	jr .loadLevel
+.checkHigh
+	cp 155
+	jr c, .check100
+	ld a, 2
+	jr .loadLevel
+.check100
+	cp 101
+	jr c, .loadLevel
+	ld a, 100
+.loadLevel
+	ld [W_CURENEMYLVL], a
+	ld a, [hli] ; a contain pokemon id
+	ld [$CF91], a
+	ld a,1
+	ld [$CC49], a
+	push hl
+	call AddPokemonToParty
+	pop hl
+	pop bc
+	jr .GotMinLevel
+
+.RandomTeamTrainer
+	ld a, [hli] ; a contains random class
+	push hl
+	ld hl, RandomTeamClassesPointers
+	add a
+	ld b, 0
+	ld c, a
+	add hl, bc
+	ld a, [hli]
+	ld e, a
+	ld d, [hl] ; de contains point to mons list
+	pop hl
+.pickMons
+	ld a, [hli]
+	and a ; reached the end of the list?
+	jp z, .FinishUp
+	ld b, a ; b contains mon's level
+	push hl
+	push bc
+	ld h, d
+	ld l, e ; hl contains pointer to mons list
+	ld a, [hli] ; a contains num entries in list
+	ld b, a
+.getValidEntry
+	call GenRandom
+	cp b ; was random number less than number of entries?
+	jr c, .gotValidEntry
+	jr .getValidEntry
+.gotValidEntry
+	ld b, 0
+	ld c, a
+	add hl, bc
+	ld a, [hl] ; a contains mon id
+	ld [$CF91], a
+	ld a,1
+	ld [$CC49], a
+	pop bc
+	pop hl
+	ld a, b
+	ld [W_CURENEMYLVL], a
+	push hl
+	call AddPokemonToParty
+	pop hl
+	jr .pickMons
+
+.SpecialTrainer
+; if this code is being run:
+; - each pokemon has a specific level
+;      (as opposed to the whole team being of the same level)
+; - if [W_LONEATTACKNO] != 0, one pokemon on the team has a special move
+	ld a,[hli]
+	and a ; have we reached the end of the trainer data?
+	jr z,.AddLoneMove
+	ld [W_CURENEMYLVL],a
+	ld a,[hli]
+	ld [$CF91],a
+	ld a,1
+	ld [$CC49],a
+	push hl
+	call AddPokemonToParty
+	pop hl
+	jr .SpecialTrainer
+.AddLoneMove
+; does the trainer have a single monster with a different move
+	ld a,[W_LONEATTACKNO] ; Brock is 01, Misty is 02, Erika is 04, etc
+	and a
+	jr z,.AddTeamMove
+	dec a
+	add a,a
+	ld c,a
+	ld b,0
+	ld hl,LoneMoves
+	add hl,bc
+	ld a,[hli]
+	ld d,[hl]
+	ld hl,W_ENEMYMON1MOVE3
+	ld bc,W_ENEMYMON2MOVE3 - W_ENEMYMON1MOVE3
+	call AddNTimes
+	ld [hl],d
+	jr .FinishUp
+.AddTeamMove
+; check if our trainer's team has special moves
+
+; get trainer class number
+	ld a,[$D059]
+	sub $C8
+	ld b,a
+	ld hl,TeamMoves
+
+; iterate through entries in TeamMoves, checking each for our trainer class
+.IterateTeamMoves
+	ld a,[hli]
+	cp b
+	jr z,.GiveTeamMoves ; is there a match?
+	inc hl ; if not, go to the next entry
+	inc a
+	jr nz,.IterateTeamMoves
+
+	; no matches found. is this trainer champion rival?
+	ld a,b
+	cp SONY3
+	jr z,.ChampionRival
+	jr .FinishUp ; nope
+.GiveTeamMoves
+	ld a,[hl]
+	ld [$D95E],a
+	jr .FinishUp
+.ChampionRival ; give moves to his team
+
+; pidgeot
+	ld a,SKY_ATTACK
+	ld [W_ENEMYMON1MOVE3],a
+
+; starter
+	ld a,[W_RIVALSTARTER]
+	cp BULBASAUR
+	ld b,MEGA_DRAIN
+	jr z,.GiveStarterMove
+	cp CHARMANDER
+	ld b,FIRE_BLAST
+	jr z,.GiveStarterMove
+	ld b,BLIZZARD ; must be squirtle
+.GiveStarterMove
+	ld a,b
+	ld [W_ENEMYMON6MOVE3],a
+.FinishUp ; XXX this needs documenting
+	xor a       ; clear D079-D07B
+	ld de,$D079
+	ld [de],a
+	inc de
+	ld [de],a
+	inc de
+	ld [de],a
+	ld a,[W_CURENEMYLVL]
+	ld b,a
+.LastLoop
+	ld hl,$D047
+	ld c,2
+	push bc
+	ld a,$B
+	call Predef
+	pop bc
+	inc de
+	inc de
+	dec b
+	jr nz,.LastLoop
+	ret
+
+GetMaxLevelInParty:
+; returns max level in register a
+	push bc
+	push hl
+	push de
+	ld a, [W_NUMINPARTY]
+	ld d, a
+	ld bc, 44
+	ld hl, W_PARTYMON1_LEVEL
+	ld a, [hl]
+	ld e, a
+	; keep track of max in e
+.loop
+	ld a, [hl]
+	cp e
+	jr c, .smaller
+	; update max
+	ld e, a
+.smaller
+	add hl, bc
+	dec d
+	jr nz, .loop
+	ld a, e 
+	pop de
+	pop hl
+	pop bc
+	ret
+
+LoneMoves: ; 39d22 (e:5d22)
+; these are used for gym leaders.
+; this is not automatic! you have to write the number you want to W_LONEATTACKNO
+; first. e.g., erika's script writes 4 to W_LONEATTACKNO to get mega drain,
+; the fourth entry in the list.
+
+; first byte:  pokemon in the trainer's party that gets the move
+; second byte: move
+; unterminated
+	db 1,SWIFT
+	db 1,DIG
+	db 2,FIRE_BLAST
+	db 3,IRON_HEAD
+	db 3,TOXIC
+	db 3,PSYWAVE
+	db 3,FIRE_BLAST
+	db 4,FISSURE
+
+TeamMoves: ; 39d32 (e:5d32)
+; these are used for elite four.
+; this is automatic, based on trainer class.
+; don't be confused by LoneMoves above, the two data structures are
+	; _completely_ unrelated.
+
+; first byte: trainer (all trainers in this class have this move)
+; second byte: move
+; ff-terminated
+	db LORELEI,BLIZZARD
+	db BRUNO,FISSURE
+	db AGATHA,TOXIC
+	db LANCE,BARRIER
+	db $FF
+
+if _YELLOW
+; different format from above.
+
+; entry ≔ trainerclass, trainerid, moveset+, 0
+; moveset ≔ partymon, partymon'smove, moveid
+
+	db BUG_CATCHER,$f
+	db 2,2,TACKLE
+	db 2,3,STRING_SHOT
+	db 0
+
+	db YOUNGSTER,$e
+	db 1,4,FISSURE
+	db 0
+
+	db BROCK,$1
+	db 2,3,BIND
+	db 2,4,BIDE
+	db 0
+
+	db MISTY,$1
+	db 2,4,BUBBLEBEAM
+	db 0
+
+	db LT__SURGE,$1
+	db 1,1,THUNDERBOLT
+	db 1,2,MEGA_PUNCH
+	db 1,3,MEGA_KICK
+	db 1,4,GROWL
+	db 0
+
+	db ERIKA,$1
+	db 1,3,MEGA_DRAIN
+	db 2,1,RAZOR_LEAF
+	db 3,1,PETAL_DANCE
+	db 0
+
+	db KOGA,$1
+	db 1,1,TOXIC
+	db 1,2,TACKLE
+	db 2,1,TOXIC
+	db 2,3,SUPERSONIC
+	db 3,1,TOXIC
+	db 3,2,DOUBLE_EDGE
+	db 4,1,LEECH_LIFE
+	db 4,2,DOUBLE_TEAM
+	db 4,3,PSYCHIC_M
+	db 4,4,TOXIC
+	db 0
+
+	db BLAINE,$1
+	db 1,1,FLAMETHROWER
+	db 1,4,CONFUSE_RAY
+	db 3,1,FLAMETHROWER
+	db 3,2,FIRE_BLAST
+	db 3,3,REFLECT
+	db 0
+
+	db SABRINA,$1
+	db 1,1,FLASH
+	db 2,1,KINESIS
+	db 2,4,PSYWAVE
+	db 3,1,PSYWAVE
+	db 0
+
+	db GIOVANNI,$3
+	db 1,3,FISSURE
+	db 2,2,DOUBLE_TEAM
+	db 3,1,EARTHQUAKE
+	db 3,3,THUNDER
+	db 4,1,EARTHQUAKE
+	db 4,2,LEER
+	db 4,3,THUNDER
+	db 5,1,ROCK_SLIDE
+	db 5,4,EARTHQUAKE
+	db 0
+
+	db LORELEI,$1
+	db 1,1,BUBBLEBEAM
+	db 2,3,ICE_BEAM
+	db 3,1,PSYCHIC_M
+	db 3,2,SURF
+	db 4,3,LOVELY_KISS
+	db 5,3,BLIZZARD
+	db 0
+
+	db BRUNO,$1
+	db 1,1,ROCK_SLIDE
+	db 1,2,SCREECH
+	db 1,4,DIG
+	db 2,3,FIRE_PUNCH
+	db 2,4,DOUBLE_TEAM
+	db 3,1,DOUBLE_KICK
+	db 3,2,MEGA_KICK
+	db 3,4,DOUBLE_TEAM
+	db 4,1,ROCK_SLIDE
+	db 4,2,SCREECH
+	db 4,4,EARTHQUAKE
+	db 5,2,KARATE_CHOP
+	db 5,3,STRENGTH
+	db 0
+
+	db AGATHA,$1
+	db 1,2,SUBSTITUTE
+	db 1,3,LICK
+	db 1,4,MEGA_DRAIN
+	db 2,2,TOXIC
+	db 2,4,LEECH_LIFE
+	db 3,2,LICK
+	db 4,1,WRAP
+	db 5,2,PSYCHIC_M
+	db 0
+
+	db LANCE,$1
+	db 1,1,DRAGON_RAGE
+	db 2,1,THUNDER_WAVE
+	db 2,3,THUNDERBOLT
+	db 3,1,BUBBLEBEAM
+	db 3,2,WRAP
+	db 3,3,ICE_BEAM
+	db 4,1,WING_ATTACK
+	db 4,2,SWIFT
+	db 4,3,FLY
+	db 5,1,BLIZZARD
+	db 5,2,FIRE_BLAST
+	db 5,3,THUNDER
+	db 0
+
+	db SONY3,$1
+	db 1,3,EARTHQUAKE
+	db 2,4,KINESIS
+	db 3,4,LEECH_SEED
+	db 4,1,ICE_BEAM
+	db 5,1,CONFUSE_RAY
+	db 5,4,FIRE_SPIN
+	db 6,3,QUICK_ATTACK
+	db 0
+
+	db SONY3,$2
+	db 1,3,EARTHQUAKE
+	db 2,4,KINESIS
+	db 3,4,LEECH_SEED
+	db 4,1,THUNDERBOLT
+	db 5,1,ICE_BEAM
+	db 6,2,REFLECT
+	db 6,3,QUICK_ATTACK
+	db 0
+
+	db SONY3,$3
+	db 1,3,EARTHQUAKE
+	db 2,4,KINESIS
+	db 3,4,LEECH_SEED
+	db 4,1,CONFUSE_RAY
+	db 4,4,FIRE_SPIN
+	db 5,1,THUNDERBOLT
+	db 6,1,AURORA_BEAM
+	db 6,3,QUICK_ATTACK
+	db 0
+
+	db $ff
+endc
+
+TrainerDataPointers: ; 39d3b (e:5d3b)
+	dw YoungsterData,BugCatcherData,LassData,SailorData,JrTrainerMData
+	dw JrTrainerFData,PokemaniacData,SuperNerdData,HikerData,BikerData
+	dw BurglarData,EngineerData,Juggler1Data,FisherData,SwimmerData
+	dw CueBallData,GamblerData,BeautyData,PsychicData,RockerData
+	dw JugglerData,TamerData,BirdKeeperData,BlackbeltData,Green1Data
+	dw ProfOakData,ChiefData,ScientistData,GiovanniData,RocketData
+	dw CooltrainerMData,CooltrainerFData,BrunoData,BrockData,MistyData
+	dw LtSurgeData,ErikaData,KogaData,BlaineData,SabrinaData
+	dw GentlemanData,Green2Data,Green3Data,LoreleiData,ChannelerData
+	dw AgathaData,LanceData,ShadowData,TimmyData
+
+; if first byte != FF, then
+	; first byte is level (of all pokemon on this team)
+	; all the next bytes are pokemon species
+	; null-terminated
+; if first byte == FF, then
+	; first byte is FF (obviously)
+	; every next two bytes are a level and species
+	; null-terminated
+
+YoungsterData: ; 39d99 (e:5d99)
+	db 6,WEEDLE,RATTATA,0 ; trainer house (Nickel City)
+	db 8,PSYDUCK,RATTATA,RATTATA,0 ; Route 3
+	db 13,NIDORAN_M,NIDORAN_F,RATTATA,0 ; Route 4 (south of Agate)
+	db 14,DIGLETT,DIGLETT,0 ; Route 4 (south of Agate)
+	db 16,RATTATA,0 ; Route 4 (south of Agate)
+	db 17,SLOWPOKE,0
+	db 14,EKANS,SANDSHREW,0
+	db 21,NIDORAN_M,0
+	db 21,EKANS,0
+	db 19,SANDSHREW,ZUBAT,0
+	db 17,RATTATA,RATTATA,RATICATE,0
+	db 18,NIDORAN_M,NIDORINO,0
+	db 17,SPEAROW,RATTATA,RATTATA,SPEAROW,0
+BugCatcherData: ; 39dce (e:5dce)
+	db 12,CATERPIE,METAPOD,0 ; Route 3
+	db 11,WEEDLE,KAKUNA,WEEDLE,WEEDLE,0 ; Route 3
+	db 10,CATERPIE,WEEDLE,BUTTERFREE,0 ; Route 3
+	db 12,PARAS,METAPOD,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
+	db 12,KAKUNA,KAKUNA,BEEDRILL,0 ; Route 4 (south of Agate)
+	db 16,BUTTERFREE,BEEDRILL,0 ; Route 5 (east of Copper Town)
+	db 11,WEEDLE,KAKUNA,0 ; Route 6 (south of Copper Town)
+	db 10,CATERPIE,METAPOD,CATERPIE,0 ; Route 6 (south of Copper Town)
+	db 14,CATERPIE,WEEDLE,0
+	db 16,WEEDLE,CATERPIE,WEEDLE,0
+	db 20,BUTTERFREE,0
+	db 18,METAPOD,CATERPIE,VENONAT,0
+	db 19,BEEDRILL,BEEDRILL,0
+	db 20,CATERPIE,WEEDLE,VENONAT,0
+LassData: ; 39e0c (e:5e0c)
+	db 10,JIGGLYPUFF,0 ; Route 3
+	db 10,CLEFAIRY,SPEAROW,0 ; Blandy's gym
+	db 10,VULPIX,JIGGLYPUFF,0 ; Route 3
+	db 11,NIDORAN_F,PIKACHU,0 ; Route 3
+	db 14,GRIMER,GRIMER,GRIMER,0 ; Route 4 (south of Agate)
+	db 14,JIGGLYPUFF,CLEFAIRY,0 ; Route 4 (south of Agate)
+	db 16,NIDORAN_F,NIDORINA,0 ; Route 5 (east of Copper Town)
+	db 15,POLIWAG,0 ; Route 5 (east of Copper Town)
+	db 21,SKARMORY,MAGNEMITE,0 ; Pyrite City Gym
+	db 24,MAGNEMITE,MAGNEMITE,0 ; Pyrite City Gym
+	db 18,PIDGEY,NIDORAN_F,0
+	db 18,RATTATA,PIKACHU,0
+	db 23,NIDORAN_F,NIDORINA,0
+	db 24,MEOWTH,MEOWTH,MEOWTH,0
+	db 19,PIDGEY,RATTATA,NIDORAN_M,MEOWTH,PIKACHU,0
+	db 22,CLEFAIRY,CLEFAIRY,0
+	db 23,BELLSPROUT,WEEPINBELL,0
+	db 23,ODDISH,GLOOM,0
+SailorData: ; 39e58 (e:5e58)
+	db 18,MACHOP,SHELLDER,0
+	db 17,MACHOP,TENTACOOL,0
+	db 21,SHELLDER,0
+	db 17,HORSEA,SHELLDER,TENTACOOL,0
+	db 18,TENTACOOL,STARYU,0
+	db 17,HORSEA,HORSEA,HORSEA,0
+	db 20,MACHOP,0
+	db 21,PIKACHU,PIKACHU,0
+JrTrainerMData: ; 39e78 (e:5e78)
+	db 11,MACHOP,EKANS,0 ; Route 3
+	db 13,PIDGEY,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
+	db 14,PIDGEY,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
+	db 17,SANDSHREW,0 ; Route 4 (south of Agate)
+	db 16,MACHOP,FLAAFFY,0 ; Route 5 (east of Copper Town)
+	db 17,BELLSPROUT,VULPIX,0 ; Route 5 (east of Copper Town)
+	db 21,GROWLITHE,CHARMANDER,0 ; Route 6 (south of Copper Town)
+	db 19,RATTATA,DIGLETT,EKANS,SANDSHREW,0 ; Route 6 (south of Copper Town)
+	db 29,NIDORAN_M,NIDORINO,0
+JrTrainerFData: ; 39e9d (e:5e9d)
+	db 14,VULPIX,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
+	db 16,SANDSHREW,DIGLETT,0 ; Agate City Gym
+	db 16,PIDGEY,PIDGEY,PIDGEY,0 ; Route 6 (south of Copper Town)
+	db 22,BULBASAUR,0 ; Route 6 (south of Copper Town)
+	db 26,STEELIX,0 ; Pyrite City Gym
+	db 23,MEOWTH,0
+	db 20,PIKACHU,CLEFAIRY,0
+	db 21,PIDGEY,PIDGEOTTO,0
+	db 21,JIGGLYPUFF,PIDGEY,MEOWTH,0
+	db 22,ODDISH,BULBASAUR,0
+	db 24,BULBASAUR,IVYSAUR,0
+	db 24,PIDGEY,MEOWTH,RATTATA,PIKACHU,MEOWTH,0
+	db 30,POLIWAG,POLIWAG,0
+	db 27,PIDGEY,MEOWTH,PIDGEY,PIDGEOTTO,0
+	db 28,GOLDEEN,POLIWAG,HORSEA,0
+	db 31,GOLDEEN,SEAKING,0
+	db 22,BELLSPROUT,CLEFAIRY,0
+	db 20,MEOWTH,ODDISH,PIDGEY,0
+	db 19,PIDGEY,RATTATA,RATTATA,BELLSPROUT,0
+	db 28,GLOOM,ODDISH,ODDISH,0
+	db 29,PIKACHU,RAICHU,0
+	db 33,CLEFAIRY,0
+	db 29,BELLSPROUT,ODDISH,TANGELA,0
+	db 30,TENTACOOL,HORSEA,SEEL,0
+PokemaniacData: ; 39f09 (e:5f09)
+	db 12,ODDISH,BELLSPROUT,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
+	db 16,DIGLETT,SANDSHREW,0 ; Route 5 (east of Copper Town)
+	db 23,BONSLY,SUDOWOODO,0 ; Route 6 (North of Pyrite City)
+	db 22,CHARMANDER,CUBONE,0
+	db 25,SLOWPOKE,0
+	db 40,CHARMELEON,LAPRAS,LICKITUNG,0
+	db 23,CUBONE,SLOWPOKE,0
+SuperNerdData: ; 39f26 (e:5f26)
+	db 12,KOFFING,GRIMER,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
+	db 19,FLAAFFY,GLIGAR,PARAS,0 ; Rocky Point 2 (MT_MOON_3)
+	db 20,VOLTORB,KOFFING,VOLTORB,MAGNEMITE,0
+	db 22,GRIMER,MUK,GRIMER,0
+	db 26,KOFFING,0
+	db 22,KOFFING,MAGNEMITE,WEEZING,0
+	db 20,MAGNEMITE,MAGNEMITE,KOFFING,MAGNEMITE,0
+	db 24,MAGNEMITE,VOLTORB,0
+	db 36,VULPIX,VULPIX,NINETALES,0
+	db 34,PONYTA,CHARMANDER,VULPIX,GROWLITHE,0
+	db 41,RAPIDASH,0
+	db 37,GROWLITHE,VULPIX,0
+HikerData: ; 39f5e (e:5f5e)
+	db 10,GEODUDE,ONIX,GEODUDE,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
+	db 14,GEODUDE,GEODUDE,MACHOP,ONIX,0 ; Route 4 (south of Agate)
+	db 15,MACHOP,0 ; Route 4 (south of Agate)
+	db 18,MACHOP,ZUBAT,0 ; Rocky Point 1 (MT_MOON_1)
+	db 32,GRAVELER,MACHOKE,GOLBAT,0 ; Fighting Club Route (West of Quartz City)
+	db 20,GEODUDE,MACHOP,GEODUDE,0
+	db 21,GEODUDE,ONIX,0
+	db 19,ONIX,GRAVELER,0
+	db 21,GEODUDE,GEODUDE,GRAVELER,0
+	db 25,GEODUDE,0
+	db 20,MACHOP,ONIX,0
+	db 19,GEODUDE,MACHOP,GEODUDE,GEODUDE,0
+	db 20,ONIX,ONIX,GEODUDE,0
+	db 21,GEODUDE,GRAVELER,0
+BikerData: ; 39f9c (e:5f9c)
+	db 23,KOFFING,ARBOK,GLOOM,0 ; Route 6 (North of Pyrite City)
+	db 29,KOFFING,GRIMER,0
+	db 25,KOFFING,KOFFING,WEEZING,KOFFING,GRIMER,0
+	db 28,KOFFING,GRIMER,WEEZING,0
+	db 29,GRIMER,KOFFING,0
+	db 33,WEEZING,0
+	db 26,GRIMER,GRIMER,GRIMER,GRIMER,0
+	db 28,WEEZING,KOFFING,WEEZING,0
+	db 33,MUK,0
+	db 29,VOLTORB,VOLTORB,0
+	db 29,WEEZING,MUK,0
+	db 25,KOFFING,WEEZING,KOFFING,KOFFING,WEEZING,0
+	db 26,KOFFING,KOFFING,GRIMER,KOFFING,0
+	db 28,GRIMER,GRIMER,KOFFING,0
+	db 29,KOFFING,MUK,0
+BurglarData: ; 39fe4 (e:5fe4)
+	db 23,MURKROW,GOLBAT,0 ; Route 6 (North of Pyrite City)
+	db 33,GROWLITHE,0
+	db 28,VULPIX,CHARMANDER,PONYTA,0
+	db 36,GROWLITHE,VULPIX,NINETALES,0
+	db 41,PONYTA,0
+	db 37,VULPIX,GROWLITHE,0
+	db 34,CHARMANDER,CHARMELEON,0
+	db 38,NINETALES,0
+	db 34,GROWLITHE,PONYTA,0
+EngineerData: ; 3a007 (e:6007)
+	db 21,VOLTORB,MAGNEMITE,0
+	db 21,MAGNEMITE,0
+	db 18,MAGNEMITE,MAGNEMITE,MAGNETON,0
+Juggler1Data: ; 3a013 (e:6013)
+; none
+FisherData: ; 3a013 (e:6013)
+	db  4,MAGIKARP,MAGIKARP,GOLDEEN,0 ; route south of Jade Village
+	db 27,SEAKING,SEAKING,0 ; route 21 (south of Jade Village)
+	db 26,GOLDEEN,POLIWHIRL,TENTACOOL,0 ; Route 21 (south of Jade Village)
+	db 28,STARYU,KRABBY,GYARADOS,0 ; Route 21 (south of Jade Village)
+	db 32,KINGLER,GOLDUCK,0 ; Route 21 (south of Jade Village)
+	db 21,POLIWAG,SHELLDER,GOLDEEN,HORSEA,0
+	db 28,SEAKING,GOLDEEN,SEAKING,SEAKING,0
+	db 31,SHELLDER,CLOYSTER,0
+	db 27,MAGIKARP,MAGIKARP,MAGIKARP,MAGIKARP,MAGIKARP,MAGIKARP,0
+	db 33,SEAKING,GOLDEEN,0
+	db 24,MAGIKARP,MAGIKARP,0
+SwimmerData: ; 3a049 (e:6049)
+	db 21,GROWLITHE,HOUNDOUR,GROWLITHE,0 ; Copper Town Gym
+	db 23,MAGMAR,0 ; Copper Town Gym
+	db 26,HORSEA,SHELLDER,SLOWPOKE,TENTACOOL,0 ; Route 21 (south of Jade Village)
+	db 27,TENTACOOL,TENTACOOL,TENTACOOL,TENTACRUEL,0 ; Route 21 (south of Jade Village)
+	db 33,GRAVELER,0 ; Route 21 (south of Jade Village)
+	db 29,GOLDEEN,SHELLDER,SEAKING,0
+	db 30,HORSEA,HORSEA,0
+	db 27,TENTACOOL,TENTACOOL,STARYU,HORSEA,TENTACRUEL,0
+	db 31,SHELLDER,CLOYSTER,0
+	db 35,STARYU,0
+	db 28,HORSEA,HORSEA,SEADRA,HORSEA,0
+	db 33,SEADRA,TENTACRUEL,0
+	db 37,STARMIE,0
+	db 33,STARYU,WARTORTLE,0
+	db 32,POLIWHIRL,TENTACOOL,SEADRA,0
+CueBallData: ; 3a08d (e:608d)
+	db 21,PONYTA,CHARMANDER,CHARMELEON,0 ; Copper Town Gym
+	db 29,MANKEY,MACHOP,0
+	db 33,MACHOP,0
+	db 29,MANKEY,PRIMEAPE,0
+	db 29,MACHOP,MACHOKE,0
+	db 33,MACHOKE,0
+	db 26,MANKEY,MANKEY,MACHOKE,MACHOP,0
+	db 29,PRIMEAPE,MACHOKE,0
+	db 31,TENTACOOL,TENTACOOL,TENTACRUEL,0
+GamblerData: ; 3a0b3 (e:60b3)
+	db 22,MEOWTH,MAGNEMITE,0 ; Route 6 (North of Pyrite City)
+	db 32,MACHOKE,AMPHAROS,0 ; Fighting Club Route (West of Quartz City)
+	db $FD,0,30,31,29,32,0 ; Route west of fighting club Route (Hardwater Hole Route)
+	db 18,GROWLITHE,VULPIX,0
+	db 22,POLIWAG,POLIWAG,POLIWHIRL,0
+	db 22,ONIX,GEODUDE,GRAVELER,0
+	db 24,GROWLITHE,VULPIX,0
+BeautyData: ; 3a0d1 (e:60d1)
+	db 4,NIDORAN_M,NIDORAN_F,SPEAROW,SPEAROW,0 ; trainer house (Nickel city)
+	db 25,STEELIX,0 ; Pyrite City Gym
+	db 23,DRILBUR,DRILBUR,0 ; Pyrite City Gym
+	db 23,MAGNEMITE,MAGNEMITE,DRILBUR,0 ; Pyrite City Gym
+	db 23,EEVEE,FLAAFFY,PONYTA,0
+	db 35,SEAKING,0
+	db 30,SHELLDER,SHELLDER,CLOYSTER,0
+	db 31,POLIWAG,SEAKING,0
+	db 29,PIDGEOTTO,WIGGLYTUFF,0
+	db 29,BULBASAUR,IVYSAUR,0
+	db 33,WEEPINBELL,BELLSPROUT,WEEPINBELL,0
+	db 27,POLIWAG,GOLDEEN,SEAKING,GOLDEEN,POLIWAG,0
+	db 30,GOLDEEN,SEAKING,0
+	db 29,STARYU,STARYU,STARYU,0
+	db 30,SEADRA,HORSEA,SEADRA,0
+PsychicData: ; 3a115 (e:6115)
+	db 31,KADABRA,SLOWPOKE,MR_MIME,KADABRA,0
+	db 34,MR_MIME,KADABRA,0
+	db 33,SLOWPOKE,SLOWPOKE,SLOWBRO,0
+	db 38,SLOWBRO,0
+RockerData: ; 3a127 (e:6127)
+if _YELLOW
+	db 20,VOLTORB,VOLTORB,VOLTORB,0
+else
+	db 20,VOLTORB,MAGNEMITE,VOLTORB,0
+endc
+	db 29,VOLTORB,ELECTRODE,0
+JugglerData: ; 3a130 (e:6130)
+	db 29,KADABRA,MR_MIME,0
+	db 41,DROWZEE,HYPNO,KADABRA,KADABRA,0
+	db 31,DROWZEE,DROWZEE,KADABRA,DROWZEE,0
+	db 34,DROWZEE,HYPNO,0
+	db 48,MR_MIME,0
+	db 33,HYPNO,0
+	db 38,HYPNO,0
+	db 34,DROWZEE,KADABRA,0
+TamerData: ; 3a151 (e:6151)
+	db 22,NIDORINO,NIDORINA,FEAROW,0 ; Route 6 (North of Pyrite City)
+	db 30,MACHOP,MACHOKE,SUDOWOODO,0 ; Fighting Club Route (West of Quartz City)
+	db 33,TYROGUE,TYROGUE,TYROGUE,MANKEY,0 ; Fighting Club Route (West of Quartz City)
+	db 39,ARBOK,TAUROS,0
+	db 44,PERSIAN,GOLDUCK,0
+	db 42,RHYHORN,PRIMEAPE,ARBOK,TAUROS,0
+BirdKeeperData: ; 3a16b (e:616b)
+	db 22,PIDGEOTTO,FEAROW,MURKROW,0 ; Route 6 (North of Pyrite City)
+	db 25,SPEAROW,PIDGEY,PIDGEY,SPEAROW,SPEAROW,0
+	db 26,PIDGEY,PIDGEOTTO,SPEAROW,FEAROW,0
+	db 33,FARFETCH_D,0
+	db 29,SPEAROW,FEAROW,0
+	db 26,PIDGEOTTO,FARFETCH_D,DODUO,PIDGEY,0
+	db 28,DODRIO,DODUO,DODUO,0
+	db 29,SPEAROW,FEAROW,0
+	db 34,DODRIO,0
+	db 26,SPEAROW,SPEAROW,FEAROW,SPEAROW,0
+	db 30,FEAROW,FEAROW,PIDGEOTTO,0
+	db 39,PIDGEOTTO,PIDGEOTTO,PIDGEY,PIDGEOTTO,0
+	db 42,FARFETCH_D,FEAROW,0
+	db 28,PIDGEY,DODUO,PIDGEOTTO,0
+	db 26,PIDGEY,SPEAROW,PIDGEY,FEAROW,0
+	db 29,PIDGEOTTO,FEAROW,0
+	db 28,SPEAROW,DODUO,FEAROW,0
+BlackbeltData: ; 3a1be (e:61be)
+	db 31,MANKEY,PRIMEAPE,MANKEY,0 ; Fighting Club Route (West of Quartz City)
+	db 34,HITMONCHAN,0 ; Fighting Club Route (West of Quartz City)
+	db 34,HITMONLEE,0 ; Fighting Club Route (West of Quartz City)
+	db 34,HITMONTOP,0 ; Fighting Club Route (West of Quartz City)
+	db 33,POLIWRATH,MACHOKE,HITMONTOP,0; Fighting Club Route (West of Quartz City)
+	db 40,MACHOP,MACHOKE,0
+	db 43,MACHOKE,0
+	db 38,MACHOKE,MACHOP,MACHOKE,0
+	db 43,MACHOKE,MACHOP,MACHOKE,0
+Green1Data: ; 3a1e4 (e:61e4)
+	db 5,STARYU,0
+	db 5,EXEGGCUTE,0
+	db 5,GROWLITHE,0
+	db $FF,9,PIDGEY,8,SQUIRTLE,0
+	db $FF,9,PIDGEY,8,BULBASAUR,0
+	db $FF,9,PIDGEY,8,CHARMANDER,0
+	db $FF,17,GASTLY,18,POLIWAG,18,ONIX,19,STARYU,0
+	db $FF,17,GASTLY,18,POLIWAG,18,ONIX,19,EXEGGCUTE,0
+	db $FF,17,GASTLY,18,POLIWAG,18,ONIX,19,GROWLITHE,0
+	db $FF,33,HAUNTER,34,POLIWHIRL,33,STEELIX,32,DRATINI,38,STARYU,0
+	db $FF,33,HAUNTER,34,POLIWHIRL,33,STEELIX,32,DRATINI,38,EXEGGCUTE,0
+	db $FF,33,HAUNTER,34,POLIWHIRL,33,STEELIX,32,DRATINI,38,GROWLITHE,0
+ProfOakData: ; 3a21d (e:621d)
+	db $FF,66,TAUROS,67,EXEGGUTOR,68,ARCANINE,69,BLASTOISE,70,GYARADOS,0
+	db $FF,66,TAUROS,67,EXEGGUTOR,68,ARCANINE,69,VENUSAUR,70,GYARADOS,0
+	db $FF,66,TAUROS,67,EXEGGUTOR,68,ARCANINE,69,CHARIZARD,70,GYARADOS,0
+ChiefData: ; 3a241 (e:6241)
+; none
+ScientistData: ; 3a241 (e:6241)
+	db 35,EEVEE,WEEPINBELL,FARFETCH_D,0 ; Quartz City Gym
+	db 34,GRIMER,PRIMEAPE,SUDOWOODO,GOLBAT,0 ; Quartz City Gym
+	db 34,GLIGAR,NIDORINO,TANGELA,0 ; Quartz City Gym
+	db 37,FEAROW,WEEZING,0 ; Quartz City Gym
+	db 33,ELECTRODE,0
+	db 26,MAGNETON,KOFFING,WEEZING,MAGNEMITE,0
+	db 25,VOLTORB,KOFFING,MAGNETON,MAGNEMITE,KOFFING,0
+	db 29,ELECTRODE,MUK,0
+	db 29,GRIMER,ELECTRODE,0
+	db 28,VOLTORB,KOFFING,MAGNETON,0
+	db 29,MAGNEMITE,KOFFING,0
+	db 33,MAGNEMITE,MAGNETON,VOLTORB,0
+	db 34,MAGNEMITE,ELECTRODE,0
+GiovanniData: ; 3a27e (e:627e)
+if _YELLOW
+	db $FF,25,ONIX,24,RHYHORN,29,PERSIAN,0
+	db $FF,37,NIDORINO,35,PERSIAN,37,RHYHORN,41,NIDOQUEEN,0
+	db $FF,50,DUGTRIO,53,PERSIAN,53,NIDOQUEEN,55,NIDOKING,55,RHYDON,0
+else
+	db $FF,25,ONIX,24,RHYHORN,29,KANGASKHAN,0
+	db $FF,37,NIDORINO,35,KANGASKHAN,37,RHYHORN,41,NIDOQUEEN,0
+	db $FF,45,RHYHORN,42,DUGTRIO,44,NIDOQUEEN,45,NIDOKING,50,RHYDON,0
+endc
+RocketData: ; 3a29c (e:629c)
+	db 11,CUBONE,MACHOP,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
+	db 12,DIGLETT,DIGLETT,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
+	db 12,SANDSHREW,RATTATA,SANDSHREW,0 ; Arbor Hollow 1bf (ROCK_TUNNEL_2)
+	db 12,RATTATA,ZUBAT,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
+	db 14,MACHOP,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
+	db 12,ZUBAT,CUBONE,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
+	db 11,ONIX,GEODUDE,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
+	db 12,RATTATA,MACHOP,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
+	db 11,DIGLETT,GEODUDE,0 ; Arbor Hollow b1f (ROCK_TUNNEL_2)
+	db 17,NIDORINO,KOFFING,CUBONE,0 ; Agate City coupon guy
+	db 18,SANDSHREW,SANDSHREW,MACHOP,SANDSHREW,0 ; Rocky Point 1 (MT_MOON_1)
+	db 19,DIGLETT,DRILBUR,0 ; Rocky Point 1 (MT_MOON_1)
+	db 18,GEODUDE,GEODUDE,SANDSHREW,SANDSHREW,RATICATE,0 ; Rocky Point 1 (MT_MOON_1)
+	db 19,RATTATA,RATICATE,CUBONE,0 ; Rocky Point 1 (MT_MOON_1)
+	db 20,DRILBUR,SANDSHREW,0 ; Rocky Point 1 (MT_MOON_1)
+	db 19,DIGLETT,DIGLETT,MACHOP,0 ; Rocky Point 1 (MT_MOON_1)
+	db 23,EKANS,SANDSHREW,ARBOK,0 ; GO BACK TO THIS ONE!!!
+	db 18,CLEFAIRY,JIGGLYPUFF,0 ; Rocky Point 2 (MT_MOON_3)
+	db 19,DIGLETT,DIGLETT,SANDSHREW,0 ; Rocky Point 2 (MT_MOON_3)
+	db 19,DRILBUR,MACHOP,0 ; Rocky Point 2 (MT_MOON_3)
+	db 19,ONIX,ONIX,GEODUDE,DRILBUR,0 ; Rocky Point 2 (MT_MOON_3)
+	db 29,MAROWAK,MACHOKE,0 ; Hardwater Hole 1F
+	db 29,GRAVELER,SANDSLASH,0 ; Hardwater Hole 1F
+	db 28,NIDORINO,ONIX,MACHOP,RATICATE,GOLBAT,0 ; Hardwater Hole 1F
+	db 30,HOUNDOOM,GLIGAR,RATICATE,0 ; Hardwater Hole B1F
+	db 30,MAROWAK,ARBOK,0 ; Hardwater Hole B1F
+	db 28,EKANS,ZUBAT,CUBONE,0
+	db 33,ARBOK,0
+	db 33,HYPNO,0
+	db 29,MACHOP,MACHOKE,0
+	db 28,ZUBAT,ZUBAT,GOLBAT,0
+	db 26,RATICATE,ARBOK,KOFFING,GOLBAT,0
+	db 29,CUBONE,CUBONE,0
+	db 29,SANDSHREW,SANDSLASH,0
+	db 26,RATICATE,ZUBAT,GOLBAT,RATTATA,0
+	db 28,WEEZING,GOLBAT,KOFFING,0
+	db 28,DROWZEE,GRIMER,MACHOP,0
+	db 28,GOLBAT,DROWZEE,HYPNO,0
+	db 33,MACHOKE,0
+	db 25,RATTATA,RATTATA,ZUBAT,RATTATA,EKANS,0
+	db 32,CUBONE,DROWZEE,MAROWAK,0
+if _YELLOW
+JessieJamesData:
+	db 14,EKANS,MEOWTH,KOFFING,0
+	db 25,KOFFING,MEOWTH,EKANS,0
+	db 27,MEOWTH,ARBOK,WEEZING,0
+	db 31,WEEZING,ARBOK,MEOWTH,0
+	db 16,KOFFING,0
+	db 27,KOFFING,0
+	db 29,WEEZING,0
+	db 33,WEEZING,0
+endc
+CooltrainerMData: ; 3a35a (e:635a)
+	db 39,NIDORINO,NIDOKING,0
+	db 43,EXEGGUTOR,CLOYSTER,ARCANINE,0
+	db 43,KINGLER,TENTACRUEL,BLASTOISE,0
+	db 45,KINGLER,STARMIE,0
+	db 42,IVYSAUR,WARTORTLE,CHARMELEON,CHARIZARD,0
+	db 44,IVYSAUR,WARTORTLE,CHARMELEON,0
+	db 49,NIDOKING,0
+	db 44,KINGLER,CLOYSTER,0
+	db 39,SANDSLASH,DUGTRIO,0
+	db 43,RHYHORN,0
+CooltrainerFData: ; 3a385 (e:6385)
+	db 16,CUBONE,GEODUDE,CUBONE,0 ; Agate City Gym
+	db 24,ONIX,MAGNEMITE,STEELIX,0 ; Pyrite City Gym
+	db 43,PARASECT,DEWGONG,CHANSEY,0
+	db 46,VILEPLUME,BUTTERFREE,0
+	db 44,PERSIAN,NINETALES,0
+	db 45,IVYSAUR,VENUSAUR,0
+	db 45,NIDORINA,NIDOQUEEN,0
+	db 43,PERSIAN,NINETALES,RAICHU,0
+BrunoData: ; 3a3a9 (e:63a9)
+	db $FF,53,ONIX,55,HITMONCHAN,55,HITMONLEE,56,ONIX,58,MACHAMP,0
+BrockData: ; 3a3b5 (e:63b5)
+if _YELLOW
+	db $FF,10,GEODUDE,12,ONIX,0
+else
+	db $FF,9,CLEFAIRY,10,PORYGON,11,SPEAROW,0 ; Blandy
+endc
+MistyData: ; 3a3bb (e:63bb)
+	db $FF,20,ONIX,22,RHYHORN,0
+LtSurgeData: ; 3a3c1 (e:63c1)
+if _YELLOW
+	db $FF,28,RAICHU,0
+else
+	db $FF,21,VOLTORB,18,PIKACHU,24,RAICHU,0
+endc
+ErikaData: ; 3a3c9 (e:63c9)
+	db $FF,22,HOUNDOUR,22,PONYTA,26,CHARMELEON,0
+KogaData: ; 3a3d1 (e:63d1)
+	db $FE,37,1,POLIWHIRL,1,MR_MIME,-2,DODRIO,2,DUGTRIO,0
+BlaineData: ; 3a3db (e:63db)
+if _YELLOW
+	db $FF,48,NINETALES,50,RAPIDASH,54,ARCANINE,0
+else
+	db $FF,42,GROWLITHE,40,PONYTA,42,RAPIDASH,47,ARCANINE,0
+endc
+SabrinaData: ; 3a3e5 (e:63e5)
+	db $FF,24,MAGNEMITE,27,STEELIX,28,EXCADRILL,29,SCIZOR,0
+GentlemanData: ; 3a3ef (e:63ef)
+	db 7,MANKEY,GEODUDE,0 ; trainer house (Nickel City)
+	db 19,NIDORAN_M,NIDORAN_F,0
+if _YELLOW
+	db 22,VOLTORB,MAGNEMITE,0
+else
+	db 23,PIKACHU,0
+endc
+	db 48,PRIMEAPE,0
+	db 17,GROWLITHE,PONYTA,0
+Green2Data: ; 3a401 (e:6401) Little Timmy rival
+	db 5,EEVEE,0
+Green3Data: ; 3a491 (e:6491)
+if _YELLOW
+	db $FF,61,SANDSLASH,59,ALAKAZAM,61,EXEGGUTOR,61,CLOYSTER,63,NINETALES,65,JOLTEON,0
+	db $FF,61,SANDSLASH,59,ALAKAZAM,61,EXEGGUTOR,61,MAGNETON,63,CLOYSTER,65,FLAREON,0
+	db $FF,61,SANDSLASH,59,ALAKAZAM,61,EXEGGUTOR,61,NINETALES,63,MAGNETON,65,VAPOREON,0
+else
+	db $FF,61,PIDGEOT,59,ALAKAZAM,61,RHYDON,61,ARCANINE,63,EXEGGUTOR,65,BLASTOISE,0
+	db $FF,61,PIDGEOT,59,ALAKAZAM,61,RHYDON,61,GYARADOS,63,ARCANINE,65,VENUSAUR,0
+	db $FF,61,PIDGEOT,59,ALAKAZAM,61,RHYDON,61,EXEGGUTOR,63,GYARADOS,65,CHARIZARD,0
+endc
+LoreleiData: ; 3a4bb (e:64bb)
+	db $FF,54,DEWGONG,53,CLOYSTER,54,SLOWBRO,56,JYNX,56,LAPRAS,0
+ChannelerData: ; 3a4c7 (e:64c7)
+	db 36,EEVEE,GLACEON,0 ; Hardwater Hole B1F (ice rock)
+	db 24,GASTLY,0
+	db 23,GASTLY,GASTLY,0
+	db 24,GASTLY,0
+	db 23,GASTLY,0
+	db 24,GASTLY,0
+	db 24,HAUNTER,0
+	db 22,GASTLY,0
+	db 24,GASTLY,0
+	db 23,GASTLY,0
+	db 24,GASTLY,0
+	db 22,GASTLY,0
+	db 24,GASTLY,0
+	db 23,HAUNTER,0
+	db 24,GASTLY,0
+	db 22,GASTLY,0
+	db 24,GASTLY,0
+	db 22,HAUNTER,0
+	db 22,GASTLY,GASTLY,GASTLY,0
+	db 24,GASTLY,0
+	db 24,GASTLY,0
+	db 34,GASTLY,HAUNTER,0
+	db 38,HAUNTER,0
+	db 33,GASTLY,GASTLY,HAUNTER,0
+AgathaData: ; 3a516 (e:6516)
+	db $FF,56,GENGAR,56,GOLBAT,55,HAUNTER,58,ARBOK,60,GENGAR,0
+LanceData: ; 3a522 (e:6522)
+	db $FF,58,GYARADOS,56,DRAGONAIR,56,DRAGONAIR,60,AERODACTYL,62,DRAGONITE,0
+ShadowData:
+	db $FF,100,SKARMORY,100,DRAGONITE,100,ALAKAZAM,0
+	db $FF,25,FLAAFFY,26,HAUNTER,27,FEAROW,0
+TimmyData:
+    db $5,EEVEE,0
+
+
+RandomTeamClassesPointers:
+	dw RandomTeamClass0
+	dw RandomTeamClass1
+
+RandomTeamClass0:
+	db 72 ; num entries in list
+	db CHARMELEON
+	db WARTORTLE
+	db IVYSAUR
+	db BUTTERFREE
+	db BEEDRILL
+	db RATICATE
+	db PIDGEOTTO
+	db FEAROW
+	db MACHOKE
+	db ARBOK
+	db SANDSLASH
+	db PIKACHU
+	db NIDORINO
+	db NIDORINA
+	db VULPIX
+	db GROWLITHE
+	db GOLBAT
+	db GLOOM
+	db PARASECT
+	db VENONAT
+	db DUGTRIO
+	db PERSIAN
+	db PSYDUCK
+	db MANKEY
+	db POLIWHIRL
+	db KADABRA
+	db WEEPINBELL
+	db TENTACOOL
+	db GRAVELER
+	db PONYTA
+	db SLOWPOKE
+	db MAGNEMITE
+	db FARFETCH_D
+	db DODUO
+	db SEEL
+	db GRIMER
+	db SHELLDER
+	db HAUNTER
+	db ONIX
+	db KRABBY
+	db ELECTRODE
+	db MAROWAK
+	db HITMONLEE
+	db HITMONCHAN
+	db LICKITUNG
+	db KOFFING
+	db RHYHORN
+	db TANGELA
+	db SEADRA
+	db SEAKING
+	db STARYU
+	db EXEGGCUTE
+	db MR_MIME
+	db SCYTHER
+	db JYNX
+	db ELECTABUZZ
+	db MAGMAR
+	db GYARADOS
+	db DITTO
+	db PORYGON
+	db OMANYTE
+	db KABUTO
+	db FLAAFFY
+	db AMPHAROS
+	db SKARMORY
+	db HOUNDOOM
+	db GLIGAR
+	db MURKROW
+	db SCIZOR
+	db SUDOWOODO
+	db HITMONTOP
+	db SNEASEL
+
+RandomTeamClass1:
+	db 7 ; num entries in list
+	db CHARMANDER
+	db SQUIRTLE
+	db BULBASAUR
+	db BUTTERFREE
+	db BEEDRILL
+	db RATTATA
+	db PIDGEOTTO
