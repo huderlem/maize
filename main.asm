@@ -86274,8 +86274,8 @@ Route18Object: ; 0x58c5a (size=66)
 
 	db $3 ; people
 	db SPRITE_GAMBLER, $14 + 4, $9 + 4, $ff, $d1, $41, GAMBLER + $C8, $3 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_1, $24 + 4, $8 + 4, $ff, $d2, $42, BIRD_KEEPER + $C8, $9 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_1, $2d + 4, $a + 4, $ff, $ff, $43, BIRD_KEEPER + $C8, $a ; trainer
+	db SPRITE_BLACK_HAIR_BOY_1, $24 + 4, $8 + 4, $ff, $d2, $42, COOLTRAINER_M + $C8, $1 ; trainer
+	db SPRITE_LASS, $2d + 4, $a + 4, $ff, $ff, $43, COOLTRAINER_F + $C8, $3 ; trainer
 
 	; warp-to
 	EVENT_DISP ROUTE_18_WIDTH, $25, $d ; CELADON_MART_ELEVATOR
@@ -120627,7 +120627,7 @@ JessieJamesData:
 	db 33,WEEZING,0
 endc
 CooltrainerMData: ; 3a35a (e:635a)
-	db 39,NIDORINO,NIDOKING,0
+	db 32,KADABRA,FEAROW,DROWZEE,MURKROW,0 ; Hardwater hole route
 	db 43,EXEGGUTOR,CLOYSTER,ARCANINE,0
 	db 43,KINGLER,TENTACRUEL,BLASTOISE,0
 	db 45,KINGLER,STARMIE,0
@@ -120640,7 +120640,7 @@ CooltrainerMData: ; 3a35a (e:635a)
 CooltrainerFData: ; 3a385 (e:6385)
 	db 16,CUBONE,GEODUDE,CUBONE,0 ; Agate City Gym
 	db 24,ONIX,MAGNEMITE,STEELIX,0 ; Pyrite City Gym
-	db 43,PARASECT,DEWGONG,CHANSEY,0
+	db 33,SNEASEL,SEEL,SNEASEL,JYNX,0 ; Hardwater Hole Route
 	db 46,VILEPLUME,BUTTERFREE,0
 	db 44,PERSIAN,NINETALES,0
 	db 45,IVYSAUR,VENUSAUR,0
