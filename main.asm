@@ -21595,22 +21595,62 @@ Route7Mons: ; d297 (3:5297)
 	db $00
 
 TowerMons1: ; d2ad (3:52ad)
-	db $00
+	db $0A
+	db 21,PARAS
+	db 22,PARAS
+	db 23,SNEASEL
+	db 23,SEEL
+	db 22,ZUBAT
+	db 21,SNEASEL
+	db 23,JYNX
+	db 22,SNEASEL
+	db 24,JYNX
+	db 25,JYNX
 
 	db $00
 
 TowerMons2: ; d2af (3:52af)
-	db $00
+	db $0A
+	db 22,PARAS
+	db 23,PARAS
+	db 24,SNEASEL
+	db 24,SEEL
+	db 23,ZUBAT
+	db 22,SNEASEL
+	db 24,JYNX
+	db 23,SNEASEL
+	db 25,JYNX
+	db 26,JYNX
 
 	db $00
 
 TowerMons3: ; d2b1 (3:52b1)
-	db $00
+	db $0A
+	db 20,PARAS
+	db 21,PARAS
+	db 22,SNEASEL
+	db 23,SEEL
+	db 21,ZUBAT
+	db 20,GASTLY
+	db 22,SEEL
+	db 21,GASTLY
+	db 23,GASTLY
+	db 24,SNEASEL
 
 	db $00
 
 TowerMons4: ; d2c7 (3:52c7)
-	db $00
+	db $0A
+	db 21,PARAS
+	db 22,PARAS
+	db 23,SNEASEL
+	db 23,SEEL
+	db 22,ZUBAT
+	db 21,SNEASEL
+	db 23,JYNX
+	db 22,SNEASEL
+	db 24,JYNX
+	db 25,JYNX
 
 	db $00
 
@@ -58356,14 +58396,16 @@ Func_3d83a: ; 3d83a (f:583a)
 	ld a,[W_ISINBATTLE]
 	dec a
 	ret nz
-	ld a,[W_CURMAP]
-	cp a,POKEMONTOWER_1
-	jr c,.next
-	cp a,LAVENDER_HOUSE_1
-	jr nc,.next
-	ld b,SILPH_SCOPE
-	call IsItemInBag ; $3493
-	ret z
+
+	;disabled the ghost encounters
+	;ld a,[W_CURMAP]
+	;cp a,POKEMONTOWER_1
+	;jr c,.next
+	;cp a,LAVENDER_HOUSE_1
+	;jr nc,.next
+	;ld b,SILPH_SCOPE
+	;call IsItemInBag ; $3493
+	;ret z
 .next
 	ld a,1
 	and a
@@ -86290,11 +86332,12 @@ Func_58d99: ; 58d99 (16:4d99)
 	ld a, [W_ISINBATTLE] ; $d057
 	dec a
 	jr nz, .asm_58dbe
-	ld a, [W_CURMAP] ; $d35e
-	cp POKEMONTOWER_3
-	jr c, .asm_58daa
-	cp LAVENDER_HOUSE_1
-	jp c, .asm_58dd8
+	; disabled ghost encounter
+	;ld a, [W_CURMAP] ; $d35e
+	;cp POKEMONTOWER_3
+	;jr c, .asm_58daa
+	;cp LAVENDER_HOUSE_1
+	;jp c, .asm_58dd8
 .asm_58daa
 	; flash screen if mon is shiny
 	ld b, Bank(IsMonShiny)
