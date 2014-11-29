@@ -53,7 +53,7 @@ _Route18AfterBattleText2:: ; 91829 (24:5829)
 	text "It's hard for me"
 	line "to remember the"
 	cont "type advantages"
-	cont "DARK and FAIRY"
+	cont "of DARK and FAIRY"
 	cont "types."
 	done
 

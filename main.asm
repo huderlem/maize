@@ -21736,16 +21736,16 @@ Route17Mons: ; d377 (3:5377)
 
 Route18Mons: ; d38d (3:538d)
 	db $19
-	db 20,SNEASEL
-	db 22,SNEASEL
-	db 25,SNEASEL
-	db 24,WEAVILE
-	db 25,WEAVILE
-	db 26,WEAVILE
-	db 28,WEAVILE
-	db 29,WEAVILE
-	db 27,WEAVILE
-	db 29,WEAVILE
+	db 21,SNEASEL
+	db 22,PSYDUCK
+	db 22,VENONAT
+	db 23,DODUO
+	db 23,FLAAFFY
+	db 21,PSYDUCK
+	db 20,VENONAT
+	db 21,VENONAT
+	db 22,DODUO
+	db 21,DODUO
 
 	db $00
 
@@ -86275,7 +86275,7 @@ Route18Object: ; 0x58c5a (size=66)
 	db $3 ; people
 	db SPRITE_GAMBLER, $14 + 4, $9 + 4, $ff, $d1, $41, GAMBLER + $C8, $3 ; trainer
 	db SPRITE_BLACK_HAIR_BOY_1, $24 + 4, $8 + 4, $ff, $d2, $42, COOLTRAINER_M + $C8, $1 ; trainer
-	db SPRITE_LASS, $2d + 4, $a + 4, $ff, $ff, $43, COOLTRAINER_F + $C8, $3 ; trainer
+	db SPRITE_BLACK_HAIR_BOY_1, $2d + 4, $a + 4, $ff, $ff, $43, BURGLAR + $C8, $2 ; trainer
 
 	; warp-to
 	EVENT_DISP ROUTE_18_WIDTH, $25, $d ; CELADON_MART_ELEVATOR
@@ -120398,7 +120398,7 @@ BikerData: ; 39f9c (e:5f9c)
 	db 29,KOFFING,MUK,0
 BurglarData: ; 39fe4 (e:5fe4)
 	db 23,MURKROW,GOLBAT,0 ; Route 6 (North of Pyrite City)
-	db 33,GROWLITHE,0
+	db 33,SNEASEL,SEEL,SNEASEL,JYNX,0 ; Hardwater Hole Route
 	db 28,VULPIX,CHARMANDER,PONYTA,0
 	db 36,GROWLITHE,VULPIX,NINETALES,0
 	db 41,PONYTA,0
@@ -120418,7 +120418,7 @@ FisherData: ; 3a013 (e:6013)
 	db 26,GOLDEEN,POLIWHIRL,TENTACOOL,0 ; Route 21 (south of Jade Village)
 	db 28,STARYU,KRABBY,GYARADOS,0 ; Route 21 (south of Jade Village)
 	db 32,KINGLER,GOLDUCK,0 ; Route 21 (south of Jade Village)
-	db 21,POLIWAG,SHELLDER,GOLDEEN,HORSEA,0
+	db 33,SNEASEL,SEEL,SNEASEL,JYNX,0
 	db 28,SEAKING,GOLDEEN,SEAKING,SEAKING,0
 	db 31,SHELLDER,CLOYSTER,0
 	db 27,MAGIKARP,MAGIKARP,MAGIKARP,MAGIKARP,MAGIKARP,MAGIKARP,0
@@ -120640,7 +120640,7 @@ CooltrainerMData: ; 3a35a (e:635a)
 CooltrainerFData: ; 3a385 (e:6385)
 	db 16,CUBONE,GEODUDE,CUBONE,0 ; Agate City Gym
 	db 24,ONIX,MAGNEMITE,STEELIX,0 ; Pyrite City Gym
-	db 33,SNEASEL,SEEL,SNEASEL,JYNX,0 ; Hardwater Hole Route
+	db 33,SNEASEL,SEEL,SNEASEL,JYNX,0
 	db 46,VILEPLUME,BUTTERFREE,0
 	db 44,PERSIAN,NINETALES,0
 	db 45,IVYSAUR,VENUSAUR,0
