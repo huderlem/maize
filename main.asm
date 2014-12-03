@@ -57611,7 +57611,10 @@ asm_3d00e: ; 3d00e (f:500e)
 OldManItemList: ; 3d02d (f:502d)
 	db $01, POKE_BALL, 50, $ff
 
-Func_3d031
+Func_3d031:
+	ld a, [W_CURMAP]
+	cp BATTLE_FACTORY
+	jp z, InitBattleMenu ; don't open battle item menu in the battle factory
 	ld hl, wNumBagItems ; $d31d
 	ld a, l
 	ld [$cf8b], a
