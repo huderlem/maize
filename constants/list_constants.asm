@@ -4,6 +4,7 @@ MOVESLISTMENU      EQU $01 ; XXX where is this used?
 PRICEDITEMLISTMENU EQU $02 ; Pokemart buy menu / Pokemart buy/sell choose quantity menu
 ITEMLISTMENU       EQU $03 ; Start menu Item menu / Pokemart sell menu
 SPECIALLISTMENU    EQU $04 ; list of special "items" e.g. floor list in elevators / list of badges
+BATTLEFACTORYSWAPMENU EQU $05 ; menu to swap pokemon in battle factory
 
 MONSTER_NAME  EQU 1
 MOVE_NAME     EQU 2

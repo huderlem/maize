@@ -1190,9 +1190,9 @@ W_VERMILIONCITYCURSCRIPT:: ; d62a
 	ds 1
 W_POKEMONTOWER2CURSCRIPT:: ; d62b
 	ds 1
-W_POKEMONTOWER3CURSCRIPT:: ; d62c TODO: unused byte
+W_POKEMONTOWER3CURSCRIPT:: ; d62c
 	ds 1
-W_POKEMONTOWER4CURSCRIPT:: ; d62d TODO: unused byte
+W_BATTLEFACTORYCURSCRIPT:: ; d62d 
 	ds 1
 W_POKEMONTOWER5CURSCRIPT:: ; d62e
 	ds 1
@@ -1479,7 +1479,7 @@ W_NEWFLAGS1:: ; dee2
 	; 6: diving animation
 	; 7: Mon should be slave
 
-W_SLOW_MUSIC:: ; dee3
+W_SLOW_MUSIC:: ; dee3 TODO: no longer using this
 	ds 1
 
 W_NUZLOCKE_MAP_FLAGS::
@@ -1511,6 +1511,29 @@ W_ROAMING2_MAP::
 	ds 1
 
 W_ROAMING3_MAP::
+	ds 1
+
+W_CURSTREAK::
+	ds 1
+W_BESTSTREAK::
+	ds 1
+W_CURCLASS::
+	ds 1
+W_STARTBATTLE::
+	ds 1
+W_MOVE1::
+	ds 1
+W_MOVE2::
+	ds 1
+W_MOVE3::
+	ds 1
+W_MOVE4::
+	ds 1
+W_SWAPMONENEMYINDEX::
+	ds 1
+W_INCHALLENGE::
+; 1 = have picked team for normal challenge
+; TODO: make sure this is actually used
 W_LAST_NEW_BYTE::
 	ds 1
 

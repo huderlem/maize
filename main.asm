@@ -252,7 +252,7 @@ MapHeaderPointers:: ; 01ae (0:01ae)
 	dw BikeShop_h
 	dw CeruleanMart_h
 	dw MtMoonPokecenter_h
-	dw CeruleanHouseTrashed_h ; copy
+	dw BattleFactory_h
 	dw Route5Gate_h
 	dw UndergroundTunnelEntranceRoute5_h
 	dw DayCareM_h
@@ -5322,22 +5322,6 @@ VBlankHandler:: ; 2024 (0:2024)
 	dec a
 	ld [H_FRAMECOUNTER],a
 .handleMusic
-	; delay music if night time and not in battle and in an outdoors map
-	ld a, [W_PLAYTIMEMINUTES + 1]
-	cp 30
-	jr c, .normalMusicHook
-	ld a, [W_ISINBATTLE]
-	and a
-	jr nz, .normalMusicHook
-	ld a, [W_CURMAP]
-	cp REDS_HOUSE_1F
-	jr nc, .normalMusicHook
-	ld a, [W_SLOW_MUSIC]
-	inc a
-	and %00000011
-	ld [W_SLOW_MUSIC], a
-	jr z, .afterMusic
-.normalMusicHook
 	call Func_28cb
 	ld a,[$c0ef] ; music ROM bank
 	ld [H_LOADEDROMBANK],a
@@ -7256,7 +7240,12 @@ DisplayListMenuID:: ; 2be6 (0:2be6)
 	ld [wTopMenuItemY],a
 	ld a,5
 	ld [wTopMenuItemX],a
+	ld a, [W_CURMAP]
+	cp BATTLE_FACTORY
 	ld a,%00000111 ; A button, B button, Select button
+	jr nz, .notBattleFactory
+	ld a,%00000011 ; A button, B button
+.notBattleFactory
 	ld [wMenuWatchedKeys],a
 	ld c,10
 	call DelayFrames
@@ -7332,6 +7321,8 @@ DisplayListMenuIDLoop:: ; 2c53 (0:2c53)
 	ld a,[wListMenuID]
 	and a ; is it a PC pokemon list?
 	jr z,.pokemonList
+	cp a, BATTLEFACTORYSWAPMENU
+	jr z, .pokemonList
 	push hl
 	call GetItemPrice
 	pop hl
@@ -7591,10 +7582,17 @@ PrintListMenuEntries:: ; 2e5a (0:2e5a)
 	ld a,[wListMenuID]
 	and a
 	jr z,.pokemonPCMenu
-	cp a,$01
+	cp a, MOVESLISTMENU
 	jr z,.movesMenu
+	cp a, BATTLEFACTORYSWAPMENU
+	jr z, .trainerMonMenu
 .itemMenu
 	call GetItemName
+	jr .placeNameString
+.trainerMonMenu
+	ld hl, TrainerMonMenu
+	ld b, Bank(TrainerMonMenu)
+	call Bankswitch
 	jr .placeNameString
 .pokemonPCMenu
 	push hl
@@ -7637,6 +7635,8 @@ PrintListMenuEntries:: ; 2e5a (0:2e5a)
 	call PrintBCDNumber
 .skipPrintingItemPrice
 	ld a,[wListMenuID]
+	cp BATTLEFACTORYSWAPMENU
+	jr z, .printPokemonLevel
 	and a
 	jr nz,.skipPrintingPokemonLevel
 .printPokemonLevel
@@ -15572,6 +15572,8 @@ AskForMonNickname: ; 64eb (1:64eb)
 	ld a, [W_CURMAP]
 	cp REDS_HOUSE_2F
 	jr z, .popHL
+	cp BATTLE_FACTORY
+	jr z, .popHL
 	
 	; if player is playing nuzlocke, don't ask for nickname
 	ld a, [W_NEWFLAGS1]
@@ -19135,7 +19137,7 @@ MapHeaderBanks: ; c23d (3:423d)
 	db BANK(BikeShop_h)
 	db BANK(CeruleanMart_h)
 	db BANK(MtMoonPokecenter_h)
-	db BANK(CeruleanHouseTrashed_h)
+	db BANK(BattleFactory_h)
 	db BANK(Route5Gate_h)
 	db BANK(UndergroundTunnelEntranceRoute5_h)
 	db BANK(DayCareM_h)
@@ -26366,11 +26368,22 @@ _AddPokemonToParty: ; f2e5 (3:72e5)
 	inc de
 	pop hl
 	push hl
+	ld a, [W_CURMAP]
+	cp BATTLE_FACTORY
+	jr nz, .notBattleFactory
+	ld a, [$cc49]
+	and $f
+	ld a, $ff     ; set enemy trainer mon IVs to fixed max values
+	ld b, $ff
+	jr nz, .writeFreshMonData
+	jr .after
+.notBattleFactory
 	ld a, [$cc49]
 	and $f
 	ld a, $98     ; set enemy trainer mon IVs to fixed average values
 	ld b, $88
 	jr nz, .writeFreshMonData
+.after
 	ld a, [$cf91]
 	ld [$d11e], a
 	push de
@@ -28138,6 +28151,8 @@ StatusScreen: ; 12953 (4:6953)
 	ld hl, Coord
 	ld bc, $0806
 	call DrawLineBox ; Draws the box around types, ID No. and OT
+	ld hl,$d730
+	set 6,[hl] ; turn off letter printing delay
 	FuncCoord 10,9
 	ld hl, Coord
 	ld de, Type1Text
@@ -30158,6 +30173,9 @@ Func_137aa: ; 137aa (4:77aa)
 	ld c, $3
 	ld a, $b
 	call Predef ; indirect jump to Func_f81d (f81d (3:781d))
+	ld a, [W_CURMAP]
+	cp BATTLE_FACTORY
+	jr z, .asm_1380a
 	ld hl, UnnamedText_1386b ; $786b
 	call PrintText
 .asm_1380a
@@ -32167,7 +32185,7 @@ PalletTownObject: ; 0x182c3 (size=58)
 	db $f ; border tile
 
 	db $3 ; warps
-	db $d, $3, $0, REDS_HOUSE_1F
+	db $d, $3, $0, BATTLE_FACTORY
 	db $7, $3, $0, BLUES_HOUSE
 	db $b, $c, $1, OAKS_LAB
 
@@ -52857,6 +52875,30 @@ Func_3af5b: ; 3af5b (e:6f5b)
 ; move slots are being filled up sequentially and shifted if all slots are full
 ; [$cee9]: (?)
 WriteMonMoves: ; 3afb8 (e:6fb8)
+	ld a, [W_CURMAP]
+	cp BATTLE_FACTORY
+	jr nz, .notBattleFactory
+	call Load16BitRegisters
+	push hl
+	push de
+	push bc
+	ld hl, W_MOVE1
+	ld a, [hli]
+	ld [de], a
+	inc de
+	ld a, [hli]
+	ld [de], a
+	inc de
+	ld a, [hli]
+	ld [de], a
+ 	inc de
+ 	ld a, [hli]
+ 	ld [de], a
+ 	pop bc
+ 	pop de
+ 	pop hl
+	ret
+.notBattleFactory
 	ld a, [$cf91]
 	cp CATERPIE
 	jr c, .thisBank
@@ -54973,6 +55015,156 @@ BankswitchEtoF: ; 3bbe1 (e:7be1)
 	ld b, $f
 	jp Bankswitch
 
+SwapMonSubMenu:
+	FuncCoord 10, 10 ; $c471
+	ld hl, Coord
+	ld b, $6
+	ld c, $8
+	call TextBoxBorder
+	FuncCoord 12, 12 ; $c49b
+	ld hl, Coord
+	ld de, SwapMenuMonText
+	call PlaceString
+	FuncCoord 12, 14 ; $c4c3
+	ld hl, Coord
+	ld de, SwapMenuStatsText ; $57dc
+	call PlaceString
+	FuncCoord 12, 16
+	ld hl, Coord
+	ld de, SwapMenuCancelText
+	call PlaceString
+	ld hl, wTopMenuItemY ; $cc24
+	ld a, 12
+	ld [hli], a
+	ld a, 11
+	ld [hli], a
+	xor a
+	ld [hli], a
+	inc hl
+	ld a, $2
+	ld [hli], a
+	ld a, $3
+	ld [hli], a
+	xor a
+	ld [hl], a
+	ld hl, wListScrollOffset ; $cc36
+	ld [hli], a
+	ld [hl], a
+	call HandleMenuInput
+	bit 1, a ; B was pressed
+	jr z, .notBPressed
+	scf 
+	ccf
+	ret
+.notBPressed
+	ld a, [wCurrentMenuItem]
+	cp 1
+	jr z, .showStatsScreen
+	cp 0 ; rent?
+	jr nz, .cancelPressed
+	xor a
+	scf
+	ret
+.cancelPressed
+	ld a, 2
+	scf
+	ccf
+	ret
+.showStatsScreen
+	ld a, $1 ; enemy's party
+.doAction
+	ld [$cc49], a
+	call CleanLCD_OAM
+	ld a, $36
+	call Predef ; indirect jump to StatusScreen (12953 (4:6953))
+	ld a, $37
+	call Predef ; indirect jump to StatusScreen2 (12b57 (4:6b57))
+	call LoadScreenTilesFromBuffer1
+	; call ReloadTilesetTilePatterns
+	call GoPAL_SET_CF1C
+	call LoadGBPal
+	jp SwapMonSubMenu
+
+SwapMonSubMenuPlayer:
+	FuncCoord 10, 10 ; $c471
+	ld hl, Coord
+	ld b, $6
+	ld c, $8
+	call TextBoxBorder
+	FuncCoord 12, 12 ; $c49b
+	ld hl, Coord
+	ld de, SwapMenuMonText
+	call PlaceString
+	FuncCoord 12, 14 ; $c4c3
+	ld hl, Coord
+	ld de, SwapMenuStatsText ; $57dc
+	call PlaceString
+	FuncCoord 12, 16
+	ld hl, Coord
+	ld de, SwapMenuCancelText
+	call PlaceString
+	ld hl, wTopMenuItemY ; $cc24
+	ld a, 12
+	ld [hli], a
+	ld a, 11
+	ld [hli], a
+	xor a
+	ld [hli], a
+	inc hl
+	ld a, $2
+	ld [hli], a
+	ld a, $3
+	ld [hli], a
+	xor a
+	ld [hl], a
+	ld hl, wListScrollOffset ; $cc36
+	ld [hli], a
+	ld [hl], a
+	call HandleMenuInput
+	bit 1, a ; B was pressed
+	jr z, .notBPressed
+	scf 
+	ccf
+	ret
+.notBPressed
+	ld a, [wCurrentMenuItem]
+	cp 1
+	jr z, .showStatsScreen
+	cp 0 ; rent?
+	jr nz, .cancelPressed
+	xor a
+	scf
+	ret
+.cancelPressed
+	ld a, 2
+	scf
+	ccf
+	ret
+.showStatsScreen
+	xor a ; player's party
+.doAction
+	ld [$cc49], a
+	call CleanLCD_OAM
+	ld a, $36
+	call Predef ; indirect jump to StatusScreen (12953 (4:6953))
+	ld a, $37
+	call Predef ; indirect jump to StatusScreen2 (12b57 (4:6b57))
+	call LoadScreenTilesFromBuffer1
+	; call ReloadTilesetTilePatterns
+	call GoPAL_SET_CF1C
+	call LoadGBPal
+	jp SwapMonSubMenuPlayer
+
+SwapMenuMonText:
+	db "SWAP@"
+
+SwapMenuStatsText:
+	db "STATS@"
+
+SwapMenuCancelText:
+	db "CANCEL@"
+
+
 SECTION "bankF",ROMX,BANK[$F]
 
 ; These are move effects (second value from the Moves table in bank $E).
@@ -55941,9 +56133,109 @@ TrainerBattleVictory: ; 3c696 (f:4696)
 	ld a, [W_ISLINKBATTLE] ; $d12b
 	cp $4
 	ret z
+	ld a, [W_CURMAP]
+	cp BATTLE_FACTORY
+	jr nz, .notBattleFactory
+	; battlefactory-related things on victory
+	ld hl, W_CURSTREAK
+	inc [hl] ; increment current win streak
+	ld a, [hl]
+	ld hl, W_BESTSTREAK
+	cp [hl]
+	jp c, .noStreakUpdate
+	ld [hl], a ; save best streak
+.noStreakUpdate
+	ld c, 0
+.divisionLoop
+	cp 7
+	jp c, .divisionDone
+	inc c
+	sub 7
+	jr .divisionLoop
+.divisionDone
+	ld a, c
+	ld [W_CURCLASS], a
+	xor a
+	ld [W_STARTBATTLE], a ; no battle starting
+.notBattleFactory
 	call Func_3ed12
 	ld c, $28
 	call DelayFrames
+	ld a, [W_CURMAP]
+	cp BATTLE_FACTORY
+	jp nz, .notBattleFactory2
+	; was this battle 7?
+	ld a, [W_CURSTREAK]
+.divisionLoop2
+	cp 7
+	jp c, .divisionDone2
+	sub 7
+	jr .divisionLoop2
+.divisionDone2
+	and a ; is a $0?
+	jr nz, .notLastBattle
+	ld [W_INCHALLENGE], a ; a is $0 here
+	ld a, [W_CURCLASS]
+	cp 3 ; first class with special trainers (+1)
+	jr c, .notSpecialMessage
+	cp 10 ; last class with special trainers (+2)
+	jr nc, .notSpecialMessage ; past the last factory head
+	call SpecialTrainerDefeatMessage
+	jr .printCongrats
+.notSpecialMessage
+	call RandomDefeatMessage
+.printCongrats
+	ld hl, W_CURCLASS
+	push hl
+	inc [hl]
+	ld hl, BeatSevenTrainersText
+	call PrintText
+	pop hl
+	dec [hl]
+	jr .noSwap
+.notLastBattle
+	call RandomDefeatMessage
+.swapping
+	ld hl, SwapText
+	call PrintText
+	FuncCoord 0, 7 ; $c42c
+	ld hl,Coord
+	ld bc,$0801
+	ld a,$14
+	ld [$D125],a
+	call DisplayTextBoxID
+	ld a,[$CC26]
+	and a
+	jr nz, .noSwap
+.yesSwapMons
+	ld hl, PickEnemyMonText
+	call PrintText
+	call SwapPokemonEnemy
+	jr nc, .swapPlayerMons
+	ld hl, SwapAreYouSureText
+	call PrintText
+	FuncCoord 0, 7 ; $c42c
+	ld hl,Coord
+	ld bc,$0801
+	ld a,$14
+	ld [$D125],a
+	call DisplayTextBoxID
+	ld a,[$CC26]
+	and a
+	jr nz, .yesSwapMons
+	jr .noSwap
+.swapPlayerMons
+	ld hl, PickPlayerMonText
+	call PrintText
+	call SwapPokemonPlayer
+	jr nc, .swapCompleted
+	jr .yesSwapMons
+.swapCompleted
+	ld hl, SwapCompleteText
+	call PrintText
+.noSwap
+	ret
+.notBattleFactory2
 	call Func_3381
 	ld hl, MoneyForWinningText ; $46e4
 	call PrintText
@@ -55963,6 +56255,35 @@ TrainerBattleVictory: ; 3c696 (f:4696)
 	ld c, $3
 	ld a, $b
 	jp Predef ; indirect jump to Func_f81d (f81d (3:781d))
+
+SwapText:
+	TX_FAR _SwapText
+	db "@"
+
+PickEnemyMonText:
+	TX_FAR _PickEnemyMonText
+	db "@"
+
+PickPlayerMonText:
+	TX_FAR _PickPlayerMonText
+	db "@"
+
+SwapCompleteText:
+	TX_FAR _SwapCompleteText
+	db "@"
+
+BeatSevenTrainersText:
+	TX_FAR _BeatSevenTrainersText
+	db "@"
+
+SwapAreYouSureText:
+	TX_FAR _SwapAreYouSureText
+	db "@"
+
+SwapAreYouSureText2:
+	TX_FAR _SwapAreYouSureText2
+	db "@"
+
 
 MoneyForWinningText: ; 3c6e4 (f:46e4)
 	TX_FAR _MoneyForWinningText
@@ -56217,6 +56538,15 @@ HandlePlayerBlackOut: ; 3c837 (f:4837)
 	res 5, a
 	ld [$d732], a
 	call ClearScreen
+	ld a, [W_CURMAP]
+	jr nz, .notBattleFactory
+	; update win streak
+	xor a
+	ld [W_CURSTREAK], a
+	ld [W_STARTBATTLE], a
+	ld [W_INCHALLENGE], a
+	ld [W_CURCLASS], a
+.notBattleFactory
 	scf
 	ret
 
@@ -61466,6 +61796,13 @@ Func_3eb01: ; 3eb01 (f:6b01)
 	ld a, [hli]
 	ld b, [hl]
 	jr nz, .asm_3eb33
+	ld a, [W_CURMAP]
+	cp BATTLE_FACTORY
+	jr nz, .notBattleFactory
+	ld a, $ff
+	ld b, $ff
+	jr .asm_3eb33
+.notBattleFactory
 	ld a, [W_ISINBATTLE] ; $d057
 	cp $2
 	ld a, $98
@@ -61576,6 +61913,24 @@ Func_3eb01: ; 3eb01 (f:6b01)
 	dec de
 	xor a
 	ld [$cee9], a
+	ld a, [W_CURMAP]
+	cp BATTLE_FACTORY
+	jr nz, .writeMovesNormalWay
+	ld a, [W_MOVE1]
+	cp $ff
+	jp z, .writeMovesNormalWay
+	ld [de], a
+	inc de
+	ld a, [W_MOVE2]
+	ld [de], a
+	inc de
+	ld a, [W_MOVE3]
+	ld [de], a
+	inc de
+	ld a, [W_MOVE4]
+	ld [de], a
+	jr .asm_3ebca
+.writeMovesNormalWay
 	ld a, $3e
 	call Predef ; indirect jump to WriteMonMoves (3afb8 (e:6fb8))
 .asm_3ebca
@@ -62131,9 +62486,18 @@ asm_3ef3d: ; 3ef3d (f:6f3d)
 	jp c, Func_3ef8b
 	ld [W_TRAINERCLASS], a ; $d031
 	call Func_3566
+	ld a, [W_INCHALLENGE]
+	cp $1
+	jr z, .inNormalChallenge
 	ld hl, ReadTrainer
 	ld b, BANK(ReadTrainer)
 	call Bankswitch ; indirect jump to ReadTrainer (39c53 (e:5c53))
+	jr .past
+.inNormalChallenge
+	ld hl, InitTrainer
+	ld b, BANK(InitTrainer)
+	call Bankswitch ; indirect jump to InitTrainer (39c53 (e:5c53))
+.past
 	call Func_3ec32
 	call Func_3f04b
 	xor a
@@ -81948,6 +82312,9 @@ FuchsiaHouse3Blocks: ; 5523f (15:523f)
 	INCBIN "maps/fuchsiahouse3.blk"
 
 Func_5524f: ; 5524f (15:524f)
+	ld a, [W_CURMAP]
+	cp BATTLE_FACTORY
+	ret z
 	ld a, [W_ISLINKBATTLE] ; $d12b
 	cp $4
 	ret z
@@ -120865,3 +121232,2134 @@ RandomTeamClass1:
 	db BEEDRILL
 	db RATTATA
 	db PIDGEOTTO
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+BattleFactory_h:
+	db $13 ; tileset
+	db BATTLE_FACTORY_HEIGHT, BATTLE_FACTORY_WIDTH ; dimensions (y, x)
+	dw BattleFactoryBlocks, BattleFactoryTextPointers, BattleFactoryScript ; blocks, texts, scripts
+	db $00 ; connections
+	dw BattleFactoryObject ; objects
+
+BattleFactoryBlocks:
+	INCBIN "maps/battlefactory.blk"
+
+BattleFactoryTextPointers:
+	dw BattleFactoryText1
+	dw BattleFactoryReceptionist
+	dw BattleFactoryGuide
+	dw BattleFactoryText9
+	dw BattleFactoryTextA
+	dw BattleFactoryTextB
+	dw BattleFactoryTextC
+	dw BattleFactoryWinsText
+	dw BattleFactoryBestText
+	dw BattleLoadingText
+	dw EmptyComputerText
+	dw UsedComputerText
+	dw ComputerDoneText
+	dw SpecialOpponentText
+
+BattleFactoryScript:
+	call EnableAutoTextBoxDrawing
+	ld hl, BattleFactoryScriptPointers
+	ld a, [W_BATTLEFACTORYCURSCRIPT]
+ 	jp CallFunctionInTable
+
+BattleFactoryScriptPointers:
+	dw BattleFactoryScript0
+	dw BattleFactoryScript1
+	dw BattleFactoryScript2
+ 
+BattleFactoryScript0:
+	ld a, [W_STARTBATTLE]
+	and a
+	ret z
+	ld a, $ff
+	ld [wJoypadForbiddenButtonsMask], a
+	ld hl, $ccd3
+	ld de, FactoryMovementData
+	call DecodeRLEList
+	dec a
+	ld [$cd38], a
+	call Func_3486
+	ld a, 1
+	ld [W_BATTLEFACTORYCURSCRIPT], a
+	ret
+
+BattleFactoryScript1:
+	ld a, [$cd38]
+	and a
+	ret nz
+	call Delay3
+	ld a, $fc
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, $a
+	ld [$ff00+$8c], a
+	call DisplayTextID
+	call Delay3
+	xor a
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, 2
+	ld [W_BATTLEFACTORYCURSCRIPT], a
+	ret
+
+BattleFactoryScript2:
+	call FightTrainer
+	ld a, [W_CURSTREAK]
+	and a
+	jr nz, .wonBattle
+	xor a
+	ld [W_BATTLEFACTORYCURSCRIPT], a
+	ret
+.wonBattle
+	ld a, [W_INCHALLENGE]
+	cp $1
+	jr z, .stillGoing
+	xor a
+	ld [W_BATTLEFACTORYCURSCRIPT], a
+	ret
+.stillGoing
+	ld a, [W_CURSTREAK]
+	ld c, 0
+.divisionLoop7
+	cp 7
+	jr c, .divisionDone7
+	sub 7
+	inc c
+	jr .divisionLoop7
+.divisionDone7
+	cp 6
+	jr nz, .normalTrainer
+	ld a, c
+	cp 9
+	jr nc, .normalTrainer
+	cp 2
+	jr c, .normalTrainer
+	ld a, $e
+	ld [$ff00+$8c], a
+	jr .displayText
+.normalTrainer
+	ld a, $a
+	ld [$ff00+$8c], a
+.displayText
+	call DisplayTextID
+	call Delay3
+	ld a, 2
+	ld [W_BATTLEFACTORYCURSCRIPT], a
+	ret
+
+FactoryMovementData:
+	db $40, 1 ; right x4
+	db $10, 6 ; up x1
+	db $FF
+
+BattleLoadingText:
+	TX_FAR _BattleLoadingText
+	db "@"
+
+
+BattleFactoryText1: ; (17:656c)
+	db $08 ; asm
+	ld a, [W_INCHALLENGE]
+	cp $1
+	jr nz, .askToStart
+	ld hl, AlreadyStartedText
+	call PrintText
+	jp TextScriptEnd
+.askToStart
+	ld hl, BattleFactoryText2
+	call PrintText
+	call YesNoChoice
+	ld a, [$cc26]
+	and a
+	jr z, .saidYes
+	ld hl, BattleFactoryText4
+	call PrintText
+	jp TextScriptEnd
+.saidYes:
+	ld hl, BattleFactoryText3
+	call PrintText
+	call ClearParty
+	call FillMonChoices
+	call SaveScreenTilesToBuffer2
+	call ShowFactoryMon
+	call LoadScreenTilesFromBuffer2
+	call UpdateSprites
+	ld hl, FinishedPickingMonsText
+	call PrintText
+	ld a, $1
+	ld [W_INCHALLENGE], a
+	jp TextScriptEnd
+
+FightTrainer:
+	call PickTrainerClass
+	add $C8 ; add $c8 to trainer class id
+	ld [W_CUROPPONENT], a ; $d059
+	call Delay3
+	ld hl, W_OPTIONS ; $d355
+	set 6, [hl] ; no switching pokemon
+	ld a, $2c
+	call Predef ; indirect jump to Func_3ef18 (3ef18 (f:6f18)) Runs the battle.
+	ld a, $7
+	call Predef ; healparty
+	call AfterBattle
+	ret
+
+PickTrainerClass:
+	; is it a special battle?
+	ld a, [W_CURSTREAK]
+.divisionLoop3
+	cp 7
+	jr c, .divisionDone3
+	sub 7
+	jr .divisionLoop3
+.divisionDone3
+	cp 6
+	jr z, .specialTrainer
+.normalTrainer
+	call GenRandom
+	cp 29 ; length of NormalTrainerClasses
+	jr nc, .normalTrainer ; is GenRandom result isn't a valid index
+	ld hl, NormalTrainerClasses
+	ld c, a
+	ld b, 0
+	add hl, bc
+	ld a, [hl]
+	ret
+.specialTrainer
+	ld a, [W_CURCLASS]
+	cp 2 ; first class to have special trainers at the end
+	jr c, .noSpecialTrainer
+	cp 9 ; last class to have special trainers at the end (+1)
+	jr nc, .noSpecialTrainer
+	ld hl, SpecialTrainerClasses
+	sub 2 ; subtract first class to have special trainers
+	ld c, a
+	ld b, 0
+	add hl, bc
+	ld a, [hl]
+	ret
+.noSpecialTrainer
+	jr .normalTrainer
+
+NormalTrainerClasses:
+; list of trainers that can appear in normal factory battles
+	db YOUNGSTER    
+	db BUG_CATCHER  
+	db LASS         
+	db SAILOR       
+	db JR__TRAINER_M
+	db JR__TRAINER_F
+	db POKEMANIAC   
+	db SUPER_NERD   
+	db HIKER        
+	db BIKER        
+	db BURGLAR      
+	db ENGINEER     
+	db JUGGLER_X    
+	db FISHER       
+	db SWIMMER      
+	db CUE_BALL     
+	db GAMBLER      
+	db BEAUTY       
+	db PSYCHIC_TR   
+	db ROCKER       
+	db JUGGLER      
+	db TAMER        
+	db BIRD_KEEPER  
+	db BLACKBELT    
+	db SCIENTIST    
+	db COOLTRAINER_M
+	db COOLTRAINER_F
+	db CHANNELER
+	db GENTLEMAN
+
+SpecialTrainerClasses:
+; these are the "factory heads" in order
+; they appear every 7 battles starting at 21 straight victories
+	db BROCK ; 2 (class in which you encounter them)
+	db KOGA ; 3
+	db BLAINE ; 4
+	db GIOVANNI ; 5
+	db LORELEI ; 6
+	db LANCE ; 7
+	db PROF_OAK ; 8
+
+InitTrainer:
+; set [wEnemyPartyCount] to 0, [$D89D] to FF
+; XXX first is total enemy pokemon?
+; XXX second is species of first pokemon?
+	ld hl,wEnemyPartyCount
+	xor a
+	ld [hli],a
+	dec a
+	ld [hl],a
+	ld a, [W_CURCLASS]
+	cp 2 ; first class for special trainers
+	jp c, .normalTrainerPicks ; is there even a chance for special trainer?
+	cp 9
+	jp nc, .normalTrainerPicks ; is it past the last special trainer class?
+	ld a, [W_CURSTREAK] ; see if this is the last battle
+.divisionLoop4
+	cp 7
+	jp c, .doneDividing4
+	sub 7
+	jr .divisionLoop4
+.doneDividing4
+	cp 6
+	jr nz, .normalTrainerPicks ; is it the last battle?
+	push hl
+	push bc
+	call SpecialPickMons
+	pop bc
+	pop hl
+	jr .FinishUp
+.normalTrainerPicks
+	ld b, 3
+.monLoop
+	call PickMon
+	ld hl, wEnemyPartyCount
+	ld e, [hl]
+	inc hl
+.checkTrainerSafePick
+	cp [hl]
+	jr z, .monLoop
+	inc hl
+	dec e
+	jr nz, .checkTrainerSafePick
+	ld hl, W_PARTYMON1
+	ld e, 3
+.checkSafePick
+	cp [hl]
+	jr z, .monLoop
+	inc hl
+	dec e
+	jr nz, .checkSafePick
+.safePick	
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	push hl
+	push bc
+	call AddPokemonToParty
+	pop bc
+	pop hl
+	dec b
+	jr nz, .monLoop
+.FinishUp ; XXX this needs documenting
+	xor a       ; clear D079-D07B
+	ld de,$D079
+	ld [de],a
+	inc de
+	ld [de],a
+	inc de
+	ld [de],a
+	ld a,[W_CURENEMYLVL]
+	ld b,a
+.LastLoop
+	ld hl,$D047
+	ld c,2
+	push bc
+	ld a,$B
+	call Predef
+	pop bc
+	inc de
+	inc de
+	dec b
+	jr nz,.LastLoop
+ 	ret
+
+AfterBattle:
+	call GBPalWhiteOutWithDelay3
+	ld hl, $cfc4
+	ld a, [hl]
+	push af
+	push hl
+	res 0, [hl]
+	xor a
+	ld [$d72d], a
+	dec a
+	ld [$d42f], a
+	call LoadMapData
+	ld b, BANK(Func_c335)
+	ld hl, Func_c335
+	call Bankswitch ; indirect jump to Func_c335 (c335 (3:4335))
+	ld a, 1
+	ld [H_AUTOBGTRANSFERENABLED], a
+	pop hl
+	pop af
+	ld [hl], a
+	call GBFadeIn2
+ 	ret
+ 	
+; loads data of some trainer on the current map and plays pre-battle music
+; a contains trainer class
+; [hl] contains a list of trainer's mons
+EngageMapTrainer2: ; 336a (0:336a)
+	ld [wEngagedTrainerClass], a
+	ld a, [hl]     ; load trainer mon set
+	ld [wEnemyMonAttackMod], a ; $cd2e
+	jp PlayTrainerMusic
+
+BattleFactoryReceptionist:
+	db $08 ; asm
+	ld a, [W_INCHALLENGE]
+	cp $1
+	jr z, .battleTrainer
+	ld hl, NotStartedText
+	call PrintText
+	jr .endReceptionist
+.battleTrainer
+	ld hl, ReadyBattleText
+	call PrintText
+	call YesNoChoice
+	ld a, [$cc26]
+	and a
+	jr z, .saidStartBattle
+	ld hl, NotYetText
+	call PrintText
+	jr .endReceptionist
+.saidStartBattle
+	ld a, [W_CURCLASS]
+	cp 2
+	jr c, .normalGoodLuckText
+	cp 9
+	jr nc, .normalGoodLuckText
+	ld a, [W_CURSTREAK]
+.divisionLoop5
+	cp 7
+	jr c, .divisionDone5
+	sub 7
+	jr .divisionLoop5
+.divisionDone5
+	cp 6
+	jr nz, .normalGoodLuckText
+	ld hl, SpecialStartNowText
+	call PrintText
+	jr .setStartFlag
+.normalGoodLuckText
+	ld hl, StartNowText
+	call PrintText
+.setStartFlag
+	ld a, $1
+	ld [W_STARTBATTLE], a
+.endReceptionist
+	jp TextScriptEnd
+
+BattleFactoryGuide:
+	db $08 ; asm
+	ld hl, GuideIntro
+	call PrintText
+	call YesNoChoice
+	ld a, [$cc26]
+	and a
+	jr z, .saidYesGuide
+	ld hl, GuideNoText
+	call PrintText
+	jr .doneGuide
+.saidYesGuide
+	ld hl, GuideText
+	call PrintText
+.doneGuide
+	jp TextScriptEnd
+
+BattleFactoryText2:
+	TX_FAR _BattleFactoryText2
+ 	db "@"
+
+BattleFactoryText3:
+	TX_FAR _BattleFactoryText3
+	db "@"
+
+BattleFactoryText4:
+	TX_FAR _BattleFactoryText4
+	db "@"
+
+FinishedPickingMonsText:
+	TX_FAR _FinishedPickingMonsText
+	db "@"
+
+BattleFactoryWinsText:
+	TX_FAR _BattleFactoryWinsText
+	db "@"
+
+BattleFactoryBestText:
+	TX_FAR _BattleFactoryBestText
+	db "@"
+
+AlreadyStartedText:
+	TX_FAR _AlreadyStartedText
+	db "@"
+
+NotStartedText:
+	TX_FAR _NotStartedText
+	db "@"
+
+ReadyBattleText:
+	TX_FAR _ReadyBattleText
+	db "@"
+
+NotYetText:
+	TX_FAR _NotYetText
+	db "@"
+
+StartNowText:
+	TX_FAR _StartNowText
+	db "@"
+
+SpecialStartNowText:
+	TX_FAR _SpecialStartNowText
+	db "@"
+
+GuideIntro:
+	TX_FAR _GuideIntro
+	db "@"
+
+GuideText:
+	TX_FAR _GuideText
+	db "@"
+
+GuideNoText:
+	TX_FAR _GuideNoText
+	db "@"
+
+EmptyComputerText:
+	TX_FAR _EmptyComputerText
+	db "@"
+
+UsedComputerText:
+	TX_FAR _UsedComputerText
+	db "@"
+
+BattleFactoryText9:
+	TX_FAR _BattleFactoryText9
+	db "@"
+
+BattleFactoryTextA:
+	TX_FAR _BattleFactoryTextA
+	db "@"
+
+BattleFactoryTextB:
+	TX_FAR _BattleFactoryTextB
+	db "@"
+
+BattleFactoryTextC:
+	TX_FAR _BattleFactoryTextC
+	db "@"
+
+ComputerDoneText:
+	TX_FAR _ComputerDoneText
+	db "@"
+
+SpecialOpponentText:
+	TX_FAR _SpecialOpponentText
+	db "@"
+
+ClearParty:
+; clears all pokemon from party
+.clearloop
+	ld a, [W_NUMINPARTY]
+	cp $0
+	jr z, .doneClearing
+	xor a
+	ld [wWhichPokemon], a
+	ld [$cf95], a
+	call RemovePokemon
+	jr .clearloop
+.doneClearing
+	ret
+
+FillMonChoices:
+; places 6 random pokemon
+	xor a
+	ld [W_NUMINBOX], a ; TODO: this doesn't fix it?
+	ld a, $ff
+	ld [W_NUMINBOX+1], a
+	ld [W_NUMINBOX+2], a
+	ld [W_NUMINBOX+3], a
+	ld [W_NUMINBOX+4], a
+	ld [W_NUMINBOX+5], a
+	ld [W_NUMINBOX+6], a
+	ld b, 6 ; num mons to place
+.fillLoop
+	push bc
+	call PickMon
+	pop bc
+	ld hl, W_NUMINBOX+1
+	ld c, 6
+.notPickedLoop
+	cp [hl]
+	jp z, .fillLoop
+	inc hl
+	dec c
+	jp nz, .notPickedLoop
+.safePick
+	ld [$cf91], a
+	ld a, 50 ; mon level
+	ld [$d127], a
+	call FillMonData
+	dec b
+	jp nz, .fillLoop
+	ret
+
+LASDDF:
+	db $78, $78, $7a, $77
+
+PickMon:
+; randomly chooses a mon
+; mon id stored in a
+	push bc
+	push de
+	push hl
+	ld b, 0
+	ld a, [W_CURCLASS]
+	cp 9
+	jr c, .haveCorrectClass
+	ld a, 8 ; last class
+.haveCorrectClass	
+	ld c, a
+	sla c ; multiply by 2
+	ld hl, MonClassPointers
+	add hl, bc ; hl contains class pointer
+	ld a, [hli]
+	ld e, a
+	ld a, [hl]
+	ld d, a
+	ld h, d
+	ld l, e
+	ld a, [hli] ; num mons in class list
+	ld b, a
+.getValidRandom
+	call GenRandom
+	cp b
+	jr c, .gotValidRandom
+	jr .getValidRandom
+.gotValidRandom
+	push de
+	ld c, a
+	ld b, 0
+	ld d, 5
+.addingLoop
+	add hl, bc
+	dec d
+	jr z, .finishedAdding
+	jr .addingLoop
+.finishedAdding
+	pop de
+	; hl now contains pointer to [mon id][moves_pointer]
+	ld a, [hli] ; a contains mon id
+	ld d, a
+.readMoves
+	ld a, [hli]
+	ld [W_MOVE1], a
+	ld a, [hli]
+	ld [W_MOVE2], a
+	ld a, [hli]
+	ld [W_MOVE3], a
+	ld a, [hl]
+	ld [W_MOVE4], a
+.done
+	ld a, d ; place mon id in a
+	pop hl
+	pop de
+	pop bc
+	ret
+
+SpecialPickMons:
+	ld a, [W_TRAINERCLASS]
+	ld hl, SpecialPickMonsFunctionPointers
+	ld c, 3
+	ld b, 0
+.searchLoop2
+	cp [hl]
+	jp z, .foundPickPointer
+	add hl, bc
+	jr .searchLoop2
+.foundPickPointer
+	inc hl
+	ld a, [hli]
+	ld e, a
+	ld a, [hl]
+	ld d, a ; de contains PickMons pointer
+	ld h, d
+	ld l, e
+	jp [hl] ; jump to the PickMons function
+
+SpecialPickMonsFunctionPointers:
+	dbw BROCK,     BrockPickMons
+	dbw KOGA,      KogaPickMons
+	dbw BLAINE,    BlainePickMons
+	dbw GIOVANNI,  GioPickMons
+	dbw LORELEI,   LoreleiPickMons
+	dbw LANCE,     LancePickMons
+	dbw PROF_OAK,  OakPickMons
+
+BrockPickMons:
+; vulpix, onix, magnemite/geodude
+	ld a, VULPIX
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, FLAMETHROWER
+	ld [W_MOVE1], a
+	ld a, CONFUSE_RAY
+	ld [W_MOVE2], a
+	ld a, QUICK_ATTACK
+	ld [W_MOVE3], a
+	ld a, DOUBLE_TEAM
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	ld a, ONIX
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, ROCK_THROW
+	ld [W_MOVE1], a
+	ld a, DIG
+	ld [W_MOVE2], a
+	ld a, SLAM
+	ld [W_MOVE3], a
+	ld a, SCREECH
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	call GenRandom
+	cp 128
+	jr c, .secondMon
+	ld a, MAGNEMITE
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, THUNDERSHOCK
+	ld [W_MOVE1], a
+	ld a, THUNDER_WAVE
+	ld [W_MOVE2], a
+	ld a, SWIFT
+	ld [W_MOVE3], a
+	ld a, SUPERSONIC
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	ret
+.secondMon
+	ld a, GEODUDE
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, EXPLOSION
+	ld [W_MOVE1], a
+	ld a, ROCK_THROW
+	ld [W_MOVE2], a
+	ld a, STRENGTH
+	ld [W_MOVE3], a
+	ld a, HARDEN
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	ret
+
+KogaPickMons:
+	ld a, WEEZING
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, SLUDGE
+	ld [W_MOVE1], a
+	ld a, SELFDESTRUCT
+	ld [W_MOVE2], a
+	ld a, TOXIC
+	ld [W_MOVE3], a
+	ld a, SMOKESCREEN
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	ld a, GOLBAT
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, WING_ATTACK
+	ld [W_MOVE1], a
+	ld a, LEECH_LIFE
+	ld [W_MOVE2], a
+	ld a, TOXIC
+	ld [W_MOVE3], a
+	ld a, CONFUSE_RAY
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	call GenRandom
+	cp 64
+	jr c, .secondMon
+	ld a, VENOMOTH
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, PSYWAVE
+	ld [W_MOVE1], a
+	ld a, TOXIC
+	ld [W_MOVE2], a
+	ld a, SLEEP_POWDER
+	ld [W_MOVE3], a
+	ld a, POISONPOWDER
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	ret
+.secondMon
+	ld a, SCYTHER
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, SLASH
+	ld [W_MOVE1], a
+	ld a, SWORDS_DANCE
+	ld [W_MOVE2], a
+	ld a, DOUBLE_TEAM
+	ld [W_MOVE3], a
+	ld a, TOXIC
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	ret
+
+BlainePickMons:
+	ld a, NINETALES
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, FIRE_BLAST
+	ld [W_MOVE1], a
+	ld a, CONFUSE_RAY
+	ld [W_MOVE2], a
+	ld a, TAKE_DOWN
+	ld [W_MOVE3], a
+	ld a, DIG
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	ld a, RHYDON
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, EARTHQUAKE
+	ld [W_MOVE1], a
+	ld a, HORN_DRILL
+	ld [W_MOVE2], a
+	ld a, TAKE_DOWN
+	ld [W_MOVE3], a
+	ld a, FIRE_BLAST
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	ld a, MAGMAR
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, FIRE_BLAST
+	ld [W_MOVE1], a
+	ld a, CONFUSE_RAY
+	ld [W_MOVE2], a
+	ld a, SMOKESCREEN
+	ld [W_MOVE3], a
+	ld a, PSYCHIC_M
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	ret
+
+GioPickMons:
+	ld a, KANGASKHAN
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, MEGA_PUNCH
+	ld [W_MOVE1], a
+	ld a, EARTHQUAKE
+	ld [W_MOVE2], a
+	ld a, DIZZY_PUNCH
+	ld [W_MOVE3], a
+	ld a, SUBMISSION
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	ld a, RHYDON
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, EARTHQUAKE
+	ld [W_MOVE1], a
+	ld a, HORN_DRILL
+	ld [W_MOVE2], a
+	ld a, TAKE_DOWN
+	ld [W_MOVE3], a
+	ld a, FISSURE
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	call GenRandom
+	cp 128
+	jr c, .secondMon
+	ld a, NIDOKING
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, THRASH
+	ld [W_MOVE1], a
+	ld a, TOXIC
+	ld [W_MOVE2], a
+	ld a, SURF
+	ld [W_MOVE3], a
+	ld a, ICE_BEAM
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	ret
+.secondMon
+	ld a, NIDOQUEEN
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, EARTHQUAKE
+	ld [W_MOVE1], a
+	ld a, BODY_SLAM
+	ld [W_MOVE2], a
+	ld a, ROCK_SLIDE
+	ld [W_MOVE3], a
+	ld a, TOXIC
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	ret
+
+LoreleiPickMons:
+	ld a, DEWGONG
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, ICE_BEAM
+	ld [W_MOVE1], a
+	ld a, SURF
+	ld [W_MOVE2], a
+	ld a, REST
+	ld [W_MOVE3], a
+	ld a, TAKE_DOWN
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	ld a, LAPRAS
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, ICE_BEAM
+	ld [W_MOVE1], a
+	ld a, SURF
+	ld [W_MOVE2], a
+	ld a, THUNDERBOLT
+	ld [W_MOVE3], a
+	ld a, SING
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	call GenRandom
+	cp 128
+	jr c, .secondMon
+	ld a, CLOYSTER
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, SPIKE_CANNON
+	ld [W_MOVE1], a
+	ld a, ICE_BEAM
+	ld [W_MOVE2], a
+	ld a, WITHDRAW
+	ld [W_MOVE3], a
+	ld a, DOUBLE_TEAM
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	ret
+.secondMon
+	ld a, JYNX
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, ICE_PUNCH
+	ld [W_MOVE1], a
+	ld a, LOVELY_KISS
+	ld [W_MOVE2], a
+	ld a, THRASH
+	ld [W_MOVE3], a
+	ld a, DOUBLE_TEAM
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	ret
+
+LancePickMons:
+	ld a, DRAGONITE
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, HYPER_BEAM
+	ld [W_MOVE1], a
+	ld a, THUNDERBOLT
+	ld [W_MOVE2], a
+	ld a, SURF
+	ld [W_MOVE3], a
+	ld a, ICE_BEAM
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	ld a, AERODACTYL
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, WING_ATTACK
+	ld [W_MOVE1], a
+	ld a, TAKE_DOWN
+	ld [W_MOVE2], a
+	ld a, ROCK_SLIDE
+	ld [W_MOVE3], a
+	ld a, HYPER_BEAM
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	ld a, CHARIZARD
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, FLAMETHROWER
+	ld [W_MOVE1], a
+	ld a, FLY
+	ld [W_MOVE2], a
+	ld a, HYPER_BEAM
+	ld [W_MOVE3], a
+	ld a, SLASH
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	ret
+
+OakPickMons:
+	ld a, TAUROS
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, EARTHQUAKE
+	ld [W_MOVE1], a
+	ld a, DOUBLE_EDGE
+	ld [W_MOVE2], a
+	ld a, FIRE_BLAST
+	ld [W_MOVE3], a
+	ld a, DOUBLE_TEAM
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	call GenRandom
+	cp 86
+	jr c, .secondMon
+	cp 172
+	jr c, .thirdMon
+	ld a, EXEGGUTOR
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, PSYCHIC_M
+	ld [W_MOVE1], a
+	ld a, MEGA_DRAIN
+	ld [W_MOVE2], a
+	ld a, HYPNOSIS
+	ld [W_MOVE3], a
+	ld a, EGG_BOMB
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	jr .lastMon
+.secondMon
+	ld a, ARCANINE
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, FIRE_BLAST
+	ld [W_MOVE1], a
+	ld a, DOUBLE_EDGE
+	ld [W_MOVE2], a
+	ld a, DIG
+	ld [W_MOVE3], a
+	ld a, DOUBLE_TEAM
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	jr .lastMon
+.thirdMon
+	ld a, GYARADOS
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, SURF
+	ld [W_MOVE1], a
+	ld a, HYPER_BEAM
+	ld [W_MOVE2], a
+	ld a, THUNDER
+	ld [W_MOVE3], a
+	ld a, BLIZZARD
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+.lastMon
+	call GenRandom
+	cp 86
+	jr c, .pickBlastoise
+	cp 172
+	jr c, .pickCharizard
+	ld a, VENUSAUR
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, RAZOR_LEAF
+	ld [W_MOVE1], a
+	ld a, SOLARBEAM
+	ld [W_MOVE2], a
+	ld a, SLEEP_POWDER
+	ld [W_MOVE3], a
+	ld a, TOXIC
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	ret
+.pickBlastoise
+	ld a, BLASTOISE
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, HYDRO_PUMP
+	ld [W_MOVE1], a
+	ld a, BODY_SLAM
+	ld [W_MOVE2], a
+	ld a, ICE_BEAM
+	ld [W_MOVE3], a
+	ld a, EARTHQUAKE
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	ret
+.pickCharizard
+	ld a, CHARIZARD
+	ld [$CF91], a
+	ld a, 1
+	ld [$CC49],a ; $1 for enemy party
+	ld a, FIRE_BLAST
+	ld [W_MOVE1], a
+	ld a, FLY
+	ld [W_MOVE2], a
+	ld a, FLASH
+	ld [W_MOVE3], a
+	ld a, HYPER_BEAM
+	ld [W_MOVE4], a
+	call AddPokemonToParty
+	ret
+
+MonClassPointers:
+	dw MonClass1
+	dw MonClass2
+	dw MonClass3
+	dw MonClass4
+	dw MonClass5
+	dw MonClass6
+	dw MonClass7
+	dw MonClass8
+	dw MonClass9
+
+MonClass1:
+	db 24; num mons in this list
+	db CATERPIE, TACKLE, STRING_SHOT, 0, 0
+	db WEEDLE, POISON_STING, STRING_SHOT, 0, 0
+	db MAGIKARP, TACKLE, 0, 0, 0
+	db ZUBAT, WING_ATTACK, CONFUSE_RAY, BITE, LEECH_LIFE
+	db PIDGEY, WING_ATTACK, QUICK_ATTACK, MIRROR_MOVE, SAND_ATTACK
+	db RATTATA, SUPER_FANG, QUICK_ATTACK, TAIL_WHIP, 0
+	db JIGGLYPUFF, POUND, SING, DISABLE, DEFENSE_CURL
+	db DIGLETT, SCRATCH, SAND_ATTACK, GROWL, 0
+	db SPEAROW, PECK, MIRROR_MOVE, GROWL, LEER
+	db NIDORAN_M, DOUBLE_KICK, HORN_DRILL, POISON_STING, LEER
+	db EKANS, ACID, BITE, SCREECH, WRAP
+	db NIDORAN_F, DOUBLE_KICK, POISON_STING, TAIL_WHIP, FURY_SWIPES
+	db PARAS, SCRATCH, LEECH_LIFE, SPORE, GROWTH
+	db DITTO, TRANSFORM, 0, 0, 0
+	db CHARMANDER, SCRATCH, RAGE, EMBER, LEER
+	db VULPIX, FIRE_SPIN, CONFUSE_RAY, QUICK_ATTACK, TAIL_WHIP
+	db SQUIRTLE, WATER_GUN, BITE, WITHDRAW, TAIL_WHIP
+	db VENONAT, SLEEP_POWDER, POISONPOWDER, LEECH_LIFE, SUPERSONIC
+	db MEOWTH, BITE, PAY_DAY, SCREECH, GROWL
+	db DRATINI, SLAM, THUNDER_WAVE, LEER, WRAP
+	db BULBASAUR, RAZOR_LEAF, LEECH_SEED, GROWTH, POISONPOWDER
+	db ODDISH, ABSORB, ACID, POISONPOWDER, SLEEP_POWDER
+	db CLEFAIRY, METRONOME, DOUBLESLAP, MINIMIZE, DEFENSE_CURL
+	db PIKACHU, THUNDERSHOCK, QUICK_ATTACK, THUNDER_WAVE, TAIL_WHIP
+
+MonClass2:
+	db 31 ; num mons in this list
+	db RATTATA, SUPER_FANG, HYPER_FANG, QUICK_ATTACK, TAIL_WHIP
+	db DIGLETT, SLASH, DIG, SAND_ATTACK, GROWL
+	db VULPIX, FLAMETHROWER, CONFUSE_RAY, QUICK_ATTACK, TAIL_WHIP
+	db MANKEY, KARATE_CHOP, SEISMIC_TOSS, LEER, LOW_KICK
+	db POLIWAG, WATER_GUN, BODY_SLAM, AMNESIA, HYPNOSIS
+	db MACHOP, KARATE_CHOP, SEISMIC_TOSS, LEER, LOW_KICK
+	db BELLSPROUT, SLAM, RAZOR_LEAF, ACID, WRAP
+	db BELLSPROUT, RAZOR_LEAF, STUN_SPORE, SLEEP_POWDER, POISONPOWDER
+	db GEODUDE, ROCK_THROW, EARTHQUAKE, HARDEN, SELFDESTRUCT
+	db MAGNEMITE, THUNDERSHOCK, SWIFT, SUPERSONIC, SCREECH
+	db CUBONE, BONE_CLUB, HEADBUTT, LEER, RAGE
+	db HORSEA, WATER_GUN, SWIFT, SMOKESCREEN, LEER
+	db SLOWPOKE, WATER_GUN, HEADBUTT, AMNESIA, DISABLE
+	db DODUO, DRILL_PECK, FURY_ATTACK, GROWL, DOUBLE_TEAM
+	db GRIMER, SLUDGE, POUND, POISON_GAS, DISABLE
+	db GASTLY, HYPNOSIS, NIGHT_SHADE, CONFUSE_RAY, LICK
+	db VOLTORB, SWIFT, SELFDESTRUCT, LIGHT_SCREEN, SCREECH
+	db SANDSHREW, SLASH, POISON_STING, SAND_ATTACK, FURY_SWIPES
+	db GROWLITHE, FLAMETHROWER, BITE, LEER, AGILITY
+	db SEEL, AURORA_BEAM, HEADBUTT, REST, GROWL
+	db SHELLDER, CLAMP, AURORA_BEAM, SUPERSONIC, WITHDRAW
+	db EXEGGCUTE, SLEEP_POWDER, LEECH_SEED, BARRAGE, POISONPOWDER
+	db EXEGGCUTE, SLEEP_POWDER, POISONPOWDER, LEECH_SEED, SOLARBEAM
+	db EEVEE, BITE, QUICK_ATTACK, TAIL_WHIP, SAND_ATTACK
+	db TENTACOOL, WATER_GUN, ACID, SUPERSONIC, SCREECH
+	db DROWZEE, CONFUSION, HEADBUTT, DISABLE, HYPNOSIS
+	db GOLDEEN, WATERFALL, HORN_DRILL, SUPERSONIC, TAIL_WHIP
+	db STARYU, WATER_GUN, SWIFT, HARDEN, MINIMIZE
+	db FARFETCH_D, SLASH, PECK, SWORDS_DANCE, LEER
+	db KOFFING, SLUDGE, SMOKESCREEN, SELFDESTRUCT, TACKLE
+	db KRABBY, STOMP, GUILLOTINE, BUBBLE, HARDEN
+
+MonClass3:
+	db 30
+	db JIGGLYPUFF, BODY_SLAM, SING, DISABLE, DEFENSE_CURL
+	db SPEAROW, DRILL_PECK, MIRROR_MOVE, GROWL, LEER
+	db CHARMANDER, FLAMETHROWER, SLASH, GROWL, LEER
+	db SQUIRTLE, SURF, BITE, WITHDRAW, TAIL_WHIP
+	db BULBASAUR, RAZOR_LEAF, MEGA_DRAIN, SLEEP_POWDER, POISONPOWDER
+	db CLEFAIRY, METRONOME, BODY_SLAM, SING, MINIMIZE
+	db PIKACHU, THUNDERBOLT, SLAM, THUNDER_WAVE, TAIL_WHIP
+	db DIGLETT, SLASH, DIG, SAND_ATTACK, DOUBLE_TEAM
+	db MAGNEMITE, THUNDERBOLT, SWIFT, SUPERSONIC, LIGHT_SCREEN
+	db KRABBY, CRABHAMMER, GUILLOTINE, BUBBLEBEAM, HARDEN
+	db KOFFING, SLUDGE, SMOKESCREEN, SELFDESTRUCT, TACKLE
+	db OMANYTE, SPIKE_CANNON, BUBBLEBEAM, HORN_ATTACK, LEER
+	db KABUTO, SLASH, BUBBLEBEAM, ABSORB, LEER
+	db BUTTERFREE, CONFUSION, SLEEP_POWDER, POISONPOWDER, GUST
+	db BEEDRILL, TWINEEDLE, SWIFT, TOXIC, FOCUS_ENERGY
+	db NIDORINA, POISON_STING, BITE, DOUBLE_KICK, TAIL_WHIP
+	db NIDORINO, POISON_STING, HORN_ATTACK, DOUBLE_KICK, FOCUS_ENERGY
+	db LICKITUNG, SLAM, STOMP, SCREECH, DISABLE
+	db PORYGON, RECOVER, PSYBEAM, REFLECT, MIMIC
+	db RHYHORN, HORN_DRILL, HORN_ATTACK, STOMP, LEER
+	db GROWLITHE, FLAMETHROWER, TAKE_DOWN, DOUBLE_TEAM, LEER
+	db GASTLY, HYPNOSIS, NIGHT_SHADE, CONFUSE_RAY, LICK
+	db KOFFING, SLUDGE, SMOKESCREEN, SELFDESTRUCT, TOXIC
+	db STARYU, BUBBLEBEAM, SWIFT, RECOVER, MINIMIZE
+	db SLOWPOKE, CONFUSION, HEADBUTT, AMNESIA, WATER_GUN
+	db DODUO, DRILL_PECK, FURY_ATTACK, GROWL, DOUBLE_TEAM
+	db FARFETCH_D, SLASH, PECK, SWORDS_DANCE, LEER
+	db MACHOP, KARATE_CHOP, SUBMISSION, LEER, DOUBLE_TEAM
+	db EEVEE, BODY_SLAM, SWIFT, TAIL_WHIP, SAND_ATTACK
+	db EXEGGCUTE, SLEEP_POWDER, POISONPOWDER, LEECH_SEED, SOLARBEAM
+
+MonClass4:
+	db 34
+	db BUTTERFREE, PSYBEAM, SLEEP_POWDER, POISONPOWDER, GUST
+	db LICKITUNG, BODY_SLAM, TAKE_DOWN, STOMP, DISABLE
+	db PORYGON, RECOVER, PSYBEAM, TRI_ATTACK, MIMIC
+	db SLOWPOKE, CONFUSION, HEADBUTT, AMNESIA, WATER_GUN
+	db RHYHORN, HORN_DRILL, HORN_ATTACK, STOMP, LEER
+	db GLOOM, PETAL_DANCE, ACID, SLEEP_POWDER, POISONPOWDER
+	db IVYSAUR, RAZOR_LEAF, SLEEP_POWDER, GROWTH, LEECH_SEED
+	db CHARMELEON, FLAMETHROWER, SLASH, LEER, DOUBLE_TEAM
+	db WARTORTLE, SURF, BODY_SLAM, WITHDRAW, SKULL_BASH
+	db KADABRA, PSYBEAM, RECOVER, DISABLE, CONFUSION
+	db POLIWHIRL, SURF, MEGA_PUNCH, AMNESIA, HYPNOSIS
+	db ONIX, SLAM, ROCK_SLIDE, HARDEN, SCREECH
+	db MR_MIME, CONFUSION, LIGHT_SCREEN, BARRIER, SUBSTITUTE
+	db JYNX, ICE_PUNCH, LICK, LOVELY_KISS, DOUBLE_TEAM
+	db RATICATE, HYPER_FANG, QUICK_ATTACK, TAIL_WHIP, SUPER_FANG
+	db PARASECT, SLASH, SPORE, LEECH_LIFE, STUN_SPORE
+	db MACHOKE, KARATE_CHOP, SUBMISSION, LEER, DOUBLE_TEAM
+	db WEEPINBELL, SLAM, RAZOR_LEAF, ACID, WRAP
+	db WEEPINBELL, RAZOR_LEAF, STUN_SPORE, SLEEP_POWDER, POISONPOWDER
+	db GRAVELER, ROCK_THROW, EARTHQUAKE, HARDEN, SELFDESTRUCT
+	db PONYTA, TAKE_DOWN, EMBER, STOMP, DOUBLE_TEAM
+	db MAROWAK, BONEMERANG, HEADBUTT, LEER, COUNTER
+	db HITMONLEE, DOUBLE_KICK, JUMP_KICK, FOCUS_ENERGY, MEDITATE
+	db HITMONCHAN, COMET_PUNCH, MEGA_PUNCH, DOUBLE_TEAM, COUNTER
+	db WIGGLYTUFF, BODY_SLAM, SING, DISABLE, MIMIC
+	db OMANYTE, SPIKE_CANNON, BUBBLEBEAM, HORN_ATTACK, LEER
+	db KABUTO, SLASH, BUBBLEBEAM, ABSORB, LEER
+	db PIDGEOTTO, WING_ATTACK, FLY, QUICK_ATTACK, SAND_ATTACK
+	db PIDGEOTTO, WING_ATTACK, FLY, QUICK_ATTACK, DOUBLE_TEAM
+	db DODUO, DRILL_PECK, TRI_ATTACK, DOUBLE_TEAM, FLY
+	db GASTLY, HYPNOSIS, NIGHT_SHADE, CONFUSE_RAY, DREAM_EATER
+	db GRIMER, SLUDGE, ACID_ARMOR, TOXIC, BODY_SLAM	
+	db GRIMER, SLUDGE, ACID_ARMOR, TOXIC, EXPLOSION
+	db KRABBY, SURF, CRABHAMMER, STOMP, GUILLOTINE
+
+MonClass5:
+	db 32
+	db POLIWHIRL, SURF, MEGA_PUNCH, AMNESIA, HYPNOSIS
+	db JYNX, ICE_PUNCH, LICK, LOVELY_KISS, THRASH
+	db IVYSAUR, RAZOR_LEAF, SLEEP_POWDER, GROWTH, MEGA_DRAIN
+	db CHARMELEON, FLAMETHROWER, SLASH, LEER, DOUBLE_TEAM
+	db WARTORTLE, SURF, BODY_SLAM, WITHDRAW, SKULL_BASH
+	db RATICATE, HYPER_FANG, QUICK_ATTACK, TAIL_WHIP, SUPER_FANG
+	db PARASECT, SLASH, SPORE, LEECH_LIFE, STUN_SPORE
+	db MACHOKE, KARATE_CHOP, SUBMISSION, LEER, DOUBLE_TEAM
+	db WEEPINBELL, SLAM, RAZOR_LEAF, ACID, WRAP
+	db WEEPINBELL, RAZOR_LEAF, STUN_SPORE, SLEEP_POWDER, POISONPOWDER
+	db GRAVELER, ROCK_THROW, EARTHQUAKE, HARDEN, SELFDESTRUCT
+	db PONYTA, TAKE_DOWN, EMBER, STOMP, DOUBLE_TEAM
+	db MAROWAK, BONEMERANG, HEADBUTT, LEER, COUNTER
+	db HITMONLEE, DOUBLE_KICK, JUMP_KICK, FOCUS_ENERGY, MEDITATE
+	db HITMONCHAN, COMET_PUNCH, MEGA_PUNCH, DOUBLE_TEAM, COUNTER
+	db HITMONCHAN, THUNDERPUNCH, FIRE_PUNCH, ICE_PUNCH, COMET_PUNCH
+	db WIGGLYTUFF, BODY_SLAM, SING, DISABLE, MIMIC
+	db HAUNTER, HYPNOSIS, CONFUSE_RAY, NIGHT_SHADE, DREAM_EATER
+	db HAUNTER, TOXIC, MEGA_DRAIN, HYPNOSIS, NIGHT_SHADE
+	db DRAGONAIR, DRAGON_RAGE, SLAM, THUNDER_WAVE, TAKE_DOWN
+	db DUGTRIO, EARTHQUAKE, SLASH, SAND_ATTACK, DOUBLE_TEAM
+	db DUGTRIO, DIG, SLASH, SAND_ATTACK, DOUBLE_TEAM
+	db ARBOK, ACID, GLARE, TAKE_DOWN, SCREECH
+	db VENOMOTH, PSYWAVE, POISONPOWDER, LEECH_LIFE, SLEEP_POWDER
+	db VENOMOTH, TOXIC, CONFUSION, LEECH_LIFE, SUPERSONIC
+	db PERSIAN, SLASH, SCREECH, SWIFT, DOUBLE_TEAM
+	db FEAROW, DRILL_PECK, FLY, MIRROR_MOVE, DOUBLE_TEAM
+	db CLEFABLE, METRONOME, MEGA_PUNCH, SUBSTITUTE, SING 
+	db PRIMEAPE, THRASH, SEISMIC_TOSS, SCREECH, COUNTER
+	db SEAKING, WATERFALL, HORN_DRILL, SUPERSONIC, FURY_ATTACK
+	db GOLBAT, WING_ATTACK, CONFUSE_RAY, TOXIC, BITE
+	db VILEPLUME, PETAL_DANCE, POISONPOWDER, MEGA_DRAIN, ACID
+
+MonClass6:
+	db 35
+	db SLOWBRO, BUBBLEBEAM, HEADBUTT, AMNESIA, DISABLE
+	db SLOWBRO, CONFUSION, HEADBUTT, AMNESIA, DISABLE
+	db RAICHU, THUNDERBOLT, SWIFT, DOUBLE_TEAM, FLASH
+	db MAGNETON, THUNDERBOLT, THUNDER_WAVE, SUPERSONIC, SCREECH
+	db TANGELA, MEGA_DRAIN, SLEEP_POWDER, SLAM, GROWTH
+	db TANGELA, MEGA_DRAIN, POISONPOWDER, SLAM, GROWTH
+	db TANGELA, MEGA_DRAIN, STUN_SPORE, SLAM, GROWTH
+	db SEADRA, SURF, SWIFT, DOUBLE_TEAM, SMOKESCREEN
+	db ELECTABUZZ, THUNDERPUNCH, MEGA_PUNCH, LIGHT_SCREEN, SCREECH
+	db MAGMAR, FLAMETHROWER, SMOG, SMOKESCREEN, CONFUSE_RAY
+	db PIDGEOT, WING_ATTACK, QUICK_ATTACK, DOUBLE_TEAM, SAND_ATTACK
+	db PIDGEOT, FLY, QUICK_ATTACK, MIRROR_MOVE, SAND_ATTACK
+	db DODRIO, DRILL_PECK, TRI_ATTACK, DOUBLE_TEAM, GROWL
+	db MUK, SLUDGE, TOXIC, ACID_ARMOR, MINIMIZE
+	db MUK, BODY_SLAM, TOXIC, ACID_ARMOR, MINIMIZE
+	db ELECTRODE, THUNDERBOLT, SWIFT, LIGHT_SCREEN, EXPLOSION
+	db ELECTRODE, SWIFT, THUNDER_WAVE, LIGHT_SCREEN, EXPLOSION
+	db SANDSLASH, SLASH, ROCK_SLIDE, POISON_STING, SAND_ATTACK
+	db SANDSLASH, DIG, ROCK_SLIDE, POISON_STING, SAND_ATTACK
+	db GOLDUCK, SURF, CONFUSION, DISABLE, SWIFT
+	db ALAKAZAM, PSYBEAM, RECOVER, REFLECT, DISABLE
+	db DEWGONG, AURORA_BEAM, TAKE_DOWN, REST, GROWL
+	db NIDOQUEEN, BODY_SLAM, DOUBLE_KICK, POISON_STING, GROWL
+	db NIDOKING, THRASH, DOUBLE_KICK, POISON_STING, TOXIC
+	db VENOMOTH, PSYWAVE, POISONPOWDER, LEECH_LIFE, SLEEP_POWDER
+	db VENOMOTH, TOXIC, PSYWAVE, LEECH_LIFE, SUPERSONIC
+	db PERSIAN, SLASH, SCREECH, SWIFT, DOUBLE_TEAM
+	db FEAROW, DRILL_PECK, FLY, MIRROR_MOVE, DOUBLE_TEAM
+	db CLEFABLE, METRONOME, MEGA_PUNCH, SUBSTITUTE, SING 
+	db PRIMEAPE, THRASH, SEISMIC_TOSS, SCREECH, COUNTER
+	db SEAKING, WATERFALL, HORN_DRILL, SUPERSONIC, FURY_ATTACK
+	db GOLBAT, WING_ATTACK, CONFUSE_RAY, TOXIC, BITE
+	db VILEPLUME, PETAL_DANCE, POISONPOWDER, MEGA_DRAIN, ACID
+	db DUGTRIO, EARTHQUAKE, SLASH, SAND_ATTACK, DOUBLE_TEAM
+	db DUGTRIO, DIG, SLASH, SAND_ATTACK, DOUBLE_TEAM
+
+MonClass7:
+	db 45
+	db POLIWRATH, SURF, STRENGTH, HYPNOSIS, BODY_SLAM
+	db HYPNO, PSYCHIC_M, POISON_GAS, HYPNOSIS, HEADBUTT
+	db KANGASKHAN, MEGA_PUNCH, DIZZY_PUNCH, LEER, COUNTER
+	db KANGASKHAN, TAKE_DOWN, EARTHQUAKE, LEER, STRENGTH
+	db CHANSEY, POUND, SUBSTITUTE, SOFTBOILED, REST
+	db CHANSEY, TOXIC, SUBSTITUTE, SOFTBOILED, REST
+	db MACHAMP, SUBMISSION, KARATE_CHOP, FOCUS_ENERGY, LEER
+	db VICTREEBEL, RAZOR_LEAF, ACID, CUT, STUN_SPORE
+	db VICTREEBEL, MEGA_DRAIN, TOXIC, DOUBLE_TEAM, STUN_SPORE
+	db GOLEM, EARTHQUAKE, ROCK_THROW, EXPLOSION, MEGA_PUNCH
+	db RAPIDASH, FIRE_SPIN, TAKE_DOWN, SKULL_BASH, TAIL_WHIP
+	db WEEZING, SLUDGE, TOXIC, HAZE, EXPLOSION
+	db SCYTHER, SLASH, SWORDS_DANCE, WING_ATTACK, DOUBLE_TEAM
+	db NINETALES, FIRE_BLAST, SKULL_BASH, DOUBLE_TEAM, SWIFT
+	db VENUSAUR, RAZOR_LEAF, LEECH_SEED, SLEEP_POWDER, MEGA_DRAIN
+	db VENUSAUR, SOLARBEAM, POISONPOWDER, LEECH_SEED, GROWTH
+	db CHARIZARD, FLAMETHROWER, SLASH, LEER, CUT
+	db CHARIZARD, FLY, EMBER, BODY_SLAM, LEER
+	db BLASTOISE, SURF, BITE, ICE_BEAM, WITHDRAW
+	db BLASTOISE, EARTHQUAKE, BUBBLEBEAM, WITHDRAW, REFLECT
+	db GENGAR, HYPNOSIS, DREAM_EATER, NIGHT_SHADE, CONFUSE_RAY
+	db GENGAR, TOXIC, DOUBLE_TEAM, MEGA_DRAIN, CONFUSE_RAY
+	db KINGLER, CRABHAMMER, STOMP, HARDEN, LEER
+	db KINGLER, BUBBLEBEAM, GUILLOTINE, HARDEN, LEER
+	db OMASTAR, SURF, SPIKE_CANNON, LEER, WITHDRAW
+	db PINSIR, SLASH, SWORDS_DANCE, SEISMIC_TOSS, HARDEN
+	db MAGMAR, FLAMETHROWER, SMOG, SMOKESCREEN, CONFUSE_RAY
+	db MAGMAR, PSYWAVE, FIRE_PUNCH, SMOKESCREEN, CONFUSE_RAY
+	db PIDGEOT, WING_ATTACK, TAKE_DOWN, DOUBLE_TEAM, SAND_ATTACK
+	db PIDGEOT, FLY, QUICK_ATTACK, MIRROR_MOVE, SAND_ATTACK
+	db DODRIO, DRILL_PECK, TRI_ATTACK, DOUBLE_TEAM, GROWL
+	db MUK, SLUDGE, TOXIC, ACID_ARMOR, MINIMIZE
+	db MUK, BODY_SLAM, TOXIC, ACID_ARMOR, MINIMIZE
+	db ELECTRODE, THUNDERBOLT, SWIFT, LIGHT_SCREEN, EXPLOSION
+	db ELECTRODE, SWIFT, THUNDER_WAVE, LIGHT_SCREEN, EXPLOSION
+	db SANDSLASH, SLASH, ROCK_SLIDE, POISON_STING, SAND_ATTACK
+	db SANDSLASH, EARTHQUAKE, ROCK_SLIDE, POISON_STING, SAND_ATTACK
+	db GOLDUCK, SURF, CONFUSION, DISABLE, SWIFT
+	db GOLDUCK, SURF, ICE_BEAM, PSYCHIC_M, DISABLE
+	db ALAKAZAM, PSYBEAM, RECOVER, REFLECT, DISABLE
+	db DEWGONG, ICE_BEAM, TAKE_DOWN, REST, GROWL
+	db NIDOQUEEN, BODY_SLAM, DOUBLE_KICK, POISON_STING, GROWL
+	db NIDOQUEEN, BODY_SLAM, FISSURE, POISON_STING, GROWL
+	db NIDOKING, THRASH, DOUBLE_KICK, POISON_STING, TOXIC
+	db NIDOKING, THRASH, FISSURE, POISON_STING, TOXIC
+
+MonClass8:
+	db 32
+	db VAPOREON, SURF, AURORA_BEAM, ACID_ARMOR, SUBSTITUTE
+	db JOLTEON, THUNDERBOLT, PIN_MISSILE, DOUBLE_KICK, DOUBLE_TEAM
+	db FLAREON, FLAMETHROWER, TAKE_DOWN, DOUBLE_TEAM, SMOG
+	db KABUTOPS, SURF, SLASH, ABSORB, LEER
+	db SNORLAX, REST, HEADBUTT, AMNESIA, BODY_SLAM
+	db TENTACRUEL, SURF, TOXIC, BARRIER, SUPERSONIC
+	db STARMIE, SURF, ICE_BEAM, SWIFT, HARDEN
+	db STARMIE, THUNDER_WAVE, PSYCHIC_M, SWIFT, RECOVER
+	db RHYDON, TAKE_DOWN, EARTHQUAKE, LEER, FIRE_BLAST
+	db RHYDON, HORN_DRILL, ROCK_SLIDE, LEER, MEGA_PUNCH
+	db AERODACTYL, WING_ATTACK, ROCK_SLIDE, TAKE_DOWN, SUPERSONIC
+	db TAUROS, BODY_SLAM, STRENGTH, EARTHQUAKE, LEER
+	db LAPRAS, SURF, ICE_BEAM, CONFUSE_RAY, SING
+	db ARCANINE, TAKE_DOWN, FIRE_BLAST, SWIFT, LEER
+	db EXEGGUTOR, MEGA_DRAIN, HYPNOSIS, EGG_BOMB, STOMP
+	db CLOYSTER, ICE_BEAM, SURF, WITHDRAW, SPIKE_CANNON
+	db GYARADOS, SURF, DRAGON_RAGE, STRENGTH, LEER
+	db WEEZING, SLUDGE, TOXIC, HAZE, EXPLOSION
+	db SCYTHER, SLASH, SWORDS_DANCE, WING_ATTACK, DOUBLE_TEAM
+	db NINETALES, FIRE_BLAST, SKULL_BASH, DOUBLE_TEAM, SWIFT
+	db VENUSAUR, RAZOR_LEAF, LEECH_SEED, SLEEP_POWDER, MEGA_DRAIN
+	db VENUSAUR, SOLARBEAM, POISONPOWDER, LEECH_SEED, GROWTH
+	db CHARIZARD, FLAMETHROWER, SLASH, LEER, CUT
+	db CHARIZARD, FLY, EMBER, BODY_SLAM, LEER
+	db BLASTOISE, SURF, BITE, ICE_BEAM, WITHDRAW
+	db BLASTOISE, EARTHQUAKE, BUBBLEBEAM, WITHDRAW, REFLECT
+	db GENGAR, HYPNOSIS, DREAM_EATER, NIGHT_SHADE, CONFUSE_RAY
+	db GENGAR, TOXIC, DOUBLE_TEAM, MEGA_DRAIN, CONFUSE_RAY
+	db KINGLER, CRABHAMMER, STOMP, HARDEN, LEER
+	db KINGLER, BUBBLEBEAM, GUILLOTINE, HARDEN, LEER
+	db OMASTAR, SURF, SPIKE_CANNON, LEER, WITHDRAW
+	db PINSIR, SLASH, SWORDS_DANCE, SEISMIC_TOSS, HARDEN
+	db CHANSEY, POUND, SUBSTITUTE, SOFTBOILED, REST
+	db CHANSEY, TOXIC, SUBSTITUTE, SOFTBOILED, REST
+	
+MonClass9:
+	db 64
+	db DRAGONITE, HYPER_BEAM, SLAM, THUNDER_WAVE, THUNDERBOLT
+	db DRAGONITE, HYPER_BEAM, BODY_SLAM, SURF, ICE_BEAM
+	db DRAGONITE, THUNDERBOLT, FIRE_BLAST, ICE_BEAM, SURF
+	db GYARADOS, HYPER_BEAM, SURF, STRENGTH, DOUBLE_TEAM
+	db GYARADOS, HYPER_BEAM, TAKE_DOWN, THUNDERBOLT, ICE_BEAM
+	db EXEGGUTOR, PSYCHIC_M, MEGA_DRAIN, LIGHT_SCREEN, SUBSTITUTE
+	db EXEGGUTOR, PSYCHIC_M, MEGA_DRAIN, TOXIC, EXPLOSION
+	db ARCANINE, TAKE_DOWN, FIRE_BLAST, SWIFT, LEER
+	db ARCANINE, TAKE_DOWN, FIRE_BLAST, DIG, LEER
+	db LAPRAS, SURF, ICE_BEAM, CONFUSE_RAY, SING
+	db LAPRAS, SURF, BLIZZARD, CONFUSE_RAY, REST
+	db LAPRAS, PSYWAVE, ICE_BEAM, THUNDERBOLT, SING
+	db TAUROS, BODY_SLAM, STRENGTH, EARTHQUAKE, LEER
+	db TAUROS, BODY_SLAM, SURF, DOUBLE_TEAM, TOXIC
+	db AERODACTYL, WING_ATTACK, ROCK_SLIDE, TAKE_DOWN, SUPERSONIC
+	db AERODACTYL, HYPER_BEAM, ROCK_SLIDE, TAKE_DOWN, SUPERSONIC
+	db RHYDON, TAKE_DOWN, EARTHQUAKE, LEER, FIRE_BLAST
+	db RHYDON, HORN_DRILL, ROCK_SLIDE, LEER, MEGA_PUNCH
+	db STARMIE, SURF, ICE_BEAM, SWIFT, HARDEN
+	db STARMIE, THUNDER_WAVE, PSYCHIC_M, SWIFT, RECOVER	
+	db STARMIE, PSYCHIC_M, SURF, THUNDERBOLT, RECOVER
+	db TENTACRUEL, SURF, TOXIC, BARRIER, SUPERSONIC
+	db TENTACRUEL, HYDRO_PUMP, BLIZZARD, SUBSTITUTE, SUPERSONIC
+	db SNORLAX, REST, HEADBUTT, AMNESIA, BODY_SLAM
+	db SNORLAX, HYPER_BEAM, HEADBUTT, AMNESIA, REST
+	db SNORLAX, MEGA_KICK, HEADBUTT, AMNESIA, REFLECT
+	db SNORLAX, ROCK_SLIDE, STRENGTH, AMNESIA, BUBBLEBEAM
+	db KABUTOPS, SURF, SLASH, ABSORB, LEER
+	db KABUTOPS, SURF, SUBMISSION, SWORDS_DANCE, SLASH
+	db VAPOREON, SURF, ICE_BEAM, ACID_ARMOR, SUBSTITUTE
+	db VAPOREON, SURF, BLIZZARD, REST, SUBSTITUTE
+	db JOLTEON, THUNDERBOLT, PIN_MISSILE, DOUBLE_KICK, DOUBLE_TEAM
+	db JOLTEON, THUNDERBOLT, PIN_MISSILE, DOUBLE_KICK, DOUBLE_TEAM
+	db FLAREON, FLAMETHROWER, TAKE_DOWN, DOUBLE_TEAM, SMOG
+	db VENUSAUR, RAZOR_LEAF, LEECH_SEED, SLEEP_POWDER, MEGA_DRAIN
+	db VENUSAUR, SOLARBEAM, POISONPOWDER, LEECH_SEED, GROWTH
+	db CHARIZARD, FLAMETHROWER, SLASH, LEER, CUT
+	db CHARIZARD, FLY, FLAMETHROWER, BODY_SLAM, LEER
+	db BLASTOISE, SURF, BITE, ICE_BEAM, WITHDRAW
+	db BLASTOISE, EARTHQUAKE, BUBBLEBEAM, WITHDRAW, REFLECT
+	db GENGAR, HYPNOSIS, DREAM_EATER, NIGHT_SHADE, CONFUSE_RAY
+	db GENGAR, TOXIC, DOUBLE_TEAM, PSYCHIC_M, MEGA_DRAIN
+	db CHANSEY, DOUBLE_EDGE, SUBSTITUTE, SOFTBOILED, REST
+	db CHANSEY, TOXIC, SUBSTITUTE, SOFTBOILED, REST
+	db CHANSEY, ICE_BEAM, THUNDERBOLT, SOFTBOILED, PSYCHIC_M
+	db MACHAMP, SUBMISSION, KARATE_CHOP, MEGA_PUNCH, LEER
+	db MACHAMP, SUBMISSION, KARATE_CHOP, EARTHQUAKE, ROCK_SLIDE
+	db SCYTHER, SLASH, SWORDS_DANCE, WING_ATTACK, DOUBLE_TEAM
+	db KANGASKHAN, MEGA_PUNCH, DIZZY_PUNCH, LEER, COUNTER
+	db KANGASKHAN, TAKE_DOWN, EARTHQUAKE, LEER, STRENGTH
+	db POLIWRATH, SURF, STRENGTH, HYPNOSIS, BODY_SLAM
+	db POLIWRATH, SURF, SUBMISSION, HYPNOSIS, BODY_SLAM
+	db ALAKAZAM, PSYCHIC_M, RECOVER, REFLECT, DISABLE
+	db DEWGONG, ICE_BEAM, TAKE_DOWN, REST, GROWL
+	db DEWGONG, BLIZZARD, SURF, REST, HORN_DRILL
+	db NIDOQUEEN, BODY_SLAM, DOUBLE_KICK, POISON_STING, GROWL
+	db NIDOQUEEN, BODY_SLAM, FISSURE, POISON_STING, GROWL
+	db NIDOQUEEN, SURF, ICE_BEAM, SUBMISSION, DOUBLE_TEAM
+	db NIDOKING, THRASH, DOUBLE_KICK, POISON_STING, TOXIC
+	db NIDOKING, THRASH, FISSURE, POISON_STING, TOXIC
+	db NIDOKING, SURF, FIRE_BLAST, ROCK_SLIDE, TOXIC
+	db ARTICUNO, ICE_BEAM, FLY, SWIFT, DOUBLE_TEAM
+	db ZAPDOS, THUNDERBOLT, DRILL_PECK, SWIFT, DOUBLE_TEAM
+	db MOLTRES, FIRE_BLAST, SKY_ATTACK, SWIFT, DOUBLE_TEAM
+
+
+FillMonData:
+	push bc
+	call EnableAutoTextBoxDrawing
+	xor a
+	ld [$ccd3], a
+	xor a
+	ld [W_ENEMYBATTSTATUS3], a ; $d069
+	ld a, [$cf91]
+	ld [W_ENEMYMONID], a
+	ld hl, Func_3eb01
+	ld b, BANK(Func_3eb01)
+	call Bankswitch ; indirect jump to Func_3eb01 (3eb01 (f:6b01))
+	ld hl, Func_e7a4
+	ld b, BANK(Func_e7a4)
+	call Bankswitch ; indirect jump to Func_e7a4 (e7a4 (3:67a4))
+	pop bc
+	ret
+
+ShowFactoryMon:
+	xor a
+	ld [wListMenuID], a
+	ld [H_AUTOBGTRANSFERENABLED],a ; disable auto-transfer
+	ld a,1
+	ld [$ffb7],a ; joypad state update flag
+	ld hl,$d730
+	set 6,[hl] ; turn off letter printing delay
+	xor a
+	ld [$cc35],a ; 0 means no item is currently being swapped
+	ld [$d12a],a
+	ld hl, W_NUMINBOX
+	ld a,[hl]
+	ld [$d12a],a ; [$d12a] = number of list entries
+	ld a,$0d ; list menu text box ID
+	ld [$d125],a
+	call DisplayTextBoxID ; draw the menu text box
+	call UpdateSprites ; move sprites
+	FuncCoord 4,2 ; coordinates of upper left corner of menu text box
+	ld hl,Coord
+	ld de,$090e ; height and width of menu text box
+	call UpdateSprites ; move sprites; possibly delete this line
+	ld a,1 ; max menu item ID is 1 if the list has less than 2 entries
+	ld [$cc37],a
+	ld a,[$d12a]
+	cp a,2 ; does the list have less than 2 entries?
+	jr c,.setMenuVariables
+	ld a,2 ; max menu item ID is 2 if the list has at least 2 entries
+.setMenuVariables
+	ld [wMaxMenuItem],a
+	ld a,4
+	ld [wTopMenuItemY],a
+	ld a,5
+	ld [wTopMenuItemX],a
+	ld a,%00000011 ; A button, B button, Select button
+	ld [wMenuWatchedKeys],a
+	ld c,10
+	call DelayFrames
+.pickMon
+	ld hl, W_NUMINBOX
+	ld a, l
+	ld [$cf8b], a
+	ld a, h
+	ld [$cf8c], a
+	xor a
+	ld [wCurrentMenuItem], a
+	ld [wListScrollOffset], a
+	ld a, Bank(ShowFactoryMon)
+	ld [$cf08], a ; save current bank
+	call DisplayListMenuIDLoop
+	jr c, ShowFactoryMon ; player tried to close menu
+	ld a, [wCurrentMenuItem]
+	ld b, a
+	ld a, [wListScrollOffset]
+	add b ; a = menuitem (0-based indexing)
+	ld [wWhichPokemon], a
+	call SaveScreenTilesToBuffer1
+	call FactoryMonSubMenu
+	push af
+	call LoadScreenTilesFromBuffer1
+	pop af
+	and a
+	jr z, .rentMon
+	jp ShowFactoryMon
+.rentMon
+	call TakeFromFactory
+	ld a, [W_NUMINPARTY]
+	cp $3 ; num allowed for factory
+	jp nz, ShowFactoryMon
+	ret
+
+FactoryMonSubMenu:
+	FuncCoord 10, 10 ; $c471
+	ld hl, Coord
+	ld b, $6
+	ld c, $8
+	call TextBoxBorder
+	FuncCoord 12, 12 ; $c49b
+	ld hl, Coord
+	ld de, ChooseMonText
+	call PlaceString
+	FuncCoord 12, 14 ; $c4c3
+	ld hl, Coord
+	ld de, ShowStatsText ; $57dc
+	call PlaceString
+	FuncCoord 12, 16
+	ld hl, Coord
+	ld de, CancelText
+	call PlaceString
+	ld hl, wTopMenuItemY ; $cc24
+	ld a, 12
+	ld [hli], a
+	ld a, 11
+	ld [hli], a
+	xor a
+	ld [hli], a
+	inc hl
+	ld a, $2
+	ld [hli], a
+	ld a, $3
+	ld [hli], a
+	xor a
+	ld [hl], a
+	ld hl, wListScrollOffset ; $cc36
+	ld [hli], a
+	ld [hl], a
+	call HandleMenuInput
+	bit 1, a ; B was pressed
+	jr z, .notBPressed
+	ld a, 2 ; cancel
+	ret
+.notBPressed
+	ld a, [wCurrentMenuItem]
+	cp 1
+	jr z, .showStatsScreen
+	cp 0 ; rent?
+	jr nz, .cancelPressed
+	xor a
+	ret
+.cancelPressed
+	ld a, 2
+	ret
+.showStatsScreen
+	ld a, $2
+.asm_217b0
+	ld [$cc49], a
+	call CleanLCD_OAM
+	ld a, $36
+	call Predef ; indirect jump to StatusScreen (12953 (4:6953))
+	ld a, $37
+	call Predef ; indirect jump to StatusScreen2 (12b57 (4:6b57))
+	call LoadScreenTilesFromBuffer1
+	call ReloadTilesetTilePatterns
+	call GoPAL_SET_CF1C
+	call LoadGBPal
+	jp FactoryMonSubMenu
+
+ChooseMonText:
+	db "RENT@"
+
+ShowStatsText:
+	db "STATS@"
+
+CancelText:
+	db "CANCEL@"
+
+TakeFromFactory: ; 21618 (8:5618)
+	ld a, [wWhichPokemon] ; $cf92
+	ld hl, W_BOXMON1NAME
+	call GetPartyMonName
+	ld a, [$cf91]
+	call GetCryData
+	call PlaySoundWaitForCurrent
+	xor a
+	ld [$cf95], a
+	call Func_3a68
+	ld a, $1
+	ld [$cf95], a
+	call RemovePokemon
+	call WaitForSoundToFinish
+	ret
+
+BattleFactoryObject:
+	db $0f ; border tile
+ 
+ 	db 1 ; warps
+ 	db 1, 7, 2, REDS_HOUSE_1F
+ 
+	db 8 ; signs
+	db $b, $4, $8
+	db $d, $4, $9
+	db $4, $a, $b
+	db $4, $e, $c
+	db $8, $a, $c
+	db $8, $e, $c
+	db $c, $a, $c
+	db $c, $e, $b
+
+	db 7 ; people
+	db SPRITE_OAK, $5 + 4, $5 + 4, $ff, $d0, $1 ; person
+	db SPRITE_NURSE, $5 + 4, $4 + 4, $ff, $d0, $2 ; person
+	db SPRITE_OAK_AIDE, $5 + 4, $3 + 4, $ff, $d0, $3 ; person
+	db SPRITE_BLACK_HAIR_BOY_1, $5 + 4, $e + 4, $ff, $d1, $4 ; person
+	db SPRITE_LASS, $9 + 4, $a + 4, $ff, $d1, $5 ; person
+	db SPRITE_ROCKER, $9 + 4, $e + 4, $ff, $d1, $6 ; person
+	db SPRITE_BLACK_HAIR_BOY_1, $d + 4, $a + 4, $ff, $d1, $7 ; person
+ 
+ 	; warp-to
+	EVENT_DISP BATTLE_FACTORY_WIDTH, 1, 7
+
+
+
+SwapPokemonEnemy:
+	xor a
+	ld [H_AUTOBGTRANSFERENABLED],a ; disable auto-transfer
+	ld a,1
+	ld [$ffb7],a ; joypad state update flag
+	ld hl,$d730
+	set 6,[hl] ; turn off letter printing delay
+	xor a
+	ld [$cc35],a ; 0 means no item is currently being swapped
+	ld [$d12a],a
+	ld hl, wEnemyPartyCount
+	ld a,[hl]
+	ld [$d12a],a ; [$d12a] = number of list entries
+	ld a,$0d ; list menu text box ID
+	ld [$d125],a
+	call DisplayTextBoxID ; draw the menu text box
+	call UpdateSprites ; move sprites
+	FuncCoord 4,2 ; coordinates of upper left corner of menu text box
+	ld hl,Coord
+	ld de,$090e ; height and width of menu text box
+	call UpdateSprites ; move sprites; possibly delete this line
+	ld a,1 ; max menu item ID is 1 if the list has less than 2 entries
+	ld [$cc37],a
+	ld a,[$d12a]
+	cp a,2 ; does the list have less than 2 entries?
+	jr c,.setMenuVariables
+	ld a,2 ; max menu item ID is 2 if the list has at least 2 entries
+.setMenuVariables
+	ld [wMaxMenuItem],a
+	ld a,4
+	ld [wTopMenuItemY],a
+	ld a,5
+	ld [wTopMenuItemX],a
+	ld a,%00000011 ; A button, B button
+	ld [wMenuWatchedKeys],a
+	ld c,10
+	call DelayFrames
+.pickMon
+	ld hl, wEnemyPartyCount
+	ld a, l
+	ld [$cf8b], a
+	ld a, h
+	ld [$cf8c], a
+	xor a
+	ld [wCurrentMenuItem], a
+	ld [wListScrollOffset], a
+	ld a, $77
+	ld [wListMenuID], a
+	ld a, Bank(SwapPokemonEnemy)
+	ld [$cf08], a ; save current bank
+	call DisplayListMenuIDLoop
+	ret c ; player tried to close menu
+	ld a, [wCurrentMenuItem]
+	ld b, a
+	ld a, [wListScrollOffset]
+	add b ; a = menuitem (0-based indexing)
+	ld [W_SWAPMONENEMYINDEX], a
+	call SaveScreenTilesToBuffer1
+	ld hl, SwapMonSubMenu
+	ld b, BANK(SwapMonSubMenu)
+	call Bankswitch
+	push af
+	call LoadScreenTilesFromBuffer1
+	pop af
+	jp nc, SwapPokemonEnemy
+	ccf
+	ret
+
+SwapPokemonPlayer:
+	xor a
+	ld [H_AUTOBGTRANSFERENABLED],a ; disable auto-transfer
+	ld a,1
+	ld [$ffb7],a ; joypad state update flag
+	ld hl,$d730
+	set 6,[hl] ; turn off letter printing delay
+	xor a
+	ld [$cc35],a ; 0 means no item is currently being swapped
+	ld [$d12a],a
+	ld hl, W_NUMINPARTY
+	ld a,[hl]
+	ld [$d12a],a ; [$d12a] = number of list entries
+	ld a,$0d ; list menu text box ID
+	ld [$d125],a
+	call DisplayTextBoxID ; draw the menu text box
+	call UpdateSprites ; move sprites
+	FuncCoord 4,2 ; coordinates of upper left corner of menu text box
+	ld hl,Coord
+	ld de,$090e ; height and width of menu text box
+	call UpdateSprites ; move sprites; possibly delete this line
+	ld a,1 ; max menu item ID is 1 if the list has less than 2 entries
+	ld [$cc37],a
+	ld a,[$d12a]
+	cp a,2 ; does the list have less than 2 entries?
+	jr c,.setMenuVariables
+	ld a,2 ; max menu item ID is 2 if the list has at least 2 entries
+.setMenuVariables
+	ld [wMaxMenuItem],a
+	ld a,4
+	ld [wTopMenuItemY],a
+	ld a,5
+	ld [wTopMenuItemX],a
+	ld a,%00000011 ; A button, B button, Select button
+	ld [wMenuWatchedKeys],a
+	ld c,10
+	call DelayFrames
+.pickMon
+	ld hl, W_NUMINPARTY
+	ld a, l
+	ld [$cf8b], a
+	ld a, h
+	ld [$cf8c], a
+	xor a
+	ld [wCurrentMenuItem], a
+	ld [wListScrollOffset], a
+	ld [wListMenuID], a
+	ld a, Bank(SwapPokemonPlayer)
+	ld [$cf08], a ; save current bank
+	call DisplayListMenuIDLoop
+	ret c ; player tried to close menu
+	ld a, [wCurrentMenuItem]
+	ld b, a
+	ld a, [wListScrollOffset]
+	add b ; a = menuitem (0-based indexing)
+	ld b, a ; b = menuitem
+	push bc
+	call SaveScreenTilesToBuffer1
+	ld hl, SwapMonSubMenuPlayer
+	ld b, BANK(SwapMonSubMenuPlayer)
+	call Bankswitch
+	push af
+	call LoadScreenTilesFromBuffer1
+	pop af
+	pop bc
+	jp nc, SwapPokemonPlayer
+	; swap mon data
+	ld a, b ; menuitem
+	ld [wCurrentMenuItem], a
+	ld hl, W_PARTYMON1DATA
+	ld bc, $002c
+	call AddNTimes
+	ld d, h
+	ld e, l ; de contains pointer to party mon data which will be overwritten
+	ld hl, wEnemyMon1
+	ld a, [W_SWAPMONENEMYINDEX]
+	call AddNTimes
+	ld a, [hl] ; save enemy mon id for later
+	push af
+	call CopyData ; swap mon data
+	; swap mon id
+	ld a, [wCurrentMenuItem]
+	ld c, a
+	ld b, 0
+	ld hl, W_PARTYMON1
+	add hl, bc
+	pop af
+	ld [hl], a
+	; now place mon name
+	ld [$d11e], a ; used for GetMonName
+	ld hl, W_PARTYMON1NAME
+	ld a, [wCurrentMenuItem]
+	ld bc, $000b
+	call AddNTimes ; hl contains pointer to mon name which is 0xb bytes
+	ld d, h
+	ld e, l
+	push de
+	call GetMonName
+	pop de
+	ld hl, $cd6d
+	ld bc, $000b
+	call CopyData
+	ret
+
+SpecialTrainerDefeatMessage:
+; make special trainer say their message
+	ld a, [W_CUROPPONENT]
+	ld d, a
+	ld c, 6
+	ld b, 0
+	ld hl, SpecialDefeatMessagesTable
+.searchingLoop
+	ld a, [hl]
+	cp d
+	jr z, .foundIt
+	add hl, bc
+	jr .searchingLoop
+.foundIt
+	inc hl
+	call PrintText
+	ret
+
+SpecialDefeatMessagesTable:
+BrockDefText:
+	db BROCK + $C8
+	TX_FAR _BrockDefText
+	db "@"
+KogaDefText:
+	db KOGA + $C8
+	TX_FAR _KogaDefText
+	db "@"
+BlaineDefText:
+	db BLAINE + $C8
+	TX_FAR _BlaineDefText
+	db "@"
+GioDefText:
+	db GIOVANNI + $C8
+	TX_FAR _GioDefText
+	db "@"
+LoreleiDefText:
+	db LORELEI + $C8
+	TX_FAR _LoreleiDefText
+	db "@"
+LanceDefText:
+	db LANCE + $C8
+	TX_FAR _LanceDefText
+	db "@"
+OakDefText:
+	db PROF_OAK + $C8
+	TX_FAR _OakDefText
+	db "@"
+
+RandomDefeatMessage:
+; make trainer say something after defeat
+	call GenRandom
+	cp 60 ; number of messages in table
+	jp nc, RandomDefeatMessage
+	ld c, 5
+	ld b, 0
+	ld hl, DefeatMessagesTable
+	call AddNTimes
+	call PrintText
+	ret
+
+DefeatMessagesTable:
+DefText1:
+	TX_FAR _DefText1
+	db "@"
+DefText2:
+	TX_FAR _DefText2
+	db "@"
+DefText3:
+	TX_FAR _DefText3
+	db "@"
+DefText4:
+	TX_FAR _DefText4
+	db "@"
+DefText5:
+	TX_FAR _DefText5
+	db "@"
+DefText6:
+	TX_FAR _DefText6
+	db "@"
+DefText7:
+	TX_FAR _DefText7
+	db "@"
+DefText8:
+	TX_FAR _DefText8
+	db "@"
+DefText9:
+	TX_FAR _DefText9
+	db "@"
+DefText10:
+	TX_FAR _DefText10
+	db "@"
+DefText11:
+	TX_FAR _DefText11
+	db "@"
+DefText12:
+	TX_FAR _DefText12
+	db "@"
+DefText13:
+	TX_FAR _DefText13
+	db "@"
+DefText14:
+	TX_FAR _DefText14
+	db "@"
+DefText15:
+	TX_FAR _DefText15
+	db "@"
+DefText16:
+	TX_FAR _DefText16
+	db "@"
+DefText17:
+	TX_FAR _DefText17
+	db "@"
+DefText18:
+	TX_FAR _DefText18
+	db "@"
+DefText19:
+	TX_FAR _DefText19
+	db "@"
+DefText20:
+	TX_FAR _DefText20
+	db "@"
+DefText21:
+	TX_FAR _DefText21
+	db "@"
+DefText22:
+	TX_FAR _DefText22
+	db "@"
+DefText23:
+	TX_FAR _DefText23
+	db "@"
+DefText24:
+	TX_FAR _DefText24
+	db "@"
+DefText25:
+	TX_FAR _DefText25
+	db "@"
+DefText26:
+	TX_FAR _DefText26
+	db "@"
+DefText27:
+	TX_FAR _DefText27
+	db "@"
+DefText28:
+	TX_FAR _DefText28
+	db "@"
+DefText29:
+	TX_FAR _DefText29
+	db "@"
+DefText30:
+	TX_FAR _DefText30
+	db "@"
+DefText31:
+	TX_FAR _DefText31
+	db "@"
+DefText32:
+	TX_FAR _DefText32
+	db "@"
+DefText33:
+	TX_FAR _DefText33
+	db "@"
+DefText34:
+	TX_FAR _DefText34
+	db "@"
+DefText35:
+	TX_FAR _DefText35
+	db "@"
+DefText36:
+	TX_FAR _DefText36
+	db "@"
+DefText37:
+	TX_FAR _DefText37
+	db "@"
+DefText38:
+	TX_FAR _DefText38
+	db "@"
+DefText39:
+	TX_FAR _DefText39
+	db "@"
+DefText40:
+	TX_FAR _DefText40
+	db "@"
+DefText41:
+	TX_FAR _DefText41
+	db "@"
+DefText42:
+	TX_FAR _DefText42
+	db "@"
+DefText43:
+	TX_FAR _DefText43
+	db "@"
+DefText44:
+	TX_FAR _DefText44
+	db "@"
+DefText45:
+	TX_FAR _DefText45
+	db "@"
+DefText46:
+	TX_FAR _DefText46
+	db "@"
+DefText47:
+	TX_FAR _DefText47
+	db "@"
+DefText48:
+	TX_FAR _DefText48
+	db "@"
+DefText49:
+	TX_FAR _DefText49
+	db "@"
+DefText50:
+	TX_FAR _DefText50
+	db "@"
+DefText51:
+	TX_FAR _DefText51
+	db "@"
+DefText52:
+	TX_FAR _DefText52
+	db "@"
+DefText53:
+	TX_FAR _DefText53
+	db "@"
+DefText54:
+	TX_FAR _DefText54
+	db "@"
+DefText55:
+	TX_FAR _DefText55
+	db "@"
+DefText56:
+	TX_FAR _DefText56
+	db "@"
+DefText57:
+	TX_FAR _DefText57
+	db "@"
+DefText58:
+	TX_FAR _DefText58
+	db "@"
+DefText59:
+	TX_FAR _DefText59
+	db "@"
+DefText60:
+	TX_FAR _DefText60
+	db "@"
+
+TrainerMonMenu:
+	ld a,[wWhichPokemon]
+	ld b,a
+	ld a,4
+	sub b
+	ld b,a
+	ld a,[wListScrollOffset]
+	add b ; a contains mon index?
+	ld c, a
+	ld b, $0
+	push hl
+	ld hl, wEnemyPartyMons
+	add hl, bc ; hl contains address of enemy mon id
+	ld a, [hl]
+	ld [$d11e], a
+	call GetMonName
+	pop hl
+	ret
