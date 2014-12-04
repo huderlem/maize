@@ -1316,6 +1316,7 @@ W_FOSSILITEM:: ; d70f
 
 W_FOSSILMON:: ; d710
 ; mon that will result from the item
+; using this for battle factory num mons stored, too
 	ds 1
 
 	ds 2
@@ -1479,7 +1480,7 @@ W_NEWFLAGS1:: ; dee2
 	; 6: diving animation
 	; 7: Mon should be slave
 
-W_SLOW_MUSIC:: ; dee3 TODO: no longer using this
+W_NUM_RENTED_MONS:: ; dee3
 	ds 1
 
 W_NUZLOCKE_MAP_FLAGS::

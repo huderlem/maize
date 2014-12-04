@@ -56183,7 +56183,7 @@ TrainerBattleVictory: ; 3c696 (f:4696)
 	call SpecialTrainerDefeatMessage
 	jr .printCongrats
 .notSpecialMessage
-	call RandomDefeatMessage
+	call RandomDefeatMessage_
 .printCongrats
 	ld hl, W_CURCLASS
 	push hl
@@ -56194,7 +56194,7 @@ TrainerBattleVictory: ; 3c696 (f:4696)
 	dec [hl]
 	jr .noSwap
 .notLastBattle
-	call RandomDefeatMessage
+	call RandomDefeatMessage_
 .swapping
 	ld hl, SwapText
 	call PrintText
@@ -56255,6 +56255,11 @@ TrainerBattleVictory: ; 3c696 (f:4696)
 	ld c, $3
 	ld a, $b
 	jp Predef ; indirect jump to Func_f81d (f81d (3:781d))
+
+RandomDefeatMessage_:
+	ld b, Bank(RandomDefeatMessage)
+	ld hl, RandomDefeatMessage
+	jp Bankswitch
 
 SwapText:
 	TX_FAR _SwapText
@@ -57572,7 +57577,7 @@ RegularBattleMenu: ; 3cf1a (f:4f1a)
 .safari1 ; safari first option??
 	ld a, $8
 	ld [$cf91], a
-	jr asm_3d05f
+	jp asm_3d05f
 
 Func_3cfe8: ; 3cfe8 (f:4fe8)
 	cp $2
@@ -57609,7 +57614,7 @@ asm_3d00e: ; 3d00e (f:500e)
 	jr Func_3d03c
 
 OldManItemList: ; 3d02d (f:502d)
-	db $01, POKE_BALL, 50, $ff
+	db $01, POKE_BALL, 42, CALCIUM, 99, OAKS_PARCEL, 01, $ff
 
 Func_3d031:
 	ld a, [W_CURMAP]
@@ -121293,6 +121298,7 @@ BattleFactoryScriptPointers:
 	dw BattleFactoryScript0
 	dw BattleFactoryScript1
 	dw BattleFactoryScript2
+	dw BattleFactoryScript3
  
 BattleFactoryScript0:
 	ld a, [W_STARTBATTLE]
@@ -121339,7 +121345,7 @@ BattleFactoryScript2:
 	ld a, [W_INCHALLENGE]
 	cp $1
 	jr z, .stillGoing
-	xor a
+	ld a, 3
 	ld [W_BATTLEFACTORYCURSCRIPT], a
 	ret
 .stillGoing
@@ -121377,6 +121383,45 @@ FactoryMovementData:
 	db $10, 6 ; up x1
 	db $FF
 
+BattleFactoryScript3:
+	; return mons in box to player
+.clearloop
+	ld a, [W_NUMINPARTY]
+	cp $0
+	jr z, .doneClearing
+	xor a
+	ld [wWhichPokemon], a
+	ld [$cf95], a
+	call RemovePokemon
+	jr .clearloop
+.doneClearing
+	ld a, [W_FOSSILMON] ; num stored in box
+	ld b, a
+.returnLoop
+	push bc
+	xor a
+	ld [$cf95], a
+	ld a, [W_NUMINBOX]
+	dec a
+	ld [wWhichPokemon], a
+	ld hl, W_NUMINBOX + 1
+	ld c, a
+	ld b, 0
+	add hl, bc
+	ld a, [hl]
+	ld [$cf91], a ; save mon id
+
+	call Func_3a68
+	ld a, $1
+	ld [$cf95], a
+	call RemovePokemon
+	pop bc
+	dec b
+	jr nz, .returnLoop
+	ld a, 0
+	ld [W_BATTLEFACTORYCURSCRIPT], a
+	ret
+
 BattleLoadingText:
 	TX_FAR _BattleLoadingText
 	db "@"
@@ -121403,10 +121448,21 @@ BattleFactoryText1: ; (17:656c)
 .saidYes:
 	ld hl, BattleFactoryText3
 	call PrintText
-	call ClearParty
+	ld a, [W_NUMINPARTY]
+	ld [W_FOSSILMON], a
+	call StoreMonsInPC
+	and a
+	jr z, .storedMonsInBox
+	ld hl, MakeRoomInBoxText
+	call PrintText
+	jp TextScriptEnd
+.storedMonsInBox
 	call FillMonChoices
 	call SaveScreenTilesToBuffer2
+	xor a 
+	ld [W_NUM_RENTED_MONS], a
 	call ShowFactoryMon
+	call RemoveUnrentedMonsFromPC
 	call LoadScreenTilesFromBuffer2
 	call UpdateSprites
 	ld hl, FinishedPickingMonsText
@@ -121414,6 +121470,54 @@ BattleFactoryText1: ; (17:656c)
 	ld a, $1
 	ld [W_INCHALLENGE], a
 	jp TextScriptEnd
+
+StoreMonsInPC:
+	; returns 0 in a if successful
+	; check if there are enough spots in the box for the player's party
+	ld a, [W_NUMINBOX]
+	ld b, a
+	ld a, [W_NUMINPARTY]
+	add a, b
+	add 6 ; 6 factory mons to choose
+	cp 19 + 1 ; Is (partymons + boxmons + 6) > 19? (19 is max that can be in box in this game)
+	jr c, .roomInBox
+	; return 1 in a
+	ld a, 1
+	ret
+.roomInBox
+	; store all party mons in box
+	ld a, [W_NUMINPARTY]
+	and a
+	jr z, .doneStoringMons
+	xor a
+	ld [wWhichPokemon], a
+	inc a
+	ld [$cf95], a ; a = 1
+	ld a, [W_PARTYMON1]
+	ld [$cf91], a
+	call Func_3a68 ; store mon in box
+	xor a
+	ld [$cf95], a
+	call RemovePokemon
+	jr .roomInBox
+.doneStoringMons
+	xor a
+	ret
+
+RemoveUnrentedMonsFromPC:
+	ld b, 3
+.loop
+	push bc
+	; remove the 3 unchosen mons
+	xor a
+	ld [wWhichPokemon], a
+	ld a, $1
+	ld [$cf95], a
+	call RemovePokemon
+	pop bc
+	dec b
+	ret z
+	jr .loop
 
 FightTrainer:
 	call PickTrainerClass
@@ -121699,6 +121803,10 @@ BattleFactoryText4:
 	TX_FAR _BattleFactoryText4
 	db "@"
 
+MakeRoomInBoxText:
+	TX_FAR _MakeRoomInBoxText
+	db "@"
+
 FinishedPickingMonsText:
 	TX_FAR _FinishedPickingMonsText
 	db "@"
@@ -121779,7 +121887,7 @@ SpecialOpponentText:
 	TX_FAR _SpecialOpponentText
 	db "@"
 
-ClearParty:
+ClearParty: ; TODO: not used
 ; clears all pokemon from party
 .clearloop
 	ld a, [W_NUMINPARTY]
@@ -121795,21 +121903,27 @@ ClearParty:
 
 FillMonChoices:
 ; places 6 random pokemon
-	xor a
-	ld [W_NUMINBOX], a ; TODO: this doesn't fix it?
+	ld a, [W_NUMINBOX]
+	ld e, a ; e contains original num mons in box
+	ld d, 0
+	ld hl, W_NUMINBOX+1
+	add hl, de
 	ld a, $ff
-	ld [W_NUMINBOX+1], a
-	ld [W_NUMINBOX+2], a
-	ld [W_NUMINBOX+3], a
-	ld [W_NUMINBOX+4], a
-	ld [W_NUMINBOX+5], a
-	ld [W_NUMINBOX+6], a
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	ld [hl], a
 	ld b, 6 ; num mons to place
 .fillLoop
+	push de
 	push bc
 	call PickMon
 	pop bc
+	pop de
 	ld hl, W_NUMINBOX+1
+	add hl, de ; compensate for num mons already in box
 	ld c, 6
 .notPickedLoop
 	cp [hl]
@@ -121821,7 +121935,9 @@ FillMonChoices:
 	ld [$cf91], a
 	ld a, 50 ; mon level
 	ld [$d127], a
+	push de
 	call FillMonData
+	pop de
 	dec b
 	jp nz, .fillLoop
 	ret
@@ -122723,7 +122839,6 @@ MonClass9:
 	db ZAPDOS, THUNDERBOLT, DRILL_PECK, SWIFT, DOUBLE_TEAM
 	db MOLTRES, FIRE_BLAST, SKY_ATTACK, SWIFT, DOUBLE_TEAM
 
-
 FillMonData:
 	push bc
 	call EnableAutoTextBoxDrawing
@@ -122742,6 +122857,20 @@ FillMonData:
 	pop bc
 	ret
 
+RestoreMonIDBefore:
+	; restore the first actual mon in box... there is no hope for someone else understanding this code
+	ld hl, W_NUMINBOX + 1
+	ld a, [W_NUM_RENTED_MONS]
+	ld b, a
+	sub b
+	sub b
+	add 6 ; a contains num mons available to rent
+	ld c, a
+	ld b, 0
+	add hl, bc ; hl points to first actual mon in box
+	pop bc
+	ld a, b
+	ld [hl], a ; mon id restored
 ShowFactoryMon:
 	xor a
 	ld [wListMenuID], a
@@ -122753,11 +122882,28 @@ ShowFactoryMon:
 	xor a
 	ld [$cc35],a ; 0 means no item is currently being swapped
 	ld [$d12a],a
-	ld hl, W_NUMINBOX
-	ld a,[hl]
-	ld [$d12a],a ; [$d12a] = number of list entries
 	ld a,$0d ; list menu text box ID
 	ld [$d125],a
+
+	; super hack ftw
+	; overwrite the first actual mon in box with sentinel so DisplayList works, but restore it afterwards
+	ld hl, W_NUMINBOX + 1
+	ld a, [W_NUM_RENTED_MONS]
+	ld b, a
+	sub b
+	sub b
+	add 6 ; a contains num mons available to rent
+	ld [$d12a],a ; [$d12a] = number of list entries
+	ld c, a
+	ld b, 0
+	add hl, bc ; hl points to first actual mon in box
+	; save the mon id for later
+	ld a, [hl]
+	ld b, a
+	push bc
+	ld a, $ff
+	ld [hl], a
+
 	call DisplayTextBoxID ; draw the menu text box
 	call UpdateSprites ; move sprites
 	FuncCoord 4,2 ; coordinates of upper left corner of menu text box
@@ -122792,7 +122938,7 @@ ShowFactoryMon:
 	ld a, Bank(ShowFactoryMon)
 	ld [$cf08], a ; save current bank
 	call DisplayListMenuIDLoop
-	jr c, ShowFactoryMon ; player tried to close menu
+	jp c, RestoreMonIDBefore ; player tried to close menu
 	ld a, [wCurrentMenuItem]
 	ld b, a
 	ld a, [wListScrollOffset]
@@ -122805,9 +122951,24 @@ ShowFactoryMon:
 	pop af
 	and a
 	jr z, .rentMon
-	jp ShowFactoryMon
+	jp RestoreMonIDBefore
 .rentMon
+	; restore the first actual mon in box... there is no hope for someone else understanding this code
+	ld hl, W_NUMINBOX + 1
+	ld a, [W_NUM_RENTED_MONS]
+	ld b, a
+	sub b
+	sub b
+	add 6 ; a contains num mons available to rent
+	ld c, a
+	ld b, 0
+	add hl, bc ; hl points to first actual mon in box
+	pop bc
+	ld a, b
+	ld [hl], a ; mon id restored
 	call TakeFromFactory
+	ld hl, W_NUM_RENTED_MONS
+	inc [hl]
 	ld a, [W_NUMINPARTY]
 	cp $3 ; num allowed for factory
 	jp nz, ShowFactoryMon

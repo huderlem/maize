@@ -3347,6 +3347,21 @@ _BattleFactoryText4::
 	cont "are ready."
 	done
 
+_MakeRoomInBoxText::
+	text "I'm sorry."
+
+	para "You need to make"
+	line "room in your PC"
+	cont "box, so we can"
+	cont "hold your #MON"
+	cont "for you during"
+	cont "the challenge."
+
+	para "Try switching to"
+	line "an empty box at"
+	cont "a PC."
+	done
+
 _FinishedPickingMonsText::
 	text "You're all set!"
 
