@@ -56405,10 +56405,14 @@ Func_3c741: ; 3c741 (f:4741)
 	ret z
 	ld a, [W_PLAYERMONID]
 	call PlayCry
+	ld a, [W_INCHALLENGE]
+	and a
+	jr nz, .notNuzlocke
 	; if nuzlocke is enabled, print death text
 	ld hl, W_NEWFLAGS1
 	bit 2, [hl]
 	jr nz, .nuzlocke
+.notNuzlocke
 	ld hl, PlayerMonFaintedText
 	jr .done
 .nuzlocke
