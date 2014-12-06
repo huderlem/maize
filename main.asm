@@ -51609,6 +51609,13 @@ TrainerAI: ; 3a52e (e:652e)
 	ld a,[W_ISLINKBATTLE]
 	cp 4
 	ret z
+	; battl factory
+	ld a, [W_INCHALLENGE]
+	and a
+	jr z, .normalBattle
+	ld hl, BattleFactoryAIPointers
+	jr .gotAIPointer
+.normalBattle
 	ld a,[W_TRAINERCLASS] ; what trainer class is this?
 	dec a
 	ld c,a
@@ -51617,6 +51624,7 @@ TrainerAI: ; 3a52e (e:652e)
 	add hl,bc
 	add hl,bc
 	add hl,bc
+.gotAIPointer
 	ld a,[wAICount]
 	and a
 	ret z ; if no AI uses left, we're done here
@@ -51632,6 +51640,9 @@ TrainerAI: ; 3a52e (e:652e)
 	ld l,a
 	call GenRandom
 	jp [hl]
+
+BattleFactoryAIPointers:
+	dbw 3,GenericAI
 
 TrainerAIPointers: ; 3a55c (e:655c)
 ; one entry per trainer class
