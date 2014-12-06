@@ -56575,7 +56575,12 @@ HandlePlayerBlackOut: ; 3c837 (f:4837)
 .notSony1Battle
 	ld b, $0
 	call GoPAL_SET
+	ld a, [W_INCHALLENGE]
 	ld hl, PlayerBlackedOutText2
+	and a
+	jr z, .gotText
+	ld hl, PlayerBlackedOutBattleFactory
+.gotText
 	ld a, [W_ISLINKBATTLE] ; $d12b
 	cp $4
 	jr nz, .noLinkBattle
@@ -56604,6 +56609,10 @@ Sony1WinText: ; 3c884 (f:4884)
 
 PlayerBlackedOutText2: ; 3c889 (f:4889)
 	TX_FAR _PlayerBlackedOutText2
+	db "@"
+
+PlayerBlackedOutBattleFactory:
+	TX_FAR _PlayerBlackedOutBattleFactory
 	db "@"
 
 LinkBattleLostText: ; 3c88e (f:488e)

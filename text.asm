@@ -1071,6 +1071,18 @@ _Sony1WinText:: ; 8972a (22:572a)
 	line "was pathetic..."
 	prompt
 
+_PlayerBlackedOutBattleFactory::
+	text "All your #MON"
+	line "have fainted!"
+	
+	para "Your win streak"
+	line "has been reset"
+	cont "to 0!"
+
+	para "Better luck next"
+	line "time!"
+	prompt
+
 _PlayerBlackedOutText2:: ; 89748 (22:5748)
 	text $52, " is out of"
 	line "useable #MON!"
