@@ -7590,9 +7590,11 @@ PrintListMenuEntries:: ; 2e5a (0:2e5a)
 	call GetItemName
 	jr .placeNameString
 .trainerMonMenu
+	push hl
 	ld hl, TrainerMonMenu
 	ld b, Bank(TrainerMonMenu)
 	call Bankswitch
+	pop hl
 	jr .placeNameString
 .pokemonPCMenu
 	push hl
@@ -56232,7 +56234,9 @@ TrainerBattleVictory: ; 3c696 (f:4696)
 .yesSwapMons
 	ld hl, PickEnemyMonText
 	call PrintText
-	call SwapPokemonEnemy
+	ld b, Bank(SwapPokemonEnemy)
+	ld hl, SwapPokemonEnemy
+	call Bankswitch
 	jr nc, .swapPlayerMons
 	ld hl, SwapAreYouSureText
 	call PrintText
@@ -56249,7 +56253,9 @@ TrainerBattleVictory: ; 3c696 (f:4696)
 .swapPlayerMons
 	ld hl, PickPlayerMonText
 	call PrintText
-	call SwapPokemonPlayer
+	ld b, Bank(SwapPokemonPlayer)
+	ld hl, SwapPokemonPlayer
+	call Bankswitch
 	jr nc, .swapCompleted
 	jr .yesSwapMons
 .swapCompleted
@@ -123157,7 +123163,7 @@ SwapPokemonEnemy:
 	xor a
 	ld [wCurrentMenuItem], a
 	ld [wListScrollOffset], a
-	ld a, $77
+	ld a, BATTLEFACTORYSWAPMENU
 	ld [wListMenuID], a
 	ld a, Bank(SwapPokemonEnemy)
 	ld [$cf08], a ; save current bank
@@ -123225,6 +123231,7 @@ SwapPokemonPlayer:
 	xor a
 	ld [wCurrentMenuItem], a
 	ld [wListScrollOffset], a
+	xor a
 	ld [wListMenuID], a
 	ld a, Bank(SwapPokemonPlayer)
 	ld [$cf08], a ; save current bank
@@ -123526,6 +123533,7 @@ DefText60:
 	db "@"
 
 TrainerMonMenu:
+	push bc
 	ld a,[wWhichPokemon]
 	ld b,a
 	ld a,4
@@ -123542,4 +123550,6 @@ TrainerMonMenu:
 	ld [$d11e], a
 	call GetMonName
 	pop hl
+	pop bc
+	ld de,$cd6d
 	ret
