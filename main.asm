@@ -29452,6 +29452,13 @@ ItemMenuLoop: ; 132fc (4:72fc)
 	call GoPAL_SET_CF1C
 
 StartMenu_Item: ; 13302 (4:7302)
+	ld a, [W_INCHALLENGE]
+	and a
+	jr z, .doMenu
+	ld hl, CantUseItemsNowText
+	call PrintText
+	jr .exitMenu
+.doMenu
 	ld a,[W_ISLINKBATTLE]
 	dec a
 	jr nz,.notInLinkBattle
@@ -29606,6 +29613,10 @@ StartMenu_Item: ; 13302 (4:7302)
 
 CannotUseItemsHereText: ; 1342a (4:742a)
 	TX_FAR _CannotUseItemsHereText
+	db "@"
+
+CantUseItemsNowText:
+	TX_FAR _CantUseItemsNowText
 	db "@"
 
 CannotGetOffHereText: ; 1342f (4:742f)
@@ -57596,6 +57607,9 @@ Func_3cfe8: ; 3cfe8 (f:4fe8)
 	ld a, [W_ISLINKBATTLE] ; $d12b
 	cp $4
 	jr nz, .asm_3cffd
+	ld a, [W_INCHALLENGE]
+	and a
+	jr z, .asm_3cffd
 	ld hl, ItemsCantBeUsedHere
 	call PrintText
 	jp InitBattleMenu
