@@ -29123,6 +29123,13 @@ StartMenu_Pokemon: ; 130a9 (4:70a9)
 	call ReloadMapData
 	jp StartMenu_Pokemon
 .choseOutOfBattleMove
+	ld a, [W_INCHALLENGE]
+	and a
+	jr z, .doMove
+	ld hl, CantUseMoveNowText
+	call PrintText
+	jp .loop
+.doMove
 	push hl
 	ld a,[wWhichPokemon]
 	ld hl,W_PARTYMON1NAME
@@ -29421,6 +29428,10 @@ StartMenu_Pokemon: ; 130a9 (4:70a9)
 	jp .loop
 .newBadgeRequiredText
 	TX_FAR _NewBadgeRequiredText
+	db "@"
+
+CantUseMoveNowText:
+	TX_FAR _CantUseMoveNowText
 	db "@"
 
 ; writes a blank tile to all possible menu cursor positions on the party menu

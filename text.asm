@@ -4188,3 +4188,10 @@ _SpecialOpponentText::
 	cont "DETECTED..."
 	cont "BEGIN BATTLE..."
 	done
+
+_CantUseMoveNowText::
+	text "You can't use this"
+	line "now because you're"
+	cont "competing in the"
+	cont "BATTLE FACTORY."
+	prompt
