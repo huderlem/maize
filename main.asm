@@ -121903,41 +121903,32 @@ ClearParty: ; TODO: not used
 
 FillMonChoices:
 ; places 6 random pokemon
-	ld a, [W_NUMINBOX]
-	ld e, a ; e contains original num mons in box
-	ld d, 0
-	ld hl, W_NUMINBOX+1
-	add hl, de
-	ld a, $ff
-	ld [hli], a
-	ld [hli], a
-	ld [hli], a
-	ld [hli], a
-	ld [hli], a
-	ld [hl], a
+	ld d, 0 ; num mons placed
 	ld b, 6 ; num mons to place
 .fillLoop
-	push de
-	push bc
 	call PickMon
-	pop bc
-	pop de
+	ld e, a
 	ld hl, W_NUMINBOX+1
-	add hl, de ; compensate for num mons already in box
-	ld c, 6
+	ld c, d
 .notPickedLoop
+	ld a, c
+	and a
+	jr z, .safePick
+	ld a, e
 	cp [hl]
 	jp z, .fillLoop
 	inc hl
 	dec c
-	jp nz, .notPickedLoop
+	jr .notPickedLoop
 .safePick
+	ld a, e
 	ld [$cf91], a
 	ld a, 50 ; mon level
 	ld [$d127], a
 	push de
 	call FillMonData
 	pop de
+	inc d
 	dec b
 	jp nz, .fillLoop
 	ret
