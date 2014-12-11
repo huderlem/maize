@@ -12495,6 +12495,8 @@ UpdatePlayerSprite: ; 4e31 (1:4e31)
 	ld a, [$FF00+$93]
 	ld c, a
 	ld a, [W_GRASSTILE]
+	cp $3c
+	jr z, .bridge
 	cp c
 	ld a, $0
 	jr nz, .asm_4ec3
@@ -12502,6 +12504,9 @@ UpdatePlayerSprite: ; 4e31 (1:4e31)
 .asm_4ec3
 	ld [$c207], a
 	ret
+.bridge
+	xor a
+	jr .asm_4ec3
 
 Func_4ec7: ; 4ec7 (1:4ec7)
 	push bc
@@ -32209,7 +32214,7 @@ PalletTownObject: ; 0x182c3 (size=58)
 	db $f ; border tile
 
 	db $3 ; warps
-	db $d, $3, $0, BATTLE_FACTORY
+	db $d, $3, $0, FUCHSIA_GYM
 	db $7, $3, $0, BLUES_HOUSE
 	db $b, $c, $1, OAKS_LAB
 
@@ -32448,7 +32453,8 @@ FuchsiaCity_h: ; 0x18ba7 to 0x18bd4 (45 bytes) (bank=6) (id=7)
 	db $00 ; tileset
 	db FUCHSIA_CITY_HEIGHT, FUCHSIA_CITY_WIDTH ; dimensions (y, x)
 	dw FuchsiaCityBlocks, FuchsiaCityTextPointers, FuchsiaCityScript ; blocks, texts, scripts
-	db WEST | EAST ; connections
+	db NORTH | WEST | EAST ; connections
+	NORTH_MAP_CONNECTION ROUTE_10, ROUTE_10_WIDTH, ROUTE_10_HEIGHT, 3, 0, ROUTE_10_WIDTH, Route10Blocks
 	WEST_MAP_CONNECTION ROUTE_9, ROUTE_9_WIDTH, 3, 0, ROUTE_9_HEIGHT, Route9Blocks, FUCHSIA_CITY_WIDTH
 	EAST_MAP_CONNECTION ROUTE_7, ROUTE_7_WIDTH, 4, 0, ROUTE_7_HEIGHT, Route7Blocks, FUCHSIA_CITY_WIDTH
 	dw FuchsiaCityObject ; objects
@@ -37019,9 +37025,9 @@ OaksLabScript13: ; 1ce32 (7:4e32)
 	ld a, $10
 	ld [$ff00+$8c], a
 	call DisplayTextID
-	ld b, BANK(Music_MeetRival)
-	ld hl, Music_MeetRival
-	call Bankswitch
+	ld c, BANK(Music_MeetRival)
+	ld a, MUSIC_MEET_RIVAL
+	call PlayMusic
 	ld a, $1
 	ld [$ff00+$8c], a
 	ld de, .RivalExitMovement
@@ -37087,9 +37093,9 @@ OaksLabScript15: ; 1ceb0 (7:4eb0)
 	ld a, $ff
 	ld [$c0ee], a
 	call PlaySound
-	ld b, BANK(Music_MeetRival)
-	ld hl, Music_MeetRival
-	call Bankswitch
+	ld c, BANK(Music_MeetRival)
+	ld a, MUSIC_MEET_RIVAL
+	call PlayMusic
 	ld a, $15
 	ld [$ff00+$8c], a
 	call DisplayTextID
@@ -37197,9 +37203,9 @@ OaksLabScript16: ; 1cf12 (7:4f12)
 	ld a, $ff
 	ld [$c0ee], a
 	call PlaySound
-	ld b, BANK(Music_MeetRival)
-	ld hl, Music_MeetRival
-	call Bankswitch
+	ld c, BANK(Music_MeetRival)
+	ld a, MUSIC_MEET_RIVAL
+	call PlayMusic
 	ld a, $1
 	ld [$ff00+$8c], a
 	ld de, $cc97
@@ -78699,9 +78705,9 @@ Route22Script2: ; 50fb5 (14:4fb5)
 	ld a, $ff
 	ld [$c0ee], a
 	call PlaySound
-	ld b, BANK(Music_MeetRival)
-	ld hl, Music_MeetRival
-	call Bankswitch
+	ld c, BANK(Music_MeetRival)
+	ld a, MUSIC_MEET_RIVAL
+	call PlayMusic
 	ld a, [$cf0d]
 	cp $1
 	jr nz, .asm_50fff ; 0x50ff8 $5
@@ -78766,9 +78772,9 @@ Func_5104e: ; 5104e (14:504e)
 	ld a, $ff
 	ld [$c0ee], a
 	call PlaySound
-	ld b, BANK(Music_MeetRival)
-	ld hl, Music_MeetRival
-	call Bankswitch ; indirect jump to Music_MeetRival (9b65 (2:5b65))
+	ld c, BANK(Music_MeetRival)
+	ld a, MUSIC_MEET_RIVAL
+	call PlayMusic
 	ld a, $2
 	ld [H_DOWNARROWBLINKCNT2], a ; $FF00+$8c
 	call Func_50ee6
@@ -78850,9 +78856,9 @@ Route22Script5: ; 510df (14:50df)
 	ld a, $ff
 	ld [$c0ee], a
 	call PlaySound
-	ld b, BANK(Music_MeetRival)
-	ld hl, Music_MeetRival
-	call Bankswitch ; indirect jump to Music_MeetRival (9b75 (2:5b75))
+	ld c, BANK(Music_MeetRival)
+	ld a, MUSIC_MEET_RIVAL
+	call PlayMusic
 	ld a, [$cf0d]
 	cp $1
 	jr nz, .asm_51134
@@ -80482,9 +80488,9 @@ SilphCo7Script4: ; 51cc8 (14:5cc8)
 	ld a, $ff
 	ld [$c0ee], a
 	call PlaySound
-	ld b, BANK(Music_MeetRival)
-	ld hl, Music_MeetRival
-	call Bankswitch ; indirect jump to Music_MeetRival (9b47 (2:5b47))
+	ld c, BANK(Music_MeetRival)
+	ld a, MUSIC_MEET_RIVAL
+	call PlayMusic
 	ld de, MovementData_51d1d
 	ld a, [$cf0d]
 	cp $1
@@ -86512,19 +86518,14 @@ Route10_h: ; 0x582d4 to 0x582f6 (34 bytes) (id=21)
 	db $00 ; tileset
 	db ROUTE_10_HEIGHT, ROUTE_10_WIDTH ; dimensions (y, x)
 	dw Route10Blocks, Route10TextPointers, Route10Script ; blocks, texts, scripts
-	db SOUTH | WEST ; connections
-	SOUTH_MAP_CONNECTION LAVENDER_TOWN, LAVENDER_TOWN_WIDTH, 0, 0, LAVENDER_TOWN_WIDTH, LavenderTownBlocks, ROUTE_10_WIDTH, ROUTE_10_HEIGHT
-	WEST_MAP_CONNECTION ROUTE_9, ROUTE_9_WIDTH, 0, 0, ROUTE_9_HEIGHT, Route9Blocks, ROUTE_10_WIDTH
+	db SOUTH ; connections
+	SOUTH_MAP_CONNECTION FUCHSIA_CITY, FUCHSIA_CITY_WIDTH, -3, 0, FUCHSIA_CITY_WIDTH, FuchsiaCityBlocks, ROUTE_10_WIDTH, ROUTE_10_HEIGHT
 	dw Route10Object ; objects
 
 Route10Object: ; 0x582f6 (size=96)
 	db $2c ; border tile
 
-	db $4 ; warps
-	db $13, $b, $0, ROCK_TUNNEL_POKECENTER
-	db $11, $8, $0, ROCK_TUNNEL_1
-	db $35, $8, $2, ROCK_TUNNEL_1
-	db $27, $6, $0, POWER_PLANT
+	db $0 ; warps
 
 	db $4 ; signs
 	db $13, $7, $7 ; Route10Text7
@@ -86541,11 +86542,7 @@ Route10Object: ; 0x582f6 (size=96)
 	db SPRITE_LASS, $36 + 4, $7 + 4, $ff, $d0, $46, JR__TRAINER_F + $C8, $8 ; trainer
 
 	; warp-to
-	EVENT_DISP $a, $13, $b ; ROCK_TUNNEL_POKECENTER
-	EVENT_DISP $a, $11, $8 ; ROCK_TUNNEL_1
-	EVENT_DISP $a, $35, $8 ; ROCK_TUNNEL_1
-	EVENT_DISP $a, $27, $6 ; POWER_PLANT
-
+	
 Route10Blocks: ; 58356 (16:4356)
 	INCBIN "maps/route10.blk"
 
@@ -87787,9 +87784,14 @@ Route10Script: ; 59336 (16:5336)
 	ret
 
 Route10ScriptPointers: ; 59349 (16:5349)
-	dw CheckFightingMapTrainers
+	dw Route10Script0
 	dw Func_324c
 	dw EndTrainerBattle
+
+Route10Script0:
+	ld a, $3c
+	ld [W_GRASSTILE], a
+	jp CheckFightingMapTrainers
 
 Route10TextPointers: ; 5934f (16:534f)
 	dw Route10Text1
@@ -96656,9 +96658,9 @@ SSAnne2Script2: ; 6146d (18:546d)
 	ld a, $ff
 	ld [$c0ee], a
 	call PlaySound
-	ld b, BANK(Music_MeetRival)
-	ld hl, Music_MeetRival
-	call Bankswitch
+	ld c, BANK(Music_MeetRival)
+	ld a, MUSIC_MEET_RIVAL
+	call PlayMusic
 	ld a, $3
 	ld [W_SSANNE2CURSCRIPT], a
 	ret
@@ -107105,7 +107107,7 @@ FuchsiaGymObject: ; 0x75658 (size=82)
 	db $3 ; border tile
 
 	db $2 ; warps
-	db $11, $4, $0, $ff
+	db $11, $4, $0, FUCHSIA_CITY
 	db $11, $5, $0, $ff
 
 	db $0 ; signs
