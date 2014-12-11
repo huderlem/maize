@@ -1498,6 +1498,7 @@ W_NEWFLAGS2::
 	; 4: roaming pokemon 2 (if bit is set, then it's actively roaming)
 	; 5: roaming pokemon 3 (if bit is set, then it's actively roaming)
 	; 6: sliding on ice
+	; 7: fixed bridge
 	
 W_COVENANT::
 	ds 1

@@ -11640,7 +11640,7 @@ ItemNames: ; 472b (1:472b)
 	db "POTION@"
 	db "LOST KEYS@"
 	db "SLAVE BALL@"
-	db "THUNDERBADGE@"
+	db "REPAIR KIT@"
 	db "RAINBOWBADGE@"
 	db "SOULBADGE@"
 	db "MARSHBADGE@"
@@ -87791,6 +87791,36 @@ Route10ScriptPointers: ; 59349 (16:5349)
 Route10Script0:
 	ld a, $3c
 	ld [W_GRASSTILE], a
+	; has player fixed bridge?
+	ld hl, W_NEWFLAGS2
+	bit 7, [hl]
+	jr nz, .done
+	; is player about to walk onto bridge?
+	ld a, [W_YCOORD]
+	cp $2c
+	jr nz, .done
+	; display textbox
+	ld a, $1
+	ld [$ff00+$8c], a
+	call DisplayTextID
+	ld hl, W_NEWFLAGS2
+	bit 7, [hl]
+	jr nz, .done
+	; move player one space down
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_DOWN
+	ld [$ccd3],a ; base address of simulated button presses
+	xor a
+	ld [$cd39],a
+	inc a
+	ld [$cd38],a ; index of current simulated button press
+	ld hl,$d730
+	set 7,[hl]
+	ret
+.done
 	jp CheckFightingMapTrainers
 
 Route10TextPointers: ; 5934f (16:534f)
@@ -87805,15 +87835,7 @@ Route10TextPointers: ; 5934f (16:534f)
 	dw Route10Text9
 	dw Route10Text10
 
-Route10TrainerHeaders: ; 59363 (16:5363)
-Route10TrainerHeader0: ; 59363 (16:5363)
-	db $1 ; flag's bit
-	db ($4 << 4) ; trainer's view range
-	dw $d7d1 ; flag's byte
-	dw Route10BattleText1 ; 0x53b6 TextBeforeBattle
-	dw Route10AfterBattleText1 ; 0x53c0 TextAfterBattle
-	dw Route10EndBattleText1 ; 0x53bb TextEndBattle
-	dw Route10EndBattleText1 ; 0x53bb TextEndBattle
+Route10TrainerHeaders: ; 59363 (16:5363) ; TODO: unused bit $d7d1 bit 1
 
 Route10TrainerHeader1: ; 5936f (16:536f)
 	db $2 ; flag's bit
@@ -87864,20 +87886,54 @@ Route10TrainerHeader5: ; 5939f (16:539f)
 
 Route10Text1: ; 593ac (16:53ac)
 	db $08 ; asm
-	ld hl, Route10TrainerHeader0
-	call TalkToTrainer
+	; did player already fix bridge?
+	ld hl, W_NEWFLAGS2
+	bit 7, [hl]
+	jr nz, .fixedBridge
+	; check for repair kit item
+	ld b, REPAIR_KIT
+	call IsItemInBag
+	jr z,.needKit
+	ld a, REPAIR_KIT
+	ldh [$db], a
+	ld b, BANK(RemoveItemByID)
+	ld hl, RemoveItemByID
+	call Bankswitch
+	ld hl, GiveRepairKitText
+	call PrintText
+	call GBFadeOut2
+	ld c, 90 ; 3 seconds
+	call DelayFrames
+	call GBFadeIn2
+	ld hl, BridgeWasFixedText
+	call PrintText
+	ld hl, W_NEWFLAGS2
+	set 7, [hl]
+	jr .done
+.needKit
+	ld hl, NeedRepairKitText
+	call PrintText
+	jr .done
+.fixedBridge
+	ld hl, Route10FixedBridgeText
+	call PrintText
+.done
 	jp TextScriptEnd
 
-Route10BattleText1: ; 593b6 (16:53b6)
-	TX_FAR _Route10BattleText1
+NeedRepairKitText:
+	TX_FAR _NeedRepairKitText
 	db "@"
 
-Route10EndBattleText1: ; 593bb (16:53bb)
-	TX_FAR _Route10EndBattleText1
+Route10FixedBridgeText:
+	TX_FAR _Route10FixedBridgeText
 	db "@"
 
-Route10AfterBattleText1: ; 593c0 (16:53c0)
-	TX_FAR _Route10AfterBattleText1
+GiveRepairKitText:
+	TX_FAR _GiveRepairKitText
+	db "@"
+
+BridgeWasFixedText:
+	TX_FAR _BridgeWasFixedText
 	db "@"
 
 Route10Text2: ; 593c5 (16:53c5)
@@ -117015,8 +117071,11 @@ _SlaveBallDescription::
 	cont "Nuzlocke Mode."
 	prompt
 
-_ThunderBadgeDescription::
-	text "..."
+_RepairKitDescription::
+	text "A useful set of"
+	line "tools that are"
+	cont "used for fixing"
+	cont "bridges."
 	prompt
 
 _RainbowBadgeDescription::
@@ -119858,7 +119917,7 @@ ItemInfoPointers:
 	db "@"
 	TX_FAR _SlaveBallDescription
 	db "@"
-	TX_FAR _ThunderBadgeDescription
+	TX_FAR _RepairKitDescription
 	db "@"
 	TX_FAR _RainbowBadgeDescription
 	db "@"
