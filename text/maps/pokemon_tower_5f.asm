@@ -1,72 +1,85 @@
 _PokemonTower5Text1:: ; 99958 (26:5958)
-	text "Come, child! I"
-	line "sealed this space"
-	cont "with white magic!"
+	text "Phew!"
 
-	para "You can rest here!"
+	para "The tracking"
+	line "system seems to"
+	cont "be functioning"
+	cont "normally."
 	done
 
-_PokemonTower5BattleText1:: ; 9999f (26:599f)
-	text "Give...me..."
-	line "your...soul..."
+_PokemonTower5Text2:: ; 9999f (26:599f)
+	text "I'm pretty smart,"
+	line "which is why I"
+	cont "work on legendary"
+	cont "tracking."
+
+	para "(I have a Ph.D.)"
 	done
 
-_PokemonTower5EndBattleText1:: ; 999bc (26:59bc)
-	text "Gasp!"
-	prompt
+_PokemonTower5Text3:: ; 999dc (26:59dc)
+	text "The birds"
+	line "reappeared as"
+	cont "quickly as they"
+	cont "disappeared!"
 
-_PokemonTower5AfterBattleText1:: ; 999c3 (26:59c3)
-	text "I was under"
-	line "possession!"
+	para "Good thing we all"
+	line "have a Ph.D.,"
+	cont "otherwise, who"
+	cont "knows what would"
+	cont "have happened to"
+	cont "them!"
 	done
 
-_PokemonTower5BattleText2:: ; 999dc (26:59dc)
-	text "You...shall..."
-	line "join...us..."
+_PokemonTower5Text4:: ; 99a1e (26:5a1e)
+	text "Our advanced"
+	line "legendary #MON"
+	cont "tracking system"
+	cont "instantly alerted"
+	cont "us to the bird"
+	cont "trio's absense!"
+
+	para "We saved the day!"
+
+	para "I definitely"
+	line "deserve my Ph.D."
 	done
 
-_PokemonTower5EndBattleText2:: ; 999f9 (26:59f9)
-	text "What"
-	line "a nightmare!"
-	prompt
+_PokemonTower5Text5:: ; 99a44 (26:5a44)
+	text "What's that?"
 
-_PokemonTower5AfterBattleText2:: ; 99a0c (26:5a0c)
-	text "I was possessed!"
+	para "Why yes, I do"
+	line "sleep with my"
+	cont "Ph.D. at night."
+
+	para "It's comforting to"
+	line "know how smart"
+	cont "I am!"
 	done
 
-_PokemonTower5BattleText3:: ; 99a1e (26:5a1e)
-	text "Zombies!"
+_PokemonTower5Text7:: ; 99958 (26:5958)
+	text "How could this"
+	line "happen?!"
+
+	para "They just"
+	line "vanished!"
+
+	para "Our tracking"
+	line "systems are top-"
+	cont "notch!"
+
+	para "Whoever captured"
+	line "them must be an"
+	cont "absolute genius!"
+
+	para "..."
+
+	para "Excuse me, little"
+	line "boy, but you need"
+	cont "to leave this"
+	cont "area."
+
+	para "We have a"
+	line "legendary"
+	cont "emergency on our"
+	cont "hands!"
 	done
-
-_PokemonTower5EndBattleText3:: ; 99a28 (26:5a28)
-	text "Ha?"
-	prompt
-
-_PokemonTower5AfterBattleText3:: ; 99a2d (26:5a2d)
-	text "I regained my"
-	line "senses!"
-	done
-
-_PokemonTower5BattleText4:: ; 99a44 (26:5a44)
-	text "Urgah..."
-	line "Urff...."
-	done
-
-_PokemonTower5EndBattleText4:: ; 99a57 (26:5a57)
-	text "Whoo!"
-	prompt
-
-_PokemonTower5AfterBattleText4:: ; 99a5e (26:5a5e)
-	text "I fell to evil"
-	line "spirits despite"
-	cont "my training!"
-	done
-
-_UnnamedText_60a43:: ; 99a8b (26:5a8b)
-	text "Entered purified,"
-	line "protected zone!"
-
-	para $52, "'s #MON"
-	line "are fully healed!"
-	done
-

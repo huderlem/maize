@@ -20550,8 +20550,8 @@ MapHS91: ; cb98 (3:4b98)
 MapHS92: ; cba1 (3:4ba1)
 	db POKEMONTOWER_5,$06,Show
 MapHS93: ; cba4 (3:4ba4)
-	db POKEMONTOWER_6,$04,Show
-	db POKEMONTOWER_6,$05,Show
+	db POKEMONTOWER_6,$02,Show
+	db POKEMONTOWER_6,$03,Show
 MapHS94: ; cbaa (3:4baa)
 	db POKEMONTOWER_7,$01,Show
 	db POKEMONTOWER_7,$02,Show
@@ -21168,8 +21168,8 @@ WildDataPointers: ; ceeb (3:4eeb)
 	dw TowerMons2
 	dw TowerMons3
 	dw TowerMons4
-	dw TowerMons5
-	dw TowerMons6
+	dw NoMons
+	dw NoMons
 	dw TowerMons7
 	dw NoMons
 	dw NoMons
@@ -93467,22 +93467,21 @@ SilphCo1Object: ; 0x5d470 (size=50)
 	db $2e ; border tile
 
 	db $3 ; warps
-	db $f, $6, $6, $ff
-	db $f, $7, $6, $ff
-	db $0, $c, $0, SILPH_CO_2F
+	db $f, $6, $6, FUCHSIA_CITY
+	db $f, $7, $6, FUCHSIA_CITY
+	db $0, $c, $1, POKEMONTOWER_5
 
 	db $0 ; signs
 
-	db $4 ; people
+	db $3 ; people
 	db SPRITE_CABLE_CLUB_WOMAN, $2 + 4, $4 + 4, $ff, $d0, $1 ; person
 	db SPRITE_OAK_AIDE, $9 + 4, $9 + 4, $ff, $ff, $2 ; person
 	db SPRITE_OAK_AIDE, $a + 4, $b + 4, $ff, $ff, $3 ; person
-	db SPRITE_OAK_AIDE, $1 + 4, $c + 4, $ff, $d0, $4 ; person
 
 	; warp-to
 	EVENT_DISP SILPH_CO_1F_WIDTH, $f, $6
 	EVENT_DISP SILPH_CO_1F_WIDTH, $f, $7
-	EVENT_DISP SILPH_CO_1F_WIDTH, $0, $c ; SILPH_CO_2F
+	EVENT_DISP SILPH_CO_1F_WIDTH, $0, $c ; POKEMONTOWER_5
 
 SilphCo1Blocks: ; 5d4a2 (17:54a2)
 	INCBIN "maps/silphco1.blk"
@@ -95359,7 +95358,7 @@ PokemonTower4Blocks: ; 608cc (18:48cc)
 	INCBIN "maps/pokemontower4.blk"
 
 PokemonTower5_h: ; 0x60926 to 0x60932 (12 bytes) (id=146)
-	db $0f ; tileset
+	db $16 ; tileset
 	db POKEMONTOWER_5_HEIGHT, POKEMONTOWER_5_WIDTH ; dimensions (y, x)
 	dw PokemonTower5Blocks, PokemonTower5TextPointers, PokemonTower5Script ; blocks, texts, scripts
 	db $00 ; connections
@@ -95367,60 +95366,42 @@ PokemonTower5_h: ; 0x60926 to 0x60932 (12 bytes) (id=146)
 
 PokemonTower5Script: ; 60932 (18:4932)
 	call EnableAutoTextBoxDrawing
-	ld hl, PokemonTower5TrainerHeaders
-	ld de, PokemonTower5ScriptPointers
-	ld a, [W_POKEMONTOWER5CURSCRIPT]
-	call ExecuteCurMapScriptInTable
-	ld [W_POKEMONTOWER5CURSCRIPT], a
-	ret
+	ld hl,PokemonTower5ScriptPointers
+	ld a,[W_POKEMONTOWER5CURSCRIPT]
+	jp CallFunctionInTable
 
 PokemonTower5ScriptPointers: ; 60945 (18:4945)
 	dw PokemonTower5Script0
-	dw Func_324c
-	dw EndTrainerBattle
 
 PokemonTower5Script0: ; 6094b (18:494b)
-	ld hl, CoordsData_60992 ; $4992
-	call ArePlayerCoordsInArray
-	jr c, .asm_60960
-	ld hl, $d72e
-	res 4, [hl]
-	ld hl, $d767
-	res 7, [hl]
-	jp CheckFightingMapTrainers
-.asm_60960
-	ld hl, $d767
-	bit 7, [hl]
-	set 7, [hl]
+	; has player freed birds?
+	ld hl, $d5ac ; byte for birds missage object flags
+	bit 7, [hl] ; one of the birds' flags
 	ret nz
-	xor a
-	ld [H_CURRENTPRESSEDBUTTONS], a
-	ld a, $f0
-	ld [wJoypadForbiddenButtonsMask], a
-	ld hl, $d72e
-	set 4, [hl]
-	ld a, $7
-	call Predef ; indirect jump to HealParty (f6a5 (3:76a5))
-	call GBFadeOut2
-	call Delay3
-	call Delay3
-	call GBFadeIn2
+	ld a, [W_XCOORD]
+	cp $b
+	ret nz
+	; make player back up
 	ld a, $7
 	ld [H_DOWNARROWBLINKCNT2], a ; $FF00+$8c
 	call DisplayTextID
+	; move player one space right
 	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
 	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_RIGHT
+	ld [$ccd3],a ; base address of simulated button presses
+	xor a
+	ld [$cd39],a
+	inc a
+	ld [$cd38],a ; index of current simulated button press
+	ld hl,$d730
+	set 7,[hl]
 	ret
 
-CoordsData_60992: ; 60992 (18:4992)
-	db $08,$0A
-	db $08,$0B
-	db $09,$0A
-	db $09,$0B
-	db $FF
-
 PokemonTower5TextPointers: ; 6099b (18:499b)
-	dw PokemonTower5Text1
+	dw PokemonTower5Text1 ; back up
 	dw PokemonTower5Text2
 	dw PokemonTower5Text3
 	dw PokemonTower5Text4
@@ -95428,151 +95409,59 @@ PokemonTower5TextPointers: ; 6099b (18:499b)
 	dw Predef5CText
 	dw PokemonTower5Text7
 
-PokemonTower5TrainerHeaders: ; 609a9 (18:49a9)
-PokemonTower5TrainerHeader0: ; 609a9 (18:49a9)
-	db $2 ; flag's bit
-	db ($2 << 4) ; trainer's view range
-	dw $d767 ; flag's byte
-	dw PokemonTower5BattleText1 ; 0x49e9 TextBeforeBattle
-	dw PokemonTower5AfterBattleText1 ; 0x49f3 TextAfterBattle
-	dw PokemonTower5EndBattleText1 ; 0x49ee TextEndBattle
-	dw PokemonTower5EndBattleText1 ; 0x49ee TextEndBattle
-
-PokemonTower5TrainerHeader1: ; 609b5 (18:49b5)
-	db $3 ; flag's bit
-	db ($3 << 4) ; trainer's view range
-	dw $d767 ; flag's byte
-	dw PokemonTower5BattleText2 ; 0x4a02 TextBeforeBattle
-	dw PokemonTower5AfterBattleText2 ; 0x4a0c TextAfterBattle
-	dw PokemonTower5EndBattleText2 ; 0x4a07 TextEndBattle
-	dw PokemonTower5EndBattleText2 ; 0x4a07 TextEndBattle
-
-PokemonTower5TrainerHeader2: ; 609c1 (18:49c1)
-	db $4 ; flag's bit
-	db ($2 << 4) ; trainer's view range
-	dw $d767 ; flag's byte
-	dw PokemonTower5BattleText3 ; 0x4a1b TextBeforeBattle
-	dw PokemonTower5AfterBattleText3 ; 0x4a25 TextAfterBattle
-	dw PokemonTower5EndBattleText3 ; 0x4a20 TextEndBattle
-	dw PokemonTower5EndBattleText3 ; 0x4a20 TextEndBattle
-
-PokemonTower5TrainerHeader3: ; 609cd (18:49cd)
-	db $5 ; flag's bit
-	db ($2 << 4) ; trainer's view range
-	dw $d767 ; flag's byte
-	dw PokemonTower5BattleText4 ; 0x4a34 TextBeforeBattle
-	dw PokemonTower5AfterBattleText4 ; 0x4a3e TextAfterBattle
-	dw PokemonTower5EndBattleText4 ; 0x4a39 TextEndBattle
-	dw PokemonTower5EndBattleText4 ; 0x4a39 TextEndBattle
-
-	db $ff
+	; TODO: unsed bits
+	; $d767 bits 2, 3, 4, 5
 
 PokemonTower5Text1: ; 609da (18:49da)
 	TX_FAR _PokemonTower5Text1
 	db "@"
 
 PokemonTower5Text2: ; 609df (18:49df)
-	db $08 ; asm
-	ld hl, PokemonTower5TrainerHeader0
-	call TalkToTrainer
-	jp TextScriptEnd
-
-PokemonTower5BattleText1: ; 609e9 (18:49e9)
-	TX_FAR _PokemonTower5BattleText1
+	TX_FAR _PokemonTower5Text2
 	db "@"
 
-PokemonTower5EndBattleText1: ; 609ee (18:49ee)
-	TX_FAR _PokemonTower5EndBattleText1
+PokemonTower5Text3: ; 609df (18:49df)
+	TX_FAR _PokemonTower5Text3
 	db "@"
 
-PokemonTower5AfterBattleText1: ; 609f3 (18:49f3)
-	TX_FAR _PokemonTower5AfterBattleText1
+PokemonTower5Text4: ; 609df (18:49df)
+	TX_FAR _PokemonTower5Text4
 	db "@"
 
-PokemonTower5Text3: ; 609f8 (18:49f8)
-	db $08 ; asm
-	ld hl, PokemonTower5TrainerHeader1
-	call TalkToTrainer
-	jp TextScriptEnd
-
-PokemonTower5BattleText2: ; 60a02 (18:4a02)
-	TX_FAR _PokemonTower5BattleText2
-	db "@"
-
-PokemonTower5EndBattleText2: ; 60a07 (18:4a07)
-	TX_FAR _PokemonTower5EndBattleText2
-	db "@"
-
-PokemonTower5AfterBattleText2: ; 60a0c (18:4a0c)
-	TX_FAR _PokemonTower5AfterBattleText2
-	db "@"
-
-PokemonTower5Text4: ; 60a11 (18:4a11)
-	db $08 ; asm
-	ld hl, PokemonTower5TrainerHeader2
-	call TalkToTrainer
-	jp TextScriptEnd
-
-PokemonTower5BattleText3: ; 60a1b (18:4a1b)
-	TX_FAR _PokemonTower5BattleText3
-	db "@"
-
-PokemonTower5EndBattleText3: ; 60a20 (18:4a20)
-	TX_FAR _PokemonTower5EndBattleText3
-	db "@"
-
-PokemonTower5AfterBattleText3: ; 60a25 (18:4a25)
-	TX_FAR _PokemonTower5AfterBattleText3
-	db "@"
-
-PokemonTower5Text5: ; 60a2a (18:4a2a)
-	db $08 ; asm
-	ld hl, PokemonTower5TrainerHeader3 ; $49cd
-	call TalkToTrainer
-	jp TextScriptEnd
-
-PokemonTower5BattleText4: ; 60a34 (18:4a34)
-	TX_FAR _PokemonTower5BattleText4
-	db "@"
-
-PokemonTower5EndBattleText4: ; 60a39 (18:4a39)
-	TX_FAR _PokemonTower5EndBattleText4
-	db "@"
-
-PokemonTower5AfterBattleText4: ; 60a3e (18:4a3e)
-	TX_FAR _PokemonTower5AfterBattleText4
+PokemonTower5Text5: ; 609df (18:49df)
+	TX_FAR _PokemonTower5Text5
 	db "@"
 
 PokemonTower5Text7: ; 60a43 (18:4a43)
-	TX_FAR _UnnamedText_60a43
+	TX_FAR _PokemonTower5Text7
 	db "@"
 
 PokemonTower5Object: ; 0x60a48 (size=65)
-	db $1 ; border tile
+	db $2e ; border tile
 
 	db $2 ; warps
-	db $9, $3, $0, POKEMONTOWER_4
-	db $9, $12, $0, POKEMONTOWER_6
+	db $0, $8, $0, POKEMONTOWER_6
+	db $0, $c, $2, SILPH_CO_1F
 
 	db $0 ; signs
 
 	db $6 ; people
-	db SPRITE_MEDIUM, $8 + 4, $c + 4, $ff, $ff, $1 ; person
-	db SPRITE_MEDIUM, $7 + 4, $11 + 4, $ff, $d2, $42, CHANNELER + $C8, $e ; trainer
-	db SPRITE_MEDIUM, $3 + 4, $e + 4, $ff, $d2, $43, CHANNELER + $C8, $10 ; trainer
-	db SPRITE_MEDIUM, $a + 4, $6 + 4, $ff, $d3, $44, CHANNELER + $C8, $11 ; trainer
-	db SPRITE_MEDIUM, $10 + 4, $9 + 4, $ff, $d3, $45, CHANNELER + $C8, $12 ; trainer
-	db SPRITE_BALL, $e + 4, $6 + 4, $ff, $ff, $86, NUGGET ; item
+	db SPRITE_OAK_AIDE, $6 + 4, $8 + 4, $ff, $d1, $1 ; person
+	db SPRITE_LASS, $7 + 4, $6 + 4, $ff, $d2, $2 ; person
+	db SPRITE_OAK_AIDE, $b + 4, $7 + 4, $ff, $d0, $3 ; person
+	db SPRITE_OAK_AIDE, $b + 4, $9 + 4, $ff, $d0, $4 ; person
+	db SPRITE_LASS, $c + 4, $5 + 4, $ff, $d3, $5 ; person
+	db SPRITE_BALL, $3 + 4, $1 + 4, $ff, $ff, $86, SCOUTER_RING ; item
 
 	; warp-to
-	EVENT_DISP $a, $9, $3 ; POKEMONTOWER_4
-	EVENT_DISP $a, $9, $12 ; POKEMONTOWER_6
+	EVENT_DISP POKEMONTOWER_5_WIDTH, $0, $8 ; POKEMONTOWER_6
+	EVENT_DISP POKEMONTOWER_5_WIDTH, $0, $c ; SILPH_CO_1F
 
 PokemonTower5Blocks: ; 60a89 (18:4a89)
 	INCBIN "maps/pokemontower5.blk"
 
 PokemonTower6_h: ; 0x60ae3 to 0x60aef (12 bytes) (id=147)
-	db $0f ; tileset
+	db $16 ; tileset
 	db POKEMONTOWER_6_HEIGHT, POKEMONTOWER_6_WIDTH ; dimensions (y, x)
 	dw PokemonTower6Blocks, PokemonTower6TextPointers, PokemonTower6Script ; blocks, texts, scripts
 	db $00 ; connections
@@ -95580,12 +95469,9 @@ PokemonTower6_h: ; 0x60ae3 to 0x60aef (12 bytes) (id=147)
 
 PokemonTower6Script: ; 60aef (18:4aef)
 	call EnableAutoTextBoxDrawing
-	ld hl, PokemonTower6TrainerHeaders
-	ld de, PokemonTower6ScriptPointers
-	ld a, [W_POKEMONTOWER6CURSCRIPT]
-	call ExecuteCurMapScriptInTable
-	ld [W_POKEMONTOWER6CURSCRIPT], a
-	ret
+	ld hl,PokemonTower6ScriptPointers
+	ld a,[W_POKEMONTOWER6CURSCRIPT]
+	jp CallFunctionInTable
 
 Func_60b02: ; 60b02 (18:4b02)
 	xor a
@@ -95596,223 +95482,116 @@ Func_60b02: ; 60b02 (18:4b02)
 
 PokemonTower6ScriptPointers: ; 60b0d (18:4b0d)
 	dw PokemonTower6Script0
-	dw Func_324c
-	dw EndTrainerBattle
-	dw PokemonTower6Script3
-	dw PokemonTower6Script4
 
 PokemonTower6Script0: ; 60b17 (18:4b17)
-	ld a, [$d768]
-	bit 7, a
-	jp nz, CheckFightingMapTrainers
-	ld hl, CoordsData_60b45 ; $4b45
-	call ArePlayerCoordsInArray
-	jp nc, CheckFightingMapTrainers
+	; is player trying to go up stairs?
+	ld a, [W_XCOORD]
+	cp 2
+	ret nz
+	ld a, [W_YCOORD]
+	cp 1
+	ret nz
+	; make player back up
+	ld a, $4
+	ld [H_DOWNARROWBLINKCNT2], a ; $FF00+$8c
+	call DisplayTextID
+	; move player one space down
 	xor a
 	ld [H_CURRENTPRESSEDBUTTONS], a
-	ld a, $6
-	ld [H_DOWNARROWBLINKCNT2], a ; $FF00+$8c
-	call DisplayTextID
-	ld a, $91
-	ld [W_CUROPPONENT], a ; $d059
-	ld a, $1e
-	ld [W_CURENEMYLVL], a ; $d127
-	ld a, $4
-	ld [W_POKEMONTOWER6CURSCRIPT], a
-	ld [W_CURMAPSCRIPT], a
-	ret
-
-CoordsData_60b45: ; 60b45 (18:4b45)
-	db $10,$0A,$FF
-
-PokemonTower6Script4: ; 60b48 (18:4b48)
-	ld a, [W_ISINBATTLE] ; $d057
-	cp $ff
-	jp z, Func_60b02
-	ld a, $ff
+	ld a, $ff ; disable all buttons
 	ld [wJoypadForbiddenButtonsMask], a
-	ld a, [$d72d]
-	bit 6, a
-	ret nz
-	call UpdateSprites
-	ld a, $f0
-	ld [wJoypadForbiddenButtonsMask], a
-	ld a, [$cf0b]
-	and a
-	jr nz, .asm_60b82
-	ld hl, $d768
-	set 7, [hl]
-	ld a, $7
-	ld [H_DOWNARROWBLINKCNT2], a ; $FF00+$8c
-	call DisplayTextID
+	ld a, BTN_DOWN
+	ld [$ccd3],a ; base address of simulated button presses
 	xor a
-	ld [wJoypadForbiddenButtonsMask], a
-	ld a, $0
-	ld [W_POKEMONTOWER6CURSCRIPT], a
-	ld [W_CURMAPSCRIPT], a
-	ret
-.asm_60b82
-	ld a, $1
-	ld [$cd38], a
-	ld a, $10
-	ld [$ccd3], a
-	xor a
-	ld [$c206], a
-	ld [$cd3b], a
-	ld hl, $d730
-	set 7, [hl]
-	ld a, $3
-	ld [W_POKEMONTOWER6CURSCRIPT], a
-	ld [W_CURMAPSCRIPT], a
-	ret
-
-PokemonTower6Script3: ; 60ba1 (18:4ba1)
-	ld a, [$cd38]
-	and a
-	ret nz
-	call Delay3
-	xor a
-	ld [W_POKEMONTOWER6CURSCRIPT], a
-	ld [W_CURMAPSCRIPT], a
+	ld [$cd39],a
+	inc a
+	ld [$cd38],a ; index of current simulated button press
+	ld hl,$d730
+	set 7,[hl]
 	ret
 
 PokemonTower6TextPointers: ; 60bb1 (18:4bb1)
 	dw PokemonTower6Text1
-	dw PokemonTower6Text2
-	dw PokemonTower6Text3
 	dw Predef5CText
 	dw Predef5CText
-	dw PokemonTower6Text6
-	dw PokemonTower6Text7
+	dw PokemonTower6Text4
 
-PokemonTower6TrainerHeaders: ; 60bbf (18:4bbf)
-PokemonTower6TrainerHeader0: ; 60bbf (18:4bbf)
-	db $1 ; flag's bit
-	db ($3 << 4) ; trainer's view range
-	dw $d768 ; flag's byte
-	dw PokemonTower6BattleText1 ; 0x4c29 TextBeforeBattle
-	dw PokemonTower6AfterBattleText1 ; 0x4c33 TextAfterBattle
-	dw PokemonTower6EndBattleText1 ; 0x4c2e TextEndBattle
-	dw PokemonTower6EndBattleText1 ; 0x4c2e TextEndBattle
+	; TODO: unused bits (these bits are accurate, unlike other trainer unused bits which are off by one)
+	; byte $d768 bits 1, 2
 
-PokemonTower6TrainerHeader1: ; 60bcb (18:4bcb)
-	db $2 ; flag's bit
-	db ($3 << 4) ; trainer's view range
-	dw $d768 ; flag's byte
-	dw PokemonTower6BattleText2 ; 0x4c38 TextBeforeBattle
-	dw PokemonTower6AfterBattleText2 ; 0x4c42 TextAfterBattle
-	dw PokemonTower6EndBattleText2 ; 0x4c3d TextEndBattle
-	dw PokemonTower6EndBattleText2 ; 0x4c3d TextEndBattle
-
-PokemonTower6TrainerHeader2: ; 60bd7 (18:4bd7)
-	db $3 ; flag's bit
-	db ($2 << 4) ; trainer's view range
-	dw $d768 ; flag's byte
-	dw PokemonTower6BattleText3 ; 0x4c47 TextBeforeBattle
-	dw PokemonTower6AfterBattleText3 ; 0x4c51 TextAfterBattle
-	dw PokemonTower6EndBattleText3 ; 0x4c4c TextEndBattle
-	dw PokemonTower6EndBattleText3 ; 0x4c4c TextEndBattle
-
-	db $ff
-
-PokemonTower6Text1: ; 60be4 (18:4be4)
+PokemonTower6Text1:
 	db $08 ; asm
-	ld hl, PokemonTower6TrainerHeader0
-	call TalkToTrainer
-	jp TextScriptEnd
-
-PokemonTower6Text2: ; 60bee (18:4bee)
-	db $08 ; asm
-	ld hl, PokemonTower6TrainerHeader1
-	call TalkToTrainer
-	jp TextScriptEnd
-
-PokemonTower6Text3: ; 60bf8 (18:4bf8)
-	db $08 ; asm
-	ld hl, PokemonTower6TrainerHeader2
-	call TalkToTrainer
-	jp TextScriptEnd
-
-PokemonTower6Text7: ; 60c02 (18:4c02)
-	db $8
-	ld hl, UnnamedText_60c1f
+	; Did player already fix bridge?
+	ld hl, W_NEWFLAGS2
+	bit 7, [hl]
+	jr nz, .alreadyFixedBridge
+	; Did player already receive repair kit?
+	ld hl, $d768
+	bit 0, [hl]
+	jr nz, .alreadyGaveKit
+	ld hl, PokemonTower6BridgeGuyIntro
 	call PrintText
-	ld a, MAROWAK
-	call PlayCry
-	call WaitForSoundToFinish
-	ld c, $1e
-	call DelayFrames
-	ld hl, UnnamedText_60c24
+	ld bc, (REPAIR_KIT << 8) | 1
+	call GiveItem
+	jr nc, .BagFull
+	ld hl, ReceivedRepairKitText
 	call PrintText
+	ld hl, $d768
+	set 0, [hl]
+	jr .done
+.BagFull
+	ld hl, PokemonTower6BridgeNoRoom
+	call PrintText
+	jr .done
+.alreadyGaveKit
+	ld hl, PokemonTower6AlreadyGave
+	call PrintText
+	jr .done
+.alreadyFixedBridge
+	ld hl, PokemonTower6FixedBridge
+	call PrintText
+.done
 	jp TextScriptEnd
 
-UnnamedText_60c1f: ; 60c1f (18:4c1f)
-	TX_FAR _UnnamedText_60c1f
+PokemonTower6BridgeGuyIntro:
+	TX_FAR _PokemonTower6BridgeGuyIntro
 	db "@"
 
-UnnamedText_60c24: ; 60c24 (18:4c24)
-	TX_FAR _UnnamedText_60c24
+PokemonTower6BridgeNoRoom:
+	TX_FAR _PokemonTower6BridgeNoRoom
 	db "@"
 
-PokemonTower6BattleText1: ; 60c29 (18:4c29)
-	TX_FAR _PokemonTower6BattleText1
+ReceivedRepairKitText:
+	TX_FAR _ReceivedRepairKitText
+	db $11, "@"
+
+PokemonTower6AlreadyGave:
+	TX_FAR _PokemonTower6AlreadyGave
 	db "@"
 
-PokemonTower6EndBattleText1: ; 60c2e (18:4c2e)
-	TX_FAR _PokemonTower6EndBattleText1
+PokemonTower6FixedBridge:
+	TX_FAR _PokemonTower6FixedBridge
 	db "@"
 
-PokemonTower6AfterBattleText1: ; 60c33 (18:4c33)
-	TX_FAR _PokemonTower6AfterBattleText1
-	db "@"
-
-PokemonTower6BattleText2: ; 60c38 (18:4c38)
-	TX_FAR _PokemonTower6BattleText2
-	db "@"
-
-PokemonTower6EndBattleText2: ; 60c3d (18:4c3d)
-	TX_FAR _PokemonTower6EndBattleText2
-	db "@"
-
-PokemonTower6AfterBattleText2: ; 60c42 (18:4c42)
-	TX_FAR _PokemonTower6AfterBattleText2
-	db "@"
-
-PokemonTower6BattleText3: ; 60c47 (18:4c47)
-	TX_FAR _PokemonTower6BattleText3
-	db "@"
-
-PokemonTower6EndBattleText3: ; 60c4c (18:4c4c)
-	TX_FAR _PokemonTower6EndBattleText3
-	db "@"
-
-PokemonTower6AfterBattleText3: ; 60c51 (18:4c51)
-	TX_FAR _PokemonTower6AfterBattleText3
-	db "@"
-
-PokemonTower6Text6: ; 60c56 (18:4c56)
-	TX_FAR _UnnamedText_60c56
+PokemonTower6Text4:
+	TX_FAR _PokemonTower6Text4
 	db "@"
 
 PokemonTower6Object: ; 0x60c5b (size=58)
-	db $1 ; border tile
+	db $2e ; border tile
 
-	db $2 ; warps
-	db $9, $12, $1, POKEMONTOWER_5
-	db $10, $9, $0, POKEMONTOWER_7
+	db $1 ; warps
+	db $0, $8, $0, POKEMONTOWER_5
 
 	db $0 ; signs
 
-	db $5 ; people
-	db SPRITE_MEDIUM, $a + 4, $c + 4, $ff, $d3, $41, CHANNELER + $C8, $13 ; trainer
-	db SPRITE_MEDIUM, $5 + 4, $9 + 4, $ff, $d0, $42, CHANNELER + $C8, $14 ; trainer
-	db SPRITE_MEDIUM, $5 + 4, $10 + 4, $ff, $d2, $43, CHANNELER + $C8, $15 ; trainer
-	db SPRITE_BALL, $8 + 4, $6 + 4, $ff, $ff, $84, RARE_CANDY ; item
-	db SPRITE_BALL, $e + 4, $e + 4, $ff, $ff, $85, X_ACCURACY ; item
+	db $3 ; people
+	db SPRITE_OAK_AIDE, $b + 4, $8 + 4, $ff, $d0, $1 ; person
+	db SPRITE_BALL, $d + 4, $d + 4, $ff, $ff, $82, PP_UP ; item
+	db SPRITE_BALL, $7 + 4, $2 + 4, $ff, $ff, $83, TM_48 ; item
 
 	; warp-to
-	EVENT_DISP $a, $9, $12 ; POKEMONTOWER_5
-	EVENT_DISP $a, $10, $9 ; POKEMONTOWER_7
+	EVENT_DISP POKEMONTOWER_6_WIDTH, $0, $8 ; POKEMONTOWER_5
 
 PokemonTower6Blocks: ; 60c95 (18:4c95)
 	INCBIN "maps/pokemontower6.blk"
