@@ -20564,7 +20564,7 @@ MapHS84: ; cbb9 (3:4bb9)
 MapHS87: ; cbbc (3:4bbc)
 	db GAME_CORNER,$0B,Show
 MapHS9B: ; cbbf (3:4bbf)
-	db FUCHSIA_HOUSE_2,$02,Show
+	db FUCHSIA_HOUSE_2,$02,Show ; TODO: unused (removed an item)
 MapHSA5: ; cbc2 (3:4bc2)
 	db MANSION_1,$02,Show
 	db MANSION_1,$03,Show
@@ -32464,7 +32464,7 @@ FuchsiaCityObject: ; 0x18bd4 (size=178)
 
 	db $8 ; warps
 	db $7, $1e, $0, FUCHSIA_GYM
-	db $9, $11, $0, FUCHSIA_HOUSE_1
+	db $9, $11, $0, FUCHSIAMEETINGROOM
 	db $11, $f, $0, FUCHSIA_MART
 	db $11, $15, $0, FUCHSIA_POKECENTER
 	db $17, $13, $0, FUCHSIA_HOUSE_2
@@ -85182,94 +85182,32 @@ FuchsiaHouse3Script: ; 5617c (15:617c)
 
 FuchsiaHouse3TextPointers: ; 5617f (15:617f)
 	dw FuchsiaHouse3Text1
+	dw FuchsiaHouse3Text2
 
-FuchsiaHouse3Text1: ; 56181 (15:6181)
-	db $08 ; asm
-	ld a, [$d728]
-	bit 4, a
-	jr nz, .after
-
-	ld hl, UnnamedText_561bd
-	call PrintText
-
-	call YesNoChoice
-	ld a, [$cc26]
-	and a
-	jr nz, .refused
-
-	ld bc, (GOOD_ROD << 8) | 1
-	call GiveItem
-	jr nc, .full
-
-	ld hl, $d728 ; TODO ALREADY USED THIS FLAG on ROUTE 21 (South of Jade Village)
-	set 4, [hl]
-
-	ld hl, UnnamedText_561c2
-	jr .talk
-
-.full
-	ld hl, UnnamedText_5621c
-	jr .talk
-
-.refused
-	ld hl, UnnamedText_56212
-	jr .talk
-
-.after
-	ld hl, UnnamedText_56217
-
-.talk
-	call PrintText
-	jp TextScriptEnd
-
-UnnamedText_561bd: ; 561bd (15:61bd)
-	TX_FAR _UnnamedText_561bd
+FuchsiaHouse3Text1:
+	TX_FAR _FuchsiaHouse3Text1
 	db "@"
 
-UnnamedText_561c2: ; 561c2 (15:61c2)
-	TX_FAR _UnnamedText_561c2 ; 0xa06e8
-	db $0B
-	db "@"
-
-UnnamedText_561c8: ; 561c8
-	para "つり こそ"
-	line "おとこの ロマン だ!"
-
-	para "へぼいつりざおは"
-	line "コイキングしか つれ なんだが"
-	line "この いいつりざおなら"
-	line "もっと いいもんが つれるんじゃ!"
-	done
-
-UnnamedText_56212: ; 56212 (15:6212)
-	TX_FAR _UnnamedText_56212
-	db "@"
-
-UnnamedText_56217: ; 56217 (15:6217)
-	TX_FAR _UnnamedText_56217
-	db "@"
-
-UnnamedText_5621c: ; 5621c (15:621c)
-	TX_FAR _UnnamedText_5621c
+FuchsiaHouse3Text2:
+	TX_FAR _FuchsiaHouse3Text2
 	db "@"
 
 FuchsiaHouse3Object: ; 0x56221 (size=34)
 	db $c ; border tile
 
-	db $3 ; warps
-	db $0, $2, $8, $ff
-	db $7, $2, $7, $ff
-	db $7, $3, $7, $ff
+	db $2 ; warps
+	db $7, $2, $5, FUCHSIA_CITY
+	db $7, $3, $5, FUCHSIA_CITY
 
-	db $0 ; signs
+	db $1 ; signs
+	db $2, $1, $2
 
 	db $1 ; people
-	db SPRITE_FISHER, $3 + 4, $5 + 4, $ff, $d3, $1 ; person
+	db SPRITE_OAK_AIDE, $4 + 4, $1 + 4, $ff, $d1, $1 ; person
 
 	; warp-to
-	EVENT_DISP $4, $0, $2
-	EVENT_DISP $4, $7, $2
-	EVENT_DISP $4, $7, $3
+	EVENT_DISP FUCHSIA_HOUSE_3_WIDTH, $7, $2
+	EVENT_DISP FUCHSIA_HOUSE_3_WIDTH, $7, $3
 
 DayCareM_h: ; 0x56243 to 0x5624f (12 bytes) (id=72)
 	db $08 ; tileset
@@ -106064,7 +106002,7 @@ FuchsiaPokecenterObject: ; 0x7507d (size=44)
 	EVENT_DISP $7, $7, $4
 
 FuchsiaHouse2_h: ; 0x750a9 to 0x750b5 (12 bytes) (id=155)
-	db $14 ; tileset
+	db $1 ; tileset
 	db FUCHSIA_HOUSE_2_HEIGHT, FUCHSIA_HOUSE_2_WIDTH ; dimensions (y, x)
 	dw FuchsiaHouse2Blocks, FuchsiaHouse2TextPointers, FuchsiaHouse2Script ; blocks, texts, scripts
 	db $00 ; connections
@@ -106075,139 +106013,52 @@ FuchsiaHouse2Script: ; 750b5 (1d:50b5)
 
 FuchsiaHouse2TextPointers: ; 750b8 (1d:50b8)
 	dw FuchsiaHouse2Text1
-	dw Predef5CText
-	dw BoulderText
-	dw FuchsiaHouse2Text4
-	dw FuchsiaHouse2Text5
+	dw FuchsiaHouse2Text2
 
 FuchsiaHouse2Text1: ; 750c2 (1d:50c2)
 	db $08 ; asm
-	ld a, [$d78e]
-	bit 0, a
-	jr nz, .subtract ; 0x750c8
-	ld b,GOLD_TEETH
-	call IsItemInBag
-	jr nz, .asm_3f30f ; 0x750cf
-	ld a, [$d78e]
-	bit 1, a
-	jr nz, .asm_60cba ; 0x750d6
-	ld hl, WardenGibberishText1
+	; has player beaten TIMMY yet?
+	ld a, [W_FUCHSIAHOUSE1CURSCRIPT]
+	cp 5
+	jr nc, .alreadyBeatTimmy
+	ld hl, FuchsiaHouseNotBeatTimmy
 	call PrintText
-	call YesNoChoice
-	ld a, [$cc26]
-	and a
-	ld hl, WardenGibberishText3
-	jr nz, .asm_61238 ; 0x750e8
-	ld hl, WardenGibberishText2
-.asm_61238 ; 0x750ed
+	jr .done
+.alreadyBeatTimmy
+	ld hl, FuchsiaHouseBeatTimmy
 	call PrintText
-	jr .asm_52039 ; 0x750f0
-.asm_3f30f ; 0x750f2
-	ld hl, WardenTeethText1
-	call PrintText
-	ld a, $40
-	ldh [$db], a
-	ld b, BANK(RemoveItemByID)
-	ld hl, RemoveItemByID
-	call Bankswitch
-	ld hl, $d78e
-	set 1, [hl]
-.asm_60cba ; 0x75109
-	ld hl, WardenThankYouText
-	call PrintText
-	ld bc,(HM_04 << 8) | 1
-	call GiveItem
-	jr nc, .BagFull
-	ld hl, ReceivedHM04Text
-	call PrintText
-	ld hl, $d78e
-	set 0, [hl]
-	jr .asm_52039 ; 0x75122
-.subtract ; 0x75124
-	ld hl, HM04ExplanationText
-	call PrintText
-	jr .asm_52039 ; 0x7512a
-.BagFull
-	ld hl, HM04NoRoomText
-	call PrintText
-.asm_52039 ; 0x75132
+.done
 	jp TextScriptEnd
 
-WardenGibberishText1: ; 75135 (1d:5135)
-	TX_FAR _WardenGibberishText1
+FuchsiaHouseNotBeatTimmy: ; 75135 (1d:5135)
+	TX_FAR _FuchsiaHouseNotBeatTimmy
 	db "@"
 
-WardenGibberishText2: ; 7513a (1d:513a)
-	TX_FAR _WardenGibberishText2
+FuchsiaHouseBeatTimmy: ; 7513a (1d:513a)
+	TX_FAR _FuchsiaHouseBeatTimmy
 	db "@"
 
-WardenGibberishText3: ; 7513f (1d:513f)
-	TX_FAR _WardenGibberishText3
-	db "@"
-
-WardenTeethText1: ; 75144 (1d:5144)
-	TX_FAR _WardenTeethText1
-	db $0b
-
-WardenTeethText2: ; 75149 (1d:5149)
-	TX_FAR _WardenTeethText2
-	db "@"
-
-WardenThankYouText: ; 7514e (1d:514e)
-	TX_FAR _WardenThankYouText
-	db "@"
-
-ReceivedHM04Text: ; 75153 (1d:5153)
-	TX_FAR _ReceivedHM04Text ; 0x9e5a2
-	db $0B, "@"
-
-HM04ExplanationText: ; 75159 (1d:5159)
-	TX_FAR _HM04ExplanationText
-	db "@"
-
-HM04NoRoomText: ; 7515e (1d:515e)
-	TX_FAR _HM04NoRoomText
-	db "@"
-
-FuchsiaHouse2Text5: ; 75163 (1d:5163)
-FuchsiaHouse2Text4: ; 75163 (1d:5163)
-	db $08 ; asm
-	ldh a, [$8c]
-	cp $4
-	ld hl, UnnamedText_7517b
-	jr nz, .asm_4c9a2 ; 0x7516b
-	ld hl, UnnamedText_75176
-.asm_4c9a2 ; 0x75170
-	call PrintText
-	jp TextScriptEnd
-
-UnnamedText_75176: ; 75176 (1d:5176)
-	TX_FAR _UnnamedText_75176
-	db "@"
-
-UnnamedText_7517b: ; 7517b (1d:517b)
-	TX_FAR _UnnamedText_7517b
+; TODO: unused bit for WARDEN event
+FuchsiaHouse2Text2:
+	TX_FAR _FuchsiaHouse2Text2
 	db "@"
 
 FuchsiaHouse2Object: ; 0x75180 (size=45)
-	db $17 ; border tile
+	db $a ; border tile
 
 	db $2 ; warps
-	db $7, $4, $3, $ff
-	db $7, $5, $3, $ff
+	db $7, $2, $4, FUCHSIA_CITY
+	db $7, $3, $4, FUCHSIA_CITY
 
-	db $2 ; signs
-	db $3, $4, $4 ; FuchsiaHouse2Text4
-	db $3, $5, $5 ; FuchsiaHouse2Text5
+	db $1 ; signs
+	db $3, $7, $2 ; FuchsiaHouse2Text2
 
-	db $3 ; people
-	db SPRITE_WARDEN, $3 + 4, $2 + 4, $ff, $ff, $1 ; person
-	db SPRITE_BALL, $3 + 4, $8 + 4, $ff, $ff, $82, RARE_CANDY ; item
-	db SPRITE_BOULDER, $4 + 4, $8 + 4, $ff, $10, $3 ; person
+	db $1 ; people
+	db $33, $4 + 4, $2 + 4, $ff, $d3, $1 ; person
 
 	; warp-to
-	EVENT_DISP $5, $7, $4
-	EVENT_DISP $5, $7, $5
+	EVENT_DISP FUCHSIA_HOUSE_2_WIDTH, $7, $2
+	EVENT_DISP FUCHSIA_HOUSE_2_WIDTH, $7, $3
 
 FuchsiaHouse2Blocks: ; 751ad (1d:51ad)
 	INCBIN "maps/fuchsiahouse2.blk"
@@ -106866,12 +106717,14 @@ FuchsiaMeetingRoomTextPointers: ; 756e7 (1d:56e7)
 	dw FuchsiaMeetingRoomText1
 	dw FuchsiaMeetingRoomText2
 	dw FuchsiaMeetingRoomText3
+	dw FuchsiaMeetingRoomText4
+	dw FuchsiaMeetingRoomText5
 
-FuchsiaMeetingRoomText1: ; 756ed (1d:56ed)
+FuchsiaMeetingRoomText1:
 	TX_FAR _FuchsiaMeetingRoomText1
 	db "@"
 
-FuchsiaMeetingRoomText2: ; 756f2 (1d:56f2)
+FuchsiaMeetingRoomText2:
 	TX_FAR _FuchsiaMeetingRoomText2
 	db "@"
 
@@ -106879,23 +106732,35 @@ FuchsiaMeetingRoomText3: ; 756f7 (1d:56f7)
 	TX_FAR _FuchsiaMeetingRoomText3
 	db "@"
 
+FuchsiaMeetingRoomText4:
+	TX_FAR _FuchsiaMeetingRoomText4
+	db "@"
+
+FuchsiaMeetingRoomText5:
+	TX_FAR _FuchsiaMeetingRoomText5
+	db "@"
+
 FuchsiaMeetingRoomObject: ; 0x756fc (size=38)
 	db $17 ; border tile
 
 	db $2 ; warps
-	db $7, $4, $6, $ff
-	db $7, $5, $6, $ff
+	db $7, $4, $1, FUCHSIA_CITY
+	db $7, $5, $1, FUCHSIA_CITY
 
-	db $0 ; signs
+	db $4 ; signs
+	db $6, $a, $4
+	db $6, $b, $4
+	db $6, $c, $5
+	db $6, $d, $5
 
 	db $3 ; people
-	db SPRITE_WHITE_PLAYER, $1 + 4, $4 + 4, $ff, $d0, $1 ; person
-	db SPRITE_WHITE_PLAYER, $2 + 4, $0 + 4, $ff, $d1, $2 ; person
-	db SPRITE_WHITE_PLAYER, $1 + 4, $a + 4, $ff, $d0, $3 ; person
+	db SPRITE_OAK_AIDE, $2 + 4, $0 + 4, $ff, $d1, $1 ; person
+	db SPRITE_OAK_AIDE, $4 + 4, $5 + 4, $ff, $ff, $2 ; person
+	db SPRITE_OAK_AIDE, $4 + 4, $a + 4, $ff, $ff, $3 ; person
 
 	; warp-to
-	EVENT_DISP $7, $7, $4
-	EVENT_DISP $7, $7, $5
+	EVENT_DISP FUCHSIAMEETINGROOM_WIDTH, $7, $4
+	EVENT_DISP FUCHSIAMEETINGROOM_WIDTH, $7, $5
 
 FuchsiaMeetingRoomBlocks: ; 75722 (1d:5722)
 	INCBIN "maps/fuchsiameetingroom.blk"
