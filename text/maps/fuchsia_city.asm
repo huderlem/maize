@@ -1,34 +1,115 @@
 _FuchsiaCityText1:: ; a5e9c (29:5e9c)
-	text "Did you try the"
-	line "SAFARI GAME? Some"
-	cont "#MON can only"
-	cont "be caught there."
+	text "This GYM is full"
+	line "of scientists!"
+
+	para "I want to do"
+	line "research on"
+	cont "#MON just like"
+	cont "my dad when I"
+	cont "grow up!"
 	done
 
 _FuchsiaCityText2:: ; a5ede (29:5ede)
-	text "SAFARI ZONE has a"
-	line "zoo in front of"
-	cont "the entrance."
+	text "Sheesh!"
 
-	para "Out back is the"
-	line "SAFARI GAME for"
-	cont "catching #MON."
+	para "This city is far"
+	line "too crowded!"
+
+	para "I can barely walk"
+	line "around without"
+	cont "bumping into"
+	cont "someone!"
+
+	para "You'd think its"
+	line "design would be"
+	cont "better with all"
+	cont "of the supposed"
+	cont "geniuses that"
+	cont "live here!"
 	done
 
-_FuchsiaCityText3:: ; a5f3e (29:5f3e)
-	text "ERIK: Where's"
-	line "SARA? I said I'd"
-	cont "meet her here."
+_FuchsiaCityText3::
+	text "Have you heard of"
+	line "a #MON called"
+	cont "SNEASEL?"
+
+	para "I managed to"
+	line "snatch one up not"
+	cont "too far from"
+	cont "here."
+
+	para "I even have an"
+	line "ITEM STONE to use"
+	cont "on it!"
 	done
 
-_FuchsiaCityText4:: ; a5f6b (29:5f6b)
-	text "That item ball in"
-	line "there is really a"
-	cont "#MON."
+_FuchsiaCityText4:: ; a5f3e (29:5f3e)
+	text "ABBY: KADAAA!"
+
+	para "(Wow so smart!)"
 	done
 
-_FuchsiaCityText5:: ; a5f96 (29:5f96)
-	text "!"
+_FuchsiaCityText5:: ; a5f6b (29:5f6b)
+	text "ALAKS: KADAAA!"
+
+	para "(Pure genius is"
+	line "spouting from its"
+	cont "mouth!)"
+	done
+
+_FuchsiaCityText6:: ; a5f96 (29:5f96)
+	text "Who's KADABRA is"
+	line "smarter?"
+
+	para "They say a"
+	line "#MON's IQ"
+	cont "positively"
+	cont "correlates with"
+	cont "its master's IQ!"
+	done
+
+_FuchsiaCityText7::
+	text "My KADABRA is way"
+	line "smarter than his!"
+
+	para "He's just too dumb"
+	line "to understand!"
+	done
+
+_FuchsiaCityText8::
+	text "There used to be"
+	line "an OUTPOST in"
+	cont "QUARTZ CITY, but"
+	cont "when the swath of"
+	cont "of researchers"
+	cont "came here, it was"
+	cont "decommissioned."
+	done
+
+_FuchsiaCityText9::
+	text "Sigh."
+
+	para "All i ever want"
+	line "in life were 2"
+	cont "work at RAINEY"
+	cont "LABS but i'm just"
+	cont "a elevator worker"
+	cont "at the"
+	cont "HARDWATER HOLE"
+	cont "west of here."
+	done
+
+_FuchsiaCityText10::
+	text "Hiya!"
+
+	para "My big brother is"
+	line "becoming a"
+	cont "#MON trainer!"
+
+	para "His name is"
+	line "TIMMY, and he's a"
+	cont "super duper big"
+	cont "brother!"
 	done
 
 _FuchsiaCityText11:: ; a5f99 (29:5f99)

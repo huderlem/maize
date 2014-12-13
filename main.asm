@@ -31276,7 +31276,7 @@ MapSpriteSets: ; 17a64 (5:7a64)
 	db $05 ; ROUTE_4
 	db $02 ; ROUTE_5
 	db $09 ; ROUTE_6
-	db $09 ; ROUTE_7
+	db $f7 ; ROUTE_7
 	db $fc ; ROUTE_8
 	db $0a ; ROUTE_9
 	db $f2 ; ROUTE_10
@@ -31305,12 +31305,12 @@ MapSpriteSets: ; 17a64 (5:7a64)
 ; 03: sprite set ID if in the East or South side
 SplitMapSpriteSets: ; 17a89 (5:7a89)
 	db $02,$25,$02,$01 ; $f1
-	db $02,$32,$02,$03 ; $f2
+	db $02,$20,$02,$0A ; $f2
 	db $01,$39,$04,$08 ; $f3
 	db $02,$15,$03,$08 ; $f4
 	db $01,$08,$0A,$08 ; $f5
 	db $01,$18,$09,$05 ; $f6
-	db $01,$22,$09,$0A ; $f7
+	db $01,$0C,$0A,$09 ; $f7
 	db $01,$35,$01,$0A ; $f8
 	db $02,$21,$02,$07 ; $f9
 	db $02,$5,$09,$05 ; $fa
@@ -32482,16 +32482,16 @@ FuchsiaCityObject: ; 0x18bd4 (size=178)
 	db $1f, $11, $10 ; FuchsiaCityText16
 	
 	db $a ; people
-	db SPRITE_BUG_CATCHER, $c + 4, $a + 4, $fe, $2, $1 ; person
-	db SPRITE_GAMBLER, $11 + 4, $1c + 4, $fe, $2, $2 ; person
-	db SPRITE_FISHER2, $e + 4, $1e + 4, $ff, $d0, $3 ; person
-	db SPRITE_BUG_CATCHER, $8 + 4, $18 + 4, $ff, $d1, $4 ; person
-	db SPRITE_CLEFAIRY, $5 + 4, $1f + 4, $fe, $0, $5 ; person
-	db SPRITE_BALL, $6 + 4, $19 + 4, $ff, $ff, $6 ; person
-	db SPRITE_SLOWBRO, $6 + 4, $c + 4, $fe, $2, $7 ; person
-	db SPRITE_SLOWBRO, $c + 4, $1e + 4, $fe, $2, $8 ; person
-	db SPRITE_SEEL, $11 + 4, $8 + 4, $fe, $0, $9 ; person
-	db SPRITE_OMANYTE, $5 + 4, $6 + 4, $ff, $ff, $a ; person
+	db SPRITE_BUG_CATCHER, $4 + 4, $21 + 4, $fe, $2, $1 ; person
+	db SPRITE_GAMBLER, $8 + 4, $18 + 4, $ff, $ff, $2 ; person
+	db SPRITE_FISHER2, $b + 4, $12 + 4, $fe, $0, $3 ; person
+	db SPRITE_SLOWBRO, $d + 4, $1c + 4, $ff, $d0, $4 ; person
+	db SPRITE_SLOWBRO, $d + 4, $1d + 4, $ff, $d0, $5 ; person
+	db SPRITE_BUG_CATCHER, $f + 4, $1c + 4, $ff, $d1, $6 ; person
+	db SPRITE_GAMBLER, $f + 4, $1d + 4, $ff, $d1, $7 ; person
+	db SPRITE_FISHER2, $14 + 4, $13 + 4, $fe, $2, $8 ; person
+	db SPRITE_HIKER, $18 + 4, $7 + 4, $ff, $d3, $9 ; person
+	db SPRITE_BUG_CATCHER, $19 + 4, $16 + 4, $ff, $ff, $a ; person
 
 	; warp-to
 	EVENT_DISP $14, $7, $1e ; FUCHSIA_GYM
@@ -34439,7 +34439,7 @@ FuchsiaCityTextPointers: ; 19a2e (6:5a2e)
 	dw FuchsiaCityText9
 	dw FuchsiaCityText10
 	dw FuchsiaCityText11
-	dw FuchsiaCityText12
+	dw FuchsiaCityText11
 	dw FuchsiaCityText13
 	dw MartSignText
 	dw PokeCenterSignText
@@ -34453,32 +34453,46 @@ FuchsiaCityTextPointers: ; 19a2e (6:5a2e)
 	dw FuchsiaCityText23
 	dw FuchsiaCityText24
 
-FuchsiaCityText1: ; 19a5e (6:5a5e)
+FuchsiaCityText1:
 	TX_FAR _FuchsiaCityText1
 	db "@"
 
-FuchsiaCityText2: ; 19a63 (6:5a63)
+FuchsiaCityText2:
 	TX_FAR _FuchsiaCityText2
 	db "@"
 
-FuchsiaCityText3: ; 19a68 (6:5a68)
+FuchsiaCityText3:
 	TX_FAR _FuchsiaCityText3
 	db "@"
 
-FuchsiaCityText4: ; 19a6d (6:5a6d)
+FuchsiaCityText4:
 	TX_FAR _FuchsiaCityText4
 	db "@"
 
-FuchsiaCityText5: ; 19a72 (6:5a72)
-FuchsiaCityText6: ; 19a72 (6:5a72)
-FuchsiaCityText7: ; 19a72 (6:5a72)
-FuchsiaCityText8: ; 19a72 (6:5a72)
-FuchsiaCityText9: ; 19a72 (6:5a72)
-FuchsiaCityText10: ; 19a72 (6:5a72)
+FuchsiaCityText5:
 	TX_FAR _FuchsiaCityText5
 	db "@"
 
-FuchsiaCityText12: ; 19a77 (6:5a77)
+FuchsiaCityText6:
+	TX_FAR _FuchsiaCityText6
+	db "@"
+
+FuchsiaCityText7:
+	TX_FAR _FuchsiaCityText7
+	db "@"
+
+FuchsiaCityText8:
+	TX_FAR _FuchsiaCityText8
+	db "@"
+
+FuchsiaCityText9:
+	TX_FAR _FuchsiaCityText9
+	db "@"
+
+FuchsiaCityText10:
+	TX_FAR _FuchsiaCityText10
+	db "@"
+
 FuchsiaCityText11: ; 19a77 (6:5a77)
 	TX_FAR _FuchsiaCityText11
 	db "@"
@@ -86527,19 +86541,12 @@ Route10Object: ; 0x582f6 (size=96)
 
 	db $0 ; warps
 
-	db $4 ; signs
-	db $13, $7, $7 ; Route10Text7
-	db $13, $c, $8 ; PokeCenterSignText
-	db $37, $9, $9 ; Route10Text9
-	db $29, $5, $a ; Route10Text10
+	db $1 ; signs
+	db $2d, $9, $3 ; Route10Text7
 
-	db $6 ; people
-	db SPRITE_BLACK_HAIR_BOY_2, $2c + 4, $a + 4, $ff, $d2, $41, POKEMANIAC + $C8, $1 ; trainer
+	db $2 ; people
+	db SPRITE_BLACK_HAIR_BOY_1, $2c + 4, $a + 4, $ff, $d3, $1 ; person
 	db SPRITE_HIKER, $39 + 4, $3 + 4, $ff, $d1, $42, HIKER + $C8, $7 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_2, $40 + 4, $e + 4, $ff, $d2, $43, POKEMANIAC + $C8, $2 ; trainer
-	db SPRITE_LASS, $19 + 4, $7 + 4, $ff, $d2, $44, JR__TRAINER_F + $C8, $7 ; trainer
-	db SPRITE_HIKER, $3d + 4, $3 + 4, $ff, $d0, $45, HIKER + $C8, $8 ; trainer
-	db SPRITE_LASS, $36 + 4, $7 + 4, $ff, $d0, $46, JR__TRAINER_F + $C8, $8 ; trainer
 
 	; warp-to
 	
@@ -87827,60 +87834,17 @@ Route10TextPointers: ; 5934f (16:534f)
 	dw Route10Text1
 	dw Route10Text2
 	dw Route10Text3
-	dw Route10Text4
-	dw Route10Text5
-	dw Route10Text6
-	dw Route10Text7
-	dw PokeCenterSignText
-	dw Route10Text9
-	dw Route10Text10
 
-Route10TrainerHeaders: ; 59363 (16:5363) ; TODO: unused bit $d7d1 bit 1
+Route10TrainerHeaders: ; 59363 (16:5363) ; TODO: unused bit $d7d1 bit 0, 2, 3, 4 ,5 (correct bits)
 
 Route10TrainerHeader1: ; 5936f (16:536f)
 	db $2 ; flag's bit
-	db ($3 << 4) ; trainer's view range
+	db ($1 << 4) ; trainer's view range
 	dw $d7d1 ; flag's byte
 	dw Route10BattleText2 ; 0x53cf TextBeforeBattle
 	dw Route10AfterBattleText2 ; 0x53d9 TextAfterBattle
 	dw Route10EndBattleText2 ; 0x53d4 TextEndBattle
 	dw Route10EndBattleText2 ; 0x53d4 TextEndBattle
-
-Route10TrainerHeader2: ; 5937b (16:537b)
-	db $3 ; flag's bit
-	db ($4 << 4) ; trainer's view range
-	dw $d7d1 ; flag's byte
-	dw Route10BattleText3 ; 0x53e8 TextBeforeBattle
-	dw Route10AfterBattleText3 ; 0x53f2 TextAfterBattle
-	dw Route10EndBattleText3 ; 0x53ed TextEndBattle
-	dw Route10EndBattleText3 ; 0x53ed TextEndBattle
-
-Route10TrainerHeader3: ; 59387 (16:5387)
-	db $4 ; flag's bit
-	db ($3 << 4) ; trainer's view range
-	dw $d7d1 ; flag's byte
-	dw Route10BattleText4 ; 0x5401 TextBeforeBattle
-	dw Route10AfterBattleText4 ; 0x540b TextAfterBattle
-	dw Route10EndBattleText4 ; 0x5406 TextEndBattle
-	dw Route10EndBattleText4 ; 0x5406 TextEndBattle
-
-Route10TrainerHeader4: ; 59393 (16:5393)
-	db $5 ; flag's bit
-	db ($2 << 4) ; trainer's view range
-	dw $d7d1 ; flag's byte
-	dw Route10BattleText5 ; 0x541a TextBeforeBattle
-	dw Route10AfterBattleText5 ; 0x5424 TextAfterBattle
-	dw Route10EndBattleText5 ; 0x541f TextEndBattle
-	dw Route10EndBattleText5 ; 0x541f TextEndBattle
-
-Route10TrainerHeader5: ; 5939f (16:539f)
-	db $6 ; flag's bit
-	db ($2 << 4) ; trainer's view range
-	dw $d7d1 ; flag's byte
-	dw Route10BattleText6 ; 0x5433 TextBeforeBattle
-	dw Route10AfterBattleText6 ; 0x543d TextAfterBattle
-	dw Route10EndBattleText6 ; 0x5438 TextEndBattle
-	dw Route10EndBattleText6 ; 0x5438 TextEndBattle
 
 	db $ff
 
@@ -87950,89 +87914,12 @@ Route10EndBattleText2: ; 593d4 (16:53d4)
 	TX_FAR _Route10EndBattleText2
 	db "@"
 
-Route10AfterBattleText2: ; 593d9 (16:53d9)
+Route10AfterBattleText2:
 	TX_FAR _Route10AfterBattleText2
 	db "@"
 
-Route10Text3: ; 593de (16:53de)
-	db $08 ; asm
-	ld hl, Route10TrainerHeader2
-	call TalkToTrainer
-	jp TextScriptEnd
-
-Route10BattleText3: ; 593e8 (16:53e8)
-	TX_FAR _Route10BattleText3
-	db "@"
-
-Route10EndBattleText3: ; 593ed (16:53ed)
-	TX_FAR _Route10EndBattleText3
-	db "@"
-
-Route10AfterBattleText3: ; 593f2 (16:53f2)
-	TX_FAR _Route10AfterBattleText3
-	db "@"
-
-Route10Text4: ; 593f7 (16:53f7)
-	db $08 ; asm
-	ld hl, Route10TrainerHeader3
-	call TalkToTrainer
-	jp TextScriptEnd
-
-Route10BattleText4: ; 59401 (16:5401)
-	TX_FAR _Route10BattleText4
-	db "@"
-
-Route10EndBattleText4: ; 59406 (16:5406)
-	TX_FAR _Route10EndBattleText4
-	db "@"
-
-Route10AfterBattleText4: ; 5940b (16:540b)
-	TX_FAR _Route10AfterBattleText4
-	db "@"
-
-Route10Text5: ; 59410 (16:5410)
-	db $08 ; asm
-	ld hl, Route10TrainerHeader4
-	call TalkToTrainer
-	jp TextScriptEnd
-
-Route10BattleText5: ; 5941a (16:541a)
-	TX_FAR _Route10BattleText5
-	db "@"
-
-Route10EndBattleText5: ; 5941f (16:541f)
-	TX_FAR _Route10EndBattleText5
-	db "@"
-
-Route10AfterBattleText5: ; 59424 (16:5424)
-	TX_FAR _Route10AfterBattleText5
-	db "@"
-
-Route10Text6: ; 59429 (16:5429)
-	db $08 ; asm
-	ld hl, Route10TrainerHeader5
-	call TalkToTrainer
-	jp TextScriptEnd
-
-Route10BattleText6: ; 59433 (16:5433)
-	TX_FAR _Route10BattleText6
-	db "@"
-
-Route10EndBattleText6: ; 59438 (16:5438)
-	TX_FAR _Route10EndBattleText6
-	db "@"
-
-Route10AfterBattleText6: ; 5943d (16:543d)
-	TX_FAR _Route10AfterBattleText6
-	db "@"
-
-Route10Text9: ; 59442 (16:5442)
-Route10Text7: ; 59442 (16:5442)
-	TX_FAR _Route10Text7 ; _Route10Text9
-	db "@"
-
-Route10Text10: ; 59447 (16:5447)
-	TX_FAR _Route10Text10
+Route10Text3:
+	TX_FAR _Route10Text3
 	db "@"
 
 Route11Script: ; 5944c (16:544c)
