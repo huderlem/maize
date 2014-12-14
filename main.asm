@@ -36088,18 +36088,18 @@ CinnabarIslandObject: ; 0x1c022 (size=71)
 	db $17, $18, $0, CINNABAR_GYM
 
 	db $6 ; signs
-	db $7, $18, $3 ; CinnabarIslandText3
-	db $d, $b, $4 ; MartSignText
-	db $11, $11, $5 ; PokeCenterSignText
-	db $17, $3, $6 ; CinnabarIslandText6
-	db $17, $e, $7 ; CinnabarIslandText7
-	db $17, $13, $7
+	db $7, $18,  $5  ; Pokemart
+	db $d,  $b,  $6  ; CinnabarIslandText6
+	db $11, $11, $7  ; CinnabarIslandText7
+	db $17, $3,  $8  ; CinnabarIslandText8
+	db $17, $e,  $9  ; Pokecenter
+	db $17, $13, $a ; CinnabarIslandText10
 
 	db $4 ; people
 	db SPRITE_GIRL, $6 + 4, $10 + 4, $fe, $2, $1 ; person
 	db SPRITE_GAMBLER, $11 + 4, $7 + 4, $ff, $ff, $2 ; person
-	db SPRITE_GAMBLER, $12 + 4, $15 + 4, $ff, $ff, $2 ; person
-	db SPRITE_GAMBLER, $19 + 4, $11 + 4, $ff, $ff, $2 ; person
+	db SPRITE_GAMBLER, $12 + 4, $15 + 4, $ff, $ff, $3 ; person
+	db SPRITE_GAMBLER, $19 + 4, $11 + 4, $ff, $ff, $4 ; person
 
 	; warp-to
 	EVENT_DISP CINNABAR_ISLAND_WIDTH, $5, $9 ; MANSION_1
@@ -36445,91 +36445,50 @@ UnnamedText_1ca14: ; 1ca14 (7:4a14)
 	db "@"
 
 CinnabarIslandScript: ; 1ca19 (7:4a19)
-	call EnableAutoTextBoxDrawing
-	ld hl, $d126
-	set 5, [hl]
-	ld hl, $d796
-	res 0, [hl]
-	ld hl, $d7a3
-	res 1, [hl]
-	ld hl, CinnabarIslandScriptPointers
-	ld a, [W_CINNABARISLANDCURSCRIPT]
-	jp CallFunctionInTable
-
-CinnabarIslandScriptPointers: ; 1ca34 (7:4a34)
-	dw CinnabarIslandScript0
-	dw CinnabarIslandScript1
-
-CinnabarIslandScript0: ; 1ca38 (7:4a38)
-	ld b, $2b
-	call IsItemInBag
-	ret nz
-	ld a, [$d361]
-	cp $4
-	ret nz
-	ld a, [$d362]
-	cp $12
-	ret nz
-	ld a, $8
-	ld [$d528], a
-	ld a, $8
-	ld [$ff00+$8c], a
-	call DisplayTextID
-	xor a
-	ld [H_CURRENTPRESSEDBUTTONS], a
-	ld a, $1
-	ld [$cd38], a
-	ld a, $80
-	ld [$ccd3], a
-	call Func_3486
-	xor a
-	ld [$c109], a
-	ld [wJoypadForbiddenButtonsMask], a
-	ld a, $1
-	ld [W_CINNABARISLANDCURSCRIPT], a
-	ret
-
-CinnabarIslandScript1: ; 1ca73 (7:4a73)
-	ld a, [$cd38]
-	and a
-	ret nz
-	call Delay3
-	ld a, $0
-	ld [W_CINNABARISLANDCURSCRIPT], a
-	ret
+	jp EnableAutoTextBoxDrawing
 
 CinnabarIslandTextPointers: ; 1ca81 (7:4a81)
 	dw CinnabarIslandText1
 	dw CinnabarIslandText2
 	dw CinnabarIslandText3
+	dw CinnabarIslandText4
 	dw MartSignText
-	dw PokeCenterSignText
 	dw CinnabarIslandText6
 	dw CinnabarIslandText7
 	dw CinnabarIslandText8
+	dw PokeCenterSignText
+	dw CinnabarIslandText10
 
-CinnabarIslandText8: ; 1ca91 (7:4a91)
-	TX_FAR _CinnabarIslandText8
-	db "@"
-
-CinnabarIslandText1: ; 1ca96 (7:4a96)
+CinnabarIslandText1:
 	TX_FAR _CinnabarIslandText1
 	db "@"
 
-CinnabarIslandText2: ; 1ca9b (7:4a9b)
+CinnabarIslandText2:
 	TX_FAR _CinnabarIslandText2
 	db "@"
 
-CinnabarIslandText3: ; 1caa0 (7:4aa0)
+CinnabarIslandText3:
 	TX_FAR _CinnabarIslandText3
 	db "@"
 
-CinnabarIslandText6: ; 1caa5 (7:4aa5)
+CinnabarIslandText4:
+	TX_FAR _CinnabarIslandText4
+	db "@"
+
+CinnabarIslandText6:
 	TX_FAR _CinnabarIslandText6
 	db "@"
 
-CinnabarIslandText7: ; 1caaa (7:4aaa)
+CinnabarIslandText7:
 	TX_FAR _CinnabarIslandText7
+	db "@"
+
+CinnabarIslandText8:
+	TX_FAR _CinnabarIslandText8
+	db "@"
+
+CinnabarIslandText10:
+	TX_FAR _CinnabarIslandText10
 	db "@"
 
 Route1Script: ; 1caaf (7:4aaf)
