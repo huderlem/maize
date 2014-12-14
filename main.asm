@@ -36072,38 +36072,42 @@ CinnabarIsland_h: ; 0x1c000 to 0x1c022 (34 bytes) (bank=7) (id=8)
 	db $00 ; tileset
 	db CINNABAR_ISLAND_HEIGHT, CINNABAR_ISLAND_WIDTH ; dimensions (y, x)
 	dw CinnabarIslandBlocks, CinnabarIslandTextPointers, CinnabarIslandScript ; blocks, texts, scripts
-	db NORTH | EAST ; connections
-	NORTH_MAP_CONNECTION ROUTE_21, ROUTE_21_WIDTH, ROUTE_21_HEIGHT, 0, 0, ROUTE_21_WIDTH, Route21Blocks
-	EAST_MAP_CONNECTION ROUTE_20, ROUTE_20_WIDTH, 0, 0, ROUTE_20_HEIGHT, Route20Blocks, CINNABAR_ISLAND_WIDTH
+	db SOUTH ; connections
+	SOUTH_MAP_CONNECTION ROUTE_10, ROUTE_10_WIDTH, 0, 0, ROUTE_10_WIDTH, Route10Blocks, CINNABAR_ISLAND_WIDTH, CINNABAR_ISLAND_HEIGHT
 	dw CinnabarIslandObject ; objects
 
 CinnabarIslandObject: ; 0x1c022 (size=71)
-	db $43 ; border tile
+	db $a ; border tile
 
-	db $5 ; warps
-	db $3, $6, $1, MANSION_1
-	db $3, $12, $0, CINNABAR_GYM
-	db $9, $6, $0, CINNABAR_LAB_1
-	db $b, $b, $0, CINNABAR_POKECENTER
-	db $b, $f, $0, CINNABAR_MART
+	db $6 ; warps
+	db $5, $9, $0, MANSION_1
+	db $7, $17, $0, CINNABAR_MART
+	db $b, $e, $0, BATTLE_FACTORY
+	db $17, $5, $0, CINNABAR_POKECENTER
+	db $17, $d, $0, CINNABAR_POKECENTER
+	db $17, $18, $0, CINNABAR_GYM
 
-	db $5 ; signs
-	db $5, $9, $3 ; CinnabarIslandText3
-	db $b, $10, $4 ; MartSignText
-	db $b, $c, $5 ; PokeCenterSignText
-	db $b, $9, $6 ; CinnabarIslandText6
-	db $3, $d, $7 ; CinnabarIslandText7
+	db $6 ; signs
+	db $7, $18, $3 ; CinnabarIslandText3
+	db $d, $b, $4 ; MartSignText
+	db $11, $11, $5 ; PokeCenterSignText
+	db $17, $3, $6 ; CinnabarIslandText6
+	db $17, $e, $7 ; CinnabarIslandText7
+	db $17, $13, $7
 
-	db $2 ; people
-	db SPRITE_GIRL, $5 + 4, $c + 4, $fe, $2, $1 ; person
-	db SPRITE_GAMBLER, $6 + 4, $e + 4, $ff, $ff, $2 ; person
+	db $4 ; people
+	db SPRITE_GIRL, $6 + 4, $10 + 4, $fe, $2, $1 ; person
+	db SPRITE_GAMBLER, $11 + 4, $7 + 4, $ff, $ff, $2 ; person
+	db SPRITE_GAMBLER, $12 + 4, $15 + 4, $ff, $ff, $2 ; person
+	db SPRITE_GAMBLER, $19 + 4, $11 + 4, $ff, $ff, $2 ; person
 
 	; warp-to
-	EVENT_DISP $a, $3, $6 ; MANSION_1
-	EVENT_DISP $a, $3, $12 ; CINNABAR_GYM
-	EVENT_DISP $a, $9, $6 ; CINNABAR_LAB_1
-	EVENT_DISP $a, $b, $b ; CINNABAR_POKECENTER
-	EVENT_DISP $a, $b, $f ; CINNABAR_MART
+	EVENT_DISP CINNABAR_ISLAND_WIDTH, $5, $9 ; MANSION_1
+	EVENT_DISP CINNABAR_ISLAND_WIDTH, $7, $17 ; CINNABAR_MART
+	EVENT_DISP CINNABAR_ISLAND_WIDTH, $b, $e ; BATTLE_FACTORY
+	EVENT_DISP CINNABAR_ISLAND_WIDTH, $17, $5 ; CINNABAR_POKECENTER
+	EVENT_DISP CINNABAR_ISLAND_WIDTH, $17, $d ; CINNABAR_POKECENTER
+	EVENT_DISP CINNABAR_ISLAND_WIDTH, $17, $18 ; CINNABAR_GYM
 
 CinnabarIslandBlocks: ; 1c069 (7:4069)
 	INCBIN "maps/cinnabarisland.blk"
@@ -86470,7 +86474,8 @@ Route10_h: ; 0x582d4 to 0x582f6 (34 bytes) (id=21)
 	db $00 ; tileset
 	db ROUTE_10_HEIGHT, ROUTE_10_WIDTH ; dimensions (y, x)
 	dw Route10Blocks, Route10TextPointers, Route10Script ; blocks, texts, scripts
-	db SOUTH ; connections
+	db NORTH | SOUTH ; connections
+	NORTH_MAP_CONNECTION CINNABAR_ISLAND, CINNABAR_ISLAND_WIDTH, CINNABAR_ISLAND_HEIGHT, 0, 0, $a, CinnabarIslandBlocks
 	SOUTH_MAP_CONNECTION FUCHSIA_CITY, FUCHSIA_CITY_WIDTH, -3, 0, FUCHSIA_CITY_WIDTH, FuchsiaCityBlocks, ROUTE_10_WIDTH, ROUTE_10_HEIGHT
 	dw Route10Object ; objects
 
@@ -86484,7 +86489,7 @@ Route10Object: ; 0x582f6 (size=96)
 
 	db $2 ; people
 	db SPRITE_BLACK_HAIR_BOY_1, $2c + 4, $a + 4, $ff, $d3, $1 ; person
-	db SPRITE_HIKER, $39 + 4, $3 + 4, $ff, $d1, $42, HIKER + $C8, $7 ; trainer
+	db SPRITE_HIKER, $14 + 4, $8 + 4, $ff, $d3, $42, HIKER + $C8, $7 ; trainer
 
 	; warp-to
 	
@@ -87777,7 +87782,7 @@ Route10TrainerHeaders: ; 59363 (16:5363) ; TODO: unused bit $d7d1 bit 0, 2, 3, 4
 
 Route10TrainerHeader1: ; 5936f (16:536f)
 	db $2 ; flag's bit
-	db ($1 << 4) ; trainer's view range
+	db ($3 << 4) ; trainer's view range
 	dw $d7d1 ; flag's byte
 	dw Route10BattleText2 ; 0x53cf TextBeforeBattle
 	dw Route10AfterBattleText2 ; 0x53d9 TextAfterBattle
