@@ -4201,6 +4201,18 @@ _SpecialOpponentText::
 	cont "BEGIN BATTLE..."
 	done
 
+_CantLeaveText::
+	text "You can't leave"
+	line "because you"
+	cont "started the"
+	cont "BATTLE FACTORY"
+	cont "challenge!"
+
+	para "Talk to the"
+	line "receptionist to"
+	cont "begin battling!"
+	done
+
 _CantUseMoveNowText::
 	text "You can't use this"
 	line "now because you're"

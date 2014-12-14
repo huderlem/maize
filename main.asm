@@ -120898,6 +120898,7 @@ BattleFactoryTextPointers:
 	dw UsedComputerText
 	dw ComputerDoneText
 	dw SpecialOpponentText
+	dw CantLeaveText
 
 BattleFactoryScript:
 	call EnableAutoTextBoxDrawing
@@ -120912,6 +120913,37 @@ BattleFactoryScriptPointers:
 	dw BattleFactoryScript3
  
 BattleFactoryScript0:
+	; is player trying to leave after picking mons?
+	ld a, [W_INCHALLENGE]
+	and a
+	jr z, .afterExitCheck
+	ld a, [W_YCOORD]
+	cp $e
+	jr nz, .afterExitCheck
+	ld a, [W_XCOORD]
+	cp $6
+	jr c, .afterExitCheck
+	cp $8
+	jr nc, .afterExitCheck
+	; display text and force up
+	ld a, $f
+	ld [H_DOWNARROWBLINKCNT2], a ; $FF00+$8c
+	call DisplayTextID
+	; move player one space down
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_UP
+	ld [$ccd3],a ; base address of simulated button presses
+	xor a
+	ld [$cd39],a
+	inc a
+	ld [$cd38],a ; index of current simulated button press
+	ld hl,$d730
+	set 7,[hl]
+	ret
+.afterExitCheck
 	ld a, [W_STARTBATTLE]
 	and a
 	ret z
@@ -121496,6 +121528,10 @@ ComputerDoneText:
 
 SpecialOpponentText:
 	TX_FAR _SpecialOpponentText
+	db "@"
+
+CantLeaveText:
+	TX_FAR _CantLeaveText
 	db "@"
 
 ClearParty: ; TODO: not used
@@ -122670,12 +122706,13 @@ TakeFromFactory: ; 21618 (8:5618)
 BattleFactoryObject:
 	db $0f ; border tile
  
- 	db 1 ; warps
- 	db 1, 7, 2, REDS_HOUSE_1F
- 
+ 	db 2 ; warps
+ 	db $f, $6, 2, CINNABAR_ISLAND
+ 	db $f, $7, 2, CINNABAR_ISLAND
+
 	db 8 ; signs
-	db $b, $4, $8
-	db $d, $4, $9
+	db $9, $4, $8
+	db $b, $4, $9
 	db $4, $a, $b
 	db $4, $e, $c
 	db $8, $a, $c
@@ -122693,8 +122730,8 @@ BattleFactoryObject:
 	db SPRITE_BLACK_HAIR_BOY_1, $d + 4, $a + 4, $ff, $d1, $7 ; person
  
  	; warp-to
-	EVENT_DISP BATTLE_FACTORY_WIDTH, 1, 7
-
+	EVENT_DISP BATTLE_FACTORY_WIDTH, $f, $6
+	EVENT_DISP BATTLE_FACTORY_WIDTH, $f, $7
 
 
 SwapPokemonEnemy:
