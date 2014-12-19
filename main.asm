@@ -780,12 +780,6 @@ OverworldLoopLessDelay:: ; 0402 (0:0402)
 	set 6,[hl]
 	xor a
 	ld [H_CURRENTPRESSEDBUTTONS],a ; clear joypad state
-	ld a,[W_CURMAP]
-	cp a,CINNABAR_GYM
-	jr nz,.notCinnabarGym
-	ld hl,$d79b
-	set 7,[hl]
-.notCinnabarGym
 	ld hl,$d72e
 	set 5,[hl]
 	ld a,[W_CURMAP]
@@ -2830,10 +2824,17 @@ LoadMapData:: ; 1241 (0:1241)
 	call Bankswitch ; load tile pattern data for sprites
 	ld a, [W_CURMAP]
 	cp VIRIDIAN_FOREST
+	jr z, .sudorand
+	cp CINNABAR_GYM
 	jr nz, .normalLoadBlockMap
+.sudorand
+	push af
 	ld b,Bank(GenSudoRandWoodMap)
 	ld hl,GenSudoRandWoodMap
 	call Bankswitch
+	pop af
+	cp CINNABAR_GYM
+	jr z, .normalLoadBlockMap
 	jr .pastBlockMap
 .normalLoadBlockMap
 	call LoadTileBlockMap
@@ -7118,7 +7119,7 @@ CountSetBits:: ; 2b7f (0:2b7f)
 	ld d,8
 .innerLoop ; count how many bits are set in the current byte
 	srl e
-	ld a,0
+	xor a
 	adc c
 	ld c,a
 	dec d
@@ -10557,11 +10558,6 @@ Load16BitRegisters:: ; 3e94 (0:3e94)
 	ld a, [$cc54]
 	ld c, a
 	ret
-
-Func_3ead:: ; 3ead (0:3ead)
-	ld b, BANK(Func_1eb0a)
-	ld hl, Func_1eb0a
-	jp Bankswitch ; indirect jump to Func_1eb0a (1eb0a (7:6b0a))
 
 Func_3eb5:: ; 3eb5 (0:3eb5)
 	ld a, [H_LOADEDROMBANK]
@@ -72570,20 +72566,8 @@ FuchsiaGymHiddenObjects: ; 46de1 (11:6de1)
 	dbw BANK(GymStatues),GymStatues
 	db $FF
 CinnabarGymHiddenObjects: ; 46dee (11:6dee)
-	db $0d,$11,$04 ; XXX, y, x
+	db $0b,$9,$04 ; XXX, y, x
 	dbw BANK(GymStatues),GymStatues
-	db $07,$0f,$01 ; XXX, y, x
-	dbw Bank(Func_1eaa17), Func_1eaa17
-	db $01,$0a,$12 ; XXX, y, x
-	dbw Bank(Func_1eaa17), Func_1eaa17
-	db $07,$09,$13 ; XXX, y, x
-	dbw Bank(Func_1eaa17), Func_1eaa17
-	db $0d,$09,$14 ; XXX, y, x
-	dbw Bank(Func_1eaa17), Func_1eaa17
-	db $0d,$01,$05 ; XXX, y, x
-	dbw Bank(Func_1eaa17), Func_1eaa17
-	db $07,$01,$16 ; XXX, y, x
-	dbw Bank(Func_1eaa17), Func_1eaa17
 	db $FF
 CinnabarPokecenterHiddenObjects: ; 46e19 (11:6e19)
 	db $04,$00,$04 ; XXX, y, x
@@ -87737,7 +87721,7 @@ Route10TextPointers: ; 5934f (16:534f)
 	dw Route10Text2
 	dw Route10Text3
 
-Route10TrainerHeaders: ; 59363 (16:5363) ; TODO: unused bit $d7d1 bit 0, 2, 3, 4 ,5 (correct bits)
+Route10TrainerHeaders: ; 59363 (16:5363) ; TODO: unused bit $d7d1 bit 5 (correct bits)
 
 Route10TrainerHeader1: ; 5936f (16:536f)
 	db $2 ; flag's bit
@@ -98035,8 +98019,8 @@ GymStatues: ; 62419 (18:6419)
 	db VERMILION_GYM,%00000100
 	db CELADON_GYM,  %00001000
 	db FUCHSIA_GYM,  %00010000
-	db SAFFRON_GYM,  %00100000
-	db CINNABAR_GYM, %01000000
+	db SAFFRON_GYM,  %01000000
+	db CINNABAR_GYM, %00100000
 	db VIRIDIAN_GYM, %10000000
 	db $ff
 
@@ -106739,32 +106723,29 @@ CinnabarGym_h: ; 0x7573e to 0x7574a (12 bytes) (id=166)
 CinnabarGymScript: ; 7574a (1d:574a)
 	call CinnabarGymScript_75759
 	call EnableAutoTextBoxDrawing
-	ld hl, CinnabarGymScriptPointers
+	ld hl, CinnabarGymTrainerHeaders
+	ld de, CinnabarGymScriptPointers
 	ld a, [W_CINNABARGYMCURSCRIPT]
-	jp CallFunctionInTable
+	call ExecuteCurMapScriptInTable
+	ld [W_CINNABARGYMCURSCRIPT], a
+	ret
 
 CinnabarGymScript_75759: ; 75759 (1d:5759)
 	ld hl, $D126
 	bit 6, [hl]
 	res 6, [hl]
-	push hl
 	call nz, CinnabarGymScript_75772
-	pop hl
-	bit 5, [hl]
-	res 5, [hl]
-	call nz, Func_3ead
-	ld hl, $D79B
-	res 7, [hl]
 	ret
+
 CinnabarGymScript_75772: ; 75772 (1d:5772)
 	ld hl, Gym7CityName
 	ld de, Gym7LeaderName
 	jp LoadGymLeaderAndCityName
 
 Gym7CityName: ; 7577b (1d:577b)
-	db "CINNABAR ISLAND@"
+	db "ENTROPIA CITY@"
 Gym7LeaderName: ; 7578b (1d:578b)
-	db "BLAINE@"
+	db "CHANCE@"
 
 CinnabarGymScript_75792: ; 75792 (1d:5792)
 	xor a
@@ -106774,98 +106755,11 @@ CinnabarGymScript_75792: ; 75792 (1d:5792)
 	ld [$da38], a
 	ret
 
-CinnabarGymScript_757a0: ; 757a0 (1d:57a0)
-	ld a, [H_DOWNARROWBLINKCNT2] ; $FF00+$8c
-	ld [wTrainerHeaderFlagBit], a
-	ret
-
 CinnabarGymScriptPointers: ; 757a6 (1d:57a6)
-	dw CinnabarGymScript0
-	dw CinnabarGymScript1
-	dw CinnabarGymScript2
+	dw CheckFightingMapTrainers
+	dw Func_324c
+	dw EndTrainerBattle
 	dw CinnabarGymScript3
-
-CinnabarGymScript0: ; 757ae (1d:57ae)
-	ld a, [$da38]
-	and a
-	ret z
-	ld [$ff00+$8c], a
-	cp $4
-	jr nz, .asm_757c3 ; 0x757b7 $a
-	ld a, $4
-	ld [$d528], a
-	ld de, MovementData_757d7
-	jr .asm_757cb ; 0x757c1 $8
-.asm_757c3
-	ld de, MovementData_757da
-	ld a, $1
-	ld [$d528], a
-.asm_757cb
-	call MoveSprite
-	ld a, $1
-	ld [W_CINNABARGYMCURSCRIPT], a
-	ld [W_CURMAPSCRIPT], a
-	ret
-
-MovementData_757d7: ; 757d7 (1d:57d7)
-	db $80,$40,$FF
-
-MovementData_757da: ; 757da (1d:57da)
-	db $80,$FF
-
-CinnabarGymScript1: ; 757dc (1d:57dc)
-	ld a, [$d730]
-	bit 0, a
-	ret nz
-	xor a
-	ld [wJoypadForbiddenButtonsMask], a
-	ld a, [$da38]
-	ld [wTrainerHeaderFlagBit], a
-	ld [$ff00+$8c], a
-	jp DisplayTextID
-
-Func_757f1: ; 757f1 (1d:57f1)
-	ld a, $10
-	jp Predef ; indirect jump to HandleBitArray (f666 (3:7666))
-
-CinnabarGymScript2: ; 757f6 (1d:57f6)
-	ld a, [$d057]
-	cp $ff
-	jp z, CinnabarGymScript_75792
-	ld a, [wTrainerHeaderFlagBit]
-	ld [$ff00+$db], a
-	ld c, a
-	ld b, $2
-	ld hl, $d79a
-	call Func_757f1
-	ld a, c
-	and a
-	jr nz, .asm_7581b ; 0x7580e $b
-	call WaitForSoundToFinish
-	ld a, $ad
-	call PlaySound
-	call WaitForSoundToFinish
-.asm_7581b
-	ld a, [wTrainerHeaderFlagBit]
-	ld [$ff00+$db], a
-	ld c, a
-	ld b, $1
-	ld hl, $d79a
-	call Func_757f1
-	ld a, [wTrainerHeaderFlagBit]
-	sub $2
-	ld c, a
-	ld b, $1
-	ld hl, $d79c
-	call Func_757f1
-	call Func_3ead
-	xor a
-	ld [wJoypadForbiddenButtonsMask], a
-	ld [$da38], a
-	ld a, $0
-	ld [W_CINNABARGYMCURSCRIPT], a
-	ld [W_CURMAPSCRIPT], a
-	ret
 
 CinnabarGymScript3: ; 7584a (1d:584a)
 	ld a, [$d057]
@@ -106874,34 +106768,32 @@ CinnabarGymScript3: ; 7584a (1d:584a)
 	ld a, $f0
 	ld [wJoypadForbiddenButtonsMask], a
 CinnabarGymScript3_75857: ; 75857 (1d:5857)
-	ld a, $a
+	ld a, $7
 	ld [$ff00+$8c], a
 	call DisplayTextID
 	ld hl, $d79a
 	set 1, [hl]
-	ld bc, (TM_38 << 8) | 1
+	ld bc, (TM_35 << 8) | 1
 	call GiveItem
 	jr nc, .BagFull
-	ld a, $b
+	ld a, $8
 	ld [$ff00+$8c], a
 	call DisplayTextID
 	ld hl, $d79a
 	set 0, [hl]
 	jr .asm_75880 ; 0x75877 $7
 .BagFull
-	ld a, $c
+	ld a, $9
 	ld [$ff00+$8c], a
 	call DisplayTextID
 .asm_75880
 	ld hl, $d356
-	set 6, [hl]
+	set 5, [hl]
 	ld hl, $d72a
-	set 6, [hl]
+	set 5, [hl]
 	ld a, [$d79a]
 	or $fc
 	ld [$d79a], a
-	ld hl, $d79b
-	set 0, [hl]
 	ld hl, $d126
 	set 5, [hl]
 	jp CinnabarGymScript_75792
@@ -106913,9 +106805,6 @@ CinnabarGymTextPointers: ; 7589f (1d:589f)
 	dw CinnabarGymText4
 	dw CinnabarGymText5
 	dw CinnabarGymText6
-	dw CinnabarGymText7
-	dw CinnabarGymText8
-	dw CinnabarGymText9
 	dw BlaineBadgeText
 	dw ReceivedTM38Text
 	dw TM38NoRoomText
@@ -106939,6 +106828,395 @@ Func_758b7: ; 758b7 (1d:58b7)
 	ld [W_CINNABARGYMCURSCRIPT], a
 	ld [W_CURMAPSCRIPT], a
 	jp TextScriptEnd
+
+DoGymLuck:
+	ld hl, WhatsInStoreText
+	call PrintText
+	ld b, 40
+	ld c, 0
+.spinLoop
+	dec b
+	jr z, .doneSpinning
+	inc c
+	ld a, c
+	cp 6 ; num options
+	jr nz, .wrappedC
+	ld c, 0 ; wrap c back to 0
+.wrappedC
+	push bc
+	FuncCoord 4, 4 ; $c4a4
+	ld hl, Coord
+	ld b, 1
+	ld c, 9
+	call TextBoxBorder
+	pop bc
+	push bc
+	; get pointer to text
+	ld hl,$d730
+	set 6,[hl] ; turn off letter printing delay
+	ld hl, SpinPointers
+	ld b, 0
+	add hl, bc
+	add hl, bc ; hl contain pointer to text
+	ld a, [hli]
+	ld e, a
+	ld a, [hl]
+	ld d, a
+	; write the characters to the screen
+	FuncCoord 5, 5 ; $c4cd
+	ld hl, Coord
+	call PlaceString
+	ld a, $a8
+	call PlaySound
+	call Delay3
+	call Delay3
+	pop bc
+	jr .spinLoop
+.doneSpinning
+	; now actually choose a random one
+	call GenRandom
+	and $7
+	cp 7 ; number of options
+	jr nc, .doneSpinning
+	cp 6
+	jr z, .healTeam
+	cp 5
+	jp z, .doBurn
+	cp 4
+	jp z, .doParalyze
+	cp 3
+	jr z, .doLosePP
+	cp 2
+	jp z, .doSleep
+	cp 1
+	jp z, .doPoison
+.healTeam
+	ld de, HealTeamTextSpin
+	FuncCoord 5, 5 ; $c4cd
+	ld hl, Coord
+	call PlaceString
+	ld hl,$d730
+	res 6,[hl] ; turn off letter printing delay
+	ld hl, DoHealPartyText
+	call PrintText
+	call GBFadeOut2
+	ld a, $7
+	call Predef ; healparty
+	jp .startBattle
+
+.doLosePP
+	ld de, LosePPTextSpin
+	FuncCoord 5, 5 ; $c4cd
+	ld hl, Coord
+	call PlaceString
+	ld hl,$d730
+	res 6,[hl] ; turn off letter printing delay
+	ld hl, DoLosePPText
+	call PrintText
+	call GBFadeOut2
+	ld hl, W_PARTYMON1_MOVE1PP
+	ld a, [W_NUMINPARTY]
+	inc a
+	ld b, a
+.partyLoopPP
+	dec b
+	jp z, .startBattle
+	push bc
+	srl [hl] ; cut pp in half for move 1
+	inc hl
+	srl [hl] ; cut pp in half for move 2
+	inc hl
+	srl [hl] ; cut pp in half for move 3
+	inc hl
+	srl [hl] ; cut pp in half for move 4
+	ld bc, 41
+	add hl, bc
+	pop bc
+	jp.partyLoopPP
+
+.doSleep
+	ld de, SleepTextSpin
+	FuncCoord 5, 5 ; $c4cd
+	ld hl, Coord
+	call PlaceString
+	ld hl,$d730
+	res 6,[hl] ; turn off letter printing delay
+	ld hl, DoSleepPartyText
+	call PrintText
+	call GBFadeOut2
+	ld hl, W_PARTYMON1_STATUS
+	ld a, [W_NUMINPARTY]
+	inc a
+	ld b, a
+.partyLoopSleep
+	dec b
+	jp z, .startBattle
+	push bc
+.getPositiveNumber
+	call GenRandom
+	and %00000111
+	and a
+	jr z, .getPositiveNumber
+	ld [hl], a ; sleep
+	ld bc, 44
+	add hl, bc
+	pop bc
+	jp .partyLoopSleep
+
+.doPoison
+	ld de, PoisonTextSpin
+	FuncCoord 5, 5 ; $c4cd
+	ld hl, Coord
+	call PlaceString
+	ld hl,$d730
+	res 6,[hl] ; turn off letter printing delay
+	ld hl, DoPoisonPartyText
+	call PrintText
+	call GBFadeOut2
+	ld hl, W_PARTYMON1_STATUS
+	ld a, [W_NUMINPARTY]
+	inc a
+	ld b, a
+.partyLoop
+	dec b
+	jr z, .startBattle
+	push bc
+	ld a, PSN
+	ld [hl], a ; poison
+	ld bc, 44
+	add hl, bc
+	pop bc
+	jr .partyLoop
+
+.doParalyze
+	ld de, ParalyzeTextSpin
+	FuncCoord 5, 5 ; $c4cd
+	ld hl, Coord
+	call PlaceString
+	ld hl,$d730
+	res 6,[hl] ; turn off letter printing delay
+	ld hl, DoParalyzePartyText
+	call PrintText
+	call GBFadeOut2
+	ld hl, W_PARTYMON1_STATUS
+	ld a, [W_NUMINPARTY]
+	inc a
+	ld b, a
+.partyLoopParalyze
+	dec b
+	jr z, .startBattle
+	push bc
+	ld a, PAR
+	ld [hl], a ; paralyze
+	ld bc, 44
+	add hl, bc
+	pop bc
+	jr .partyLoopParalyze
+
+.doBurn
+	ld de, BurnTextSpin
+	FuncCoord 5, 5 ; $c4cd
+	ld hl, Coord
+	call PlaceString
+	ld hl,$d730
+	res 6,[hl] ; turn off letter printing delay
+	ld hl, DoBurnText
+	call PrintText
+	call GBFadeOut2
+	ld hl, W_PARTYMON1_STATUS
+	ld a, [W_NUMINPARTY]
+	inc a
+	ld b, a
+.partyLoopBurn
+	dec b
+	jr z, .startBattle
+	push bc
+	ld a, BRN
+	ld [hl], a ; burn
+	ld bc, 44
+	add hl, bc
+	pop bc
+	jr .partyLoopBurn
+
+.startBattle
+	call Delay3
+	call GBFadeIn2
+	ld hl, StartSpinBattleText
+	call PrintText
+	ret
+
+WhatsInStoreText:
+	TX_FAR _WhatsInStoreText
+	db "@"
+
+DoHealPartyText:
+	TX_FAR _DoHealPartyText
+	db "@"
+
+DoSleepPartyText:
+	TX_FAR _DoSleepPartyText
+	db "@"
+
+DoPoisonPartyText:
+	TX_FAR _DoPoisonPartyText
+	db "@"
+
+DoLosePPText:
+	TX_FAR _DoLosePPText
+	db "@"
+
+DoParalyzePartyText:
+	TX_FAR _DoParalyzeText
+	db "@"
+
+DoBurnText:
+	TX_FAR _DoBurnText
+	db "@"
+
+StartSpinBattleText:
+	TX_FAR _StartSpinBattleText
+	db "@"
+
+SpinPointers:
+	dw HealTeamTextSpin
+	dw PoisonTextSpin
+	dw SleepTextSpin
+	dw LosePPTextSpin
+	dw ParalyzeTextSpin
+	dw BurnTextSpin
+
+HealTeamTextSpin:
+	db "HEAL     @"
+
+PoisonTextSpin:
+	db "POISON   @"
+
+SleepTextSpin:
+	db "SLEEP    @"
+
+LosePPTextSpin:
+	db "LOSE PP  @"
+
+ParalyzeTextSpin:
+	db "PARALYZE @"
+
+BurnTextSpin:
+	db "BURN     @"
+
+CinnabarGymTrainerHeaders: ; 754eb (1d:54eb)
+CinnabarGymTrainerHeader0: ; 754eb (1d:54eb)
+	db $2 ; flag's bit
+	db ($4 << 4) ; trainer's view range
+	dw $d79a ; flag's byte
+	dw CinnabarGymBattleText1 ; 0x55ae TextBeforeBattle
+	dw CinnabarGymAfterBattleText1 ; 0x55b8 TextAfterBattle
+	dw CinnabarGymEndBattleText1 ; 0x55b3 TextEndBattle
+	dw CinnabarGymEndBattleText1 ; 0x55b3 TextEndBattle
+
+CinnabarGymTrainerHeader2: ; 754eb (1d:54eb)
+	db $3 ; flag's bit
+	db ($4 << 4) ; trainer's view range
+	dw $d79a ; flag's byte
+	dw CinnabarGymBattleText2 ; 0x55ae TextBeforeBattle
+	dw CinnabarGymAfterBattleText2 ; 0x55b8 TextAfterBattle
+	dw CinnabarGymEndBattleText2 ; 0x55b3 TextEndBattle
+	dw CinnabarGymEndBattleText2 ; 0x55b3 TextEndBattle
+
+CinnabarGymTrainerHeader3: ; 754eb (1d:54eb)
+	db $4 ; flag's bit
+	db ($4 << 4) ; trainer's view range
+	dw $d79a ; flag's byte
+	dw CinnabarGymBattleText3 ; 0x55ae TextBeforeBattle
+	dw CinnabarGymAfterBattleText3 ; 0x55b8 TextAfterBattle
+	dw CinnabarGymEndBattleText3 ; 0x55b3 TextEndBattle
+	dw CinnabarGymEndBattleText3 ; 0x55b3 TextEndBattle
+
+CinnabarGymTrainerHeader4: ; 754eb (1d:54eb)
+	db $5 ; flag's bit
+	db ($4 << 4) ; trainer's view range
+	dw $d79a ; flag's byte
+	dw CinnabarGymBattleText4 ; 0x55ae TextBeforeBattle
+	dw CinnabarGymAfterBattleText4 ; 0x55b8 TextAfterBattle
+	dw CinnabarGymEndBattleText4 ; 0x55b3 TextEndBattle
+	dw CinnabarGymEndBattleText4 ; 0x55b3 TextEndBattle
+
+	db $ff
+
+CinnabarGymBattleText1:
+	db $08 ; asm
+	ld hl, __CinnabarGymBattleText1
+	call PrintText
+	call DoGymLuck
+	jp TextScriptEnd
+
+__CinnabarGymBattleText1:
+	TX_FAR _CinnabarGymBattleText1
+	db "@"
+
+CinnabarGymAfterBattleText1:
+	TX_FAR _CinnabarGymAfterBattleText1
+	db "@"
+
+CinnabarGymEndBattleText1:
+	TX_FAR _CinnabarGymEndBattleText1
+	db "@"
+
+CinnabarGymBattleText2:
+	db $08 ; asm
+	ld hl, __CinnabarGymBattleText2
+	call PrintText
+	call DoGymLuck
+	jp TextScriptEnd
+
+__CinnabarGymBattleText2:
+	TX_FAR _CinnabarGymBattleText2
+	db "@"
+
+CinnabarGymAfterBattleText2:
+	TX_FAR _CinnabarGymAfterBattleText2
+	db "@"
+
+CinnabarGymEndBattleText2:
+	TX_FAR _CinnabarGymEndBattleText2
+	db "@"
+
+CinnabarGymBattleText3:
+	db $08 ; asm
+	ld hl, __CinnabarGymBattleText3
+	call PrintText
+	call DoGymLuck
+	jp TextScriptEnd
+
+__CinnabarGymBattleText3:
+	TX_FAR _CinnabarGymBattleText3
+	db "@"
+
+CinnabarGymAfterBattleText3:
+	TX_FAR _CinnabarGymAfterBattleText3
+	db "@"
+
+CinnabarGymEndBattleText3:
+	TX_FAR _CinnabarGymEndBattleText3
+	db "@"
+
+CinnabarGymBattleText4:
+	db $08 ; asm
+	ld hl, __CinnabarGymBattleText4
+	call PrintText
+	call DoGymLuck
+	jp TextScriptEnd
+
+__CinnabarGymBattleText4:
+	TX_FAR _CinnabarGymBattleText4
+	db "@"
+
+CinnabarGymAfterBattleText4:
+	TX_FAR _CinnabarGymAfterBattleText4
+	db "@"
+
+CinnabarGymEndBattleText4:
+	TX_FAR _CinnabarGymEndBattleText4
+	db "@"
 
 CinnabarGymText1: ; 758df (1d:58df)
 	db $8
@@ -106994,208 +107272,29 @@ TM38NoRoomText: ; 75934 (1d:5934)
 
 CinnabarGymText2: ; 75939 (1d:5939)
 	db $08 ; asm
-	call CinnabarGymScript_757a0
-	ld a, [$d79a]
-	bit 2, a
-	jr nz, .asm_46bb4 ; 0x75942
-	ld hl, UnnamedText_7595f
-	call PrintText
-	ld hl, UnnamedText_75964
-	ld de, UnnamedText_75964 ; $5964 XXX
-	call PreBattleSaveRegisters
-	jp Func_758b7
-.asm_46bb4 ; 0x75956
-	ld hl, UnnamedText_75969
-	call PrintText
+	ld hl, CinnabarGymTrainerHeader0
+	call TalkToTrainer
 	jp TextScriptEnd
-
-UnnamedText_7595f: ; 7595f (1d:595f)
-	TX_FAR _UnnamedText_7595f
-	db "@"
-
-UnnamedText_75964: ; 75964 (1d:5964)
-	TX_FAR _UnnamedText_75964
-	db "@"
-
-UnnamedText_75969: ; 75969 (1d:5969)
-	TX_FAR _UnnamedText_75969
-	db "@"
 
 CinnabarGymText3: ; 7596e (1d:596e)
 	db $08 ; asm
-	call CinnabarGymScript_757a0
-	ld a, [$d79a]
-	bit 3, a
-	jr nz, .asm_4b406 ; 0x75977
-	ld hl, UnnamedText_75994
-	call PrintText
-	ld hl, UnnamedText_75999
-	ld de, UnnamedText_75999 ; $5999 XXX
-	call PreBattleSaveRegisters
-	jp Func_758b7
-.asm_4b406 ; 0x7598b
-	ld hl, UnnamedText_7599e
-	call PrintText
+	ld hl, CinnabarGymTrainerHeader2
+	call TalkToTrainer
 	jp TextScriptEnd
-
-UnnamedText_75994: ; 75994 (1d:5994)
-	TX_FAR _UnnamedText_75994
-	db "@"
-
-UnnamedText_75999: ; 75999 (1d:5999)
-	TX_FAR _UnnamedText_75999
-	db "@"
-
-UnnamedText_7599e: ; 7599e (1d:599e)
-	TX_FAR _UnnamedText_7599e
-	db "@"
 
 CinnabarGymText4: ; 759a3 (1d:59a3)
 	db $08 ; asm
-	call CinnabarGymScript_757a0
-	ld a, [$d79a]
-	bit 4, a
-	jr nz, .asm_c0673 ; 0x759ac
-	ld hl, UnnamedText_759c9
-	call PrintText
-	ld hl, UnnamedText_759ce
-	ld de, UnnamedText_759ce ; $59ce XXX
-	call PreBattleSaveRegisters
-	jp Func_758b7
-.asm_c0673 ; 0x759c0
-	ld hl, UnnamedText_759d3
-	call PrintText
+	ld hl, CinnabarGymTrainerHeader3
+	call TalkToTrainer
 	jp TextScriptEnd
-
-UnnamedText_759c9: ; 759c9 (1d:59c9)
-	TX_FAR _UnnamedText_759c9
-	db "@"
-
-UnnamedText_759ce: ; 759ce (1d:59ce)
-	TX_FAR _UnnamedText_759ce
-	db "@"
-
-UnnamedText_759d3: ; 759d3 (1d:59d3)
-	TX_FAR _UnnamedText_759d3
-	db "@"
 
 CinnabarGymText5: ; 759d8 (1d:59d8)
 	db $08 ; asm
-	call CinnabarGymScript_757a0
-	ld a, [$d79a]
-	bit 5, a
-	jr nz, .asm_5cfd7 ; 0x759e1
-	ld hl, UnnamedText_759fe
-	call PrintText
-	ld hl, UnnamedText_75a03
-	ld de, UnnamedText_75a03 ; $5a03 XXX
-	call PreBattleSaveRegisters
-	jp Func_758b7
-.asm_5cfd7 ; 0x759f5
-	ld hl, UnnamedText_75a08
-	call PrintText
+	ld hl, CinnabarGymTrainerHeader4
+	call TalkToTrainer
 	jp TextScriptEnd
 
-UnnamedText_759fe: ; 759fe (1d:59fe)
-	TX_FAR _UnnamedText_759fe
-	db "@"
-
-UnnamedText_75a03: ; 75a03 (1d:5a03)
-	TX_FAR _UnnamedText_75a03
-	db "@"
-
-UnnamedText_75a08: ; 75a08 (1d:5a08)
-	TX_FAR _UnnamedText_75a08
-	db "@"
-
-CinnabarGymText6: ; 75a0d (1d:5a0d)
-	db $08 ; asm
-	call CinnabarGymScript_757a0
-	ld a, [$d79a]
-	bit 6, a
-	jr nz, .asm_776b4 ; 0x75a16
-	ld hl, UnnamedText_75a33
-	call PrintText
-	ld hl, UnnamedText_75a38
-	ld de, UnnamedText_75a38
-	call PreBattleSaveRegisters
-	jp Func_758b7
-.asm_776b4 ; 0x75a2a
-	ld hl, UnnamedText_75a3d
-	call PrintText
-	jp TextScriptEnd
-
-UnnamedText_75a33: ; 75a33 (1d:5a33)
-	TX_FAR _UnnamedText_75a33
-	db "@"
-
-UnnamedText_75a38: ; 75a38 (1d:5a38)
-	TX_FAR _UnnamedText_75a38
-	db "@"
-
-UnnamedText_75a3d: ; 75a3d (1d:5a3d)
-	TX_FAR _UnnamedText_75a3d
-	db "@"
-
-CinnabarGymText7: ; 75a42 (1d:5a42)
-	db $08 ; asm
-	call CinnabarGymScript_757a0
-	ld a, [$d79a]
-	bit 7, a
-	jr nz, .asm_2f755 ; 0x75a4b
-	ld hl, UnnamedText_75a68
-	call PrintText
-	ld hl, UnnamedText_75a6d
-	ld de, UnnamedText_75a6d
-	call PreBattleSaveRegisters
-	jp Func_758b7
-.asm_2f755 ; 0x75a5f
-	ld hl, UnnamedText_75a72
-	call PrintText
-	jp TextScriptEnd
-
-UnnamedText_75a68: ; 75a68 (1d:5a68)
-	TX_FAR _UnnamedText_75a68
-	db "@"
-
-UnnamedText_75a6d: ; 75a6d (1d:5a6d)
-	TX_FAR _UnnamedText_75a6d
-	db "@"
-
-UnnamedText_75a72: ; 75a72 (1d:5a72)
-	TX_FAR _UnnamedText_75a72
-	db "@"
-
-CinnabarGymText8: ; 75a77 (1d:5a77)
-	db $08 ; asm
-	call CinnabarGymScript_757a0
-	ld a, [$d79b]
-	bit 0, a
-	jr nz, .asm_d87be ; 0x75a80
-	ld hl, UnnamedText_75a9d
-	call PrintText
-	ld hl, UnnamedText_75aa2
-	ld de, UnnamedText_75aa2 ; $5aa2 XXX
-	call PreBattleSaveRegisters
-	jp Func_758b7
-.asm_d87be ; 0x75a94
-	ld hl, UnnamedText_75aa7
-	call PrintText
-	jp TextScriptEnd
-
-UnnamedText_75a9d: ; 75a9d (1d:5a9d)
-	TX_FAR _UnnamedText_75a9d
-	db "@"
-
-UnnamedText_75aa2: ; 75aa2 (1d:5aa2)
-	TX_FAR _UnnamedText_75aa2
-	db "@"
-
-UnnamedText_75aa7: ; 75aa7 (1d:5aa7)
-	TX_FAR _UnnamedText_75aa7
-	db "@"
-
-CinnabarGymText9: ; 75aac (1d:5aac)
+CinnabarGymText6: ; 75aac (1d:5aac)
 	db $08 ; asm
 	ld a, [$d79a]
 	bit 1, a
@@ -107220,25 +107319,22 @@ CinnabarGymObject: ; 0x75acc (size=90)
 	db $2e ; border tile
 
 	db $2 ; warps
-	db $11, $10, $1, $ff
-	db $11, $11, $1, $ff
+	db $11, $8, $5, CINNABAR_ISLAND
+	db $11, $9, $5, CINNABAR_ISLAND
 
 	db $0 ; signs
 
-	db $9 ; people
-	db SPRITE_FAT_BALD_GUY, $3 + 4, $3 + 4, $ff, $d0, $41, BLAINE + $C8, $1 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_2, $2 + 4, $11 + 4, $ff, $d0, $42, SUPER_NERD + $C8, $9 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_2, $8 + 4, $11 + 4, $ff, $d0, $43, BURGLAR + $C8, $4 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_2, $4 + 4, $b + 4, $ff, $d0, $44, SUPER_NERD + $C8, $a ; trainer
-	db SPRITE_BLACK_HAIR_BOY_2, $8 + 4, $b + 4, $ff, $d0, $45, BURGLAR + $C8, $5 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_2, $e + 4, $b + 4, $ff, $d0, $46, SUPER_NERD + $C8, $b ; trainer
-	db SPRITE_BLACK_HAIR_BOY_2, $e + 4, $3 + 4, $ff, $d0, $47, BURGLAR + $C8, $6 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_2, $8 + 4, $3 + 4, $ff, $d0, $48, SUPER_NERD + $C8, $c ; trainer
-	db SPRITE_GYM_HELPER, $d + 4, $10 + 4, $ff, $d0, $9 ; person
+	db $6 ; people
+	db SPRITE_FAT_BALD_GUY, $2 + 4, $9 + 4, $ff, $d0, $41, BLAINE + $C8, $1 ; trainer
+	db SPRITE_GAMBLER, $4 + 4, $6 + 4, $ff, $d3, $42, GAMBLER + $C8, $4 ; trainer
+	db SPRITE_GAMBLER, $6 + 4, $b + 4, $ff, $d2, $43, GAMBLER + $C8, $5 ; trainer
+	db SPRITE_GAMBLER, $7 + 4, $6 + 4, $ff, $d3, $44, GAMBLER + $C8, $6 ; trainer
+	db SPRITE_GAMBLER, $8 + 4, $b + 4, $ff, $d2, $45, GAMBLER + $C8, $7 ; trainer
+	db SPRITE_GYM_HELPER, $c + 4, $a + 4, $ff, $d0, $6 ; person
 
 	; warp-to
-	EVENT_DISP $a, $11, $10
-	EVENT_DISP $a, $11, $11
+	EVENT_DISP CINNABAR_GYM_WIDTH, $11, $8
+	EVENT_DISP CINNABAR_GYM_WIDTH, $11, $9
 
 CinnabarGymBlocks: ; 75b26 (1d:5b26)
 	INCBIN "maps/cinnabargym.blk"
@@ -107639,8 +107735,8 @@ CinnabarPokecenterObject: ; 0x75e46 (size=44)
 	db $0 ; border tile
 
 	db $2 ; warps
-	db $7, $3, $3, $ff
-	db $7, $4, $3, $ff
+	db $7, $3, $4, CINNABAR_ISLAND
+	db $7, $4, $4, CINNABAR_ISLAND
 
 	db $0 ; signs
 
@@ -107681,8 +107777,8 @@ CinnabarMartObject: ; 0x75e91 (size=38)
 	db $0 ; border tile
 
 	db $2 ; warps
-	db $7, $3, $4, $ff
-	db $7, $4, $4, $ff
+	db $7, $3, $1, CINNABAR_ISLAND
+	db $7, $4, $1, CINNABAR_ISLAND
 
 	db $0 ; signs
 
@@ -119110,7 +119206,21 @@ ClearOpening:
 	pop hl
 	ret
 
+HandleCinnabarGymEntrance:
+	; if player hasn't beaten gym, reset trainer flags
+	ld a, [W_OBTAINEDBADGES]
+	bit 5, a
+	ret nz
+	ld a, [$d79a]
+	and %11000011
+	ld [$d79a], a
+	ret
+
 GenSudoRandWoodMap:
+	ld a, [W_CURMAP]
+	cp CINNABAR_GYM
+	jp z, HandleCinnabarGymEntrance
+
 ; fill C6E8-CBFB with the background tile
 	ld hl,$c6e8
 	ld a,[$d3ad] ; background tile number
@@ -119891,6 +120001,7 @@ ReadTrainer: ; 39c53 (e:5c53)
 
 .RandomTeamTrainer
 	ld a, [hli] ; a contains random class
+	dec a
 	push hl
 	ld hl, RandomTeamClassesPointers
 	add a
@@ -120080,7 +120191,7 @@ LoneMoves: ; 39d22 (e:5d22)
 	db 3,IRON_HEAD
 	db 3,TOXIC
 	db 3,PSYWAVE
-	db 3,FIRE_BLAST
+	db 3,METRONOME
 	db 4,FISSURE
 
 TeamMoves: ; 39d32 (e:5d32)
@@ -120482,11 +120593,11 @@ CueBallData: ; 3a08d (e:608d)
 GamblerData: ; 3a0b3 (e:60b3)
 	db 22,MEOWTH,MAGNEMITE,0 ; Route 6 (North of Pyrite City)
 	db 32,MACHOKE,AMPHAROS,0 ; Fighting Club Route (West of Quartz City)
-	db $FD,0,30,31,29,32,0 ; Route west of fighting club Route (Hardwater Hole Route)
-	db 18,GROWLITHE,VULPIX,0
-	db 22,POLIWAG,POLIWAG,POLIWHIRL,0
-	db 22,ONIX,GEODUDE,GRAVELER,0
-	db 24,GROWLITHE,VULPIX,0
+	db $FD,1,30,31,29,32,0 ; Route west of fighting club Route (Hardwater Hole Route)
+	db $FD,1,34,35,34,0 ; Entropia City Gym
+	db $FD,1,37,0 ; Entropia City Gym
+	db $FD,1,33,34,34,34,0 ; Entropia City Gym
+	db $FD,1,36,32,35,0 ; Entropia City Gym
 BeautyData: ; 3a0d1 (e:60d1)
 	db 4,NIDORAN_M,NIDORAN_F,SPEAROW,SPEAROW,0 ; trainer house (Nickel city)
 	db 25,STEELIX,0 ; Pyrite City Gym
@@ -120696,11 +120807,7 @@ ErikaData: ; 3a3c9 (e:63c9)
 KogaData: ; 3a3d1 (e:63d1)
 	db $FE,37,1,POLIWHIRL,1,MR_MIME,-2,DODRIO,2,DUGTRIO,0
 BlaineData: ; 3a3db (e:63db)
-if _YELLOW
-	db $FF,48,NINETALES,50,RAPIDASH,54,ARCANINE,0
-else
-	db $FF,42,GROWLITHE,40,PONYTA,42,RAPIDASH,47,ARCANINE,0
-endc
+	db $FD,1,37,38,39,41,0
 SabrinaData: ; 3a3e5 (e:63e5)
 	db $FF,24,MAGNEMITE,27,STEELIX,28,EXCADRILL,29,SCIZOR,0
 GentlemanData: ; 3a3ef (e:63ef)
@@ -120764,10 +120871,10 @@ TimmyData:
 
 
 RandomTeamClassesPointers:
-	dw RandomTeamClass0
 	dw RandomTeamClass1
+	dw RandomTeamClass2
 
-RandomTeamClass0:
+RandomTeamClass1:
 	db 72 ; num entries in list
 	db CHARMELEON
 	db WARTORTLE
@@ -120842,7 +120949,7 @@ RandomTeamClass0:
 	db HITMONTOP
 	db SNEASEL
 
-RandomTeamClass1:
+RandomTeamClass2:
 	db 7 ; num entries in list
 	db CHARMANDER
 	db SQUIRTLE
