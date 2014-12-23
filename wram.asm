@@ -1535,7 +1535,9 @@ W_SWAPMONENEMYINDEX::
 	ds 1
 W_INCHALLENGE::
 ; 1 = have picked team for normal challenge
-; TODO: make sure this is actually used
+	ds 1
+
+W_FACTORY_REWARD::
 W_LAST_NEW_BYTE::
 	ds 1
 

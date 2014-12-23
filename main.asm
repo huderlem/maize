@@ -56615,6 +56615,7 @@ HandlePlayerBlackOut: ; 3c837 (f:4837)
 	ld [$d732], a
 	call ClearScreen
 	ld a, [W_CURMAP]
+	cp BATTLE_FACTORY
 	jr nz, .notBattleFactory
 	; update win streak
 	xor a
@@ -58189,7 +58190,7 @@ Func_3d3dd: ; 3d3dd (f:53dd)
 	jp Func_3d2fe
 
 Func_3d3f5: ; 3d3f5 (f:53f5)
-	ld a, $a5
+	ld a, STRUGGLE
 	ld [wPlayerSelectedMove], a ; $ccdc
 	ld a, [W_PLAYERDISABLEDMOVE] ; $d06d
 	and a
@@ -58504,6 +58505,10 @@ SelectEnemyMove: ; 3d564 (f:5564)
 	jr z, .chooseRandomMove ; move non-existant, try again
 .done
 	ld [wEnemySelectedMove], a
+
+	ld a, [W_CURMAP]
+	cp BATTLE_FACTORY
+	ret z
 
 	ld a, [W_ENEMYMONID]
 	ld hl,RoamingMonIDs
@@ -121124,7 +121129,7 @@ BattleFactoryScript2:
 	ld a, [W_CURSTREAK]
 	and a
 	jr nz, .wonBattle
-	xor a
+	ld a, 3
 	ld [W_BATTLEFACTORYCURSCRIPT], a
 	ret
 .wonBattle
@@ -121170,6 +121175,10 @@ FactoryMovementData:
 	db $FF
 
 BattleFactoryScript3:
+	call UpdateSprites
+	ld a, $d
+	ld [$ff00+$8c], a
+	call DisplayTextID
 	; return mons in box to player
 .clearloop
 	ld a, [W_NUMINPARTY]
@@ -121212,13 +121221,63 @@ BattleLoadingText:
 	TX_FAR _BattleLoadingText
 	db "@"
 
+BattleFactoryRewards:
+	db DV_BALL, THUNDER_STONE, SHINY_BALL, ITEM_STONE, SHINY_BALL, OLD_AMBER, MASTER_BALL 
+
+BattleFactoryReward1:
+ 	TX_FAR _BattleFactoryReward1
+ 	db "@"
+
+BattleFactoryNoRoom:
+ 	TX_FAR _BattleFactoryNoRoom
+ 	db "@"
+
+BattleFactoryReward2:
+ 	TX_FAR _BattleFactoryReward2
+ 	db "@"
 
 BattleFactoryText1: ; (17:656c)
 	db $08 ; asm
 	ld a, [W_INCHALLENGE]
 	cp $1
-	jr nz, .askToStart
+	jr nz, .giveItem
 	ld hl, AlreadyStartedText
+	call PrintText
+	jp TextScriptEnd
+.giveItem
+	; is the player supposed to get an item?
+	ld a, [W_FACTORY_REWARD]
+	and a
+	jr z, .askToStart
+	ld hl, BattleFactoryReward1
+	call PrintText
+	; figure out which item to give
+	ld a, [W_CURSTREAK]
+	sub 21
+	ld c, 0
+.giveItemLoop
+	cp 7
+	jr c, .afterGiveItemLoop
+	sub 7
+	inc c
+	jr .giveItemLoop
+.afterGiveItemLoop
+	; c contains reward index
+	ld b, 0
+	ld hl, BattleFactoryRewards
+	add hl, bc ; hl contains pointer to item id
+	ld a, [hl] ; a contains reward item id
+	ld c, 1
+	ld b, a
+	call GiveItem
+	jr nc, .BagFull
+	ld hl, BattleFactoryReward2
+	call PrintText
+	xor a
+	ld [W_FACTORY_REWARD], a
+	jp TextScriptEnd
+.BagFull
+	ld hl, BattleFactoryNoRoom
 	call PrintText
 	jp TextScriptEnd
 .askToStart
@@ -122915,7 +122974,7 @@ SwapPokemonEnemy:
 	ld c,10
 	call DelayFrames
 .pickMon
-	ld hl, wEnemyPartyCount
+	ld hl, W_NUMINPARTY
 	ld a, l
 	ld [$cf8b], a
 	ld a, h
@@ -123066,6 +123125,13 @@ SpecialTrainerDefeatMessage:
 .foundIt
 	inc hl
 	call PrintText
+
+	; determine if there should be a reward
+	ld a, [W_CURSTREAK]
+	cp 64
+	ret nc
+	ld a, 1
+	ld [W_FACTORY_REWARD], a
 	ret
 
 SpecialDefeatMessagesTable:
@@ -123358,23 +123424,16 @@ GetHeadID:
 SECTION "Factory Head Sprites", ROMX, BANK[$39]
 
 HeadBrockPic:
-	INCBIN "pic/trainer/youngster.pic"
-	;INCBIN "pic/trainer/headbrock.pic"
+	INCBIN "pic/trainer/headbrock.pic"
 HeadKogaPic:
-	INCBIN "pic/trainer/bugcatcher.pic"
-	;INCBIN "pic/trainer/headkoga.pic"
+	INCBIN "pic/trainer/headkoga.pic"
 HeadBlainePic:
-	INCBIN "pic/trainer/lass.pic"
-	;INCBIN "pic/trainer/headblaine.pic"
+	INCBIN "pic/trainer/headblaine.pic"
 HeadGiovanniPic: ; 4e3be (13:63be)
-	INCBIN "pic/trainer/sailor.pic"
-	;INCBIN "pic/trainer/headgiovanni.pic"
+	INCBIN "pic/trainer/headgiovanni.pic"
 HeadLoreleiPic:
-	INCBIN "pic/trainer/jr.trainerm.pic"
-	;INCBIN "pic/trainer/headlorelei.pic"
+	INCBIN "pic/trainer/headlorelei.pic"
 HeadLancePic:
-	INCBIN "pic/trainer/jr.trainerf.pic"
-	;INCBIN "pic/trainer/headlance.pic"
+	INCBIN "pic/trainer/headlance.pic"
 HeadProfOakPic:
 	INCBIN "pic/trainer/headprofoak.pic"
-
