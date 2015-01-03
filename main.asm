@@ -77750,16 +77750,15 @@ Route22_h: ; 0x50000 to 0x50022 (34 bytes) (id=33)
 	db $00 ; tileset
 	db ROUTE_22_HEIGHT, ROUTE_22_WIDTH ; dimensions (y, x)
 	dw Route22Blocks, Route22TextPointers, Route22Script ; blocks, texts, scripts
-	db NORTH | EAST ; connections
-	NORTH_MAP_CONNECTION ROUTE_23, ROUTE_23_WIDTH, ROUTE_23_HEIGHT, 0, 0, ROUTE_23_WIDTH, Route23Blocks
-	EAST_MAP_CONNECTION VIRIDIAN_CITY, VIRIDIAN_CITY_WIDTH, -3, 1, VIRIDIAN_CITY_HEIGHT - 3, ViridianCityBlocks, ROUTE_22_WIDTH
+	db SOUTH ; connections
+	SOUTH_MAP_CONNECTION ROUTE_4, ROUTE_4_WIDTH, 0, 18, $c, Route4Blocks, ROUTE_22_WIDTH, ROUTE_22_HEIGHT
 	dw Route22Object ; objects
 
 Route22Object: ; 0x50022 (size=27)
-	db $2c ; border tile
+	db $43 ; border tile
 
 	db $2 ; warps
-	db $3, $20, $7, MT_MOON_2
+	db $5, $20, $7, MT_MOON_2
 	db $b, $8, $0, MT_MOON_1
 
 	db $1 ; signs
@@ -77770,7 +77769,7 @@ Route22Object: ; 0x50022 (size=27)
 	db SPRITE_BLUE, $5 + 4, $19 + 4, $ff, $ff, $2 ; person
 
 	; warp-to
-	EVENT_DISP $14, $3, $20 ; MT_MOON_2
+	EVENT_DISP $14, $5, $20 ; MT_MOON_2
 	EVENT_DISP $14, $b, $8 ; MT_MOON_1
 
 Route22Blocks: ; 5003d (14:403d)
@@ -82066,12 +82065,13 @@ Route4_h: ; 0x54390 to 0x543b2 (34 bytes) (id=15)
 	db $00 ; tileset
 	db ROUTE_4_HEIGHT, ROUTE_4_WIDTH ; dimensions (y, x)
 	dw Route4Blocks, Route4TextPointers, Route4Script; blocks, texts, scripts
-	db WEST ; connections
+	db NORTH | WEST ; connections
+	NORTH_MAP_CONNECTION ROUTE_22, ROUTE_22_WIDTH, ROUTE_22_HEIGHT, $12, 0, ROUTE_22_WIDTH, Route22Blocks
 	WEST_MAP_CONNECTION CELADON_CITY, CELADON_CITY_WIDTH, 0, 0, $10, CeladonCityBlocks, ROUTE_4_WIDTH
 	dw Route4Object ; objects
 
 Route4Object: ; 0x543b2 (size=58)
-	db $2c ; border tile
+	db $43 ; border tile
 
 	db $3 ; warps
 	db $2, $b, $0, MT_MOON_POKECENTER
@@ -82087,9 +82087,9 @@ Route4Object: ; 0x543b2 (size=58)
 	db SPRITE_GIRL, $d + 4, $10 + 4, $fe, $0, $1 ; person
 
 	; warp-to
-	EVENT_DISP $2d, $2, $b ; MT_MOON_POKECENTER
-	EVENT_DISP $2d, $5, $1e ; MT_MOON_1
-	EVENT_DISP $2d, $2, $10 ; MT_MOON_2
+	EVENT_DISP ROUTE_4_WIDTH, $2, $b ; MT_MOON_POKECENTER
+	EVENT_DISP ROUTE_4_WIDTH, $5, $1e ; MT_MOON_1
+	EVENT_DISP ROUTE_4_WIDTH, $2, $10 ; MT_MOON_2
 
 Route4Blocks: ; 543ec (15:43ec)
 	INCBIN "maps/route4.blk"
