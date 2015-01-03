@@ -3340,6 +3340,28 @@ _BattleFactoryText2::
 	cont "challenge?"
 	done
 
+_BattleFactoryReward1::
+	text $52, "!"
+
+	para "I have a reward"
+	line "to give you for"
+	cont "your success in"
+	cont "your most recent"
+	cont "BATTLE FACTORY"
+	cont "session!"
+	prompt
+
+_BattleFactoryNoRoom::
+	text "You don't have"
+	line "room for this!"
+
+	para "You need to make"
+	line "room and claim"
+	cont "your reward"
+	cont "before starting"
+	cont "another session."
+	done
+
 _BattleFactoryText3::
 	text "Alright, let me"
 	line "bring up your"
@@ -3352,6 +3374,12 @@ _BattleFactoryText3::
 	line "#MON from the"
 	cont "list."
 	done
+
+_BattleFactoryReward2::
+	text $52, " received"
+	line "@"
+	TX_RAM $cf4b
+	text "!@@"
 
 _BattleFactoryText4::
 	text "Ok, just talk to"
@@ -3589,7 +3617,10 @@ _GuideText::
 	line "enough, you might"
 	cont "confront some"
 	cont "very special"
-	cont "opponents."
+	cont "opponents, and"
+	cont "if you beat them,"
+	cont "you'll earn some"
+	cont "fabulous items!"
 
 	para "If you ever lose,"
 	line "you'll start all"
@@ -4185,7 +4216,11 @@ _BattleFactoryTextC::
 
 _ComputerDoneText::
 	text "BATTLE SESSION"
-	line "COMPLETE...", $51
+	line "COMPLETE..."
+
+	para "Your #MON have"
+	line "been returned."
+	done
 
 _SpecialOpponentText::
 	text "CURRENT WINNING"

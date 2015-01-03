@@ -15513,9 +15513,9 @@ Map05FlyWarp: ; 649a (1:649a)
 Map06FlyWarp: ; 64a0 (1:64a0)
 	FLYWARP_DATA 25,10,41
 Map07FlyWarp: ; 64a6 (1:64a6)
-	FLYWARP_DATA 20,28,19
+	FLYWARP_DATA FUCHSIA_CITY_WIDTH,$12,$15
 Map08FlyWarp: ; 64ac (1:64ac)
-	FLYWARP_DATA 10,12,11
+	FLYWARP_DATA CINNABAR_ISLAND_WIDTH,$18,$d
 Map09FlyWarp: ; 64b2 (1:64b2)
 	FLYWARP_DATA 10,6,9
 Map0aFlyWarp: ; 64b8 (1:64b8)
@@ -51256,6 +51256,13 @@ TrainerClassMoveChoiceModifications: ; 3989b (e:589b)
 	db 1,0    ; AGATHA
 	db 1,3,0  ; LANCE
 	db 1,3,0  ; SHADOW
+	db 1,0    ; HEAD_BROCK
+	db 1,0    ; HEAD_KOGA
+	db 1,0    ; HEAD_BLAINE
+	db 1,0    ; HEAD_ROCKET
+	db 1,0    ; HEAD_LORELEI
+	db 1,0    ; HEAD_LANCE
+	db 1,0    ; HEAD_OAK
 
 TrainerPicAndMoneyPointers: ; 39914 (e:5914)
 ; trainer pic pointers and base money.
@@ -51408,6 +51415,27 @@ TrainerPicAndMoneyPointers: ; 39914 (e:5914)
     dw YoungsterPic
     db 0,$10,0
 
+	dw HeadBrockPic
+	db 0,0,0
+	
+	dw HeadKogaPic
+	db 0,0,0
+
+	dw HeadBlainePic
+	db 0,0,0
+
+	dw HeadGiovanniPic
+	db 0,0,0
+
+	dw HeadLoreleiPic
+	db 0,0,0
+
+	dw HeadLancePic
+	db 0,0,0
+
+	dw HeadProfOakPic
+	db 0,0,0
+
 TrainerNames: ; 399ff (e:59ff)
 	db "YOUNGSTER@"
 	db "BUG CATCHER@"
@@ -51458,6 +51486,13 @@ TrainerNames: ; 399ff (e:59ff)
 	db "LANCE@"
 	db "???@"
     db "TIMMY@"
+    db "HEAD BROCK@" 
+    db "HEAD KOGA@"
+    db "HEAD BLAINE@"
+    db "HEAD ROCKET@"
+    db "HEAD LORELEI@"
+    db "HEAD LANCE@"
+    db "HEAD OAK@"
 
 Func_39b87: ; 39b87 (e:5b87)
 	ld hl, $d0dc
@@ -51675,6 +51710,13 @@ TrainerAIPointers: ; 3a55c (e:655c)
 	dbw 2,AgathaAI ; agatha
 	dbw 1,LanceAI ; lance
 	dbw 3,GenericAI
+	dbw 3,GenericAI ; factory head
+	dbw 3,GenericAI ; factory head
+	dbw 3,GenericAI ; factory head
+	dbw 3,GenericAI ; factory head
+	dbw 3,GenericAI ; factory head
+	dbw 3,GenericAI ; factory head
+	dbw 3,GenericAI ; factory head
 
 JugglerAI: ; 3a5e9 (e:65e9)
 	cp $40
@@ -56194,7 +56236,9 @@ TrainerBattleVictory: ; 3c696 (f:4696)
 	jr c, .notSpecialMessage
 	cp 10 ; last class with special trainers (+2)
 	jr nc, .notSpecialMessage ; past the last factory head
-	call SpecialTrainerDefeatMessage
+	ld b, Bank(SpecialTrainerDefeatMessage)
+	ld hl, SpecialTrainerDefeatMessage
+	call Bankswitch
 	jr .printCongrats
 .notSpecialMessage
 	call RandomDefeatMessage_
@@ -56571,6 +56615,7 @@ HandlePlayerBlackOut: ; 3c837 (f:4837)
 	ld [$d732], a
 	call ClearScreen
 	ld a, [W_CURMAP]
+	cp BATTLE_FACTORY
 	jr nz, .notBattleFactory
 	; update win streak
 	xor a
@@ -58119,7 +58164,7 @@ MoveDisabledText: ; 3d3b3 (f:53b3)
 	db "@"
 
 WhichTechniqueString: ; 3d3b8 (f:53b8)
-	db "WHICH TECHNIQUE?@"
+	db "WHICH MOVE?@"
 
 Func_3d3c9: ; 3d3c9 (f:53c9)
 	ld a, [wCurrentMenuItem] ; $cc26
@@ -58145,7 +58190,7 @@ Func_3d3dd: ; 3d3dd (f:53dd)
 	jp Func_3d2fe
 
 Func_3d3f5: ; 3d3f5 (f:53f5)
-	ld a, $a5
+	ld a, STRUGGLE
 	ld [wPlayerSelectedMove], a ; $ccdc
 	ld a, [W_PLAYERDISABLEDMOVE] ; $d06d
 	and a
@@ -58461,6 +58506,10 @@ SelectEnemyMove: ; 3d564 (f:5564)
 .done
 	ld [wEnemySelectedMove], a
 
+	ld a, [W_CURMAP]
+	cp BATTLE_FACTORY
+	ret z
+
 	ld a, [W_ENEMYMONID]
 	ld hl,RoamingMonIDs
 	ld de,1
@@ -58740,9 +58789,6 @@ Func_3d811: ; 3d811 (f:5811)
 ; print the ghost battle messages
 	call Func_3d83a
 	ret nz
-	ld a,[H_WHOSETURN]
-	and a
-	jr nz,.Ghost
 	ld a,[W_PLAYERMONSTATUS] ; player’s turn
 	and a,SLP | FRZ
 	ret nz
@@ -58750,18 +58796,9 @@ Func_3d811: ; 3d811 (f:5811)
 	call PrintText
 	xor a
 	ret
-.Ghost ; ghost’s turn
-	ld hl,GetOutText
-	call PrintText
-	xor a
-	ret
 
 ScaredText: ; 3d830 (f:5830)
 	TX_FAR _ScaredText
-	db "@"
-
-GetOutText: ; 3d835 (f:5835)
-	TX_FAR _GetOutText
 	db "@"
 
 Func_3d83a: ; 3d83a (f:583a)
@@ -62526,6 +62563,21 @@ asm_3ef3d: ; 3ef3d (f:6f3d)
 	ld a, [W_ENEMYMONID]
 	sub $c8
 	jp c, Func_3ef8b
+	ld hl, SpecialTrainersFactory2
+	ld e, 1
+	ld d, 0
+	ld b, a
+	push bc
+	call IsInArray
+	pop bc
+	ld a, b
+	jr nc, .gotTrainerClass
+	ld d, a
+	ld hl, GetHeadID
+	ld b, Bank(GetHeadID)
+	call Bankswitch
+	ld a, d
+.gotTrainerClass
 	ld [W_TRAINERCLASS], a ; $d031
 	call Func_3566
 	ld a, [W_INCHALLENGE]
@@ -62563,39 +62615,7 @@ Func_3ef8b: ; 3ef8b (f:6f8b)
 	call Func_3eb01
 	call Func_3ec32
 	ld a, [W_CUROPPONENT] ; $d059
-	cp MAROWAK
-	jr z, .isGhost
 	call Func_3d83a
-	jr nz, .isNoGhost
-.isGhost
-	ld hl, W_MONHSPRITEDIM
-	ld a, $66
-	ld [hli], a   ; write sprite dimensions
-	ld bc, GhostPic ; $66b5
-	ld a, c
-	ld [hli], a   ; write  front sprite pointer
-	ld [hl], b
-	ld hl, W_ENEMYMONNAME  ; set name to "GHOST"
-	ld a, "G"
-	ld [hli], a
-	ld a, "H"
-	ld [hli], a
-	ld a, "O"
-	ld [hli], a
-	ld a, "S"
-	ld [hli], a
-	ld a, "T"
-	ld [hli], a
-	ld [hl], "@"
-	ld a, [$cf91]
-	push af
-	ld a, MON_GHOST
-	ld [$cf91], a
-	ld de, $9000
-	call LoadMonFrontSprite ; load ghost sprite
-	pop af
-	ld [$cf91], a
-	jr .spriteLoaded
 .isNoGhost
 	ld de, $9000
 	call LoadMonFrontSprite ; load mon sprite
@@ -62670,6 +62690,12 @@ Func_3efeb: ; 3efeb (f:6feb)
 TerminatorText_3f04a: ; 3f04a (f:704a)
 	db "@"
 
+SpecialTrainersFactory2:
+	db BROCK, KOGA, BLAINE, GIOVANNI, LORELEI, LANCE, PROF_OAK, $ff
+
+SpecialTrainersFactory:
+	db BROCK + $c8, KOGA + $c8, BLAINE + $c8, GIOVANNI + $c8, LORELEI + $c8, LANCE + $c8, PROF_OAK + $c8, $ff
+
 Func_3f04b: ; 3f04b (f:704b)
 	ld a, [$d033]
 	ld e, a
@@ -62680,6 +62706,21 @@ Func_3f04b: ; 3f04b (f:704b)
 	jr z, .notLinkBattle
 	ld a, $4
 .notLinkBattle
+	; factory head?
+	ld a, [W_INCHALLENGE]
+	and a
+	jr z, .notFactoryHead
+	push de
+	ld e, 1
+	ld d, 0
+	ld hl, SpecialTrainersFactory
+	ld a, [W_CUROPPONENT]
+	call IsInArray
+	pop de
+	jr nc, .notFactoryHead
+	ld a, Bank(HeadBrockPic)
+	jr .loadSprite
+.notFactoryHead
 	ld a, [W_CUROPPONENT]
 	cp SHADOW + $C8
 	ld a, Bank(ShadowPic)
@@ -121088,7 +121129,7 @@ BattleFactoryScript2:
 	ld a, [W_CURSTREAK]
 	and a
 	jr nz, .wonBattle
-	xor a
+	ld a, 3
 	ld [W_BATTLEFACTORYCURSCRIPT], a
 	ret
 .wonBattle
@@ -121134,6 +121175,10 @@ FactoryMovementData:
 	db $FF
 
 BattleFactoryScript3:
+	call UpdateSprites
+	ld a, $d
+	ld [$ff00+$8c], a
+	call DisplayTextID
 	; return mons in box to player
 .clearloop
 	ld a, [W_NUMINPARTY]
@@ -121176,13 +121221,63 @@ BattleLoadingText:
 	TX_FAR _BattleLoadingText
 	db "@"
 
+BattleFactoryRewards:
+	db DV_BALL, THUNDER_STONE, SHINY_BALL, ITEM_STONE, SHINY_BALL, OLD_AMBER, MASTER_BALL 
+
+BattleFactoryReward1:
+ 	TX_FAR _BattleFactoryReward1
+ 	db "@"
+
+BattleFactoryNoRoom:
+ 	TX_FAR _BattleFactoryNoRoom
+ 	db "@"
+
+BattleFactoryReward2:
+ 	TX_FAR _BattleFactoryReward2
+ 	db "@"
 
 BattleFactoryText1: ; (17:656c)
 	db $08 ; asm
 	ld a, [W_INCHALLENGE]
 	cp $1
-	jr nz, .askToStart
+	jr nz, .giveItem
 	ld hl, AlreadyStartedText
+	call PrintText
+	jp TextScriptEnd
+.giveItem
+	; is the player supposed to get an item?
+	ld a, [W_FACTORY_REWARD]
+	and a
+	jr z, .askToStart
+	ld hl, BattleFactoryReward1
+	call PrintText
+	; figure out which item to give
+	ld a, [W_CURSTREAK]
+	sub 21
+	ld c, 0
+.giveItemLoop
+	cp 7
+	jr c, .afterGiveItemLoop
+	sub 7
+	inc c
+	jr .giveItemLoop
+.afterGiveItemLoop
+	; c contains reward index
+	ld b, 0
+	ld hl, BattleFactoryRewards
+	add hl, bc ; hl contains pointer to item id
+	ld a, [hl] ; a contains reward item id
+	ld c, 1
+	ld b, a
+	call GiveItem
+	jr nc, .BagFull
+	ld hl, BattleFactoryReward2
+	call PrintText
+	xor a
+	ld [W_FACTORY_REWARD], a
+	jp TextScriptEnd
+.BagFull
+	ld hl, BattleFactoryNoRoom
 	call PrintText
 	jp TextScriptEnd
 .askToStart
@@ -121771,13 +121866,13 @@ SpecialPickMons:
 	jp [hl] ; jump to the PickMons function
 
 SpecialPickMonsFunctionPointers:
-	dbw BROCK,     BrockPickMons
-	dbw KOGA,      KogaPickMons
-	dbw BLAINE,    BlainePickMons
-	dbw GIOVANNI,  GioPickMons
-	dbw LORELEI,   LoreleiPickMons
-	dbw LANCE,     LancePickMons
-	dbw PROF_OAK,  OakPickMons
+	dbw HEAD_BROCK,   BrockPickMons
+	dbw HEAD_KOGA,    KogaPickMons
+	dbw HEAD_BLAINE,  BlainePickMons
+	dbw HEAD_ROCKET,  GioPickMons
+	dbw HEAD_LORELEI, LoreleiPickMons
+	dbw HEAD_LANCE,   LancePickMons
+	dbw HEAD_OAK,     OakPickMons
 
 BrockPickMons:
 ; vulpix, onix, magnemite/geodude
@@ -122879,7 +122974,7 @@ SwapPokemonEnemy:
 	ld c,10
 	call DelayFrames
 .pickMon
-	ld hl, wEnemyPartyCount
+	ld hl, W_NUMINPARTY
 	ld a, l
 	ld [$cf8b], a
 	ld a, h
@@ -123030,6 +123125,13 @@ SpecialTrainerDefeatMessage:
 .foundIt
 	inc hl
 	call PrintText
+
+	; determine if there should be a reward
+	ld a, [W_CURSTREAK]
+	cp 64
+	ret nc
+	ld a, 1
+	ld [W_FACTORY_REWARD], a
 	ret
 
 SpecialDefeatMessagesTable:
@@ -123277,3 +123379,61 @@ TrainerMonMenu:
 	pop bc
 	ld de,$cd6d
 	ret
+
+GetHeadID:
+	; d = trainer id
+	ld a, [W_INCHALLENGE]
+	cp $1
+	ret nz
+
+	ld a, d
+	cp BROCK
+	jr nz, .koga
+	ld d, HEAD_BROCK
+	ret
+.koga
+	cp KOGA
+	jr nz, .blaine
+	ld d, HEAD_KOGA
+	ret
+.blaine
+	cp BLAINE
+	jr nz, .rocket
+	ld d, HEAD_BLAINE
+	ret
+.rocket
+	cp GIOVANNI
+	jr nz, .lorelei
+	ld d, HEAD_ROCKET
+	ret
+.lorelei
+	cp LORELEI
+	jr nz, .lance
+	ld d, HEAD_LORELEI
+	ret
+.lance
+	cp LANCE
+	jr nz, .oak
+	ld d, HEAD_LANCE
+	ret
+.oak
+	ld d, HEAD_OAK
+	ret
+
+
+SECTION "Factory Head Sprites", ROMX, BANK[$39]
+
+HeadBrockPic:
+	INCBIN "pic/trainer/headbrock.pic"
+HeadKogaPic:
+	INCBIN "pic/trainer/headkoga.pic"
+HeadBlainePic:
+	INCBIN "pic/trainer/headblaine.pic"
+HeadGiovanniPic: ; 4e3be (13:63be)
+	INCBIN "pic/trainer/headgiovanni.pic"
+HeadLoreleiPic:
+	INCBIN "pic/trainer/headlorelei.pic"
+HeadLancePic:
+	INCBIN "pic/trainer/headlance.pic"
+HeadProfOakPic:
+	INCBIN "pic/trainer/headprofoak.pic"
