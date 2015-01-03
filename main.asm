@@ -21540,17 +21540,17 @@ TunnelMonsB2: ; d23f (3:523f)
 	db $00
 
 Route10Mons: ; d255 (3:5255)
-	db $0F
-	db 16,VOLTORB
-	db 16,SPEAROW
-	db 14,VOLTORB
-	db 11,EKANS
-	db 13,SPEAROW
-	db 15,EKANS
-	db 17,VOLTORB
-	db 17,SPEAROW
-	db 13,EKANS
-	db 17,EKANS
+	db $30
+	db 20,SPEAROW
+	db 20,PIDGEY
+	db 21,PIDGEOTTO
+	db 21,PIDGEY
+	db 21,SPEAROW
+	db 22,FEAROW
+	db 20,MURKROW
+	db 20,FARFETCH_D
+	db 21,MURKROW
+	db 21,FARFETCH_D
 
 	db $00
 
