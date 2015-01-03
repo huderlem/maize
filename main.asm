@@ -36068,8 +36068,9 @@ CinnabarIsland_h: ; 0x1c000 to 0x1c022 (34 bytes) (bank=7) (id=8)
 	db $00 ; tileset
 	db CINNABAR_ISLAND_HEIGHT, CINNABAR_ISLAND_WIDTH ; dimensions (y, x)
 	dw CinnabarIslandBlocks, CinnabarIslandTextPointers, CinnabarIslandScript ; blocks, texts, scripts
-	db SOUTH ; connections
+	db SOUTH | EAST ; connections
 	SOUTH_MAP_CONNECTION ROUTE_10, ROUTE_10_WIDTH, 0, 0, ROUTE_10_WIDTH, Route10Blocks, CINNABAR_ISLAND_WIDTH, CINNABAR_ISLAND_HEIGHT
+	EAST_MAP_CONNECTION ROUTE_8, ROUTE_8_WIDTH, 2, 0, 9, Route8Blocks, CINNABAR_ISLAND_WIDTH
 	dw CinnabarIslandObject ; objects
 
 CinnabarIslandObject: ; 0x1c022 (size=71)
@@ -86416,40 +86417,41 @@ Route8_h: ; 0x5812d to 0x5814f (34 bytes) (id=19)
 	db $00 ; tileset
 	db ROUTE_8_HEIGHT, ROUTE_8_WIDTH ; dimensions (y, x)
 	dw Route8Blocks, Route8TextPointers, Route8Script ; blocks, texts, scripts
-	db EAST ; connections
+	db WEST | EAST ; connections
+	WEST_MAP_CONNECTION CINNABAR_ISLAND, CINNABAR_ISLAND_WIDTH, -2, 0, CINNABAR_ISLAND_HEIGHT, CinnabarIslandBlocks, ROUTE_8_WIDTH
 	EAST_MAP_CONNECTION VERMILION_CITY, VERMILION_CITY_WIDTH, -4, 0, VERMILION_CITY_HEIGHT, VermilionCityBlocks, ROUTE_8_WIDTH
 	dw Route8Object ; objects
 
 Route8Object: ; 0x5814f (size=119)
-	db $2c ; border tile
+	db $0a ; border tile
 
 	db $5 ; warps
 	db $a, $35, $0, ROUTE_8_GATE
 	db $b, $35, $1, ROUTE_8_GATE
 	db $a, $3a, $2, ROUTE_8_GATE
 	db $b, $3a, $3, ROUTE_8_GATE
-	db $3, $d, $0, PATH_ENTRANCE_ROUTE_8
+	db $5, $2a, $0, PATH_ENTRANCE_ROUTE_8
 
-	db $1 ; signs
-	db $3, $11, $a ; Route8Text10
+	db $2 ; signs
+	db $7, $27, $9 ; Route8Text10
+	db $d, $2d, $a
 
-	db $9 ; people
-	db SPRITE_BLACK_HAIR_BOY_2, $5 + 4, $8 + 4, $ff, $d3, $41, SUPER_NERD + $C8, $3 ; trainer
-	db SPRITE_GAMBLER, $9 + 4, $d + 4, $ff, $d1, $42, GAMBLER + $C8, $5 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_2, $6 + 4, $2a + 4, $ff, $d1, $43, SUPER_NERD + $C8, $4 ; trainer
-	db SPRITE_LASS, $3 + 4, $1a + 4, $ff, $d2, $44, LASS + $C8, $d ; trainer
-	db SPRITE_BLACK_HAIR_BOY_2, $4 + 4, $1a + 4, $ff, $d3, $45, SUPER_NERD + $C8, $5 ; trainer
-	db SPRITE_LASS, $5 + 4, $1a + 4, $ff, $d2, $46, LASS + $C8, $e ; trainer
-	db SPRITE_LASS, $6 + 4, $1a + 4, $ff, $d3, $47, LASS + $C8, $f ; trainer
-	db SPRITE_GAMBLER, $d + 4, $2e + 4, $ff, $d0, $48, GAMBLER + $C8, $7 ; trainer
-	db SPRITE_LASS, $c + 4, $33 + 4, $ff, $d2, $49, LASS + $C8, $10 ; trainer
+	db $8 ; people
+	db SPRITE_BLACK_HAIR_BOY_2, $3 + 4, $19 + 4, $ff, $d0, $41, SUPER_NERD + $C8, $1 ; trainer
+	db SPRITE_GAMBLER, $3 + 4, $1a + 4, $ff, $d0, $42, GAMBLER + $C8, $1 ; trainer
+	db SPRITE_BLACK_HAIR_BOY_2, $5 + 4, $20 + 4, $ff, $ff, $43, SUPER_NERD + $C8, $1 ; trainer
+	db SPRITE_LASS, $6 + 4, $29 + 4, $ff, $d0, $44, LASS + $C8, $1 ; trainer
+	db SPRITE_BLACK_HAIR_BOY_2, $8 + 4, $2f + 4, $ff, $ff, $45, SUPER_NERD + $C8, $1 ; trainer
+	db SPRITE_LASS, $9 + 4, $24 + 4, $ff, $d2, $46, LASS + $C8, $1 ; trainer
+	db SPRITE_LASS, $c + 4, $10 + 4, $ff, $d3, $47, LASS + $C8, $1 ; trainer
+	db SPRITE_GAMBLER, $c + 4, $20 + 4, $ff, $d0, $48, GAMBLER + $C8, $1 ; trainer
 
 	; warp-to
-	EVENT_DISP $1e, $a, $35 ; ROUTE_8_GATE
-	EVENT_DISP $1e, $b, $35 ; ROUTE_8_GATE
-	EVENT_DISP $1e, $a, $3a ; ROUTE_8_GATE
-	EVENT_DISP $1e, $b, $3a ; ROUTE_8_GATE
-	EVENT_DISP $1e, $3, $d ; PATH_ENTRANCE_ROUTE_8
+	EVENT_DISP ROUTE_8_WIDTH, $a, $35 ; ROUTE_8_GATE
+	EVENT_DISP ROUTE_8_WIDTH, $b, $35 ; ROUTE_8_GATE
+	EVENT_DISP ROUTE_8_WIDTH, $a, $3a ; ROUTE_8_GATE
+	EVENT_DISP ROUTE_8_WIDTH, $b, $3a ; ROUTE_8_GATE
+	EVENT_DISP ROUTE_8_WIDTH, $5, $2a ; PATH_ENTRANCE_ROUTE_8
 
 Route8Blocks: ; 581c6 (16:41c6)
 	INCBIN "maps/route8.blk"
@@ -87455,13 +87457,13 @@ Route8TextPointers: ; 591cf (16:51cf)
 	dw Route8Text6
 	dw Route8Text7
 	dw Route8Text8
-	dw Route8Text9
+	dw Route8Text10
 	dw Route8Text10
 
 Route8TrainerHeaders: ; 591e3 (16:51e3)
 Route8TrainerHeader0: ; 591e3 (16:51e3)
 	db $1 ; flag's bit
-	db ($4 << 4) ; trainer's view range
+	db ($3 << 4) ; trainer's view range
 	dw $d7cd ; flag's byte
 	dw Route8BattleText1 ; 0x525a TextBeforeBattle
 	dw Route8AfterBattleText1 ; 0x5264 TextAfterBattle
@@ -87470,7 +87472,7 @@ Route8TrainerHeader0: ; 591e3 (16:51e3)
 
 Route8TrainerHeader1: ; 591ef (16:51ef)
 	db $2 ; flag's bit
-	db ($4 << 4) ; trainer's view range
+	db ($3 << 4) ; trainer's view range
 	dw $d7cd ; flag's byte
 	dw Route8BattleText2 ; 0x5273 TextBeforeBattle
 	dw Route8AfterBattleText2 ; 0x527d TextAfterBattle
@@ -87479,7 +87481,7 @@ Route8TrainerHeader1: ; 591ef (16:51ef)
 
 Route8TrainerHeader2: ; 591fb (16:51fb)
 	db $3 ; flag's bit
-	db ($4 << 4) ; trainer's view range
+	db ($3 << 4) ; trainer's view range
 	dw $d7cd ; flag's byte
 	dw Route8BattleText3 ; 0x528c TextBeforeBattle
 	dw Route8AfterBattleText3 ; 0x5296 TextAfterBattle
@@ -87488,7 +87490,7 @@ Route8TrainerHeader2: ; 591fb (16:51fb)
 
 Route8TrainerHeader3: ; 59207 (16:5207)
 	db $4 ; flag's bit
-	db ($2 << 4) ; trainer's view range
+	db ($1 << 4) ; trainer's view range
 	dw $d7cd ; flag's byte
 	dw Route8BattleText4 ; 0x52a5 TextBeforeBattle
 	dw Route8AfterBattleText4 ; 0x52af TextAfterBattle
@@ -87497,7 +87499,7 @@ Route8TrainerHeader3: ; 59207 (16:5207)
 
 Route8TrainerHeader4: ; 59213 (16:5213)
 	db $5 ; flag's bit
-	db ($3 << 4) ; trainer's view range
+	db ($1 << 4) ; trainer's view range
 	dw $d7cd ; flag's byte
 	dw Route8BattleText5 ; 0x52be TextBeforeBattle
 	dw Route8AfterBattleText5 ; 0x52c8 TextAfterBattle
@@ -87515,7 +87517,7 @@ Route8TrainerHeader5: ; 5921f (16:521f)
 
 Route8TrainerHeader6: ; 5922b (16:522b)
 	db $7 ; flag's bit
-	db ($2 << 4) ; trainer's view range
+	db ($4 << 4) ; trainer's view range
 	dw $d7cd ; flag's byte
 	dw Route8BattleText7 ; 0x52f0 TextBeforeBattle
 	dw Route8AfterBattleText7 ; 0x52fa TextAfterBattle
@@ -87524,21 +87526,12 @@ Route8TrainerHeader6: ; 5922b (16:522b)
 
 Route8TrainerHeader7: ; 59237 (16:5237)
 	db $8 ; flag's bit
-	db ($2 << 4) ; trainer's view range
+	db ($3 << 4) ; trainer's view range
 	dw $d7cd ; flag's byte
 	dw Route8BattleText8 ; 0x5309 TextBeforeBattle
 	dw Route8AfterBattleText8 ; 0x5313 TextAfterBattle
 	dw Route8EndBattleText8 ; 0x530e TextEndBattle
 	dw Route8EndBattleText8 ; 0x530e TextEndBattle
-
-Route8TrainerHeader8: ; 59243 (16:5243)
-	db $9 ; flag's bit
-	db ($4 << 4) ; trainer's view range
-	dw $d7cd ; flag's byte
-	dw Route8BattleText9 ; 0x5322 TextBeforeBattle
-	dw Route8AfterBattleText9 ; 0x532c TextAfterBattle
-	dw Route8EndBattleText9 ; 0x5327 TextEndBattle
-	dw Route8EndBattleText9 ; 0x5327 TextEndBattle
 
 	db $ff
 
@@ -87684,24 +87677,6 @@ Route8EndBattleText8: ; 5930e (16:530e)
 
 Route8AfterBattleText8: ; 59313 (16:5313)
 	TX_FAR _Route8AfterBattleText8
-	db "@"
-
-Route8Text9: ; 59318 (16:5318)
-	db $08 ; asm
-	ld hl, Route8TrainerHeader8
-	call TalkToTrainer
-	jp TextScriptEnd
-
-Route8BattleText9: ; 59322 (16:5322)
-	TX_FAR _Route8BattleText9
-	db "@"
-
-Route8EndBattleText9: ; 59327 (16:5327)
-	TX_FAR _Route8EndBattleText9
-	db "@"
-
-Route8AfterBattleText9: ; 5932c (16:532c)
-	TX_FAR _Route8AfterBattleText9
 	db "@"
 
 Route8Text10: ; 59331 (16:5331)
