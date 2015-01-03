@@ -117733,7 +117733,7 @@ UpdateHappiness:
 
 SECTION "MiniSprites 2", ROMX, BANK[$35]
 
-MiniSprites2: ; mons 51-170
+MiniSprites2: ; mons 51-176
 	INCBIN "gfx/mini_sprites/mini_sprites_2.2bpp"
 
 SECTION "EvosMoves Extension", ROMX, BANK[$36]
