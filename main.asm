@@ -17726,8 +17726,8 @@ BuySellQuitText: ; 7413 (1:7413)
 
 UseTossText: ; 7422 (1:7422)
 	db   "USE"
-	next "TOSS"
-	next "INFO@"
+	next "INFO"
+	next "TOSS@"
 
 JapaneseSaveMessageText: ; 742b (1:742b)
 	db   "きろく"
@@ -21050,7 +21050,7 @@ WildDataPointers: ; ceeb (3:4eeb)
 	dw Route18Mons ; ROUTE_18
 	dw WaterMons   ; ROUTE_19
 	dw WaterMons   ; ROUTE_20
-	dw Route21Mons ; ROUTE_21
+	dw WaterMons   ; ROUTE_21
 	dw Route22Mons ; ROUTE_22
 	dw Route23Mons ; ROUTE_23
 	dw Route24Mons ; ROUTE_24
@@ -21470,10 +21470,10 @@ Route5Mons: ; d1e7 (3:51e7)
 	db 15,MAREEP
 	db 17,MAREEP
 	db 15,MANKEY
-	db 17,MANKEY
+	db 17,BUTTERFREE
 	db 17,BELLSPROUT
 	db 18,ODDISH
-	db 17,PIDGEY
+	db 17,BEEDRILL
 	db 18,BEEDRILL
 	db 19,BEEDRILL
 
@@ -21485,8 +21485,8 @@ Route6Mons: ; d1fd (3:51fd)
 	db 13,PIDGEY
 	db 15,PIDGEY
 	db 10,MANKEY
-	db 12,MANKEY
-	db 15,ODDISH
+	db 12,MAREEP
+	db 15,MAREEP
 	db 16,ODDISH
 	db 16,PIDGEY
 	db 14,MANKEY
@@ -29305,7 +29305,7 @@ StartMenu_Pokemon: ; 130a9 (4:70a9)
 	db $ff
 
 .surf
-	bit 4,a ; does the player have the Soul Badge?
+	bit 3,a ; does the player have the badge from pyrite city?
 	jp z,.newBadgeRequired
 	ld b, BANK(Func_cdc0)
 	ld hl, Func_cdc0
@@ -29324,7 +29324,7 @@ StartMenu_Pokemon: ; 130a9 (4:70a9)
 	call GBPalWhiteOutWithDelay3
 	jp .goBackToMap
 .strength
-	bit 3,a ; does the player have the Rainbow Badge?
+	bit 4,a ; does the player have the badge from quartz city?
 	jp z,.newBadgeRequired
 	ld a,$5b
 	call Predef
@@ -29546,9 +29546,9 @@ StartMenu_Item: ; 13302 (4:7302)
 	jp ItemMenuLoop
 .notBicycle2
 	ld a,[wCurrentMenuItem]
-	cp a, 1
-	jr z, .tossItem
 	cp a, 2
+	jr z, .tossItem
+	cp a, 1
 	jr z, .infoItem
 .useItem
 	ld [$d152],a

@@ -28,8 +28,14 @@ _PalletTownText2::
 	done
 
 _PalletTownText3::
-	text "Don't forget to"
-	line "store unneeded"
+	text "When you select"
+	line "an item in your"
+	cont "bag, you can"
+	cont "select INFO to"
+	cont "see what it does!"
+
+	para "And don't forget"
+	line "to store unneeded"
 	cont "items in the PC!"
 	done
 
