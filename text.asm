@@ -3351,6 +3351,16 @@ _PolitoedDexEntry::
 	next "during battles"
 	dex
 
+_CrobatDexEntry::
+	text "It is the"
+	next "NIGHT FURY of"
+	next "#MON."
+
+	page "It is incredibly"
+	next "adorable, yet"
+	next "deadly silent"
+	dex
+
 _BattleFactoryText2::
 	text "Hello, ", $52, "!"
 

@@ -48,10 +48,11 @@ _UnnamedText_19677:: ; a4e07 (29:4e07)
 	cont "erase this from"
 	cont "my memory!"
 
-	para "Maybe I'll some"
-	line "cool TEAM QUARRY"
-	cont "members to hang"
-	cont "out with, too."
+	para "Maybe I'll find"
+	line "some cool TEAM"
+	cont "QUARRY members to"
+	cont "hang out with,"
+	cont "too!"
 
 	para "Crush ya later,"
 	line "..."

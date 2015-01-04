@@ -3079,7 +3079,7 @@ LoadFrontSpriteByMonIndex:: ; 1389 (0:1389)
 	and a
 	pop hl
 	jr z, .invalidDexNumber  ; dex #0 invalid
-	cp 179 ; num mons in dex + 1
+	cp 180 ; num mons in dex + 1
 	jr c, .validDexNumber    ; dex >#151 invalid
 .invalidDexNumber
 	ld a, RHYDON ; $1
@@ -33664,9 +33664,9 @@ CeruleanCityScript2: ; 195b1 (6:55b1)
 	ld a, $ff
 	ld [$c0ee], a
 	call PlaySound
-	ld b, BANK(Music_MeetRival)
+	ld c, BANK(Music_MeetRival)
 	ld hl, Music_MeetRival
-	call Bankswitch
+	call PlayMusic
 	ld a, $1
 	ld [$ff00+$8c], a
 	call SetSpriteMovementBytesToFF
@@ -36328,7 +36328,7 @@ MonsterNames: ; 1c21e (7:421e)
 	db "BULBASAUR@"
 	db "VENUSAUR@@"
 	db "TENTACRUEL"
-	db "MISSINGNO."
+	db "CROBAT@@@@"
 	db "GOLDEEN@@@"
 	db "SEAKING@@@"
 	db "MISSINGNO."
@@ -50700,6 +50700,43 @@ PolitoedBaseStats:
 
 	db Bank(PolitoedPicFront)
 
+CrobatBaseStats:
+	db DEX_CROBAT ; pokedex id
+	db 85    ; base hp
+	db 90   ; base attack
+	db 80   ; base defense
+	db 130    ; base speed
+	db 75    ; base special
+
+	db POISON     ; species type 1
+	db FLYING     ; species type 2
+
+	db 90  ; catch rate
+	db 204 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw CrobatPicFront
+	dw CrobatPicBack
+
+	; attacks known at lvl 0
+	db SCREECH
+	db LEECH_LIFE
+	db BITE
+	db 0
+
+	db 0 ; growth rate
+
+	; learnset
+	db %00100010
+	db %01000010
+	db %00011000
+	db %11000000
+	db %01000010
+	db %00001100
+	db %00001010
+
+	db Bank(CrobatPicFront)
+
 CryData: ; 39446 (e:5446)
 	;$BaseCry, $Pitch, $Length
 	db $11, $00, $80; Rhydon
@@ -50857,7 +50894,7 @@ CryData: ; 39446 (e:5446)
 	db $0F, $80, $01; Bulbasaur
 	db $0F, $00, $C0; Venusaur
 	db $1A, $EE, $FF; Tentacruel
-	db $00, $00, $00; MissingNo.
+	db $1D, $FF, $30; Crobat
 	db $16, $80, $40; Goldeen
 	db $16, $10, $FF; Seaking
 	db $00, $00, $00; MissingNo.
@@ -65370,7 +65407,7 @@ PokedexEntryPointers: ; 4047e (10:447e)
 	dw BulbasaurDexEntry
 	dw VenusaurDexEntry
 	dw TentacruelDexEntry
-	dw MissingNoDexEntry
+	dw CrobatDexEntry
 	dw GoldeenDexEntry
 	dw SeakingDexEntry
 	dw MissingNoDexEntry
@@ -66657,6 +66694,13 @@ PolitoedDexEntry:
 	TX_FAR _PolitoedDexEntry
 	db "@"
 
+CrobatDexEntry:
+	db "BAT@"
+	db 5, 11
+	dw 1653
+	TX_FAR _CrobatDexEntry
+	db "@"
+
 MissingNoDexEntry: ; 40fe5 (10:4fe5)
 	db "???@"
 	db 10 ; 1.0 m
@@ -66856,7 +66900,7 @@ PokedexOrder: ; 41024 (10:5024)
 	db DEX_BULBASAUR
 	db DEX_VENUSAUR
 	db DEX_TENTACRUEL
-	db 0 ; MISSINGNO.
+	db DEX_CROBAT
 	db DEX_GOLDEEN
 	db DEX_SEAKING
 	db 0 ; MISSINGNO.
@@ -101917,6 +101961,7 @@ MonOverworldData: ; 7190d (1c:590d)
 	dn SPRITE_MON, SPRITE_MON               ;Tyrogue/Hitmontop
 	dn SPRITE_MON, SPRITE_MON               ;Sneasel/Weavile
 	dn SPRITE_MON, SPRITE_MON               ;Slowking/Politoed
+	dn SPRITE_MON, SPRITE_MON               ;Crobat
 	db 0
 
 MonOverworldSprites: ; 71959 (1c:5959)
@@ -103260,6 +103305,7 @@ MonsterPalettes: ; 725c8 (1c:65c8)
 	db PAL_GREYMON   ; Weavile
 	db PAL_PINKMON   ; Slowking
 	db PAL_GREENMON  ; Politoed
+	db PAL_PURPLEMON ; Crobat
 
 ; palettes for overworlds, title screen, monsters
 SuperPalettes: ; 72660 (1c:6660)
@@ -117948,6 +117994,7 @@ Mon097_EvosMoves: ; 3b776 (e:7776)
 Mon042_EvosMoves: ; 3b784 (e:7784)
 ;GOLBAT
 ;Evolutions
+	db EV_HAPPINESS,1,CROBAT
 	db 0
 ;Learnset
 	db 10,SUPERSONIC
@@ -118254,10 +118301,16 @@ Mon073_EvosMoves: ; 3b867 (e:7867)
 	db 0
 
 Mon179_EvosMoves: ; 3b879 (e:7879)
-;MISSINGNO
+;CROBAT
 ;Evolutions
 	db 0
 ;Learnset
+	db 10,SUPERSONIC
+	db 15,BITE
+	db 21,CONFUSE_RAY
+	db 23,AERIAL_ACE
+	db 32,WING_ATTACK
+	db 43,HAZE
 	db 0
 Mon118_EvosMoves: ; 3b87b (e:787b)
 ;GOLDEEN
@@ -123519,3 +123572,7 @@ PolitoedPicFront:
 	INCBIN "pic/bmon/politoed.pic"
 PolitoedPicBack:
 	INCBIN "pic/monback/politoedb.pic"
+CrobatPicFront:
+	INCBIN "pic/bmon/crobat.pic"
+CrobatPicBack:
+	INCBIN "pic/monback/crobatb.pic"
