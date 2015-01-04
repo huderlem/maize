@@ -101540,19 +101540,28 @@ LoadMonNicknameSprite:
 	ld a, [$d11e] ; a contains dex id
 	dec a
 	cp a, 50
-	jr nc, .everythingElse
+	jr nc, .secondBatch
 .first50
 	ld hl, MiniSprites1
 	ld bc, $80
 	call AddNTimes ; hl now contains pointer to mon's mini sprite
 	ld a, Bank(MiniSprites1)
 	jr .afterMiniSprite
-.everythingElse
+.secondBatch
+	cp 178
+	jr nc, .thirdBatch
 	sub 50
 	ld hl, MiniSprites2
 	ld bc, $80
 	call AddNTimes ; hl now contains pointer to mon's mini sprite
 	ld a, Bank(MiniSprites2)
+	jr .afterMiniSprite
+.thirdBatch
+	sub 178
+	ld hl, MiniSprites3
+	ld bc, $80
+	call AddNTimes
+	ld a, Bank(MiniSprites3)
 .afterMiniSprite
 	ld de, $8000
 	call FarCopyData2
@@ -101574,7 +101583,7 @@ LoadMonMiniSprites: ; 71791 (1c:5791)
 	ld a, [$d11e] ; a contains dex id
 	dec a
 	cp a, 50
-	jr nc, .everythingElse
+	jr nc, .secondBatch
 .first50
 	ld hl, MiniSprites1
 	ld bc, $80
@@ -101582,11 +101591,21 @@ LoadMonMiniSprites: ; 71791 (1c:5791)
 	ld d, h
 	ld e, l
 	jr .afterMiniSprite
-.everythingElse
+.secondBatch
+	cp 178
+	jr nc, .thirdBatch
 	sub 50
 	ld hl, MiniSprites2
 	ld bc, $80
 	call AddNTimes ; hl now contains pointer to mon's mini sprite
+	ld d, h
+	ld e, l
+	jr .afterMiniSprite
+.thirdBatch
+	sub 178
+	ld hl, MiniSprites3
+	ld bc, $80
+	call AddNTimes
 	ld d, h
 	ld e, l
 .afterMiniSprite
@@ -101608,6 +101627,11 @@ LoadMonMiniSprites: ; 71791 (1c:5791)
 	ld a, [$d11e]
 	cp 51
 	jr c, .firstBank
+	cp 179
+	jr c, .secondBank
+	ld a, Bank(MiniSprites3)
+	jr .gotBank
+.secondBank
 	ld a, Bank(MiniSprites2)
 	jr .gotBank
 .firstBank
@@ -117845,7 +117869,7 @@ UpdateHappiness:
 
 SECTION "MiniSprites 2", ROMX, BANK[$35]
 
-MiniSprites2: ; mons 51-176
+MiniSprites2: ; mons 51-178
 	INCBIN "gfx/mini_sprites/mini_sprites_2.2bpp"
 
 SECTION "EvosMoves Extension", ROMX, BANK[$36]
@@ -123576,3 +123600,6 @@ CrobatPicFront:
 	INCBIN "pic/bmon/crobat.pic"
 CrobatPicBack:
 	INCBIN "pic/monback/crobatb.pic"
+
+MiniSprites3: ; mons 179-?
+	INCBIN "gfx/mini_sprites/mini_sprites_3.2bpp"
