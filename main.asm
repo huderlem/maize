@@ -3079,7 +3079,7 @@ LoadFrontSpriteByMonIndex:: ; 1389 (0:1389)
 	and a
 	pop hl
 	jr z, .invalidDexNumber  ; dex #0 invalid
-	cp 177 ; num mons in dex + 1
+	cp 179 ; num mons in dex + 1
 	jr c, .validDexNumber    ; dex >#151 invalid
 .invalidDexNumber
 	ld a, RHYDON ; $1
@@ -36312,13 +36312,13 @@ MonsterNames: ; 1c21e (7:421e)
 	db "WEAVILE@@@"
 	db "KINGLER@@@"
 	db "CLOYSTER@@"
-	db "MISSINGNO."
+	db "SLOWKING@@"
 	db "ELECTRODE@"
 	db "CLEFABLE@@"
 	db "WEEZING@@@"
 	db "PERSIAN@@@"
 	db "MAROWAK@@@"
-	db "MISSINGNO."
+	db "POLITOED@@"
 	db "HAUNTER@@@"
 	db "ABRA@@@@@@"
 	db "ALAKAZAM@@"
@@ -50626,7 +50626,79 @@ WeavileBaseStats:
 
 	db Bank(SneaselPicFront)
 
+SlowkingBaseStats:
+	db DEX_SLOWKING ; pokedex id
+	db 95    ; base hp
+	db 75   ; base attack
+	db 80   ; base defense
+	db 30    ; base speed
+	db 105    ; base special
 
+	db WATER     ; species type 1
+	db PSYCHIC     ; species type 2
+
+	db 70  ; catch rate
+	db 164 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw SlowkingPicFront
+	dw SlowkingPicBack
+
+	; attacks known at lvl 0
+	db CONFUSION
+	db DISABLE
+	db HEADBUTT
+	db 0
+
+	db 0 ; growth rate
+
+	; learnset
+	db %10111001
+	db %01111110
+	db %00001110
+	db %11111010
+	db %01100010
+	db %00111010
+	db %10110010
+
+	db Bank(SlowkingPicFront)
+
+PolitoedBaseStats:
+	db DEX_POLITOED ; pokedex id
+	db 90    ; base hp
+	db 75   ; base attack
+	db 75   ; base defense
+	db 70    ; base speed
+	db 95    ; base special
+
+	db WATER     ; species type 1
+	db WATER     ; species type 2
+
+	db 45  ; catch rate
+	db 185 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw PolitoedPicFront
+	dw PolitoedPicBack
+
+	; attacks known at lvl 0
+	db DOUBLESLAP
+	db WATER_GUN
+	db HYPNOSIS
+	db 0
+
+	db 3 ; growth rate
+
+	; learnset
+	db %10110001
+	db %01111110
+	db %00001110
+	db %11111010
+	db %01000110
+	db %00001000
+	db %10110010
+
+	db Bank(PolitoedPicFront)
 
 CryData: ; 39446 (e:5446)
 	;$BaseCry, $Pitch, $Length
@@ -50769,13 +50841,13 @@ CryData: ; 39446 (e:5446)
 	db $19, $A0, $C0; Weavile
 	db $20, $EE, $E0; Kingler
 	db $18, $6F, $E0; Cloyster
-	db $00, $00, $00; MissingNo.
+	db $1F, $20, $40; Slowking
 	db $06, $A8, $90; Electrode
 	db $19, $AA, $20; Clefable
 	db $12, $FF, $FF; Weezing
 	db $19, $99, $FF; Persian
 	db $08, $4F, $60; Marowak
-	db $00, $00, $00; MissingNo.
+	db $0E, $50, $AF; Politoed
 	db $1C, $30, $40; Haunter
 	db $1C, $C0, $01; Abra
 	db $1C, $98, $FF; Alakazam
@@ -53676,6 +53748,7 @@ Mon016_EvosMoves: ; 3b39c (e:739c)
 Mon079_EvosMoves: ; 3b3ad (e:73ad)
 ;SLOWPOKE
 ;Evolutions
+	db EV_ITEM,ITEM_STONE,1,SLOWKING
 	db EV_LEVEL,37,SLOWBRO
 	db 0
 ;Learnset
@@ -54611,7 +54684,8 @@ Mon046_EvosMoves: ; 3b6bd (e:76bd)
 Mon061_EvosMoves: ; 3b6cc (e:76cc)
 ;POLIWHIRL
 ;Evolutions
-	db EV_ITEM,WATER_STONE ,1,POLIWRATH
+	db EV_ITEM,WATER_STONE,1,POLIWRATH
+	db EV_ITEM,ITEM_STONE,1,POLITOED
 	db 0
 ;Learnset
 	db 16,HYPNOSIS
@@ -65280,13 +65354,13 @@ PokedexEntryPointers: ; 4047e (10:447e)
 	dw WeavileDexEntry
 	dw KinglerDexEntry
 	dw CloysterDexEntry
-	dw MissingNoDexEntry
+	dw SlowkingDexEntry
 	dw ElectrodeDexEntry
 	dw ClefableDexEntry
 	dw WeezingDexEntry
 	dw PersianDexEntry
 	dw MarowakDexEntry
-	dw MissingNoDexEntry
+	dw PolitoedDexEntry
 	dw HaunterDexEntry
 	dw AbraDexEntry
 	dw AlakazamDexEntry
@@ -66569,6 +66643,20 @@ WeavileDexEntry:
 	TX_FAR _WeavileDexEntry
 	db "@"
 
+SlowkingDexEntry:
+	db "ROYAL@"
+	db 6, 7
+	dw 795
+	TX_FAR _SlowkingDexEntry
+	db "@"
+
+PolitoedDexEntry:
+	db "FROG@"
+	db 3, 7
+	dw 747
+	TX_FAR _PolitoedDexEntry
+	db "@"
+
 MissingNoDexEntry: ; 40fe5 (10:4fe5)
 	db "???@"
 	db 10 ; 1.0 m
@@ -66752,13 +66840,13 @@ PokedexOrder: ; 41024 (10:5024)
 	db DEX_WEAVILE
 	db DEX_KINGLER
 	db DEX_CLOYSTER
-	db 0 ; MISSINGNO.
+	db DEX_SLOWKING
 	db DEX_ELECTRODE
 	db DEX_CLEFABLE
 	db DEX_WEEZING
 	db DEX_PERSIAN
 	db DEX_MAROWAK
-	db 0 ; MISSINGNO.
+	db DEX_POLITOED
 	db DEX_HAUNTER
 	db DEX_ABRA
 	db DEX_ALAKAZAM
@@ -101828,6 +101916,7 @@ MonOverworldData: ; 7190d (1c:590d)
 	dn SPRITE_MON, SPRITE_MON               ;Bonsly/Sudowoodo
 	dn SPRITE_MON, SPRITE_MON               ;Tyrogue/Hitmontop
 	dn SPRITE_MON, SPRITE_MON               ;Sneasel/Weavile
+	dn SPRITE_MON, SPRITE_MON               ;Slowking/Politoed
 	db 0
 
 MonOverworldSprites: ; 71959 (1c:5959)
@@ -103169,6 +103258,8 @@ MonsterPalettes: ; 725c8 (1c:65c8)
 	db PAL_BROWNMON  ; HITMONTOP
 	db PAL_GREYMON   ; Sneasel
 	db PAL_GREYMON   ; Weavile
+	db PAL_PINKMON   ; Slowking
+	db PAL_GREENMON  ; Politoed
 
 ; palettes for overworlds, title screen, monsters
 SuperPalettes: ; 72660 (1c:6660)
@@ -117977,10 +118068,15 @@ Mon091_EvosMoves: ; 3b7cd (e:77cd)
 	db 0
 
 Mon177_EvosMoves: ; 3b7d1 (e:77d1)
-;MISSINGNO
+;SLOWKING
 ;Evolutions
 	db 0
 ;Learnset
+	db 15,WATER_GUN
+	db 20,CONFUSION
+	db 29,DISABLE
+	db 34,HEADBUTT
+	db 40,PSYCHIC_M
 	db 0
 Mon101_EvosMoves: ; 3b7d3 (e:77d3)
 ;ELECTRODE
@@ -118040,10 +118136,12 @@ Mon105_EvosMoves: ; 3b7f9 (e:77f9)
 	db 0
 
 Mon178_EvosMoves: ; 3b805 (e:7805)
-;MISSINGNO
+;POLITOED
 ;Evolutions
 	db 0
 ;Learnset
+	db 16,HYPNOSIS
+	db 19,WATER_GUN
 	db 0
 Mon093_EvosMoves: ; 3b807 (e:7807)
 ;HAUNTER
@@ -123412,3 +123510,12 @@ HeadLancePic:
 	INCBIN "pic/trainer/headlance.pic"
 HeadProfOakPic:
 	INCBIN "pic/trainer/headprofoak.pic"
+
+SlowkingPicFront:
+	INCBIN "pic/bmon/slowking.pic"
+SlowkingPicBack:
+	INCBIN "pic/monback/slowkingb.pic"
+PolitoedPicFront:
+	INCBIN "pic/bmon/politoed.pic"
+PolitoedPicBack:
+	INCBIN "pic/monback/politoedb.pic"

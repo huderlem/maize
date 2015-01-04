@@ -3331,6 +3331,26 @@ _WeavileDexEntry::
 	next "cavemen"
 	dex
 
+_SlowkingDexEntry::
+	text "When SHELLDER"
+	next "decides to bite"
+	next "SLOWPOKE's head"
+
+	page "instead of its"
+	next "tail, it becomes"
+	next "smart and noble"
+	dex
+
+_PolitoedDexEntry::
+	text "It can control"
+	next "all POLIWAG with"
+	next "its croak."
+
+	page "This ability is"
+	next "suspiciously gone"
+	next "during battles"
+	dex
+
 _BattleFactoryText2::
 	text "Hello, ", $52, "!"
 
