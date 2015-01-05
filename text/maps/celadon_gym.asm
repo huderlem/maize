@@ -44,7 +44,7 @@ _UnnamedText_48a6d:: ; 9d481 (27:5481)
 
 	para "Use this newfound"
 	line "strength to use"
-	cont "STRENGTH outside"
+	cont "SURF outside"
 	cont "of battle."
 
 	para "Of course, you're"
