@@ -7001,13 +7001,10 @@ PlayerBlackedOutText:: ; 2aba (0:2aba)
 	db "@"
 
 DisplayRepelWoreOffText:: ; 2abf (0:2abf)
-	ld hl,RepelWoreOffText
-	call PrintText
+	ld hl, RepelWoreOff
+	ld b, Bank(RepelWoreOff)
+	call Bankswitch
 	jp AfterDisplayingTextID
-
-RepelWoreOffText:: ; 2ac8 (0:2ac8)
-	TX_FAR _RepelWoreOffText
-	db "@"
 
 DisplayStartMenu:: ; 2acd (0:2acd)
 	ld a,$04 ; hardcoded Bank, not sure what's it refers to
@@ -30459,6 +30456,70 @@ Func_13870: ; 13870 (4:7870)
 .asm_13916
 	xor a
 	ret
+
+RepelWoreOffText:: ; 2ac8 (0:2ac8)
+	TX_FAR _RepelWoreOffText
+	db "@"
+
+RepelWoreOff::
+	ld hl, RepelWoreOffText
+	call PrintText
+	; check to see if there are any more repels in bag
+	ld b, REPEL
+	call IsItemInBag
+	ld b, REPEL
+	jr nz, .gotItem
+	ld b, SUPER_REPEL
+	call IsItemInBag
+	ld b, SUPER_REPEL
+	jr nz, .gotItem
+	ld b, MAX_REPEL
+	call IsItemInBag
+	ret z ; return if no repels left in bag
+	ld b, MAX_REPEL
+.gotItem
+	; b contains item id
+	push bc
+	ld a, b
+	ld [$d11e], a
+	call GetItemName
+	call CopyStringToCF4B ; copy name
+	ld hl, UseARepelText
+	call PrintText
+	call YesNoChoice
+	ld a, [wCurrentMenuItem] ; $cc26
+	and a
+	jr nz, .saidNo
+	pop bc
+	ld a, b
+	ld [$cf91],a
+	ld [$d152],a
+	ld hl, wBagItems
+	ld c, 0
+.loop
+	; search for item...
+	ld a, [hli]
+	cp b
+	jr z, .found
+	inc c
+	inc hl
+	jr .loop
+.found
+	ld a, c
+	ld [wWhichPokemon], a
+	call UseItem
+	ld a, 1
+	ld [$cc47], a ; dont hold text display open
+	ret
+.saidNo
+	pop bc
+	ld a, 1
+	ld [$cc47], a ; dont hold text display open
+	ret
+
+UseARepelText:
+	TX_FAR _UseARepelText
+	db "@"
 
 RoamingPokemon:
 ; mon id, level

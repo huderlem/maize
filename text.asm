@@ -2998,6 +2998,11 @@ _BoxFullCannotThrowBallText:: ; a6b69 (29:6b69)
 	cont "use that item!"
 	prompt
 
+_UseARepelText::
+	text "Use a @"
+	TX_RAM $cf4b
+	text "?"
+	done
 
 SECTION "Text 11", ROMX, BANK[TEXT_11]
 
