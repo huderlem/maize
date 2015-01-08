@@ -17300,6 +17300,23 @@ DrawStartMenu: ; 710b (1:710b)
 	ld de,StartMenuExitText
 .printLastMenuItemText
 	call PlaceString
+	; display night or day
+	FuncCoord 1, 0 ; $c3aa
+	ld hl,Coord
+	ld b,$03
+	ld c,$07
+	call TextBoxBorder
+	FuncCoord 3, 2
+	ld hl,Coord
+	ld a, [W_PLAYTIMEMINUTES + 1]
+	cp 30
+	jr nc, .night
+	ld de, DayText
+	jr .gotText
+.night
+	ld de,NightText
+.gotText
+	call PlaceString
 	ld hl,$d730
 	res 6,[hl] ; turn pauses between printing letters back on
 	ret
@@ -17327,6 +17344,12 @@ StartMenuGoHomeText: ; 71af (1:71af)
 
 StartMenuOptionText: ; 71b4 (1:71b4)
 	db "OPTION@"
+
+DayText:
+	db " DAY @"
+
+NightText:
+	db "NIGHT@"
 
 PrintStartMenuItem: ; 71bb (1:71bb)
 	push hl
