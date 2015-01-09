@@ -1538,6 +1538,9 @@ W_INCHALLENGE::
 	ds 1
 
 W_FACTORY_REWARD::
+	ds 1
+
+W_RING::
 W_LAST_NEW_BYTE::
 	ds 1
 

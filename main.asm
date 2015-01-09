@@ -8787,11 +8787,8 @@ Func_3566:: ; 3566 (0:3566)
 	ld [de], a
 
 	; check for AMULET_RING
-	push hl
-	ld hl, wBagItems
-	ld a, [hl]
+	ld a, [W_RING]
 	cp AMULET_RING
-	pop hl
 	jr nz, .noAmuletRing
 
 	; double the base money
@@ -17317,6 +17314,7 @@ DrawStartMenu: ; 710b (1:710b)
 	ld de,NightText
 .gotText
 	call PlaceString
+	; display ring currently worn
 	ld hl,$d730
 	res 6,[hl] ; turn pauses between printing letters back on
 	ret
@@ -18494,6 +18492,14 @@ Func_79ab: ; 79ab (1:79ab)
 	ld hl, wNumBagItems ; $d31d
 	call RemoveItemFromInventory
 	call WaitForSoundToFinish
+	ld a, [$cf91]
+	ld b, a
+	ld a, [W_RING]
+	cp b
+	jr nz, .notSameRing
+	xor a
+	ld [W_RING], a
+.notSameRing
 	ld a, $ab
 	call PlaySound
 	call WaitForSoundToFinish
@@ -21025,6 +21031,13 @@ LoadWildData: ; ceb8 (3:4eb8)
 	ld de,W_GRASSMONS ; otherwise, load grass data
 	ld bc,$0014
 	call CopyData
+	ld a, [W_PLAYTIMEMINUTES + 1]
+	cp 30
+	jr c, .day
+	ld hl, HandleNightMons
+	ld b, Bank(HandleNightMons)
+	call Bankswitch
+.day
 	pop hl
 	ld bc,$0014
 	add hl,bc
@@ -22274,7 +22287,7 @@ ItemUsePtrTable: ; d5e1 (3:55e1)
 	dw ItemUseEvoStone   ; LEAF_STONE
 	dw ItemUseCardKey    ; CARD_KEY
 	dw UnusableItem      ; NUGGET
-	dw UnusableItem      ; SCOUTER_RING
+	dw ItemUseRing       ; SCOUTER_RING
 	dw ItemUsePokedoll   ; POKE_DOLL
 	dw ItemUseMedicine   ; FULL_HEAL
 	dw ItemUseMedicine   ; REVIVE
@@ -22322,21 +22335,40 @@ ItemUsePtrTable: ; d5e1 (3:55e1)
 	dw UnusableItem      ; 10F
 	dw UnusableItem      ; 11F
 	dw UnusableItem      ; B4F
-	dw UnusableItem      ; FOCUS_RING
-	dw UnusableItem      ; BLUNT_RING
-	dw UnusableItem      ; WIZARD_RING
-	dw UnusableItem      ; SHIELD_RING
-	dw UnusableItem      ; BUBBLE_RING
-	dw UnusableItem      ; AMULET_RING
-	dw UnusableItem      ; BOOSTER_RING
-	dw UnusableItem      ; SHINY_RING
+	dw ItemUseRing       ; FOCUS_RING
+	dw ItemUseRing       ; BLUNT_RING
+	dw ItemUseRing       ; WIZARD_RING
+	dw ItemUseRing       ; SHIELD_RING
+	dw ItemUseRing       ; BUBBLE_RING
+	dw ItemUseRing       ; AMULET_RING
+	dw ItemUseRing       ; BOOSTER_RING
+	dw ItemUseRing       ; SHINY_RING
     dw ItemUseBall       ; SHINY_BALL
 
 ExtraItemUsePtrTable:
 	dw ItemUseBall       ; DV_BALL
-	dw UnusableItem      ; HUSTLE_RING
-	dw UnusableItem      ; WONDER_RING
-	dw UnusableItem      ; HEALING_RING
+	dw ItemUseRing       ; HUSTLE_RING
+	dw ItemUseRing       ; WONDER_RING
+	dw ItemUseRing       ; HEALING_RING
+
+ItemUseRing:
+	ld a, [W_ISINBATTLE]
+	and a
+	jp nz, ItemUseNotTime ; not in battle
+	ld a, [$cf91] ; used item id
+	ld b, a
+	ld a, [W_RING]
+	cp b
+	jr z, .takeOffRing
+	ld a, b
+	ld [W_RING], a
+	ld hl, ItemUseRingText
+	jp PrintText
+.takeOffRing
+	xor a
+	ld [W_RING], a
+	ld hl, TookOffRingText
+	jp PrintText
 
 ItemUseBall: ; d687 (3:5687)
 	ld a,[W_ISINBATTLE]
@@ -24720,6 +24752,18 @@ NoSurfingHereText: ; e5de (3:65de)
 
 BoxFullCannotThrowBallText: ; e5e3 (3:65e3)
 	TX_FAR _BoxFullCannotThrowBallText
+	db "@"
+
+ItemUseRingText: ; e5e8 (3:65e8)
+	TX_FAR _ItemUseRing001
+	db $05
+	TX_FAR _ItemUseRing002
+	db "@"
+
+TookOffRingText:
+	TX_FAR _TookOffRingText1
+	db $05
+	TX_FAR _TookOffRingText2
 	db "@"
 
 ItemUseText00: ; e5e8 (3:65e8)
@@ -29489,6 +29533,31 @@ StartMenu_Item: ; 13302 (4:7302)
 	call PrintText
 	jr .exitMenu
 .notInLinkBattle
+	; display ring currently worn
+	FuncCoord 0, 13 ; $c3aa
+	ld hl,Coord
+	ld b,$3
+	ld c,$12
+	call TextBoxBorder
+	FuncCoord 2, 14
+	ld hl, Coord
+	ld de, ItemScreenRingText
+	call PlaceString
+	ld a, [W_RING]
+	ld [$d11e], a
+	and a
+	jr z, .noRingWorn
+	call GetItemName
+	FuncCoord 4, 15
+	ld hl, Coord
+	call PlaceString
+	jr .afterRings
+.noRingWorn
+	ld de, NoRingWornText
+	FuncCoord 2, 15
+	ld hl, Coord
+	call PlaceString
+.afterRings
 	ld bc,wNumBagItems
 	ld hl,$cf8b
 	ld a,c
@@ -29645,6 +29714,12 @@ CantUseItemsNowText:
 CannotGetOffHereText: ; 1342f (4:742f)
 	TX_FAR _CannotGetOffHereText
 	db "@"
+
+ItemScreenRingText:
+	db "RING:@"
+
+NoRingWornText:
+	db "NOT WEARING RING@"
 
 ; items which bring up the party menu when used
 UsableItems_PartyMenu: ; 13434 (4:7434)
@@ -30351,8 +30426,7 @@ Func_13870: ; 13870 (4:7870)
 	ld b, a
 	; check for hustle ring
 	push hl
-	ld hl, wBagItems
-	ld a, [hl]
+	ld a, [W_RING]
 	cp HUSTLE_RING
 	ld a, b
 	jr nz, .continue
@@ -59843,8 +59917,7 @@ CalculateDamage: ; 3ddcf (f:5dcf)
 .physicalAttack
 	; check for BLUNT_RING
 	; d contains non-zero attack base power
-	ld hl, wBagItems
-	ld a, [hl]
+	ld a, [W_RING]
 	cp BLUNT_RING
 	jr nz, .noBluntRing
 	; multiply register d by 1.125
@@ -59887,8 +59960,7 @@ CalculateDamage: ; 3ddcf (f:5dcf)
 .specialAttack
 	; check for WIZARD_RING
 	; d contains non-zero attack base power
-	ld hl, wBagItems
-	ld a, [hl]
+	ld a, [W_RING]
 	cp WIZARD_RING
 	jr nz, .noWizardRing
 	; multiply register d by 1.125
@@ -60030,8 +60102,7 @@ Func_3de75: ; 3de75 (f:5e75)
 	
 	; it's a physical move
 	; check for SHIELD_RING
-	ld hl, wBagItems
-	ld a, [hl]
+	ld a, [W_RING]
 	cp SHIELD_RING
 	jr nz, .continue
 
@@ -60072,8 +60143,7 @@ Func_3de75: ; 3de75 (f:5e75)
 	jr .asm_3deef
 .specialAttack
 	; check for BUBBLE_RING
-	ld hl, wBagItems
-	ld a, [hl]
+	ld a, [W_RING]
 	cp BUBBLE_RING
 	jr nz, .continue
 
@@ -60712,8 +60782,7 @@ ApplyDamageToPlayerPokemon: ; 3e200 (f:6200)
 	push hl
 	push af
 	; check for FOCUS_RING
-	ld hl, wBagItems
-	ld a, [hl]
+	ld a, [W_RING]
 	cp FOCUS_RING
 	jr nz, .preNormalStuff
 
@@ -61072,8 +61141,7 @@ AdjustDamageForMoveType: ; 3e3a5 (f:63a5)
 	ld c, a
 
 	; check for WONDER_RING
-	ld hl, wBagItems
-	ld a, [hl]
+	ld a, [W_RING]
 	cp a, WONDER_RING
 	ld a, c
 	jr nz, .gotMultiplier
@@ -61152,8 +61220,7 @@ AIGetTypeEffectiveness: ; 3e449 (f:6449)
 	ld a,[hl]
 	ld c, a
 	; check for WONDER_RING
-	ld hl, wBagItems
-	ld a, [hl]
+	ld a, [W_RING]
 	cp a, WONDER_RING
 	ld a, c
 	jr nz, .gotMultiplier
@@ -62084,7 +62151,7 @@ Func_3eb01: ; 3eb01 (f:6b01)
 	ld b, $88
 	jr z, .asm_3eb33
     ; check for SHINY_RING
-    ld a, [wBagItems]
+    ld a, [W_RING]
     cp SHINY_RING
     jr nz, .genDVs
     ; fix shiny 1/64 of the time
@@ -82695,8 +82762,7 @@ Func_5525f: ; 5525f (15:525f)
 	push hl
 
 	; check for BOOSTER_RING
-	ld hl, wBagItems
-	ld a, [hl]
+	ld a, [W_RING]
 	cp BOOSTER_RING
 	call z, Func_5549f ; multiplies exp by 1.5
 
@@ -86991,8 +87057,7 @@ Func_58d99: ; 58d99 (16:4d99)
 .doScouterLogic
 	; scouter here
 	; is SCOUTER_RING in the first item slot?
-	ld hl, wBagItems
-	ld a, [hl]
+	ld a, [W_RING]
 	cp SCOUTER_RING
 	jr nz, .continue
 .countDVs	
@@ -117124,10 +117189,9 @@ _ScouterRingDescription::
 	line "the #MON is"
 	cont "strong."
 
-	para "Must be in the"
-	line "top item slot of"
-	cont "your inventory to"
-	cont "be in effect."
+	para "You can only wear"
+	line "one RING at a"
+	cont "time."
 	prompt
 
 _PokeDollDescription::
@@ -117588,10 +117652,9 @@ _HustleRingDescription::
 	line "boosts the levels"
 	cont "of wild #MON."
 
-	para "Must be in the"
-	line "top item slot of"
-	cont "your inventory to"
-	cont "be in effect."
+	para "You can only wear"
+	line "one RING at a"
+	cont "time."
 	prompt
 
 _WonderRingDescription::
@@ -117605,10 +117668,9 @@ _WonderRingDescription::
 	cont "successfully hit"
 	cont "a FLYING #MON."
 
-	para "Must be in the"
-	line "top item slot of"
-	cont "your inventory to"
-	cont "be in effect."
+	para "You can only wear"
+	line "one RING at a"
+	cont "time."
 	prompt
 
 _HealingRingDescription::
@@ -117617,10 +117679,9 @@ _HealingRingDescription::
 	cont "#MON as you"
 	cont "walk around."
 
-	para "Must be in the"
-	line "top item slot of"
-	cont "your inventory to"
-	cont "be in effect."
+	para "You can only wear"
+	line "one RING at a"
+	cont "time."
 	prompt
 
 _FocusRingDescription::
@@ -117631,10 +117692,9 @@ _FocusRingDescription::
 	cont "battle 1/4 of the"
 	cont "time."
 
-	para "Must be in the"
-	line "top item slot of"
-	cont "your inventory to"
-	cont "be in effect."
+	para "You can only wear"
+	line "one RING at a"
+	cont "time."
 	prompt
 
 _BluntRingDescription::
@@ -117644,10 +117704,9 @@ _BluntRingDescription::
 	cont "attacks for your"
 	cont "#MON."
 
-	para "Must be in the"
-	line "top item slot of"
-	cont "your inventory to"
-	cont "be in effect."
+	para "You can only wear"
+	line "one RING at a"
+	cont "time."
 	prompt
 
 _WizardRingDescription::
@@ -117657,10 +117716,9 @@ _WizardRingDescription::
 	cont "attacks for your"
 	cont "#MON."
 
-	para "Must be in the"
-	line "top item slot of"
-	cont "your inventory to"
-	cont "be in effect."
+	para "You can only wear"
+	line "one RING at a"
+	cont "time."
 	prompt
 
 _ShieldRingDescription::
@@ -117670,10 +117728,9 @@ _ShieldRingDescription::
 	cont "physical attacks"
 	cont "for your #MON."
 
-	para "Must be in the"
-	line "top item slot of"
-	cont "your inventory to"
-	cont "be in effect."
+	para "You can only wear"
+	line "one RING at a"
+	cont "time."
 	prompt
 
 _BubbleRingDescription::
@@ -117683,10 +117740,9 @@ _BubbleRingDescription::
 	cont "attacks for your"
 	cont "#MON."
 
-	para "Must be in the"
-	line "top item slot of"
-	cont "your inventory to"
-	cont "be in effect."
+	para "You can only wear"
+	line "one RING at a"
+	cont "time."
 	prompt
 
 _AmuletRingDescription::
@@ -117695,10 +117751,9 @@ _AmuletRingDescription::
 	cont "you receive from"
 	cont "trainers."
 
-	para "Must be in the"
-	line "top item slot of"
-	cont "your inventory to"
-	cont "be in effect."
+	para "You can only wear"
+	line "one RING at a"
+	cont "time."
 	prompt
 
 _BoosterRingDescription::
@@ -117707,10 +117762,9 @@ _BoosterRingDescription::
 	cont "EXP. gained in"
 	cont "battles."
 
-	para "Must be in the"
-	line "top item slot of"
-	cont "your inventory to"
-	cont "be in effect."
+	para "You can only wear"
+	line "one RING at a"
+	cont "time."
 	prompt
 
 _ShinyRingDescription::
@@ -117723,10 +117777,9 @@ _ShinyRingDescription::
     cont "increases to"
     cont "1/64 chance."
 
-    para "Must be in the"
-    line "top item slot of"
-    cont "your inventory to"
-    cont "be in effect."
+    para "You can only wear"
+	line "one RING at a"
+	cont "time."
     prompt
 
 _ShinyBallDescription::
@@ -117763,8 +117816,7 @@ HealingRing:
 	jp nz, .done
 	
 	; check for HEALING_RING
-	ld hl, wBagItems
-	ld a, [hl]
+	ld a, [W_RING]
 	cp HEALING_RING
 	jr nz, .done
 
@@ -123687,3 +123739,141 @@ CrobatPicBack:
 
 MiniSprites3: ; mons 179-?
 	INCBIN "gfx/mini_sprites/mini_sprites_3.2bpp"
+
+
+SECTION "Night Mons", ROMX, BANK[$3a]
+
+HandleNightMons:
+	; replace the 1, 4, and 7 grassmon slots
+	ld hl, NightWildMonPointers
+	ld a,[W_CURMAP]
+	; get wild data for current map
+	ld c,a
+	ld b,0
+	add hl,bc
+	add hl,bc
+	ld a,[hli]
+	ld h,[hl]
+	ld l,a       ; hl now points to wild data for current map
+	ld a, [hli]
+	cp $ff
+	ret z
+	ld [W_GRASSMONS], a
+	ld a, [hli]
+	ld [W_GRASSMONS+1], a
+	ld a, [hli]
+	ld [W_GRASSMONS+6], a
+	ld a, [hli]
+	ld [W_GRASSMONS+7], a
+	ld a, [hli]
+	ld [W_GRASSMONS+12], a
+	ld a, [hli]
+	ld [W_GRASSMONS+13], a
+	ret
+
+NightWildMonPointers:
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw Route1NightMons
+	dw Route2NightMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+
+NoNightMons:
+	db $ff
+
+Route1NightMons:
+	db 10, CHARMANDER
+	db 10, BULBASAUR
+	db 10, SQUIRTLE
+
+Route2NightMons:
+	db 10, ODDISH
+	db 10, BELLSPROUT
+	db 10, GRIMER
+
+

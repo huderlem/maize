@@ -3006,6 +3006,24 @@ _UseARepelText::
 
 SECTION "Text 11", ROMX, BANK[TEXT_11]
 
+_ItemUseRing001::
+	text $52, " wore the"
+	line "the @@"
+
+_ItemUseRing002::
+	TX_RAM $cf4b
+	text "!"
+	prompt
+
+_TookOffRingText1::
+	text $52, " took off"
+	line "the @@"
+
+_TookOffRingText2::
+	TX_RAM $cf4b
+	text "."
+	prompt
+
 _ItemUseText001:: ; a8000 (2a:4000)
 	text $52," used@@"
 
