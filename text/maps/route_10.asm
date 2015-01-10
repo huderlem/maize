@@ -112,7 +112,7 @@ _Route10AfterBattleText2::
 	done
 
 _Route10Text3::
-	text "ROUTE blah"
+	text "ROUTE 16"
 	line "BRIDGE"
 
 	para "QUARTZ CITY -"

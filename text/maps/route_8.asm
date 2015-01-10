@@ -148,8 +148,8 @@ _Route8AfterBattleText9:: ; 8e221 (23:6221)
 	done
 
 _Route8Text10:: ; 8e262 (23:6262)
-	text "UNDERGROUND PATH"
-	line "CELADON CITY -"
-	cont "LAVENDER TOWN"
+	text "ROUTE 9"
+	line "COPPER TOWN -"
+	cont "ENTROPIA CITY"
 	done
 

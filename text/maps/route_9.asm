@@ -199,8 +199,8 @@ _Route9AfterBattleText9:: ; 8e5f6 (23:65f6)
 	done
 
 _Route9Text11:: ; 8e61e (23:661e)
-	text "ROUTE asffd"
-	line "jaojfd CITY-"
+	text "ROUTE 14"
+	line "ROUTE 15 -"
 	cont "QUARTZ CITY"
 	done
 

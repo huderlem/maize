@@ -33,8 +33,8 @@ _Route7Text1::
     done
 
 _Route7Text2:: ; 8de7a (23:5e7a)
-	text "ROUTE 7"
-	line "BLAHBLAH -"
+	text "ROUTE 13"
+	line "QUARTZ CITY -"
 	cont "ROUTE 6"
 	done
 

@@ -176,7 +176,7 @@ _Route6Text7:: ; 8de49 (23:5e49)
 	text "ROUTE 6"
 	line "COPPER TOWN -"
 	cont "PYRITE CITY -"
-	cont "ROUTE 12"
+	cont "ROUTE 13"
 	done
 
 _Route6Text8::

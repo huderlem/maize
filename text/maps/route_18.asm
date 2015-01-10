@@ -81,8 +81,8 @@ _Route18AfterBattleText3:: ; 91879 (24:5879)
 	done
 
 _Route18Text4:: ; 9189d (24:589d)
-	text "ROUTE odskjfd-"
-	line "HARDWATER HOLE -"
+	text "ROUTE 15 -"
+	line "HARDWATER HOLE"
 	done
 
 _Route18Text5:: ; 918c3 (24:58c3)
