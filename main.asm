@@ -119540,6 +119540,9 @@ HandleCinnabarGymEntrance:
 	ld a, [W_OBTAINEDBADGES]
 	bit 5, a
 	ret nz
+	ld a, [W_YCOORD]
+	cp $11
+	ret nz
 	ld a, [$d79a]
 	and %11000011
 	ld [$d79a], a
