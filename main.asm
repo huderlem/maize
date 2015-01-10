@@ -52889,12 +52889,11 @@ Func_3ad71: ; 3ad71 (e:6d71)
 .asm_3ada4
 	ld a, [W_ISINBATTLE]
 	and a
-	jr nz, .noItemEvo
+	jp nz, NoItemEvo
 	ld a, [hli]
 	ld b, a
 	ld a, [$cf91]
 	cp b
-.noItemEvo
 	jp nz, Func_3aed9
 .asm_3adad
 	ld a, [hli]
@@ -53043,6 +53042,8 @@ EvolutionForkHook: ; allow to other routine to hook back in
 	ld h, d
 	jp asm_3ad2e
 
+NoItemEvo:
+	inc hl
 Func_3aed9: ; 3aed9 (e:6ed9)
 	inc hl
 
@@ -119122,12 +119123,11 @@ Func_3ad71_2: ; 3ad71 (e:6d71)
 .asm_3ada4_2
 	ld a, [W_ISINBATTLE]
 	and a
-	jr nz, .noItemEvo_2
+	jp nz, NoItemEvo_2
 	ld a, [hli]
 	ld b, a
 	ld a, [$cf91]
 	cp b
-.noItemEvo_2
 	jp nz, Func_3aed9_2
 .asm_3adad_2
 	ld a, [hli]
@@ -119216,6 +119216,8 @@ Func_3b057_2: ; 3b057 (e:7057)
 	ld a, $10
 	jp Predef ; indirect jump to HandleBitArray (f666 (3:7666))
 
+NoItemEvo_2:
+	inc hl
 Func_3aed9_2: ; 3aed9 (e:6ed9)
 	inc hl
 
