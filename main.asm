@@ -20175,7 +20175,7 @@ TilesetsHeadPtr: ; c7be (3:47be)
 	TSETHEAD Tset03_Block,Tset03_GFX,Tset03_Coll,$FF,$FF,$FF,$20,1
 	TSETHEAD Tset01_Block,Tset01_GFX,Tset01_Coll,$FF,$FF,$FF,$FF,0
 	TSETHEAD Tset05_Block,Tset05_GFX,Tset05_Coll,$3A,$FF,$FF,$FF,2
-	TSETHEAD Tset02_Block,Tset02_GFX,Tset02_Coll,$18,$19,$1E,$FF,0
+	TSETHEAD Tset06_Block,Tset06_GFX,Tset05_Coll,$18,$19,$1E,$FF,0
 	TSETHEAD Tset05_Block,Tset05_GFX,Tset05_Coll,$3A,$FF,$FF,$FF,2
 	TSETHEAD Tset08_Block,Tset08_GFX,Tset08_Coll,$FF,$FF,$FF,$FF,0
 	TSETHEAD Tset09_Block,Tset09_GFX,Tset09_Coll,$17,$32,$FF,$FF,0
@@ -68621,7 +68621,7 @@ UnnamedText_4424c: ; 4424c (11:424c)
 	db "@"
 
 ViridianPokecenter_h: ; 0x44251 to 0x4425d (12 bytes) (bank=11) (id=41)
-	db $06 ; tileset
+	db $02 ; tileset
 	db VIRIDIAN_POKECENTER_HEIGHT, VIRIDIAN_POKECENTER_WIDTH ; dimensions (y, x)
 	dw ViridianPokecenterBlocks, ViridianPokecenterTextPointers, ViridianPokeCenterScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -70997,7 +70997,7 @@ SilphCoElevatorBlocks: ; 4585b (11:585b)
 	INCBIN "maps/silphcoelevator.blk"
 
 SafariZoneEast_h: ; 0x4585f to 0x4586b (12 bytes) (bank=11) (id=217)
-	db $03 ; tileset
+	db $06 ; tileset
 	db SAFARI_ZONE_EAST_HEIGHT, SAFARI_ZONE_EAST_WIDTH ; dimensions (y, x)
 	dw SafariZoneEastBlocks, SafariZoneEastTextPointers, SafariZoneEastScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -74270,7 +74270,7 @@ CeladonMansion4Blocks: ; 48894 (12:4894)
 	INCBIN "maps/celadonmansion4.blk"
 
 CeladonPokecenter_h: ; 0x488ac to 0x488b8 (12 bytes) (bank=12) (id=133)
-	db $06 ; tileset
+	db $02 ; tileset
 	db CELADON_POKECENTER_HEIGHT, CELADON_POKECENTER_WIDTH ; dimensions (y, x)
 	dw CeladonPokecenterBlocks, CeladonPokecenterTextPointers, CeladonPokecenterScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -75704,7 +75704,7 @@ CeladonHouseBlocks: ; 4924d (12:524d)
 	INCBIN "maps/celadonhouse.blk"
 
 CeladonHotel_h: ; 0x4925d to 0x49269 (12 bytes) (bank=12) (id=140)
-	db $06 ; tileset
+	db $02 ; tileset
 	db CELADONHOTEL_HEIGHT, CELADONHOTEL_WIDTH ; dimensions (y, x)
 	dw CeladonHotelBlocks, CeladonHotelTextPointers, CeladonHotelScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -75752,7 +75752,7 @@ CeladonHotelBlocks: ; 492a7 (12:52a7)
 	INCBIN "maps/celadonhotel.blk"
 
 MtMoonPokecenter_h: ; 0x492c3 to 0x492cf (12 bytes) (bank=12) (id=68)
-	db $06 ; tileset
+	db $02 ; tileset
 	db MT_MOON_POKECENTER_HEIGHT, MT_MOON_POKECENTER_WIDTH ; dimensions (y, x)
 	dw MtMoonPokecenterBlocks, MtMoonPokecenterTextPointers, MtMoonPokecenterScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -75878,7 +75878,7 @@ MtMoonPokecenterObject: ; 0x49376 (size=56)
 	EVENT_DISP $7, $7, $4
 
 RockTunnelPokecenter_h: ; 0x493ae to 0x493ba (12 bytes) (id=81)
-	db $06 ; tileset
+	db $02 ; tileset
 	db ROCK_TUNNEL_POKECENTER_HEIGHT, ROCK_TUNNEL_POKECENTER_WIDTH ; dimensions (y, x)
 	dw RockTunnelPokecenterBlocks, RockTunnelPokecenterTextPointers, RockTunnelPokecenterScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -91077,7 +91077,7 @@ PewterGymBlocks: ; 5c558 (17:4558)
 	INCBIN "maps/pewtergym.blk"
 
 PewterPokecenter_h: ; 0x5c57b to 0x5c587 (12 bytes) (id=58)
-	db $06 ; tileset
+	db $02 ; tileset
 	db PEWTER_POKECENTER_HEIGHT, PEWTER_POKECENTER_WIDTH ; dimensions (y, x)
 	dw PewterPokecenterBlocks, PewterPokecenterTextPointers, PewterPokecenterScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -91257,7 +91257,7 @@ PewterPokecenterObject: ; 0x5c60d (size=44)
 	EVENT_DISP $7, $7, $4
 
 CeruleanPokecenter_h: ; 0x5c639 to 0x5c645 (12 bytes) (id=64)
-	db $06 ; tileset
+	db $02 ; tileset
 	db CERULEAN_POKECENTER_HEIGHT, CERULEAN_POKECENTER_WIDTH ; dimensions (y, x)
 	dw CeruleanPokecenterBlocks, CeruleanPokecenterTextPointers, CeruleanPokecenterScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -91857,7 +91857,7 @@ CeruleanMartObject: ; 0x5c8a8 (size=38)
 	EVENT_DISP $4, $7, $4
 
 LavenderPokecenter_h: ; 0x5c8ce to 0x5c8da (12 bytes) (id=141)
-	db $06 ; tileset
+	db $02 ; tileset
 	db LAVENDER_POKECENTER_HEIGHT, LAVENDER_POKECENTER_WIDTH ; dimensions (y, x)
 	dw LavenderPokecenterBlocks, LavenderPokecenterTextPointers, LavenderPokecenterScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -91966,7 +91966,7 @@ LavenderMartObject: ; 0x5c95d (size=38)
 	EVENT_DISP $4, $7, $4
 
 VermilionPokecenter_h: ; 0x5c983 to 0x5c98f (12 bytes) (id=89)
-	db $06 ; tileset
+	db $02 ; tileset
 	db VERMILION_POKECENTER_HEIGHT, VERMILION_POKECENTER_WIDTH ; dimensions (y, x)
 	dw VermilionPokecenterBlocks, VermilionPokecenterTextPointers, VermilionPokecenterScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -93558,7 +93558,7 @@ SilphCo1Blocks: ; 5d4a2 (17:54a2)
 	INCBIN "maps/silphco1.blk"
 
 SaffronPokecenter_h: ; 0x5d529 to 0x5d535 (12 bytes) (id=182)
-	db $06 ; tileset
+	db $02 ; tileset
 	db SAFFRON_POKECENTER_HEIGHT, SAFFRON_POKECENTER_WIDTH ; dimensions (y, x)
 	dw SaffronPokecenterBlocks, SaffronPokecenterTextPointers, SaffronPokecenterScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -106227,7 +106227,7 @@ FuchsiaHouse1Object: ; 0x75031 (size=38)
 	EVENT_DISP FUCHSIA_HOUSE_1_WIDTH, $b, $5
 
 FuchsiaPokecenter_h: ; 0x75057 to 0x75063 (12 bytes) (id=154)
-	db $06 ; tileset
+	db $02 ; tileset
 	db FUCHSIA_POKECENTER_HEIGHT, FUCHSIA_POKECENTER_WIDTH ; dimensions (y, x)
 	dw FuchsiaPokecenterBlocks, FuchsiaPokecenterTextPointers, FuchsiaPokecenterScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -108028,7 +108028,7 @@ Lab4Blocks: ; 75e10 (1d:5e10)
 	INCBIN "maps/lab4.blk"
 
 CinnabarPokecenter_h: ; 0x75e20 to 0x75e2c (12 bytes) (id=171)
-	db $06 ; tileset
+	db $02 ; tileset
 	db CINNABAR_POKECENTER_HEIGHT, CINNABAR_POKECENTER_WIDTH ; dimensions (y, x)
 	dw CinnabarPokecenterBlocks, CinnabarPokecenterTextPointers, CinnabarPokecenterScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -117792,6 +117792,11 @@ _ShinyBallDescription::
     para "It has a decent"
     line "catch rate."
     prompt
+
+Tset06_GFX:
+	INCBIN "gfx/tilesets/bike_yard.2bpp"
+Tset06_Block:
+	INCBIN "gfx/blocksets/bike_yard.bst"
 
 SECTION "New Functions", ROMX, BANK[$34]
 
