@@ -55,12 +55,14 @@ Music_Celadon:: ; 825e (2:425e)
 	dw Music_Celadon_Ch4
 
 Music_Cinnabar:: ; 8267 (2:4267)
-	db ( $80 | CH0 )
+	db ( $C0 | CH0 )
 	dw Music_Cinnabar_Ch1
 	db CH1
 	dw Music_Cinnabar_Ch2
 	db CH2
 	dw Music_Cinnabar_Ch3
+	db CH3
+	dw Music_Cinnabar_Ch4
 
 Music_Vermilion:: ; 8270 (2:4270)
 	db ( $C0 | CH0 )
