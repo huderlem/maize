@@ -5,6 +5,8 @@ PRICEDITEMLISTMENU EQU $02 ; Pokemart buy menu / Pokemart buy/sell choose quanti
 ITEMLISTMENU       EQU $03 ; Start menu Item menu / Pokemart sell menu
 SPECIALLISTMENU    EQU $04 ; list of special "items" e.g. floor list in elevators / list of badges
 BATTLEFACTORYSWAPMENU EQU $05 ; menu to swap pokemon in battle factory
+NUMBERMENU         EQU $06 ; used for picking a number between 0 and 255
+
 
 MONSTER_NAME  EQU 1
 MOVE_NAME     EQU 2

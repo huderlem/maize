@@ -879,6 +879,7 @@ W_PARTYMON6DATA:: ; d247
 ; Byte 0: happiness value
 ; Byte 1: 
 ;     	Bit 0: Slave bit
+; Byte 2: Alternate Sprite if non-zero
 
 W_PARTYMON1OT:: ; d273
 	ds 11
@@ -1346,6 +1347,14 @@ W_GRASSRATE:: ; d887
 	ds 1
 
 W_GRASSMONS:: ; d888
+W_EVENTDATA::
+; byte 0: mon id
+; byte 1,2,3,4: move ids
+; byte 5,6: (atkdef iv is byte 6) IVs
+; byte 7: level
+; byte 8: alt sprite
+; byte 9,10: checksum bytes
+; byte 11: set to $ff for givepokemon to work
 	ds 20
 
 wEnemyPartyCount:: ; d89c

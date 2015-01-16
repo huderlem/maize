@@ -26445,6 +26445,14 @@ _AddPokemonToParty: ; f2e5 (3:72e5)
 	jr nz, .writeFreshMonData
 	jr .after
 .notBattleFactory
+	ld a, [W_EVENTDATA + 11]
+	cp $ff
+	jr nz, .notEvent
+	ld a, [W_EVENTDATA + 5]
+	ld b, a
+	ld a, [W_EVENTDATA + 6]
+	jr .writeFreshMonData
+.notEvent
 	ld a, [$cc49]
 	and $f
 	ld a, $98     ; set enemy trainer mon IVs to fixed average values
@@ -26568,8 +26576,17 @@ _AddPokemonToParty: ; f2e5 (3:72e5)
 	dec de
 	xor a
 	ld [$cee9], a
+	ld a, [W_EVENTDATA + 11]
+	cp $ff
+	jr nz, .writeMovesNormally
+	ld hl, WriteEventMovesFunc
+	ld b, Bank(WriteEventMovesFunc)
+	call Bankswitch
+	jr .wroteMoves
+.writeMovesNormally
 	ld a, $3e
 	call Predef ; indirect jump to WriteMonMoves (3afb8 (e:6fb8))
+.wroteMoves
 	pop de
 	ld a, [wPlayerID]  ; set trainer ID to player ID
 	inc de
@@ -29888,6 +29905,15 @@ DrawTrainerInfo: ; 1349a (4:749a)
 	ld de,wPlayerMoney
 	ld c,$e3
 	call PrintBCDNumber
+	FuncCoord 2, 8
+	ld hl, Coord
+	ld de, TrainerIDText
+	call PlaceString
+	FuncCoord 13, 8
+	ld hl, Coord
+	ld de, wPlayerID
+	ld bc, $4205
+	call PrintNumber
 	FuncCoord 9,6
 	ld hl,Coord
 	ld de,$da41 ; hours
@@ -29907,6 +29933,9 @@ TrainerInfo_NameMoneyTimeText: ; 13584 (4:7584)
 	db   "NAME/"
 	next "MONEY/"
 	next "TIME/@"
+
+TrainerIDText:
+	db "TRAINER ID/@"
 
 ; $76 is a circle tile
 TrainerInfo_BadgesText: ; 13597 (4:7597)
@@ -57964,7 +57993,7 @@ asm_3d00e: ; 3d00e (f:500e)
 	jr Func_3d03c
 
 OldManItemList: ; 3d02d (f:502d)
-	db $01, POKE_BALL, 42, CALCIUM, 99, OAKS_PARCEL, 01, $ff
+	db $01, POKE_BALL, 42, OAKS_PARCEL, 01, $ff
 
 Func_3d031:
 	ld a, [W_CURMAP]
@@ -62146,6 +62175,14 @@ Func_3eb01: ; 3eb01 (f:6b01)
 	ld b, $ff
 	jr .asm_3eb33
 .notBattleFactory
+	ld a, [W_EVENTDATA + 11]
+	cp $ff
+	jr nz, .notEvent
+	ld a, [W_EVENTDATA + 5]
+	ld b, a
+	ld a, [W_EVENTDATA + 6]
+	jr .asm_3eb33
+.notEvent
 	ld a, [W_ISINBATTLE] ; $d057
 	cp $2
 	ld a, $98
@@ -62258,7 +62295,7 @@ Func_3eb01: ; 3eb01 (f:6b01)
 	ld [$cee9], a
 	ld a, [W_CURMAP]
 	cp BATTLE_FACTORY
-	jr nz, .writeMovesNormalWay
+	jr nz, .writeEventMoves
 	ld a, [W_MOVE1]
 	cp $ff
 	jp z, .writeMovesNormalWay
@@ -62272,6 +62309,14 @@ Func_3eb01: ; 3eb01 (f:6b01)
 	inc de
 	ld a, [W_MOVE4]
 	ld [de], a
+	jr .asm_3ebca
+.writeEventMoves
+	ld a, [W_EVENTDATA + 11]
+	cp $ff
+	jr nz, .writeMovesNormalWay
+	ld hl, WriteEventMovesFunc
+	ld b, Bank(WriteEventMovesFunc)
+	call Bankswitch
 	jr .asm_3ebca
 .writeMovesNormalWay
 	ld a, $3e
@@ -62705,11 +62750,8 @@ Func_3ee5b: ; 3ee5b (f:6e5b)
 	jp CopyVideoDataDouble
 
 Func_3ee94: ; 3ee94 (f:6e94)
-	ld hl, TerminatorText_3ee9a ; $6e9a
+	ld hl, TerminatorText_3f04a ; $6e9a
 	jp PrintText
-
-TerminatorText_3ee9a: ; 3ee9a (f:6e9a)
-	db "@"
 
 ; generates a random number unless in link battle
 ; stores random number in A
@@ -62997,11 +63039,7 @@ Func_3f04b: ; 3f04b (f:704b)
 	ld c, a
 	jp LoadUncompressedSpriteData
 
-Func_3f069: ; 3f069 (f:7069)
-	xor a
-	ld [$c0f1], a
-	ld [$c0f2], a
-	jp PlaySound
+; TODO: I deleted Func_3f069 right here because it didn't look like it was used.
 
 Func_3f073: ; 3f073 (f:7073)
 	ld a, [$cc4f]
@@ -108048,8 +108086,344 @@ CinnabarPokecenterText1: ; 75e3a (1d:5e3a)
 	db $ff
 
 CinnabarPokecenterText2: ; 75e3b (1d:5e3b)
-	TX_FAR _CinnabarPokecenterText1
+	db $08 ; asm
+	ld hl, EventText1
+	call PrintText
+	call YesNoChoice
+	ld a, [wCurrentMenuItem] ; $cc26
+	and a
+	jp nz, .saidNo
+	ld hl, EventText2
+	call PrintText
+	ld a, $ff
+	ld [$cf97], a ; max quantity
+
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA], a
+
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA + 1], a
+
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA + 2], a
+
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA + 3], a
+
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA + 4], a
+
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA + 5], a
+
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA + 6], a
+
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA + 7], a
+
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA + 8], a
+
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA + 9], a
+
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA + 10], a
+
+	call ValidateEventCode
+	jr z, .notValid
+	ld hl, EventTextValid
+	call PrintText
+
+	ld hl, wPlayerID
+	ld a, [W_EVENTDATA]
+	xor [hl]
+	ld [W_EVENTDATA], a
+
+	ld a, [W_EVENTDATA + 1]
+	xor [hl]
+	ld [W_EVENTDATA + 1], a
+
+	ld a, [W_EVENTDATA + 2]
+	xor [hl]
+	ld [W_EVENTDATA + 2], a
+
+	ld a, [W_EVENTDATA + 3]
+	xor [hl]
+	ld [W_EVENTDATA + 3], a
+
+	inc hl
+
+	ld a, [W_EVENTDATA + 4]
+	xor [hl]
+	ld [W_EVENTDATA + 4], a
+
+	ld a, [W_EVENTDATA + 5]
+	xor [hl]
+	ld [W_EVENTDATA + 5], a
+
+	ld a, [W_EVENTDATA + 6]
+	xor [hl]
+	ld [W_EVENTDATA + 6], a
+
+	ld a, [W_EVENTDATA + 7]
+	xor [hl]
+	ld [W_EVENTDATA + 7], a
+
+	ld a, [W_EVENTDATA + 8]
+	xor [hl]
+	ld [W_EVENTDATA + 8], a
+
+	ld a, $ff
+	ld [W_EVENTDATA + 11], a ; flag for givepokemon
+
+	ld a, [W_EVENTDATA] ; mon id
+	ld b, a
+	ld a, [W_EVENTDATA + 7] ; mon level
+	ld c, a
+	call GivePokemon
+
+	jr .done
+.notValid
+	ld hl, EventTextNotValid
+	call PrintText
+	jr .done
+.saidNo
+	ld hl, EventText3
+	call PrintText
+.done
+	jp TextScriptEnd
+
+EventText1:
+	TX_FAR _EventText1
 	db "@"
+
+EventText2:
+	TX_FAR _EventText2
+	db "@"
+
+EventText3:
+	TX_FAR _EventText3
+	db "@"
+
+EventTextNotValid:
+	TX_FAR _EventTextNotValid
+	db "@"
+
+EventTextValid:
+	TX_FAR _EventTextValid
+	db "@"
+
+ValidateEventCode:
+; sets zero flag if not valid
+; checks to see if the checksum is correct
+	ld b, 0
+	
+	; bit 7; high byte
+	ld a, [W_EVENTDATA + 0]
+	and %00000001
+	jr z, .bit6HighByte
+	ld a, %10000000
+	ld b, a
+.bit6HighByte
+	ld a, [W_EVENTDATA + 1]
+	and %00000010
+	jr z, .bit5HighByte
+	ld a, %01000000
+	add a, b
+	ld b, a
+.bit5HighByte
+	ld a, [W_EVENTDATA + 2]
+	and %00000100
+	jr z, .bit4HighByte
+	ld a, %00100000
+	add a, b
+	ld b, a
+.bit4HighByte
+	ld a, [W_EVENTDATA + 3]
+	and %00001000
+	jr z, .bit3HighByte
+	ld a, %00010000
+	add a, b
+	ld b, a
+.bit3HighByte
+	ld a, [W_EVENTDATA + 4]
+	and %00010000
+	jr z, .bit2HighByte
+	ld a, %00001000
+	add a, b
+	ld b, a
+.bit2HighByte
+	ld a, [W_EVENTDATA + 5]
+	and %00100000
+	jr z, .bit1HighByte
+	ld a, %00000100
+	add a, b
+	ld b, a
+.bit1HighByte
+	ld a, [W_EVENTDATA + 6]
+	and %01000000
+	jr z, .bit0HighByte
+	ld a, %00000010
+	add a, b
+	ld b, a
+.bit0HighByte
+	ld a, [W_EVENTDATA + 7]
+	and %10000000
+	jr z, .compareHighByte
+	ld a, %00000001
+	add a, b
+	ld b, a
+.compareHighByte
+	ld a, [W_EVENTDATA + 9]
+	cp b
+	jr nz, .notValid
+
+	ld b, 0
+.bit7LowByte
+	ld a, [W_EVENTDATA + 8]
+	and %00001000
+	jr z, .bit6LowByte
+	ld a, %10000000
+	add a, b
+	ld b, a
+.bit6LowByte
+	ld a, [W_EVENTDATA + 0]
+	and %00010000
+	jr z, .bit5LowByte
+	ld a, %01000000
+	add a, b
+	ld b, a
+.bit5LowByte
+	ld a, [W_EVENTDATA + 1]
+	and %00100000
+	jr z, .bit4LowByte
+	ld a, %00100000
+	add a, b
+	ld b, a
+.bit4LowByte
+	ld a, [W_EVENTDATA + 2]
+	and %01000000
+	jr z, .bit3LowByte
+	ld a, %00010000
+	add a, b
+	ld b, a
+.bit3LowByte
+	ld a, [W_EVENTDATA + 3]
+	and %10000000
+	jr z, .bit2LowByte
+	ld a, %00001000
+	add a, b
+	ld b, a
+.bit2LowByte
+	ld a, [W_EVENTDATA + 4]
+	and %00000001
+	jr z, .bit1LowByte
+	ld a, %00000100
+	add a, b
+	ld b, a
+.bit1LowByte
+	ld a, [W_EVENTDATA + 5]
+	and %00000010
+	jr z, .bit0LowByte
+	ld a, %00000010
+	add a, b
+	ld b, a
+.bit0LowByte
+	ld a, [W_EVENTDATA + 6]
+	and %00000100
+	jr z, .compareLowByte
+	ld a, %00000001
+	add a, b
+	ld b, a
+.compareLowByte
+	ld a, [W_EVENTDATA + 10]
+	cp b
+	jr nz, .notValid
+.valid
+	ld a, 1
+	and a
+	ret
+.notValid
+	xor a
+	and a
+	ret
+
+InitialNumberText:
+	db "000@"
+
+DisplayChooseNumberMenu::
+; choose number from 0 - [$cf97]
+; This function is modified from DisplayChooseQuantityMenu
+; text box dimensions/coordinates for just quantity
+	FuncCoord 6,1
+	ld hl,Coord
+	ld b,3 ; height
+	ld c,5 ; width
+.drawTextBox
+	call TextBoxBorder
+	FuncCoord 8,3
+	ld hl,Coord
+.printInitialQuantity
+	ld de, InitialNumberText
+	call PlaceString
+	ld a, $ff
+	ld [$cf96],a ; initialize current quantity to 0
+	jp .incrementQuantity
+.waitForKeyPressLoop
+	call GetJoypadStateLowSensitivity
+	ld a,[H_NEWLYPRESSEDBUTTONS] ; newly pressed buttons
+	bit 0,a ; was the A button pressed?
+	jp nz,.buttonAPressed
+	bit 6,a ; was Up pressed?
+	jr nz,.incrementQuantity
+	bit 7,a ; was Down pressed?
+	jr nz,.decrementQuantity
+	jr .waitForKeyPressLoop
+.incrementQuantity
+	ld a,[$cf97] ; max quantity
+	inc a
+	ld b,a
+	ld hl,$cf96 ; current quantity
+	inc [hl]
+	ld a,[hl]
+	cp b
+	jr nz,.handleNewQuantity
+; wrap to 0 if the player goes above the max quantity
+	xor a
+	ld [hl],a
+	jr .handleNewQuantity
+.decrementQuantity
+	ld hl,$cf96 ; current quantity
+	dec [hl]
+	ld a, [hl]
+	cp $ff
+	jr nz,.handleNewQuantity
+; wrap to the max quantity if the player goes below 0
+	ld a,[$cf97] ; max quantity
+	ld [hl],a
+.handleNewQuantity
+	FuncCoord 8,3
+	ld hl,Coord
+.printQuantity
+	ld de,$cf96 ; current quantity
+	ld bc,$8103 ; print leading zeroes, 1 byte, 3 digits
+	call PrintNumber
+	jp .waitForKeyPressLoop
+.buttonAPressed ; the player selected the number
+	ret
 
 CinnabarPokecenterText3: ; 75e40 (1d:5e40)
 	TX_FAR _CinnabarPokecenterText3
@@ -123886,4 +124260,17 @@ Route2NightMons:
 	db 10, BELLSPROUT
 	db 10, GRIMER
 
-
+WriteEventMovesFunc:
+	ld hl, W_EVENTDATA + 1
+	ld a, [hli]
+	ld [de], a
+	inc de
+	ld a, [hli]
+	ld [de], a
+	inc de
+	ld a, [hli]
+	ld [de], a
+	inc de
+	ld a, [hl]
+	ld [de], a
+	ret
