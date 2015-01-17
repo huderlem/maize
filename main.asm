@@ -57505,9 +57505,18 @@ Func_3cc91: ; 3cc91 (f:4c91)
 
 Func_3cca4: ; 3cca4 (f:4ca4)
 	call Func_3cd60
+
+	ld hl, W_PARTYMON1OT + 3
+	ld bc, 11
+	ld a, [wWhichPokemon]
+	call AddNTimes ; hl contains pointer to mon's alt sprite byte
+	ld a, [hl]
+	ld [W_PRIZE1], a
+	
 	ld a, $4
 	call Predef ; indirect jump to LoadMonBackSprite (3f103 (f:7103))
 	xor a
+	ld [W_PRIZE1], a
 	ld [$FF00+$e1], a
 	ld hl, $cc2d
 	ld [hli], a
@@ -63155,29 +63164,6 @@ asm_3f0d0: ; 3f0d0 (f:70d0)
 	dec b
 	jr nz, .asm_3f0f4
 	ret
-
-; loads back sprite of mon to $8000
-; assumes the corresponding mon header is already loaded
-LoadMonBackSprite: ; 3f103 (f:7103)
-	ld a, [$cfd9]
-	ld [$cf91], a
-	FuncCoord 1, 5 ; $c405
-	ld hl, Coord
-	ld b, $7
-	ld c, $8
-	call ClearScreenArea
-	ld hl,  W_MONHBACKSPRITE - W_MONHEADER
-	call UncompressMonSprite
-	ld a, $3
-	call Predef ; indirect jump to ScaleSpriteByTwo (2fe40 (b:7e40))
-	ld de, $9310
-	call InterlaceMergeSpriteBuffers ; combine the two buffers to a single 2bpp sprite
-	ld hl, $8000
-	ld de, $9310
-	ld c, (2*SPRITEBUFFERSIZE)/16 ; count of 16-byte chunks to be copied
-	ld a, [H_LOADEDROMBANK]
-	ld b, a
-	jp CopyVideoData
 
 Func_3f132: ; 3f132 (f:7132)
 	call JumpMoveEffect
@@ -111765,27 +111751,28 @@ Func_79517: ; 79517 (1e:5517)
 
 AnimationShootManyBallsUpward: ; 79566 (1e:5566)
 ; Shoots several pillars of "energy" balls upward.
-	ld a, [H_WHOSETURN]
-	and a
-	ld hl, UpwardBallsAnimXCoordinatesPlayerTurn
-	ld a, $50 ; y coordinate for "energy" ball pillar
-	jr z, .player
-	ld hl, UpwardBallsAnimXCoordinatesEnemyTurn
-	ld a, $28 ; y coordinate for "energy" ball pillar
+	;ld a, [H_WHOSETURN]
+	;and a
+	;ld hl, UpwardBallsAnimXCoordinatesPlayerTurn
+	;ld a, $50 ; y coordinate for "energy" ball pillar
+	;jr z, .player
+	;ld hl, UpwardBallsAnimXCoordinatesEnemyTurn
+	;ld a, $28 ; y coordinate for "energy" ball pillar
 .player
-	ld [wTrainerSpriteOffset], a
+	;ld [wTrainerSpriteOffset], a
 .loop
-	ld a, [wTrainerSpriteOffset]
-	ld [W_BASECOORDY], a
-	ld a, [hli]
-	cp $ff
-	jp z, AnimationCleanOAM
-	ld [W_BASECOORDX], a
-	ld bc, $0401
-	push hl
-	call Func_79517
-	pop hl
-	jr .loop
+	;ld a, [wTrainerSpriteOffset]
+	;ld [W_BASECOORDY], a
+	;ld a, [hli]
+	;cp $ff
+	;jp z, AnimationCleanOAM
+	jp AnimationCleanOAM
+	;ld [W_BASECOORDX], a
+	;ld bc, $0401
+	;push hl
+	;call Func_79517
+	;pop hl
+	;jr .loop
 
 UpwardBallsAnimXCoordinatesPlayerTurn: ; 79591 (1e:5591)
 ; List of x coordinates for each pillar of "energy" balls in the 
@@ -112107,9 +112094,16 @@ Func_79793: ; 79793 (1e:5793)
 	ld [$cfd9], a
 	ld [$d0b5], a
 	call GetMonHeader
+	ld hl, W_PARTYMON1OT + 3
+	ld bc, 11
+	ld a, [wWhichPokemon]
+	call AddNTimes ; hl contains pointer to mon's alt sprite byte
+	ld a, [hl]
+	ld [W_PRIZE1], a
 	ld a, $4
 	call Predef ; indirect jump to LoadMonBackSprite (3f103 (f:7103))
 	xor a
+	ld [W_PRIZE1], a
 	call Func_79842
 	call Func_79820
 	call Func_79aae
@@ -113905,13 +113899,7 @@ SmokeScreenAnim: ; 7a519 (1e:6519)
 	db $04,$FF,$0A
 	db SE_DARKEN_MON_PALETTE, $FF
 	db SE_DELAY_ANIMATION_10, $FF
-	db SE_DELAY_ANIMATION_10, $FF
 	db SE_DARK_SCREEN_PALETTE, $FF
-	db SE_DELAY_ANIMATION_10, $FF
-	db SE_DELAY_ANIMATION_10, $FF
-	db SE_DELAY_ANIMATION_10, $FF
-	db SE_DELAY_ANIMATION_10, $FF
-	db SE_DELAY_ANIMATION_10, $FF
 	db SE_DELAY_ANIMATION_10, $FF
 	db SE_DARKEN_MON_PALETTE, $FF
 	db SE_DELAY_ANIMATION_10, $FF
@@ -124333,6 +124321,67 @@ NormalUncompressFront:
 	ld hl, W_MONHFRONTSPRITE - W_MONHEADER
 	call UncompressMonSprite
 	ret
+
+; loads back sprite of mon to $8000
+; assumes the corresponding mon header is already loaded
+LoadMonBackSprite: ; 3f103 (f:7103)
+	ld a, [$cfd9]
+	ld [$cf91], a
+	FuncCoord 1, 5 ; $c405
+	ld hl, Coord
+	ld b, $7
+	ld c, $8
+	call ClearScreenArea
+
+	ld a, [W_PRIZE1] ; should mon have alt sprite?
+	and a
+	jr z, .normal
+	call PreUncompressAltBackSprite
+	jr .after
+.normal
+	ld hl,  W_MONHBACKSPRITE - W_MONHEADER
+	call UncompressMonSprite
+.after
+	ld a, $3
+	call Predef ; indirect jump to ScaleSpriteByTwo (2fe40 (b:7e40))
+	ld de, $9310
+	call InterlaceMergeSpriteBuffers ; combine the two buffers to a single 2bpp sprite
+	ld hl, $8000
+	ld de, $9310
+	ld c, (2*SPRITEBUFFERSIZE)/16 ; count of 16-byte chunks to be copied
+	ld a, [H_LOADEDROMBANK]
+	ld b, a
+	jp CopyVideoData
+
+PreUncompressAltBackSprite:
+	ld a, [$cf91]
+	ld d, a
+	ld hl, AltPicsPointers
+	ld bc, 5
+.searchLoop
+	ld a, [hl]
+	cp d
+	jr z, .foundMon
+	cp $ff
+	jp z, NormalUncompressBack
+	add hl, bc
+	jr .searchLoop
+.foundMon
+	; back sprite is second
+	inc hl
+	inc hl
+	inc hl
+	ld a, [hli]
+	ld [W_SPRITEINPUTPTR],a    ; fetch sprite input pointer
+	ld a, [hl]
+	ld [W_SPRITEINPUTPTR + 1],a
+	ld a, Bank(AltPicsPointers)
+.GotBank
+	jp UncompressSpriteData
+
+NormalUncompressBack:
+	ld hl, W_MONHBACKSPRITE - W_MONHEADER
+	jp UncompressMonSprite
 
 AltPicsPointers:
 	db ELECTRODE
