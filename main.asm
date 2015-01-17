@@ -124387,6 +124387,15 @@ AltPicsPointers:
 	db ELECTRODE
 	dw ElectrodeAltFront, ElectrodeAltBack
 
+	db SQUIRTLE
+	dw SquirtleAltFront, SquirtleAltBack
+
+	db WARTORTLE
+	dw WartortleAltFront, WartortleAltBack
+
+	db BLASTOISE
+	dw BlastoiseAltFront, BlastoiseAltBack
+
 	; terminator
 	db $ff
 
@@ -124394,3 +124403,15 @@ ElectrodeAltFront:
 	INCBIN "pic/bmon/electrode-alt-front.pic"
 ElectrodeAltBack:
 	INCBIN "pic/monback/electrode-alt-back.pic"
+SquirtleAltFront:
+	INCBIN "pic/bmon/squirtle-alt-front.pic"
+SquirtleAltBack:
+	INCBIN "pic/monback/squirtle-alt-back.pic"
+WartortleAltFront:
+	INCBIN "pic/bmon/wartortle-alt-front.pic"
+WartortleAltBack:
+	INCBIN "pic/monback/wartortle-alt-back.pic"
+BlastoiseAltFront:
+	INCBIN "pic/bmon/blastoise-alt-front.pic"
+BlastoiseAltBack:
+	INCBIN "pic/monback/blastoise-alt-back.pic"
