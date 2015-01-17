@@ -776,6 +776,7 @@ W_ISLINKBATTLE:: ; d12b
 	ds 17
 
 W_PRIZE1:: ; d13d
+; 1 = alt mon sprite
 	ds 1
 W_PRIZE2:: ; d13e
 	ds 1

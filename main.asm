@@ -3544,8 +3544,17 @@ UncompressMonSprite:: ; 1627 (0:1627)
 ; de: destination location
 LoadMonFrontSprite:: ; 1665 (0:1665)
 	push de
+	ld a, [W_PRIZE1] ; should mon have alt sprite?
+	and a
+	jr z, .normal
+	ld b, Bank(PreUncompressAltSprite)
+	ld hl, PreUncompressAltSprite
+	call Bankswitch
+	jr .after
+.normal
 	ld hl, W_MONHFRONTSPRITE - W_MONHEADER
 	call UncompressMonSprite
+.after
 	ld hl, W_MONHSPRITEDIM
 	ld a, [hli]
 	ld c, a
@@ -124274,3 +124283,52 @@ WriteEventMovesFunc:
 	ld a, [hl]
 	ld [de], a
 	ret
+
+SECTION "Alt Pics", ROMX, BANK[$3b]
+
+PreUncompressAltSprite:
+; uncompresses the front or back sprite of the specified mon
+; assumes the corresponding mon header is already loaded
+; hl contains offset to sprite pointer ($b for front or $d for back)
+	ld a, [$cf91]
+	ld d, a
+	ld hl, AltPicsPointers
+	ld bc, 5
+.searchLoop
+	ld a, [hl]
+	cp d
+	jr z, .foundMon
+	cp $ff
+	jp z, NormalUncompressFront
+	add hl, bc
+	jr .searchLoop
+.foundMon
+	; front sprite is first
+	inc hl
+	ld a, [hli]
+	ld [W_SPRITEINPUTPTR],a    ; fetch sprite input pointer
+	ld a, [hl]
+	ld [W_SPRITEINPUTPTR + 1],a
+	ld a, Bank(AltPicsPointers)
+.GotBank
+	call UncompressSpriteData
+	ld a, $77
+	ld [W_MONHSPRITEDIM], a
+	ret
+
+NormalUncompressFront:
+	ld hl, W_MONHFRONTSPRITE - W_MONHEADER
+	call UncompressMonSprite
+	ret
+
+AltPicsPointers:
+	db ELECTRODE
+	dw ElectrodeAltFront, ElectrodeAltBack
+
+	; terminator
+	db $ff
+
+ElectrodeAltFront:
+	INCBIN "pic/bmon/electrode-alt-front.pic"
+ElectrodeAltBack:
+	INCBIN "pic/monback/electrode-alt-back.pic"
