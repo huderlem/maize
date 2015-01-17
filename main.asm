@@ -28326,9 +28326,21 @@ StatusScreen: ; 12953 (4:6953)
 	call PrintStatsBox
 	call Delay3
 	call GBPalNormal
+
+
+	ld hl, W_PARTYMON1OT + 3
+	ld bc, 11
+	ld a, [wWhichPokemon]
+	call AddNTimes ; hl contains pointer to mon's alt sprite byte
+	ld a, [hl]
+	ld [W_PRIZE1], a
+
 	FuncCoord 1, 0 ; $c3a1
 	ld hl, Coord
 	call LoadFlippedFrontSpriteByMonIndex ; draw Pokémon picture
+	xor a
+	ld [W_PRIZE1], a ; clear alt sprite flag
+
 	ld a, [$cf91]
 	call PlayCry ; play Pokémon cry
 	call WaitForTextScrollButtonPress ; wait for button
@@ -98969,6 +98981,7 @@ HallOfFameText: ; 7026b (1c:426b)
 	db "HALL OF FAME@"
 
 Func_70278: ; 70278 (1c:4278)
+; TODO: make this load the alternate sprite in the hall of fame
 	call ClearScreen
 	ld a, $d0
 	ld [$FF00+$af], a
