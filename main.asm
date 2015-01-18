@@ -95320,6 +95320,17 @@ PokemonTower2Text2: ; 60641 (18:4641)
 	ld a, [W_NEWFLAGS2]
 	or %00111000 ; bits 3, 4, and 5 are the roaming bits
 	ld [W_NEWFLAGS2], a
+	ld c, 20
+.roamLoop
+	push bc
+	ld b, Bank(UpdateRoamingPokemon)
+	ld hl, UpdateRoamingPokemon
+	call Bankswitch
+	pop bc
+	dec c
+	jr z, .continue
+	jr .roamLoop
+.continue
 
 	call GBFadeOut2
 	call ReloadMapData
@@ -108361,9 +108372,8 @@ CinnabarPokecenterText1: ; 75e3a (1d:5e3a)
 	db $ff
 
 CinnabarPokecenterText2: ; 75e3b (1d:5e3b)
-	db $08 ; asm
-	; todo	
-
+	TX_FAR _CinnabarPokecenterText2
+	db "@"
 
 CinnabarPokecenterText3: ; 75e40 (1d:5e40)
 	TX_FAR _CinnabarPokecenterText3
@@ -120445,24 +120455,39 @@ RoamingMapPointers:
 	dbw ROUTE_5, Route5AdjRoutes
 	dbw ROUTE_8, Route8AdjRoutes
 	dbw ROUTE_6, Route6AdjRoutes
+	dbw ROUTE_7, Route7AdjRoutes
+	dbw ROUTE_10, Route10AdjRoutes
+	dbw ROUTE_9, Route9AdjRoutes
+	dbw ROUTE_18, Route18AdjRoutes
+	dbw ROUTE_21, Route21AdjRoutes
 	db $ff ; terminator
 
 Route1AdjRoutes:
-	db 0, ROUTE_2
+	db 2, ROUTE_2, ROUTE_21
 Route2AdjRoutes:
-	db 1, ROUTE_1, ROUTE_3
+	db 2, ROUTE_1, ROUTE_21
 Route3AdjRoutes:
-	db 1, ROUTE_25, ROUTE_2
+	db 2, ROUTE_25, ROUTE_2
 Route25AdjRoutes:
-	db 1, ROUTE_3, ROUTE_24
+	db 2, ROUTE_3, ROUTE_24
 Route24AdjRoutes:
-	db 3, ROUTE_25, ROUTE_5, ROUTE_6, ROUTE_8
+	db 4, ROUTE_25, ROUTE_5, ROUTE_6, ROUTE_8
 Route5AdjRoutes:
-	db 3, ROUTE_3, ROUTE_24, ROUTE_5, ROUTE_6
+	db 3, ROUTE_24, ROUTE_6, ROUTE_8
 Route8AdjRoutes:
-	db 3, ROUTE_8, ROUTE_5, ROUTE_6, ROUTE_24 ; TODO, shouldn't connect to itself
+	db 4, ROUTE_5, ROUTE_24, ROUTE_6, ROUTE_10
 Route6AdjRoutes:
-	db 3, ROUTE_8, ROUTE_24, ROUTE_5, ROUTE_7
+	db 4, ROUTE_5, ROUTE_24, ROUTE_8, ROUTE_7
+Route7AdjRoutes:
+	db 3, ROUTE_6, ROUTE_10, ROUTE_9
+Route10AdjRoutes:
+	db 3, ROUTE_8, ROUTE_9, ROUTE_7
+Route9AdjRoutes:
+	db 3, ROUTE_18, ROUTE_10, ROUTE_7
+Route18AdjRoutes:
+	db 1, ROUTE_9
+Route21AdjRoutes:
+	db 2, ROUTE_1, ROUTE_2
 
 UpdateRoamingPokemon:
 ; update the current maps of the roaming pokemon
@@ -120522,8 +120547,11 @@ UpdateRoamingPokemon:
 	ld l, e ; hl points to adjacent routes entry
 	ld a, [hli]
 	ld e, a
+.getValidRandom
 	call GenRandom
-	and e
+	and $07 ; lower three bits
+	cp e
+	jr nc, .getValidRandom
 	ld c, a
 	ld b, 0
 	add hl, bc
