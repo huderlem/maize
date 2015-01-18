@@ -881,7 +881,6 @@ W_PARTYMON6DATA:: ; d247
 ; Byte 1: 
 ;     	Bit 0: Slave bit
 ; Byte 2: Alternate Sprite if non-zero
-; Byte 3: non-zero means alt sprite
 
 W_PARTYMON1OT:: ; d273
 	ds 11
@@ -1356,7 +1355,8 @@ W_EVENTDATA::
 ; byte 7: level
 ; byte 8: alt sprite
 ; byte 9,10: checksum bytes
-; byte 11: set to $ff for givepokemon to work
+; byte 11,12 : checkum bytes
+; byte 13: set to $ff for givepokemon to work
 	ds 20
 
 wEnemyPartyCount:: ; d89c

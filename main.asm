@@ -26454,7 +26454,7 @@ _AddPokemonToParty: ; f2e5 (3:72e5)
 	jr nz, .writeFreshMonData
 	jr .after
 .notBattleFactory
-	ld a, [W_EVENTDATA + 11]
+	ld a, [W_EVENTDATA + 13]
 	cp $ff
 	jr nz, .notEvent
 	ld a, [W_EVENTDATA + 5]
@@ -26585,7 +26585,7 @@ _AddPokemonToParty: ; f2e5 (3:72e5)
 	dec de
 	xor a
 	ld [$cee9], a
-	ld a, [W_EVENTDATA + 11]
+	ld a, [W_EVENTDATA + 13]
 	cp $ff
 	jr nz, .writeMovesNormally
 	ld hl, WriteEventMovesFunc
@@ -26612,6 +26612,17 @@ _AddPokemonToParty: ; f2e5 (3:72e5)
 	call SkipFixedLengthTextEntries
 	ld a, 70
 	ld [hli], a
+	ld a, [W_EVENTDATA + 13]
+	cp $ff
+	jr nz, .clearNormally
+	xor a
+	ld [hli], a
+	ld a, [W_EVENTDATA + 8]
+	ld [hli], a
+	xor a
+	ld d, $8
+	jr .clearLoop
+.clearNormally
 	xor a
 	ld d, $a
 .clearLoop
@@ -28328,7 +28339,7 @@ StatusScreen: ; 12953 (4:6953)
 	call GBPalNormal
 
 
-	ld hl, W_PARTYMON1OT + 3
+	ld hl, W_PARTYMON1OT + 2
 	ld bc, 11
 	ld a, [wWhichPokemon]
 	call AddNTimes ; hl contains pointer to mon's alt sprite byte
@@ -57509,7 +57520,7 @@ Func_3cc91: ; 3cc91 (f:4c91)
 Func_3cca4: ; 3cca4 (f:4ca4)
 	call Func_3cd60
 
-	ld hl, W_PARTYMON1OT + 3
+	ld hl, W_PARTYMON1OT + 2
 	ld bc, 11
 	ld a, [wWhichPokemon]
 	call AddNTimes ; hl contains pointer to mon's alt sprite byte
@@ -62208,7 +62219,7 @@ Func_3eb01: ; 3eb01 (f:6b01)
 	ld b, $ff
 	jr .asm_3eb33
 .notBattleFactory
-	ld a, [W_EVENTDATA + 11]
+	ld a, [W_EVENTDATA + 13]
 	cp $ff
 	jr nz, .notEvent
 	ld a, [W_EVENTDATA + 5]
@@ -62344,7 +62355,7 @@ Func_3eb01: ; 3eb01 (f:6b01)
 	ld [de], a
 	jr .asm_3ebca
 .writeEventMoves
-	ld a, [W_EVENTDATA + 11]
+	ld a, [W_EVENTDATA + 13]
 	cp $ff
 	jr nz, .writeMovesNormalWay
 	ld hl, WriteEventMovesFunc
@@ -108155,6 +108166,14 @@ CinnabarPokecenterText2: ; 75e3b (1d:5e3b)
 	ld a, [$cf96] ; a = number that was selected
 	ld [W_EVENTDATA + 10], a
 
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA + 11], a
+
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA + 12], a
+
 	call ValidateEventCode
 	jr z, .notValid
 	ld hl, EventTextValid
@@ -108200,7 +108219,7 @@ CinnabarPokecenterText2: ; 75e3b (1d:5e3b)
 	ld [W_EVENTDATA + 8], a
 
 	ld a, $ff
-	ld [W_EVENTDATA + 11], a ; flag for givepokemon
+	ld [W_EVENTDATA + 13], a ; flag for givepokemon
 
 	ld a, [W_EVENTDATA] ; mon id
 	ld b, a
@@ -108302,7 +108321,7 @@ ValidateEventCode:
 .compareHighByte
 	ld a, [W_EVENTDATA + 9]
 	cp b
-	jr nz, .notValid
+	jp nz, .notValid
 
 	ld b, 0
 .bit7LowByte
@@ -108363,6 +108382,37 @@ ValidateEventCode:
 	ld b, a
 .compareLowByte
 	ld a, [W_EVENTDATA + 10]
+	cp b
+	jr nz, .notValid
+; last two checksum bytes
+	ld hl, W_EVENTDATA
+	ld d, 9 ; number of bytes to sum
+	ld b, 0
+.sum1loop
+	ld a, [hli]
+	add b
+	ld b, a
+	dec d
+	jr nz, .sum1loop
+	ld a, [wPlayerID]
+	add b
+	ld b, a
+	ld a, [W_EVENTDATA + 11]
+	cp b
+	jr nz, .notValid
+	ld hl, W_EVENTDATA
+	ld d, 9 ; number of bytes to sum
+	ld b, 0
+.sum2loop
+	ld a, [hli]
+	add b
+	ld b, a
+	dec d
+	jr nz, .sum2loop
+	ld a, [wPlayerID + 1]
+	add b
+	ld b, a
+	ld a, [W_EVENTDATA + 12]
 	cp b
 	jr nz, .notValid
 .valid
@@ -112099,7 +112149,7 @@ Func_79793: ; 79793 (1e:5793)
 	ld [$cfd9], a
 	ld [$d0b5], a
 	call GetMonHeader
-	ld hl, W_PARTYMON1OT + 3
+	ld hl, W_PARTYMON1OT + 2
 	ld bc, 11
 	ld a, [wWhichPokemon]
 	call AddNTimes ; hl contains pointer to mon's alt sprite byte
