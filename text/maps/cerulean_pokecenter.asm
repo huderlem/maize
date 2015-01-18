@@ -15,89 +15,96 @@ _CeruleanPokecenterText3:: ; 9892a (26:492a)
 	cont "advice for me!"
 	done
 
-_AgatePokecenterText5::
-	text "Hmm..."
+_EventText1::
+	text "Hiya!"
 
-	para "It seems that you"
-	line "aren't playing"
-	cont "in Nuzlocke Mode."
-
-	para "I'm afraid I can't"
-	line "help you."
-	done
-
-_AgatePokecenterText5_2::
-	text "Aha!"
-
-	para "I see you're"
-	line "playing in"
-	cont "Nuzlocke Mode!"
-
-	para "If you're stuck"
-	line "with #MON that"
-	cont "can't learn an"
-	cont "HM move needed to"
-	cont "progress in the"
-	cont "world, I can fix"
-	cont "that problem."
-
-	para "You need to"
-	line "sacrifice one of"
-	cont "your current"
-	cont "#MON, though."
-
-	para "Plus, the #MON"
-	line "you receive will"
-	cont "be terrible."
-
-	para "Which HM do you"
-	line "need a #MON"
-	cont "for?"
-	done
-
-_AgatePokecenterText5_3::
-	text "Goodbye."
-
-	para "I'll be here"
-	line "if you need my"
-	cont "assistance."
-	done
-
-_AgatePokecenterText5_4::
-	text "You don't have the"
-	line "required GYM"
-	cont "badge to use that"
-	cont "HM, yet!"
-
-	para "I can't help you"
-	line "with that HM."
-	prompt
-
-_AgatePokecenterText5_5::
-	text "I can give you"
-	line "@"
-	TX_RAM $cd6d
-	text " if you"
-	cont "sacrifice one"
-	cont "of your #MON."
+	para "You can claim"
+	line "event #MON"
+	cont "from me if you"
+	cont "know a secret"
+	cont "code!"
 
 	para "Do you want to"
-	line "sacrifice one of"
-	cont "your #MON to"
-	cont "receive a"
-	cont "@"
-	TX_RAM $cd6d
-	text " that"
-	cont "can learn the"
-	cont "required HM?"
+	line "enter a code?"
 	done
 
-_AgatePokecenterText5_6::
-	text "Please choose a"
-	line "#MON to"
-	cont "sacrifice."
+_EventText2::
+	text "Great!"
+
+	para "Please enter your"
+	line "13-number code in"
+	cont "the right order."
+
+	para "Number 1:"
 	prompt
 
-_AgatePokecenterText5_7::
-	text "Are you sure?"
+_EventText3::
+	text "Come back when"
+	line "you have a"
+	cont "secret code!"
 	done
+
+_EventTextNotValid::
+	text "Sorry!"
+
+	para "That code is"
+	line "invalid!"
+	done
+
+_EventTextValid::
+	text "Aha!"
+
+	para "That code is"
+	line "correct!"
+
+	para "Here is your"
+	line "event #MON!"
+	prompt
+
+_EventTextNumber2::
+	text "Number 2:"
+	prompt
+
+_EventTextNumber3::
+	text "Number 3:"
+	prompt
+
+_EventTextNumber4::
+	text "Number 4:"
+	prompt
+
+_EventTextNumber5::
+	text "Number 5:"
+	prompt
+
+_EventTextNumber6::
+	text "Number 6:"
+	prompt
+
+_EventTextNumber7::
+	text "Number 7:"
+	prompt
+
+_EventTextNumber8::
+	text "Number 8:"
+	prompt
+
+_EventTextNumber9::
+	text "Number 9:"
+	prompt
+
+_EventTextNumber10::
+	text "Number 10:"
+	prompt
+
+_EventTextNumber11::
+	text "Number 11:"
+	prompt
+
+_EventTextNumber12::
+	text "Number 12:"
+	prompt
+
+_EventTextNumber13::
+	text "Number 13:"
+	prompt

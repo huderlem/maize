@@ -20,26 +20,3 @@ _CinnabarPokecenterText3:: ; a133e (28:533e)
 	para "I think it's"
 	line "worth a try!"
 	done
-
-_EventText1::
-	text "Do you want?"
-	done
-
-_EventText2::
-	text "Enter codes."
-	prompt
-
-_EventText3::
-	text "Bye!"
-	done
-
-_EventTextNotValid::
-	text "Sorry!"
-
-	para "That code is"
-	line "invalid!"
-	done
-
-_EventTextValid::
-	text "Valid!"
-	done

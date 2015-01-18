@@ -91351,202 +91351,453 @@ CeruleanPokecenterText3: ; 5c65a (17:465a)
 
 CeruleanPokecenterText5:
 	db $08 ; asm
-	; check if playing nuzlocke mode
-	ld hl, W_NEWFLAGS1
-	bit 2, [hl]
-	jr nz, .nuzlockeMode
-	ld hl, AgatePokecenterText5
+	ld hl, EventText1
 	call PrintText
-	jp TextScriptEnd
-.nuzlockeMode
-	; load HM list of HMs
-	ld hl, AgatePokecenterText5_2
+	call YesNoChoice
+	ld a, [wCurrentMenuItem] ; $cc26
+	and a
+	jp nz, .saidNo
+	ld hl, EventText2
 	call PrintText
-.showHMList
-	xor a
-	ld [wCurrentMenuItem], a
-	ld [wListScrollOffset], a
+	ld a, $ff
+	ld [$cf97], a ; max quantity
 
-	ld hl, NuzlockeHMMoveList
-	; taken from cerulean house badge information guy
-	call LoadItemList
-	ld hl, $cf7b
-	ld a, l
-	ld [$cf8b], a
-	ld a, h
-	ld [$cf8c], a
-	xor a
-	ld [$cf93], a
-	ld [$cc35], a
-	ld a, SPECIALLISTMENU
-	ld [wListMenuID], a
-	call DisplayListMenuID
-	jp c, .goodbye
-	ld a, [$cf91] ; a contains list selection
-	ld hl, W_OBTAINEDBADGES
-	cp HM_05
-	jr z, .hm05
-	cp HM_04
-	jr z, .hm04
-	cp HM_03
-	jr z, .hm03
-	cp HM_02
-	jr z, .hm02
-.hm01
-	bit 1, [hl]
-	jp z, .dontHaveRequiredBadge
-	jr .getMove
-.hm05
-	bit 0, [hl]
-	jp z, .dontHaveRequiredBadge
-	jr .getMove
-.hm04
-	bit 3, [hl]
-	jp z, .dontHaveRequiredBadge
-	jr .getMove
-.hm03
-	bit 4, [hl]
-	jp z, .dontHaveRequiredBadge
-	jr .getMove
-.hm02
-	bit 2, [hl]
-	jp z, .dontHaveRequiredBadge
-.getMove
-	ld a, [$cf91] ; a contains list selection
-	sub HM_01
-	ld c, a
-	ld b, 0
-	ld hl, NuzlockeHMMONList
-	add hl, bc
-	ld a, [hl] ; a contains mon id
-	push hl
-	ld [$d11e], a
-	call GetMonName
-	ld hl, AgatePokecenterText5_5
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA], a
+
+	ld hl, EventTextNumber2
 	call PrintText
-	call YesNoChoice
-	ld a, [$cc26]
-	and a
-	pop hl
-	jp nz, .goodbye
-	push hl
-	ld hl, AgatePokecenterText5_6
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA + 1], a
+
+	ld hl, EventTextNumber3
 	call PrintText
-	; choose a pokemon from the party
-	call SaveScreenTilesToBuffer2
-	xor a
-	ld [$d07d], a
-	ld [$cfcb], a
-	ld [$cc35], a
-	call DisplayPartyMenu
-	push af
-	call GBPalWhiteOutWithDelay3
-	call Func_3dbe
-	call LoadGBPal
-	call LoadScreenTilesFromBuffer2
-	pop af
-	pop hl
-	jr c, .goodbye
-	push hl
-	ld hl, AgatePokecenterText5_7
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA + 2], a
+
+	ld hl, EventTextNumber4
 	call PrintText
-	call YesNoChoice
-	ld a, [$cc26]
-	and a
-	pop hl
-	jr nz, .goodbye
-	push hl
-	ld a,[$cf92] ; index within party
-	ld [wWhichPokemon], a
-	xor a
-	ld [$cf95], a
-	call RemovePokemon
-	; now add the new pokemon
-	pop hl
-	ld a, [hl] ; a contains new mon id
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA + 3], a
+
+	ld hl, EventTextNumber5
+	call PrintText
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA + 4], a
+
+	ld hl, EventTextNumber6
+	call PrintText
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA + 5], a
+
+	ld hl, EventTextNumber7
+	call PrintText
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA + 6], a
+
+	ld hl, EventTextNumber8
+	call PrintText
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA + 7], a
+
+	ld hl, EventTextNumber9
+	call PrintText
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA + 8], a
+
+	ld hl, EventTextNumber10
+	call PrintText
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA + 9], a
+
+	ld hl, EventTextNumber11
+	call PrintText
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA + 10], a
+
+	ld hl, EventTextNumber12
+	call PrintText
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA + 11], a
+
+	ld hl, EventTextNumber13
+	call PrintText
+	call DisplayChooseNumberMenu
+	ld a, [$cf96] ; a = number that was selected
+	ld [W_EVENTDATA + 12], a
+
+	call ValidateEventCode
+	jr z, .notValid
+	ld hl, EventTextValid
+	call PrintText
+
+	ld hl, wPlayerID
+	ld a, [W_EVENTDATA]
+	xor [hl]
+	ld [W_EVENTDATA], a
+
+	ld a, [W_EVENTDATA + 1]
+	xor [hl]
+	ld [W_EVENTDATA + 1], a
+
+	ld a, [W_EVENTDATA + 2]
+	xor [hl]
+	ld [W_EVENTDATA + 2], a
+
+	ld a, [W_EVENTDATA + 3]
+	xor [hl]
+	ld [W_EVENTDATA + 3], a
+
+	inc hl
+
+	ld a, [W_EVENTDATA + 4]
+	xor [hl]
+	ld [W_EVENTDATA + 4], a
+
+	ld a, [W_EVENTDATA + 5]
+	xor [hl]
+	ld [W_EVENTDATA + 5], a
+
+	ld a, [W_EVENTDATA + 6]
+	xor [hl]
+	ld [W_EVENTDATA + 6], a
+
+	ld a, [W_EVENTDATA + 7]
+	xor [hl]
+	ld [W_EVENTDATA + 7], a
+
+	ld a, [W_EVENTDATA + 8]
+	xor [hl]
+	ld [W_EVENTDATA + 8], a
+
+	ld a, $ff
+	ld [W_EVENTDATA + 13], a ; flag for givepokemon
+
+	ld a, [W_EVENTDATA] ; mon id
 	ld b, a
-	ld c, 2 ; level 2
+	ld a, [W_EVENTDATA + 7] ; mon level
+	ld c, a
 	call GivePokemon
-	ld a, [W_NUMINPARTY]
-	dec a
-	ld hl, W_PARTYMON1_IV
-	ld bc, 44
-.addLoop
-	and a
-	jr z, .overwriteDVs
-	add hl, bc
-	dec a
-	jr .addLoop
-.overwriteDVs
-	xor a
-	ld [hli], a
-	ld [hli], a
-	; recalculate stats
-	ld bc, $0005
-	add hl, bc
-	ld d, h
-	ld e, l
-	ld bc, -18
-	add hl, bc
-	push hl
-	call CalcStats
-	pop hl
-	ld bc, -15
-	add hl, bc
-	; 1 HP left
-	xor a
-	ld [hli], a
-	inc a
-	ld [hl], a
-	jr .goodbye
-.dontHaveRequiredBadge
-	ld hl, AgatePokecenterText5_4
+	jr .done
+.notValid
+	ld hl, EventTextNotValid
 	call PrintText
-	jp .showHMList
-.goodbye
-	ld hl, AgatePokecenterText5_3
+	jr .done
+.saidNo
+	ld hl, EventText3
 	call PrintText
+.done
 	jp TextScriptEnd
 
-NuzlockeHMMONList:
-	db RATTATA, PIDGEY, TENTACOOL, EKANS, CLEFAIRY
-
-NuzlockeHMMoveList:
-	db $5 ; num items in list
-	db HM_01, HM_02, HM_03, HM_04, HM_05
-	db $ff ; terminator
-
-HMMoveList:
-	db CUT, FLY, SURF, STRENGTH, FLASH
-
-AgatePokecenterText5:
-	TX_FAR _AgatePokecenterText5
+EventText1:
+	TX_FAR _EventText1
 	db "@"
 
-AgatePokecenterText5_2:
-	TX_FAR _AgatePokecenterText5_2
+EventText2:
+	TX_FAR _EventText2
 	db "@"
 
-AgatePokecenterText5_3:
-	TX_FAR _AgatePokecenterText5_3
+EventText3:
+	TX_FAR _EventText3
 	db "@"
 
-AgatePokecenterText5_4:
-	TX_FAR _AgatePokecenterText5_4
+EventTextNotValid:
+	TX_FAR _EventTextNotValid
 	db "@"
 
-AgatePokecenterText5_5:
-	TX_FAR _AgatePokecenterText5_5
+EventTextValid:
+	TX_FAR _EventTextValid
 	db "@"
 
-AgatePokecenterText5_6:
-	TX_FAR _AgatePokecenterText5_6
+EventTextNumber2:
+	TX_FAR _EventTextNumber2
 	db "@"
 
-AgatePokecenterText5_7:
-	TX_FAR _AgatePokecenterText5_7
+EventTextNumber3:
+	TX_FAR _EventTextNumber3
 	db "@"
 
+EventTextNumber4:
+	TX_FAR _EventTextNumber4
+	db "@"
+
+EventTextNumber5:
+	TX_FAR _EventTextNumber5
+	db "@"
+
+EventTextNumber6:
+	TX_FAR _EventTextNumber6
+	db "@"
+
+EventTextNumber7:
+	TX_FAR _EventTextNumber7
+	db "@"
+
+EventTextNumber8:
+	TX_FAR _EventTextNumber8
+	db "@"
+
+EventTextNumber9:
+	TX_FAR _EventTextNumber9
+	db "@"
+
+EventTextNumber10:
+	TX_FAR _EventTextNumber10
+	db "@"
+
+EventTextNumber11:
+	TX_FAR _EventTextNumber11
+	db "@"
+
+EventTextNumber12:
+	TX_FAR _EventTextNumber12
+	db "@"
+
+EventTextNumber13:
+	TX_FAR _EventTextNumber13
+	db "@"
+
+ValidateEventCode:
+; sets zero flag if not valid
+; checks to see if the checksum is correct
+	ld b, 0
+	
+	; bit 7; high byte
+	ld a, [W_EVENTDATA + 0]
+	and %00000001
+	jr z, .bit6HighByte
+	ld a, %10000000
+	ld b, a
+.bit6HighByte
+	ld a, [W_EVENTDATA + 1]
+	and %00000010
+	jr z, .bit5HighByte
+	ld a, %01000000
+	add a, b
+	ld b, a
+.bit5HighByte
+	ld a, [W_EVENTDATA + 2]
+	and %00000100
+	jr z, .bit4HighByte
+	ld a, %00100000
+	add a, b
+	ld b, a
+.bit4HighByte
+	ld a, [W_EVENTDATA + 3]
+	and %00001000
+	jr z, .bit3HighByte
+	ld a, %00010000
+	add a, b
+	ld b, a
+.bit3HighByte
+	ld a, [W_EVENTDATA + 4]
+	and %00010000
+	jr z, .bit2HighByte
+	ld a, %00001000
+	add a, b
+	ld b, a
+.bit2HighByte
+	ld a, [W_EVENTDATA + 5]
+	and %00100000
+	jr z, .bit1HighByte
+	ld a, %00000100
+	add a, b
+	ld b, a
+.bit1HighByte
+	ld a, [W_EVENTDATA + 6]
+	and %01000000
+	jr z, .bit0HighByte
+	ld a, %00000010
+	add a, b
+	ld b, a
+.bit0HighByte
+	ld a, [W_EVENTDATA + 7]
+	and %10000000
+	jr z, .compareHighByte
+	ld a, %00000001
+	add a, b
+	ld b, a
+.compareHighByte
+	ld a, [W_EVENTDATA + 9]
+	cp b
+	jp nz, .notValid
+
+	ld b, 0
+.bit7LowByte
+	ld a, [W_EVENTDATA + 8]
+	and %00001000
+	jr z, .bit6LowByte
+	ld a, %10000000
+	add a, b
+	ld b, a
+.bit6LowByte
+	ld a, [W_EVENTDATA + 0]
+	and %00010000
+	jr z, .bit5LowByte
+	ld a, %01000000
+	add a, b
+	ld b, a
+.bit5LowByte
+	ld a, [W_EVENTDATA + 1]
+	and %00100000
+	jr z, .bit4LowByte
+	ld a, %00100000
+	add a, b
+	ld b, a
+.bit4LowByte
+	ld a, [W_EVENTDATA + 2]
+	and %01000000
+	jr z, .bit3LowByte
+	ld a, %00010000
+	add a, b
+	ld b, a
+.bit3LowByte
+	ld a, [W_EVENTDATA + 3]
+	and %10000000
+	jr z, .bit2LowByte
+	ld a, %00001000
+	add a, b
+	ld b, a
+.bit2LowByte
+	ld a, [W_EVENTDATA + 4]
+	and %00000001
+	jr z, .bit1LowByte
+	ld a, %00000100
+	add a, b
+	ld b, a
+.bit1LowByte
+	ld a, [W_EVENTDATA + 5]
+	and %00000010
+	jr z, .bit0LowByte
+	ld a, %00000010
+	add a, b
+	ld b, a
+.bit0LowByte
+	ld a, [W_EVENTDATA + 6]
+	and %00000100
+	jr z, .compareLowByte
+	ld a, %00000001
+	add a, b
+	ld b, a
+.compareLowByte
+	ld a, [W_EVENTDATA + 10]
+	cp b
+	jr nz, .notValid
+; last two checksum bytes
+	ld hl, W_EVENTDATA
+	ld d, 9 ; number of bytes to sum
+	ld b, 0
+.sum1loop
+	ld a, [hli]
+	add b
+	ld b, a
+	dec d
+	jr nz, .sum1loop
+	ld a, [wPlayerID]
+	add b
+	ld b, a
+	ld a, [W_EVENTDATA + 11]
+	cp b
+	jr nz, .notValid
+	ld hl, W_EVENTDATA
+	ld d, 9 ; number of bytes to sum
+	ld b, 0
+.sum2loop
+	ld a, [hli]
+	add b
+	ld b, a
+	dec d
+	jr nz, .sum2loop
+	ld a, [wPlayerID + 1]
+	add b
+	ld b, a
+	ld a, [W_EVENTDATA + 12]
+	cp b
+	jr nz, .notValid
+.valid
+	ld a, 1
+	and a
+	ret
+.notValid
+	xor a
+	and a
+	ret
+
+InitialNumberText:
+	db "000@"
+
+DisplayChooseNumberMenu::
+; choose number from 0 - [$cf97]
+; This function is modified from DisplayChooseQuantityMenu
+; text box dimensions/coordinates for just quantity
+	FuncCoord 6,1
+	ld hl,Coord
+	ld b,3 ; height
+	ld c,5 ; width
+.drawTextBox
+	call TextBoxBorder
+	FuncCoord 8,3
+	ld hl,Coord
+.printInitialQuantity
+	ld de, InitialNumberText
+	call PlaceString
+	ld a, $ff
+	ld [$cf96],a ; initialize current quantity to 0
+	jp .incrementQuantity
+.waitForKeyPressLoop
+	call GetJoypadStateLowSensitivity
+	ld a,[H_NEWLYPRESSEDBUTTONS] ; newly pressed buttons
+	bit 0,a ; was the A button pressed?
+	jp nz,.buttonAPressed
+	bit 6,a ; was Up pressed?
+	jr nz,.incrementQuantity
+	bit 7,a ; was Down pressed?
+	jr nz,.decrementQuantity
+	jr .waitForKeyPressLoop
+.incrementQuantity
+	ld a,[$cf97] ; max quantity
+	inc a
+	ld b,a
+	ld hl,$cf96 ; current quantity
+	inc [hl]
+	ld a,[hl]
+	cp b
+	jr nz,.handleNewQuantity
+; wrap to 0 if the player goes above the max quantity
+	xor a
+	ld [hl],a
+	jr .handleNewQuantity
+.decrementQuantity
+	ld hl,$cf96 ; current quantity
+	dec [hl]
+	ld a, [hl]
+	cp $ff
+	jr nz,.handleNewQuantity
+; wrap to the max quantity if the player goes below 0
+	ld a,[$cf97] ; max quantity
+	ld [hl],a
+.handleNewQuantity
+	FuncCoord 8,3
+	ld hl,Coord
+.printQuantity
+	ld de,$cf96 ; current quantity
+	ld bc,$8103 ; print leading zeroes, 1 byte, 3 digits
+	call PrintNumber
+	jp .waitForKeyPressLoop
+.buttonAPressed ; the player selected the number
+	ret
 
 CeruleanPokecenterObject: ; 0x5c65f (size=44)
 	db $0 ; border tile
@@ -108111,382 +108362,8 @@ CinnabarPokecenterText1: ; 75e3a (1d:5e3a)
 
 CinnabarPokecenterText2: ; 75e3b (1d:5e3b)
 	db $08 ; asm
-	ld hl, EventText1
-	call PrintText
-	call YesNoChoice
-	ld a, [wCurrentMenuItem] ; $cc26
-	and a
-	jp nz, .saidNo
-	ld hl, EventText2
-	call PrintText
-	ld a, $ff
-	ld [$cf97], a ; max quantity
+	; todo	
 
-	call DisplayChooseNumberMenu
-	ld a, [$cf96] ; a = number that was selected
-	ld [W_EVENTDATA], a
-
-	call DisplayChooseNumberMenu
-	ld a, [$cf96] ; a = number that was selected
-	ld [W_EVENTDATA + 1], a
-
-	call DisplayChooseNumberMenu
-	ld a, [$cf96] ; a = number that was selected
-	ld [W_EVENTDATA + 2], a
-
-	call DisplayChooseNumberMenu
-	ld a, [$cf96] ; a = number that was selected
-	ld [W_EVENTDATA + 3], a
-
-	call DisplayChooseNumberMenu
-	ld a, [$cf96] ; a = number that was selected
-	ld [W_EVENTDATA + 4], a
-
-	call DisplayChooseNumberMenu
-	ld a, [$cf96] ; a = number that was selected
-	ld [W_EVENTDATA + 5], a
-
-	call DisplayChooseNumberMenu
-	ld a, [$cf96] ; a = number that was selected
-	ld [W_EVENTDATA + 6], a
-
-	call DisplayChooseNumberMenu
-	ld a, [$cf96] ; a = number that was selected
-	ld [W_EVENTDATA + 7], a
-
-	call DisplayChooseNumberMenu
-	ld a, [$cf96] ; a = number that was selected
-	ld [W_EVENTDATA + 8], a
-
-	call DisplayChooseNumberMenu
-	ld a, [$cf96] ; a = number that was selected
-	ld [W_EVENTDATA + 9], a
-
-	call DisplayChooseNumberMenu
-	ld a, [$cf96] ; a = number that was selected
-	ld [W_EVENTDATA + 10], a
-
-	call DisplayChooseNumberMenu
-	ld a, [$cf96] ; a = number that was selected
-	ld [W_EVENTDATA + 11], a
-
-	call DisplayChooseNumberMenu
-	ld a, [$cf96] ; a = number that was selected
-	ld [W_EVENTDATA + 12], a
-
-	call ValidateEventCode
-	jr z, .notValid
-	ld hl, EventTextValid
-	call PrintText
-
-	ld hl, wPlayerID
-	ld a, [W_EVENTDATA]
-	xor [hl]
-	ld [W_EVENTDATA], a
-
-	ld a, [W_EVENTDATA + 1]
-	xor [hl]
-	ld [W_EVENTDATA + 1], a
-
-	ld a, [W_EVENTDATA + 2]
-	xor [hl]
-	ld [W_EVENTDATA + 2], a
-
-	ld a, [W_EVENTDATA + 3]
-	xor [hl]
-	ld [W_EVENTDATA + 3], a
-
-	inc hl
-
-	ld a, [W_EVENTDATA + 4]
-	xor [hl]
-	ld [W_EVENTDATA + 4], a
-
-	ld a, [W_EVENTDATA + 5]
-	xor [hl]
-	ld [W_EVENTDATA + 5], a
-
-	ld a, [W_EVENTDATA + 6]
-	xor [hl]
-	ld [W_EVENTDATA + 6], a
-
-	ld a, [W_EVENTDATA + 7]
-	xor [hl]
-	ld [W_EVENTDATA + 7], a
-
-	ld a, [W_EVENTDATA + 8]
-	xor [hl]
-	ld [W_EVENTDATA + 8], a
-
-	ld a, $ff
-	ld [W_EVENTDATA + 13], a ; flag for givepokemon
-
-	ld a, [W_EVENTDATA] ; mon id
-	ld b, a
-	ld a, [W_EVENTDATA + 7] ; mon level
-	ld c, a
-	call GivePokemon
-
-	jr .done
-.notValid
-	ld hl, EventTextNotValid
-	call PrintText
-	jr .done
-.saidNo
-	ld hl, EventText3
-	call PrintText
-.done
-	jp TextScriptEnd
-
-EventText1:
-	TX_FAR _EventText1
-	db "@"
-
-EventText2:
-	TX_FAR _EventText2
-	db "@"
-
-EventText3:
-	TX_FAR _EventText3
-	db "@"
-
-EventTextNotValid:
-	TX_FAR _EventTextNotValid
-	db "@"
-
-EventTextValid:
-	TX_FAR _EventTextValid
-	db "@"
-
-ValidateEventCode:
-; sets zero flag if not valid
-; checks to see if the checksum is correct
-	ld b, 0
-	
-	; bit 7; high byte
-	ld a, [W_EVENTDATA + 0]
-	and %00000001
-	jr z, .bit6HighByte
-	ld a, %10000000
-	ld b, a
-.bit6HighByte
-	ld a, [W_EVENTDATA + 1]
-	and %00000010
-	jr z, .bit5HighByte
-	ld a, %01000000
-	add a, b
-	ld b, a
-.bit5HighByte
-	ld a, [W_EVENTDATA + 2]
-	and %00000100
-	jr z, .bit4HighByte
-	ld a, %00100000
-	add a, b
-	ld b, a
-.bit4HighByte
-	ld a, [W_EVENTDATA + 3]
-	and %00001000
-	jr z, .bit3HighByte
-	ld a, %00010000
-	add a, b
-	ld b, a
-.bit3HighByte
-	ld a, [W_EVENTDATA + 4]
-	and %00010000
-	jr z, .bit2HighByte
-	ld a, %00001000
-	add a, b
-	ld b, a
-.bit2HighByte
-	ld a, [W_EVENTDATA + 5]
-	and %00100000
-	jr z, .bit1HighByte
-	ld a, %00000100
-	add a, b
-	ld b, a
-.bit1HighByte
-	ld a, [W_EVENTDATA + 6]
-	and %01000000
-	jr z, .bit0HighByte
-	ld a, %00000010
-	add a, b
-	ld b, a
-.bit0HighByte
-	ld a, [W_EVENTDATA + 7]
-	and %10000000
-	jr z, .compareHighByte
-	ld a, %00000001
-	add a, b
-	ld b, a
-.compareHighByte
-	ld a, [W_EVENTDATA + 9]
-	cp b
-	jp nz, .notValid
-
-	ld b, 0
-.bit7LowByte
-	ld a, [W_EVENTDATA + 8]
-	and %00001000
-	jr z, .bit6LowByte
-	ld a, %10000000
-	add a, b
-	ld b, a
-.bit6LowByte
-	ld a, [W_EVENTDATA + 0]
-	and %00010000
-	jr z, .bit5LowByte
-	ld a, %01000000
-	add a, b
-	ld b, a
-.bit5LowByte
-	ld a, [W_EVENTDATA + 1]
-	and %00100000
-	jr z, .bit4LowByte
-	ld a, %00100000
-	add a, b
-	ld b, a
-.bit4LowByte
-	ld a, [W_EVENTDATA + 2]
-	and %01000000
-	jr z, .bit3LowByte
-	ld a, %00010000
-	add a, b
-	ld b, a
-.bit3LowByte
-	ld a, [W_EVENTDATA + 3]
-	and %10000000
-	jr z, .bit2LowByte
-	ld a, %00001000
-	add a, b
-	ld b, a
-.bit2LowByte
-	ld a, [W_EVENTDATA + 4]
-	and %00000001
-	jr z, .bit1LowByte
-	ld a, %00000100
-	add a, b
-	ld b, a
-.bit1LowByte
-	ld a, [W_EVENTDATA + 5]
-	and %00000010
-	jr z, .bit0LowByte
-	ld a, %00000010
-	add a, b
-	ld b, a
-.bit0LowByte
-	ld a, [W_EVENTDATA + 6]
-	and %00000100
-	jr z, .compareLowByte
-	ld a, %00000001
-	add a, b
-	ld b, a
-.compareLowByte
-	ld a, [W_EVENTDATA + 10]
-	cp b
-	jr nz, .notValid
-; last two checksum bytes
-	ld hl, W_EVENTDATA
-	ld d, 9 ; number of bytes to sum
-	ld b, 0
-.sum1loop
-	ld a, [hli]
-	add b
-	ld b, a
-	dec d
-	jr nz, .sum1loop
-	ld a, [wPlayerID]
-	add b
-	ld b, a
-	ld a, [W_EVENTDATA + 11]
-	cp b
-	jr nz, .notValid
-	ld hl, W_EVENTDATA
-	ld d, 9 ; number of bytes to sum
-	ld b, 0
-.sum2loop
-	ld a, [hli]
-	add b
-	ld b, a
-	dec d
-	jr nz, .sum2loop
-	ld a, [wPlayerID + 1]
-	add b
-	ld b, a
-	ld a, [W_EVENTDATA + 12]
-	cp b
-	jr nz, .notValid
-.valid
-	ld a, 1
-	and a
-	ret
-.notValid
-	xor a
-	and a
-	ret
-
-InitialNumberText:
-	db "000@"
-
-DisplayChooseNumberMenu::
-; choose number from 0 - [$cf97]
-; This function is modified from DisplayChooseQuantityMenu
-; text box dimensions/coordinates for just quantity
-	FuncCoord 6,1
-	ld hl,Coord
-	ld b,3 ; height
-	ld c,5 ; width
-.drawTextBox
-	call TextBoxBorder
-	FuncCoord 8,3
-	ld hl,Coord
-.printInitialQuantity
-	ld de, InitialNumberText
-	call PlaceString
-	ld a, $ff
-	ld [$cf96],a ; initialize current quantity to 0
-	jp .incrementQuantity
-.waitForKeyPressLoop
-	call GetJoypadStateLowSensitivity
-	ld a,[H_NEWLYPRESSEDBUTTONS] ; newly pressed buttons
-	bit 0,a ; was the A button pressed?
-	jp nz,.buttonAPressed
-	bit 6,a ; was Up pressed?
-	jr nz,.incrementQuantity
-	bit 7,a ; was Down pressed?
-	jr nz,.decrementQuantity
-	jr .waitForKeyPressLoop
-.incrementQuantity
-	ld a,[$cf97] ; max quantity
-	inc a
-	ld b,a
-	ld hl,$cf96 ; current quantity
-	inc [hl]
-	ld a,[hl]
-	cp b
-	jr nz,.handleNewQuantity
-; wrap to 0 if the player goes above the max quantity
-	xor a
-	ld [hl],a
-	jr .handleNewQuantity
-.decrementQuantity
-	ld hl,$cf96 ; current quantity
-	dec [hl]
-	ld a, [hl]
-	cp $ff
-	jr nz,.handleNewQuantity
-; wrap to the max quantity if the player goes below 0
-	ld a,[$cf97] ; max quantity
-	ld [hl],a
-.handleNewQuantity
-	FuncCoord 8,3
-	ld hl,Coord
-.printQuantity
-	ld de,$cf96 ; current quantity
-	ld bc,$8103 ; print leading zeroes, 1 byte, 3 digits
-	call PrintNumber
-	jp .waitForKeyPressLoop
-.buttonAPressed ; the player selected the number
-	ret
 
 CinnabarPokecenterText3: ; 75e40 (1d:5e40)
 	TX_FAR _CinnabarPokecenterText3
@@ -117416,7 +117293,7 @@ _SlaveBallDescription::
 	cont "to 2."
 
 	para "This BALL can"
-	cont "be used in areas"
+	line "be used in areas"
 	cont "where you've"
 	cont "already had a"
 	cont "chance to catch"
