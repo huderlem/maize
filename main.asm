@@ -32461,13 +32461,14 @@ ViridianCityObject: ; 0x18384 (size=104)
 	db $11, $b, $0, VIRIDIAN_HOUSE
 	db $7, $20, $0, VIRIDIAN_GYM
 
-	db $6 ; signs
+	db $7 ; signs
 	db $13, $9, $8 ; ViridianCityText8
 	db $19, $d, $9 ; ViridianCityText9
 	db $13, $15, $a ; ViridianCityText10
 	db $19, $10, $b ; MartSignText
 	db $19, $a, $c ; PokeCenterSignText
 	db $1, $17, $d ; ViridianCityText13
+	db $1d, $4, $8 ; talking bush
 
 	db $7 ; people
 	db SPRITE_BUG_CATCHER, $14 + 4, $7 + 4, $fe, $0, $1 ; person
@@ -32511,7 +32512,7 @@ PewterCityObject: ; 0x18577 (size=111)
 	db $1f, $b, $0, PEWTER_HOUSE_2
 	db $1d, $19, $0, PEWTER_POKECENTER
 
-	db $7 ; signs
+	db $8 ; signs
 	db $7, $b, $6 ; PewterCityText6
 	db $f, $21, $7 ; PewterCityText7
 	db $1b, $4, $8 ; MartSignText
@@ -32519,6 +32520,7 @@ PewterCityObject: ; 0x18577 (size=111)
 	db $5, $21, $a ; PewterCityText10
 	db $19, $f, $b ; PewterCityText11
 	db $11, $13, $c ; PewterCityText12
+	db $11, $6, $6 ; talking bush
 
 	db $5 ; people
 	db SPRITE_LASS, $9 + 4, $10 + 4, $ff, $ff, $1 ; person
@@ -32622,7 +32624,7 @@ VermilionCityObject: ; 0x189ba (size=133)
 	db $17, $20, $0, VERMILION_HOUSE_3
 	db $5, $1f, $0, PATH_ENTRANCE_ROUTE_5
 
-	db $7 ; signs
+	db $8 ; signs
 	db $11, $19, $7 ; VermilionCityText7
 	db $15, $7, $8 ; VermilionCityText8
 	db $f, $1a, $9 ; MartSignText
@@ -32630,6 +32632,7 @@ VermilionCityObject: ; 0x189ba (size=133)
 	db $7, $21, $b ; VermilionCityText11
 	db $7, $f, $c ; VermilionCityText12
 	db $7, $19, $d ; VermilionCityText13
+	db $5, $e, $7 ; talking bush
 
 	db $6 ; people
 	db SPRITE_LASS, $d + 4, $13 + 4, $fe, $2, $1 ; person
@@ -72568,7 +72571,7 @@ HiddenObjectMaps: ; 46a40 (11:6a40)
 	db SILPH_CO_5F
 	db SILPH_CO_9F
 	db COPYCATS_HOUSE_2F
-	db UNKNOWN_DUNGEON_1
+	db ROCK_TUNNEL_1
 	db UNKNOWN_DUNGEON_3
 	db POWER_PLANT
 	db SEAFOAM_ISLANDS_3
@@ -72657,7 +72660,7 @@ HiddenObjectPointers: ; 46a96 (11:6a96)
 	dw SilphCo5FHiddenObjects
 	dw SilphCo9FHiddenObjects
 	dw CopycatsHouse2FHiddenObjects
-	dw UnknownDungeon1HiddenObjects
+	dw ArborHollow1HiddenObjects
 	dw UnknownDungeon3HiddenObjects
 	dw PowerPlantHiddenObjects
 	dw SeafoamIslands3HiddenObjects
@@ -72805,7 +72808,7 @@ VermilionGymHiddenObjects: ; 46c18 (11:6c18)
 	dbw Bank(Func_5ddef), Func_5ddef
 	db $FF
 CeladonMansion2HiddenObjects: ; 46c85 (11:6c85)
-	db $05,$00,$04 ; XXX, y, x
+	db $00,$00,$04 ; XXX, y, x
 	dbw Bank(Func_62516), Func_62516
 	db $FF
 CeladonPokecenterHiddenObjects: ; 46c8c (11:6c8c)
@@ -72969,9 +72972,9 @@ ViridianForestHiddenObjects: ; 46e47 (11:6e47)
 	dbw BANK(HiddenItems),HiddenItems
 	db $FF
 MtMoon3HiddenObjects: ; 46e54 (11:6e54)
-	db $0c,$12,MOON_STONE
+	db $14,$1e,THUNDER_STONE
 	dbw BANK(HiddenItems),HiddenItems
-	db $09,$21,ETHER
+	db $1a,$20,SUPER_REPEL
 	dbw BANK(HiddenItems),HiddenItems
 	db $FF
 IndigoPlateauHiddenObjects: ; 46e61 (11:6e61)
@@ -72983,11 +72986,11 @@ IndigoPlateauHiddenObjects: ; 46e61 (11:6e61)
 Route3HiddenObjects: ; 46e6e (11:6e6e)
 	db $7,$22,SHINY_BALL
 	dbw BANK(HiddenItems),HiddenItems
-	db $7,$10,RARE_CANDY
+	db $8,$11,REVIVE
 	dbw BANK(HiddenItems),HiddenItems
 	db $FF
 Route9HiddenObjects: ; 46e7b (11:6e7b)
-	db $07,$0e,ETHER
+	db $06,$0d,REVIVE
 	dbw BANK(HiddenItems),HiddenItems
 	db $FF
 SSAnne6HiddenObjects: ; 46e82 (11:6e82)
@@ -73056,8 +73059,8 @@ CopycatsHouse2FHiddenObjects: ; 46efb (11:6efb)
 	db $01,$01,NUGGET
 	dbw BANK(HiddenItems),HiddenItems
 	db $FF
-UnknownDungeon1HiddenObjects: ; 46f02 (11:6f02)
-	db $0b,$0e,RARE_CANDY
+ArborHollow1HiddenObjects: ; 46f02 (11:6f02)
+	db $13,$22,SUPER_REPEL
 	dbw BANK(HiddenItems),HiddenItems
 	db $FF
 UnknownDungeon3HiddenObjects: ; 46f09 (11:6f09)
@@ -73125,7 +73128,7 @@ BillsHouseHiddenObjects: ; 46f86 (11:6f86)
 	dbw Bank(Func_1eb6e), Func_1eb6e
 	db $FF
 ViridianCityHiddenObjects: ; 46f8d (11:6f8d)
-	db $15,$1f,RARE_CANDY
+	db $15,$1C,RARE_CANDY
 	dbw BANK(HiddenItems),HiddenItems
 	db $FF
 SafariZoneRestHouse2HiddenObjects: ; 46f94 (11:6f94)
@@ -73159,11 +73162,11 @@ LavenderHouse1HiddenObjects: ; 46fc2 (11:6fc2)
 	dbw Bank(Func_1eb60), Func_1eb60
 	db $FF
 CeladonMansion5HiddenObjects: ; 46fd5 (11:6fd5)
-	db $00,$03,$34 ; XXX, y, x
+	db $00,$00,$34 ; XXX, y, x
 	dbw Bank(Func_5dc1a), Func_5dc1a
-	db $00,$04,$34 ; XXX, y, x
+	db $00,$00,$34 ; XXX, y, x
 	dbw Bank(Func_5dc1a), Func_5dc1a
-	db $04,$03,$35 ; XXX, y, x
+	db $00,$00,$35 ; XXX, y, x
 	dbw Bank(Func_52996), Func_52996
 	db $FF
 FightingDojoHiddenObjects: ; 46fe8 (11:6fe8)
@@ -73237,7 +73240,7 @@ UndergroundPathWeHiddenObjects: ; 4707b (11:707b)
 	dbw BANK(HiddenItems),HiddenItems
 	db $FF
 CeladonCityHiddenObjects: ; 47088 (11:7088)
-	db $0f,$30,PP_UP
+	db $08,$02,TM_07
 	dbw BANK(HiddenItems),HiddenItems
 	db $FF
 SeafoamIslands4HiddenObjects: ; 4708f (11:708f)
@@ -73245,7 +73248,7 @@ SeafoamIslands4HiddenObjects: ; 4708f (11:708f)
 	dbw BANK(HiddenItems),HiddenItems
 	db $FF
 VermilionCityHiddenObjects: ; 47096 (11:7096)
-	db $0b,$0e,MAX_ETHER
+	db $08,$09,SUPER_POTION
 	dbw BANK(HiddenItems),HiddenItems
 	db $FF
 CeruleanCityHiddenObjects: ; 4709d (11:709d)
@@ -73253,7 +73256,7 @@ CeruleanCityHiddenObjects: ; 4709d (11:709d)
 	dbw BANK(HiddenItems),HiddenItems
 	db $FF
 Route4HiddenObjects: ; 470a4 (11:70a4)
-	db $03,$28,GREAT_BALL
+	db $0b,$21,BOOSTER_RING
 	dbw BANK(HiddenItems),HiddenItems
 	db $FF
 
@@ -78268,8 +78271,9 @@ Route25Object: ; 0x507b2 (size=94)
 	db $1 ; warps
 	db $25, $d, $0, BILLS_HOUSE
 
-	db $1 ; signs
+	db $2 ; signs
 	db $25, $b, $b ; Route25Text11
+	db $1d, $4, $b ; Talking bush
 
 	db $a ; people
 	db SPRITE_BUG_CATCHER, $2c + 4, $4 + 4, $ff, $d1, $41, YOUNGSTER + $C8, $3 ; trainer
@@ -87001,9 +87005,10 @@ Route18Object: ; 0x58c5a (size=66)
 	db $25, $d, $1, CELADON_MART_ELEVATOR
 	db $2b, $8, $1, POKEMONTOWER_3
 	
-	db $2 ; signs
+	db $3 ; signs
 	db $1f, $9, $4 ; Route18Text4
 	db $27, $d, $5 ; Route18Text5
+	db $2d, $e, $4 ; talking bush
 
 	db $3 ; people
 	db SPRITE_GAMBLER, $14 + 4, $9 + 4, $ff, $d1, $41, GAMBLER + $C8, $3 ; trainer
@@ -109589,9 +109594,9 @@ HiddenItemCoords: ; 766b8 (1d:66b8)
 ; map ID, then coords
 	db VIRIDIAN_FOREST,$12,$01
 	db VIRIDIAN_FOREST,$2a,$10
-	db MT_MOON_3,$0c,$12
+	db MT_MOON_3,$14,$1e
 	db ROUTE_25,$03,$26
-	db ROUTE_9,$07,$0e
+	db ROUTE_9,$06,$0d
 	db SS_ANNE_6,$09,$0d
 	db SS_ANNE_10,$01,$03
 	db ROUTE_10,$11,$09
@@ -109608,7 +109613,7 @@ HiddenItemCoords: ; 766b8 (1d:66b8)
 	db SILPH_CO_5F,$03,$0c
 	db SILPH_CO_9F,$0f,$02
 	db COPYCATS_HOUSE_2F,$01,$01
-	db UNKNOWN_DUNGEON_1,$0b,$0e
+	db ROCK_TUNNEL_1,$13,$22
 	db UNKNOWN_DUNGEON_3,$03,$1b
 	db POWER_PLANT,$10,$11
 	db POWER_PLANT,$01,$0c
@@ -109634,14 +109639,14 @@ HiddenItemCoords: ; 766b8 (1d:66b8)
 	db UNDERGROUND_PATH_NS,$1e,$03
 	db UNDERGROUND_PATH_WE,$02,$0c
 	db UNDERGROUND_PATH_WE,$05,$15
-	db CELADON_CITY,$0f,$30
-	db ROUTE_3,$22,$07
-    db ROUTE_3,$10,$07
-	db MT_MOON_3,$09,$21
+	db CELADON_CITY,$08,$02
+	db ROUTE_3,$7,$22
+    db ROUTE_3,$8,$11
+	db MT_MOON_3,$1a,$20
 	db SEAFOAM_ISLANDS_4,$10,$09
-	db VERMILION_CITY,$0b,$0e
+	db VERMILION_CITY,$08,$09
 	db CERULEAN_CITY,$08,$0f
-	db ROUTE_4,$03,$28
+	db ROUTE_4,$0b,$21
 	db $ff
 
 FoundHiddenItemText: ; 7675b (1d:675b)
