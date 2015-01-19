@@ -101110,7 +101110,7 @@ Func_70e92: ; 70e92 (1c:4e92)
 .asm_70ef2
 	ld a, [wWhichTrade] ; $cd3d
 	inc a
-	cp 20 ; num entries in TownMapOrder
+	cp 29 ; num entries in TownMapOrder
 	jr nz, .asm_70efb
 	xor a
 .asm_70efb
@@ -101121,7 +101121,7 @@ Func_70e92: ; 70e92 (1c:4e92)
 	dec a
 	cp $ff
 	jr nz, .asm_70f0b
-	ld a, 19 ; num entries - 1 in TownMapOrder
+	ld a, 28 ; num entries - 1 in TownMapOrder
 .asm_70f0b
 	ld [wWhichTrade], a ; $cd3d
 	jp Func_70e7e
@@ -101139,14 +101139,23 @@ TownMapOrder: ; 70f11 (1c:4f11)
 	db ROUTE_25
 	db ROUTE_24
 	db VERMILION_CITY
+	db ROUTE_5
+	db ROUTE_8
 	db ROUTE_6
 	db CELADON_CITY
 	db ROUTE_4
-	db ROUTE_5
-	db ROUTE_8
 	db ROUTE_22
 	db MT_MOON_2
 	db ROUTE_21
+	db LAVENDER_TOWN
+	db ROUTE_11
+	db ROUTE_7
+	db FUCHSIA_CITY
+	db ROUTE_9
+	db ROUTE_18
+	db POKEMONTOWER_3
+	db ROUTE_10
+	db CINNABAR_ISLAND
 
 TownMapCursor: ; 70f40 (1c:4f40)
 	INCBIN "gfx/town_map_cursor.1bpp"
@@ -101653,11 +101662,11 @@ ExternalMapEntries: ; 71313 (1c:5313)
 	EMAP $F,$9,ViridianCityName
 	EMAP $E,$3,PewterCityName
 	EMAP $A,$4,CeruleanCityName
-	EMAP $E,$5,LavenderTownName
+	EMAP $F,$F,LavenderTownName
 	EMAP $7,$7,VermilionCityName
 	EMAP $7,$F,CeladonCityName
-	EMAP $8,$D,FuchsiaCityName
-	EMAP $2,$F,CinnabarIslandName
+	EMAP $4,$B,FuchsiaCityName
+	EMAP $4,$7,CinnabarIslandName
 	EMAP $0,$2,IndigoPlateauName
 	EMAP $A,$5,SaffronCityName
 	EMAP $0,$0,PalletTownName ; unused
@@ -101667,18 +101676,18 @@ ExternalMapEntries: ; 71313 (1c:5313)
 	EMAP $8,$F,Route4Name
 	EMAP $7,$5,Route5Name
 	EMAP $7,$B,Route6Name
-	EMAP $8,$5,Route7Name
+	EMAP $5,$B,Route7Name
 	EMAP $6,$7,Route8Name
-	EMAP $D,$2,Route9Name
-	EMAP $E,$4,Route10Name
-	EMAP $C,$9,Route11Name
+	EMAP $2,$B,Route9Name
+	EMAP $4,$9,Route10Name
+	EMAP $C,$F,Route11Name
 	EMAP $E,$9,Route12Name
 	EMAP $D,$B,Route13Name
 	EMAP $B,$C,Route14Name
 	EMAP $A,$D,Route15Name
 	EMAP $5,$5,Route16Name
 	EMAP $4,$8,Route17Name
-	EMAP $6,$D,Route18Name
+	EMAP $0,$B,Route18Name
 	EMAP $6,$F,Route19Name
 	EMAP $4,$F,Route20Name
 	EMAP $F,$C,Route21Name
@@ -101715,7 +101724,7 @@ InternalMapEntries: ; 71382 (1c:5382)
 	IMAP $7A,$A,$5,UndergroundPathName
 	IMAP $8D,$7,$5,CeladonCityName
 	IMAP $8E,$E,$5,LavenderTownName
-	IMAP $95,$F,$5,PokemonTowerName
+	IMAP POKEMONTOWER_4,$0,$C,PokemonTowerName
 	IMAP $98,$E,$5,LavenderTownName
 	IMAP $9C,$8,$D,FuchsiaCityName
 	IMAP $9D,$8,$C,SafariZoneName
@@ -101766,9 +101775,9 @@ VermilionCityName: ; 714b5 (1c:54b5)
 CeladonCityName: ; 714c4 (1c:54c4)
 	db "PYRITE CITY@"
 FuchsiaCityName: ; 714d1 (1c:54d1)
-	db "FUCHSIA CITY@"
+	db "QUARTZ CITY@"
 CinnabarIslandName: ; 714de (1c:54de)
-	db "CINNABAR ISLAND@"
+	db "ENTROPIA CITY@"
 IndigoPlateauName: ; 714ee (1c:54ee)
 	db "INDIGO PLATEAU@"
 SaffronCityName: ; 714fd (1c:54fd)
@@ -101786,15 +101795,15 @@ Route5Name: ; 7152a (1c:552a)
 Route6Name: ; 71532 (1c:5532)
 	db "ROUTE 6@"
 Route7Name: ; 7153a (1c:553a)
-	db "ROUTE 7@"
+	db "ROUTE 13@"
 Route8Name: ; 71542 (1c:5542)
 	db "ROUTE 9@"
 Route9Name: ; 7154a (1c:554a)
-	db "ROUTE 9@"
+	db "ROUTE 14@"
 Route10Name: ; 71552 (1c:5552)
-	db "ROUTE 10@"
+	db "ROUTE 16@"
 Route11Name: ; 7155b (1c:555b)
-	db "ROUTE 11@"
+	db "UNCHARTED@"
 Route12Name: ; 71564 (1c:5564)
 	db "ROUTE 12@"
 Route13Name: ; 7156d (1c:556d)
@@ -101808,7 +101817,7 @@ Route16Name: ; 71588 (1c:5588)
 Route17Name: ; 71591 (1c:5591)
 	db "ROUTE 17@"
 Route18Name: ; 7159a (1c:559a)
-	db "ROUTE 18@"
+	db "ROUTE 15@"
 Route19Name: ; 715a3 (1c:55a3)
 	db "SEA ROUTE 19@"
 Route20Name: ; 715b0 (1c:55b0)
@@ -101838,7 +101847,7 @@ PokemonLeagueName: ; 71627 (1c:5627)
 UndergroundPathName: ; 71633 (1c:5633)
 	db "UNDERGROUND PATH@"
 PokemonTowerName: ; 71644 (1c:5644)
-	db "#MON TOWER@"
+	db "HARDWATER HOLE@"
 SeafoamIslandsName: ; 7164f (1c:564f)
 	db "SEAFOAM ISLANDS@"
 VictoryRoadName: ; 7165f (1c:565f)
