@@ -708,6 +708,9 @@ OverworldLoopLessDelay:: ; 0402 (0:0402)
 .moveAhead2
 	ld hl,wFlags_0xcd60
 	res 2,[hl]
+	ld a,[$d700]
+	dec a ; riding a bike?
+	jr z,.bikeSpeedup
 	; pressing B?
 	ld a,[H_CURRENTPRESSEDBUTTONS] ; current joypad state
 	and a,%00000010 ; bit mask for B button
@@ -716,6 +719,7 @@ OverworldLoopLessDelay:: ; 0402 (0:0402)
 	ld a, [W_BILLSHOUSECURSCRIPT] ; 1 = have running shoes
 	cp 1
 	jr nz,.normalPlayerSpriteAdvancement
+.bikeSpeedup
 	ld a,[$d736]
 	bit 6,a ; jumping a ledge?
 	jr nz,.normalPlayerSpriteAdvancement
@@ -831,13 +835,6 @@ BikeSpeedup:: ; 06a0 (0:06a0)
 	ld a,[$cc57]
 	and a
 	ret nz
-	ld a,[W_CURMAP]
-	cp a,ROUTE_17 ; Cycling Road
-	jr nz,.goFaster
-	ld a,[H_CURRENTPRESSEDBUTTONS] ; current joypad state
-	and a,%01110000 ; bit mask for up, left, right buttons
-	ret nz
-.goFaster
 	jp AdvancePlayerSprite
 
 ; check if the player has stepped onto a warp after having not collided
@@ -1318,7 +1315,7 @@ IsBikeRidingAllowed:: ; 09c5 (0:09c5)
 	ret
 
 BikeRidingTilesets:: ; 09e2 (0:09e2)
-	db $00, $03, $0B, $0E, $11, $FF
+	db $00, $03, $06, $0B, $0E, $11, $FF
 
 ; load the tile pattern data of the current tileset into VRAM
 LoadTilesetTilePatternData:: ; 09e8 (0:09e8)
@@ -3738,6 +3735,8 @@ Tset16_Coll:: ; 17dd (0:17dd)
 	INCBIN "gfx/tilesets/16.tilecoll"
 Tset17_Coll:: ; 17f0 (0:17f0)
 	INCBIN "gfx/tilesets/17.tilecoll"
+Tset06_Coll::
+	INCBIN "gfx/tilesets/6.tilecoll"
 
 ; does the same thing as FarCopyData at 009D
 ; only difference is that it uses [$ff8b] instead of [$cee9] for a temp value
@@ -5994,12 +5993,12 @@ UpdateSprites:: ; 2429 (0:2429)
 
 ; Viridian
 ViridianMartText6:: ; 2442 (0:2442)
-	db $FE,SLAVE_BALL,POKE_BALL,ANTIDOTE,PARLYZ_HEAL,BURN_HEAL,$FF
+	db $FE,SLAVE_BALL,POKE_BALL,ANTIDOTE,POTION,$FF
 
 ; Pewter
 PewterMartText1:: ; 2449 (0:2449)
-	db $FE,SLAVE_BALL,POKE_BALL,POTION,ESCAPE_ROPE,ANTIDOTE,BURN_HEAL,AWAKENING
-	db PARLYZ_HEAL,REPEL,$FF
+	db $FE,SLAVE_BALL,POKE_BALL,POTION,ESCAPE_ROPE,ANTIDOTE,AWAKENING
+	db REPEL,$FF
 
 ; Cerulean
 CeruleanMartText1:: ; 2453 (0:2453)
@@ -8839,11 +8838,11 @@ HasEnoughMoney:: ; 35a6 (0:35a6)
 ; tests if player's game corner coins are at least as many as [$ffa0]
 ; sets carry flag if not enough coins
 ; sets zero flag if amounts match exactly
-HasEnoughCoins:: ; 35b1 (0:35b1)
-	ld de, wPlayerCoins
-	ld hl, $ffa0
-	ld c, $2
-	jp StringCmp
+;HasEnoughCoins:: ; 35b1 (0:35b1)
+;	ld de, wPlayerCoins
+;	ld hl, $ffa0
+;	ld c, $2
+;	jp StringCmp
 
 BankswitchHome:: ; 35bc (0:35bc)
 ; switches to bank # in a
@@ -19425,10 +19424,6 @@ CheckForceBikeOrSurf: ; c38b (3:438b)
 	bit 5, [hl]
 	ret nz
 	ld hl, ForcedBikeOrSurfMaps
-	ld a, [W_YCOORD]
-	ld b, a
-	ld a, [W_XCOORD]
-	ld c, a
 	ld a, [W_CURMAP]
 	ld d, a
 .loop
@@ -19436,23 +19431,7 @@ CheckForceBikeOrSurf: ; c38b (3:438b)
 	cp $ff
 	ret z ;if we reach FF then it's not part of the list
 	cp d ;compare to current map
-	jr nz, .incorrectMap
-	ld a, [hli]
-	cp b ;compare y-coord
-	jr nz, .incorrectY
-	ld a, [hli]
-	cp c ;compare x-coord
-	jr nz, .loop ; incorrect x-coord, check next item
-	ld a, [W_CURMAP]
-	cp SEAFOAM_ISLANDS_4
-	ld a, $2
-	ld [W_SEAFOAMISLANDS4CURSCRIPT], a
-	jr z, .forceSurfing
-	ld a, [W_CURMAP]
-	cp SEAFOAM_ISLANDS_5
-	ld a, $2
-	ld [W_SEAFOAMISLANDS5CURSCRIPT], a
-	jr z, .forceSurfing
+	jr nz, .loop
 	;force bike riding
 	ld hl, $d732
 	set 5, [hl]
@@ -19460,11 +19439,6 @@ CheckForceBikeOrSurf: ; c38b (3:438b)
 	ld [$d700], a
 	ld [$d11a], a
 	jp ForceBikeOrSurf
-.incorrectMap
-	inc hl
-.incorrectY
-	inc hl
-	jr .loop
 .forceSurfing
 	ld a, $2
 	ld [$d700], a
@@ -19473,13 +19447,8 @@ CheckForceBikeOrSurf: ; c38b (3:438b)
 	jp ForceBikeOrSurf
 
 ForcedBikeOrSurfMaps: ; c3e6 (3:43e6)
-; map id, y, x
-	db ROUTE_16,$0A,$11 
-	db ROUTE_16,$0B,$11
-	db SEAFOAM_ISLANDS_4,$07,$12 
-	db SEAFOAM_ISLANDS_4,$07,$13 
-	db SEAFOAM_ISLANDS_5,$0E,$04 
-	db SEAFOAM_ISLANDS_5,$0E,$05
+; map id
+	db SAFARI_ZONE_EAST
 	db $FF ;end
 
 ForceSurfMaps:
@@ -20184,7 +20153,7 @@ TilesetsHeadPtr: ; c7be (3:47be)
 	TSETHEAD Tset03_Block,Tset03_GFX,Tset03_Coll,$FF,$FF,$FF,$20,1
 	TSETHEAD Tset01_Block,Tset01_GFX,Tset01_Coll,$FF,$FF,$FF,$FF,0
 	TSETHEAD Tset05_Block,Tset05_GFX,Tset05_Coll,$3A,$FF,$FF,$FF,2
-	TSETHEAD Tset06_Block,Tset06_GFX,Tset05_Coll,$18,$19,$1E,$FF,0
+	TSETHEAD Tset06_Block,Tset06_GFX,Tset06_Coll,$FF,$FF,$FF,$FF,0
 	TSETHEAD Tset05_Block,Tset05_GFX,Tset05_Coll,$3A,$FF,$FF,$FF,2
 	TSETHEAD Tset08_Block,Tset08_GFX,Tset08_Coll,$FF,$FF,$FF,$FF,0
 	TSETHEAD Tset09_Block,Tset09_GFX,Tset09_Coll,$17,$32,$FF,$FF,0
@@ -21277,7 +21246,7 @@ WildDataPointers: ; ceeb (3:4eeb)
 	dw MansionMons2
 	dw MansionMons3
 	dw MansionMonsB1
-	dw ZoneMons1
+	dw NoMons
 	dw ZoneMons2
 	dw ZoneMons3
 	dw ZoneMonsCenter
@@ -21848,21 +21817,6 @@ ZoneMonsCenter: ; d3a3 (3:53a3)
 	db 30,PARASECT
 	db 23,SCYTHER
 	db 23,CHANSEY
-
-	db $00
-
-ZoneMons1: ; d3b9 (3:53b9)
-	db $1E
-	db 24,NIDORAN_M
-	db 26,DODUO
-	db 22,PARAS
-	db 25,EXEGGCUTE
-	db 33,NIDORINO
-	db 23,EXEGGCUTE
-	db 24,NIDORAN_F
-	db 25,PARASECT
-	db 25,KANGASKHAN
-	db 28,SCYTHER
 
 	db $00
 
@@ -36202,8 +36156,11 @@ Func_1a672: ; 1a672 (6:6672)
 	bit 6, a
 	ret nz
 	ld a, [W_CURMAPTILESET] ; $d367
+	cp $06
+	jr z, .biketileset
 	and a
 	ret nz
+.biketileset
 	ld a, $35
 	call Predef ; indirect jump to Func_c586 (c586 (3:4586))
 	ld a, [$c109]
@@ -36213,6 +36170,10 @@ Func_1a672: ; 1a672 (6:6672)
 	ld c, a
 	ld a, [$cfc6]
 	ld d, a
+	ld a, [W_CURMAPTILESET]
+	cp $06
+	ld hl, BikeParkLedgesData
+	jr z, .asm_1a691
 	ld hl, DataTable_1a6cf ; $66cf
 .asm_1a691
 	ld a, [hli]
@@ -36266,6 +36227,11 @@ DataTable_1a6cf: ; 1a6cf (6:66cf)
 	db $0C,$39,$0D,$10
 	db $FF
 
+BikeParkLedgesData:
+	db $08, $00, $1B, $20
+	db $0C, $00, $1D, $10
+	db $FF
+
 Func_1a6f0: ; 1a6f0 (6:66f0)
 	ld hl, $8ff0
 	ld de, LedgeHoppingShadow ; $6708
@@ -36302,7 +36268,7 @@ CinnabarIslandObject: ; 0x1c022 (size=71)
 	db $5, $9, $0, MANSION_1
 	db $7, $17, $0, CINNABAR_MART
 	db $b, $e, $0, BATTLE_FACTORY
-	db $17, $5, $0, CINNABAR_POKECENTER
+	db $17, $5, $0, SAFARI_ZONE_EAST
 	db $17, $d, $0, CINNABAR_POKECENTER
 	db $17, $18, $0, CINNABAR_GYM
 
@@ -71063,7 +71029,60 @@ SafariZoneEast_h: ; 0x4585f to 0x4586b (12 bytes) (bank=11) (id=217)
 	dw SafariZoneEastObject ; objects
 
 SafariZoneEastScript: ; 4586b (11:586b)
-	jp EnableAutoTextBoxDrawing
+	call EnableAutoTextBoxDrawing
+	; check if current tile is left arrow
+	FuncCoord 9, 9 ; $c45d
+	ld hl, Coord
+	ld a, [hl]
+	cp $2f ; left arrow tile
+	jr z, .startSlidingLeft
+	cp $26 ; up arrow tile
+	jr z, .startSlidingUp
+	cp $24 ; right arrow tile
+	jr z, .startSlidingRight
+	cp $28 ; down arrow tile
+	jr z, .startSlidingDown
+	ret
+.startSlidingLeft
+	; disable input, press appropriate directional button
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_LEFT
+	jr .pressButton
+.startSlidingUp
+	; disable input, press appropriate directional button
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_UP
+	jr .pressButton
+.startSlidingRight
+	; disable input, press appropriate directional button
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_RIGHT
+	jr .pressButton
+.startSlidingDown
+	; disable input, press appropriate directional button
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_DOWN
+.pressButton
+	ld [$ccd3],a ; base address of simulated button presses
+	xor a
+	ld [$cd39],a
+	inc a
+	ld [$cd38],a ; index of current simulated button press
+	ld hl,$d730
+	set 7,[hl]
+	ret
 
 SafariZoneEastTextPointers: ; 4586e (11:586e)
 	dw Predef5CText
@@ -71087,32 +71106,23 @@ SafariZoneEastText7: ; 45886 (11:5886)
 	db "@"
 
 SafariZoneEastObject: ; 0x4588b (size=81)
-	db $0 ; border tile
+	db $24 ; border tile
 
-	db $5 ; warps
-	db $4, $0, $6, SAFARI_ZONE_NORTH
-	db $5, $0, $7, SAFARI_ZONE_NORTH
-	db $16, $0, $6, SAFARI_ZONE_CENTER
-	db $17, $0, $6, SAFARI_ZONE_CENTER
-	db $9, $19, $0, SAFARI_ZONE_REST_HOUSE_3
-
-	db $3 ; signs
-	db $a, $1a, $5 ; SafariZoneEastText5
-	db $4, $6, $6 ; SafariZoneEastText6
-	db $17, $5, $7 ; SafariZoneEastText7
-
-	db $4 ; people
-	db SPRITE_BALL, $a + 4, $15 + 4, $ff, $ff, $81, FULL_RESTORE ; item
-	db SPRITE_BALL, $7 + 4, $3 + 4, $ff, $ff, $82, MAX_POTION ; item
-	db SPRITE_BALL, $d + 4, $14 + 4, $ff, $ff, $83, CARBOS ; item
-	db SPRITE_BALL, $c + 4, $f + 4, $ff, $ff, $84, TM_37 ; item
+	db $2 ; warps
+	db $16, $1d, $3, CINNABAR_ISLAND
+	db $17, $1d, $3, CINNABAR_ISLAND
+	
+	db $0 ; signs
+	
+	db $0 ; people
+	;db SPRITE_BALL, $a + 4, $15 + 4, $ff, $ff, $81, FULL_RESTORE ; item
+	;db SPRITE_BALL, $7 + 4, $3 + 4, $ff, $ff, $82, MAX_POTION ; item
+	;db SPRITE_BALL, $d + 4, $14 + 4, $ff, $ff, $83, CARBOS ; item
+	;db SPRITE_BALL, $c + 4, $f + 4, $ff, $ff, $84, TM_37 ; item
 
 	; warp-to
-	EVENT_DISP $f, $4, $0 ; SAFARI_ZONE_NORTH
-	EVENT_DISP $f, $5, $0 ; SAFARI_ZONE_NORTH
-	EVENT_DISP $f, $16, $0 ; SAFARI_ZONE_CENTER
-	EVENT_DISP $f, $17, $0 ; SAFARI_ZONE_CENTER
-	EVENT_DISP $f, $9, $19 ; SAFARI_ZONE_REST_HOUSE_3
+	EVENT_DISP SAFARI_ZONE_EAST_WIDTH, $16, $1d ; SAFARI_ZONE_NORTH
+	EVENT_DISP SAFARI_ZONE_EAST_WIDTH, $17, $1d ; SAFARI_ZONE_NORTH
 
 SafariZoneEastBlocks: ; 458dc (11:58dc)
 	INCBIN "maps/safarizoneeast.blk"
@@ -75438,7 +75448,8 @@ Has9990Coins: ; 48f95 (12:4f95)
 	ld [$ff00+$a0], a
 	ld a, $90
 	ld [$ff00+$a1], a
-	jp HasEnoughCoins
+	ret
+;	jp HasEnoughCoins
 
 CeladonGameCornerObject: ; 0x48fa0 (size=99)
 	db $f ; border tile
@@ -82207,7 +82218,7 @@ HandlePrizeChoice: ; 528c6 (14:68c6)
 	and a
 	jr nz,.PrintOhFineThen
 	call LoadCoinsToSubtract
-	call HasEnoughCoins
+;	call HasEnoughCoins
 	jr c,.NotEnoughCoins
 	ld a,[$D12F]
 	cp a,$02
@@ -124140,6 +124151,170 @@ NightWildMonPointers:
 	dw NoMons
 	dw Route1NightMons
 	dw Route2NightMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
+	dw NoMons
 	dw NoMons
 	dw NoMons
 	dw NoMons
