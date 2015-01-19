@@ -7079,6 +7079,8 @@ RedisplayStartMenu:: ; 2adf (0:2adf)
 	and a,%00001010 ; was the Start button or B button pressed?
 	jp nz,CloseStartMenu
 	call SaveScreenTilesToBuffer2 ; copy background from wTileMap to wTileMapBackup2
+	ld hl,$d730
+	set 6,[hl] ; turn off letter printing delay
 	ld a,[$d74b]
 	bit 5,a ; does the player have the pokedex?
 	ld a,[wCurrentMenuItem]
@@ -29119,6 +29121,8 @@ StartMenu_Pokemon: ; 130a9 (4:70a9)
 	jp RedisplayStartMenu
 .chosePokemon
 	call SaveScreenTilesToBuffer1 ; save screen
+	ld hl,$d730
+	set 6,[hl] ; turn off letter printing delay
 	ld a,$04
 	ld [$d125],a
 	call DisplayTextBoxID ; display pokemon menu options
