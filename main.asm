@@ -3076,7 +3076,7 @@ LoadFrontSpriteByMonIndex:: ; 1389 (0:1389)
 	and a
 	pop hl
 	jr z, .invalidDexNumber  ; dex #0 invalid
-	cp 180 ; num mons in dex + 1
+	cp 182 ; num mons in dex + 1
 	jr c, .validDexNumber    ; dex >#151 invalid
 .invalidDexNumber
 	ld a, RHYDON ; $1
@@ -17242,6 +17242,8 @@ DisplayTextIDInit: ; 7096 (1:7096)
 
 ; function that displays the start menu
 DrawStartMenu: ; 710b (1:710b)
+	ld hl,$d730
+	set 6,[hl] ; no pauses between printing each letter
 	ld a,[$d74b]
 	bit 5,a ; does the player have the pokedex?
 ; menu with pokedex
@@ -17268,8 +17270,6 @@ DrawStartMenu: ; 710b (1:710b)
 	ld [$cc2a],a
 	xor a
 	ld [$cc37],a
-	ld hl,$d730
-	set 6,[hl] ; no pauses between printing each letter
 	FuncCoord 12, 2 ; $c3d4
 	ld hl,Coord
 	ld a,[$d74b]
@@ -21299,10 +21299,10 @@ NoMons: ; d0dd (3:50dd)
 
 Route1Mons: ; d0df (3:50df)
 	db $19
-	db 3,RATTATA
 	db 3,SPEAROW
-	db 4,SPEAROW
+	db 3,RATTATA
 	db 4,RATTATA
+	db 4,SPEAROW
 	db 2,SPEAROW
 	db 5,SPEAROW
 	db 3,PIDGEY
@@ -28736,6 +28736,8 @@ RedrawPartyMenu__:
 	ld hl, LoadMonMiniSprites
 	call Bankswitch ; load pokemon icon graphics
 RedrawPartyMenu_:
+	ld hl,$d730
+	set 6,[hl] ; no pauses between printing each letter
 	ld a,[$D07D]
 	cp a,$04
 	jp z,.printMessage
@@ -29526,6 +29528,8 @@ ItemMenuLoop: ; 132fc (4:72fc)
 	call GoPAL_SET_CF1C
 
 StartMenu_Item: ; 13302 (4:7302)
+	ld hl,$d730
+	set 6,[hl] ; no pauses between printing each letter
 	ld a, [W_INCHALLENGE]
 	and a
 	jr z, .doMenu
@@ -30221,6 +30225,7 @@ TechnicalMachines: ; 13773 (4:7773)
 	db TOXIC
 	db HORN_DRILL
 	db BODY_SLAM
+
 	db TAKE_DOWN
 	db DOUBLE_EDGE
 	db BUBBLEBEAM
@@ -30229,6 +30234,7 @@ TechnicalMachines: ; 13773 (4:7773)
 	db BLIZZARD
 	db HYPER_BEAM
 	db PAY_DAY
+
 	db SUBMISSION
 	db COUNTER
 	db SEISMIC_TOSS
@@ -30237,6 +30243,7 @@ TechnicalMachines: ; 13773 (4:7773)
 	db SOLARBEAM
 	db DRAGON_RAGE
 	db THUNDERBOLT
+
 	db THUNDER
 	db EARTHQUAKE
 	db FISSURE
@@ -30245,6 +30252,7 @@ TechnicalMachines: ; 13773 (4:7773)
 	db SCALD
 	db MIMIC
 	db DOUBLE_TEAM
+
 	db REFLECT
 	db BIDE
 	db METRONOME
@@ -30253,6 +30261,7 @@ TechnicalMachines: ; 13773 (4:7773)
 	db FIRE_BLAST
 	db SWIFT
 	db SKULL_BASH
+	
 	db SOFTBOILED
 	db DREAM_EATER
 	db SKY_ATTACK
@@ -36523,8 +36532,8 @@ MonsterNames: ; 1c21e (7:421e)
 	db "CROBAT@@@@"
 	db "GOLDEEN@@@"
 	db "SEAKING@@@"
-	db "MISSINGNO."
-	db "MISSINGNO."
+	db "HOOTHOOT@@"
+	db "NOCTOWL@@@"
 	db "MISSINGNO."
 	db "MISSINGNO."
 	db "PONYTA@@@@"
@@ -50929,6 +50938,80 @@ CrobatBaseStats:
 
 	db Bank(CrobatPicFront)
 
+HoothootBaseStats:
+	db DEX_HOOTHOOT ; pokedex id
+	db 60    ; base hp
+	db 30   ; base attack
+	db 30   ; base defense
+	db 50    ; base speed
+	db 50    ; base special
+
+	db NORMAL     ; species type 1
+	db FLYING     ; species type 2
+
+	db 255  ; catch rate
+	db 58 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw HoothootPicFront
+	dw HoothootPicBack
+
+	; attacks known at lvl 0
+	db TACKLE
+	db GROWL
+	db 0
+	db 0
+
+	db 0 ; growth rate
+
+	; learnset
+	db %00100010
+	db %01000011
+	db %00001000
+	db %11010000
+	db %01000001
+	db %00101110
+	db %01001010
+
+	db Bank(HoothootPicFront)
+
+NoctowlBaseStats:
+	db DEX_NOCTOWL ; pokedex id
+	db 100    ; base hp
+	db 50   ; base attack
+	db 50   ; base defense
+	db 70    ; base speed
+	db 90    ; base special
+
+	db NORMAL     ; species type 1
+	db FLYING     ; species type 2
+
+	db 90  ; catch rate
+	db 162 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw NoctowlPicFront
+	dw NoctowlPicBack
+
+	; attacks known at lvl 0
+	db TACKLE
+	db GROWL
+	db 0
+	db 0
+
+	db 0 ; growth rate
+
+	; learnset
+	db %00100010
+	db %01000011
+	db %00001000
+	db %11010000
+	db %01000001
+	db %00101110
+	db %01001010
+
+	db Bank(HoothootPicFront)
+
 CryData: ; 39446 (e:5446)
 	;$BaseCry, $Pitch, $Length
 	db $11, $00, $80; Rhydon
@@ -51089,8 +51172,8 @@ CryData: ; 39446 (e:5446)
 	db $1D, $FF, $30; Crobat
 	db $16, $80, $40; Goldeen
 	db $16, $10, $FF; Seaking
-	db $00, $00, $00; MissingNo.
-	db $00, $00, $00; MissingNo.
+	db $14, $60, $10; Hoothoot
+	db $14, $40, $20; Noctowl
 	db $00, $00, $00; MissingNo.
 	db $00, $00, $00; MissingNo.
 	db $25, $00, $80; Ponyta
@@ -65591,8 +65674,8 @@ PokedexEntryPointers: ; 4047e (10:447e)
 	dw CrobatDexEntry
 	dw GoldeenDexEntry
 	dw SeakingDexEntry
-	dw MissingNoDexEntry
-	dw MissingNoDexEntry
+	dw HoothootDexEntry
+	dw NoctowlDexEntry
 	dw MissingNoDexEntry
 	dw MissingNoDexEntry
 	dw PonytaDexEntry
@@ -66882,6 +66965,20 @@ CrobatDexEntry:
 	TX_FAR _CrobatDexEntry
 	db "@"
 
+HoothootDexEntry:
+	db "OWL@"
+	db 2, 4
+	dw 467
+	TX_FAR _HoothootDexEntry
+	db "@"
+
+NoctowlDexEntry:
+	db "OWL@"
+	db 5, 3
+	dw 899
+	TX_FAR _NoctowlDexEntry
+	db "@"
+
 MissingNoDexEntry: ; 40fe5 (10:4fe5)
 	db "???@"
 	db 10 ; 1.0 m
@@ -67084,8 +67181,8 @@ PokedexOrder: ; 41024 (10:5024)
 	db DEX_CROBAT
 	db DEX_GOLDEEN
 	db DEX_SEAKING
-	db 0 ; MISSINGNO.
-	db 0 ; MISSINGNO.
+	db DEX_HOOTHOOT
+	db DEX_NOCTOWL
 	db 0 ; MISSINGNO.
 	db 0 ; MISSINGNO.
 	db DEX_PONYTA
@@ -102483,7 +102580,8 @@ MonOverworldData: ; 7190d (1c:590d)
 	dn SPRITE_MON, SPRITE_MON               ;Tyrogue/Hitmontop
 	dn SPRITE_MON, SPRITE_MON               ;Sneasel/Weavile
 	dn SPRITE_MON, SPRITE_MON               ;Slowking/Politoed
-	dn SPRITE_MON, SPRITE_MON               ;Crobat
+	dn SPRITE_MON, SPRITE_BIRD              ;Crobat/Hoothoot
+	dn SPRITE_BIRD_M, SPRITE_BIRD_M         ;Noctowl/
 	db 0
 
 MonOverworldSprites: ; 71959 (1c:5959)
@@ -103828,6 +103926,8 @@ MonsterPalettes: ; 725c8 (1c:65c8)
 	db PAL_PINKMON   ; Slowking
 	db PAL_GREENMON  ; Politoed
 	db PAL_PURPLEMON ; Crobat
+	db PAL_BROWNMON  ; Hoothoot
+	db PAL_BROWNMON  ; Noctowl
 
 ; palettes for overworlds, title screen, monsters
 SuperPalettes: ; 72660 (1c:6660)
@@ -118855,17 +118955,32 @@ Mon119_EvosMoves: ; 3b88c (e:788c)
 	db 0
 
 Mon180_EvosMoves: ; 3b89a (e:789a)
-;MISSINGNO
+;HOOTHOOT
 ;Evolutions
+	db EV_LEVEL,20,NOCTOWL
 	db 0
 ;Learnset
+	db 11,PECK
+	db 16,HYPNOSIS
+	db 22,REFLECT
+	db 25,TAKE_DOWN
+	db 29,AERIAL_ACE
+	db 34,CONFUSION
+	db 48,DREAM_EATER
 	db 0
 
 Mon181_EvosMoves: ; 3b89c (e:789c)
-;MISSINGNO
+;NOCTOWL
 ;Evolutions
 	db 0
 ;Learnset
+	db 11,PECK
+	db 16,HYPNOSIS
+	db 25,REFLECT
+	db 31,TAKE_DOWN
+	db 35,AERIAL_ACE
+	db 41,CONFUSION
+	db 47,DREAM_EATER
 	db 0
 
 Mon182_EvosMoves: ; 3b89e (e:789e)
@@ -124114,6 +124229,14 @@ CrobatPicFront:
 	INCBIN "pic/bmon/crobat.pic"
 CrobatPicBack:
 	INCBIN "pic/monback/crobatb.pic"
+HoothootPicFront:
+	INCBIN "pic/bmon/hoothoot.pic"
+HoothootPicBack:
+	INCBIN "pic/monback/hoothootb.pic"
+NoctowlPicFront:
+	INCBIN "pic/bmon/noctowl.pic"
+NoctowlPicBack:
+	INCBIN "pic/monback/noctowlb.pic"
 
 MiniSprites3: ; mons 179-?
 	INCBIN "gfx/mini_sprites/mini_sprites_3.2bpp"
@@ -124409,14 +124532,14 @@ NoNightMons:
 	db $ff
 
 Route1NightMons:
-	db 10, CHARMANDER
-	db 10, BULBASAUR
-	db 10, SQUIRTLE
+	db 3, HOOTHOOT
+	db 4, HOOTHOOT
+	db 3, HOOTHOOT
 
 Route2NightMons:
-	db 10, ODDISH
-	db 10, BELLSPROUT
-	db 10, GRIMER
+	db 5, HOOTHOOT
+	db 6, HOOTHOOT
+	db 4, ODDISH
 
 WriteEventMovesFunc:
 	ld hl, W_EVENTDATA + 1

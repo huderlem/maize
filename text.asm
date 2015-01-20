@@ -3008,7 +3008,7 @@ SECTION "Text 11", ROMX, BANK[TEXT_11]
 
 _ItemUseRing001::
 	text $52, " wore the"
-	line "the @@"
+	line "@@"
 
 _ItemUseRing002::
 	TX_RAM $cf4b
@@ -3382,6 +3382,26 @@ _CrobatDexEntry::
 	page "It is incredibly"
 	next "adorable, yet"
 	next "deadly silent"
+	dex
+
+_HoothootDexEntry::
+	text "This dense bird"
+	next "orb only comes"
+	next "out at night."
+
+	page "Owls say HOOT."
+	next "That's why it's"
+	next "called HOOTHOOT"
+	dex
+
+_NoctowlDexEntry::
+	text "I kid you not--"
+	next "when it needs to"
+	next "be smart, it"
+
+	page "spins its head"
+	next "around to raise"
+	next "its IQ"
 	dex
 
 _BattleFactoryText2::
