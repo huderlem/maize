@@ -1,39 +1,48 @@
 _SafariZoneEntranceText1:: ; 9e6c7 (27:66c7)
-	text "Welcome to the"
-	line "SAFARI ZONE!"
+	text "You look like a"
+	line "thrill seeker!"
 	done
 
-UnnamedText_9e6e4:: ; 9e6e4 (27:66e4)
-	text "For just ¥500,"
-	line "you can catch all"
-	cont "the #MON you"
-	cont "want in the park!"
+UnnamedText_9e6e4::
+	text "Welcome to the"
+	line "BIKE PARK, where"
+	cont "you can ride as"
+	cont "fast as you want!"
 
-	para "Would you like to"
-	line "join the hunt?@@"
+	para "For a small fee"
+	line "of ¥600, you can"
+	cont "rent a BICYCLE"
+	cont "and use it until"
+	cont "its tires run out"
+	cont "of air."
+
+	para "What do you say?"
+
+	para "Do you want to"
+	line "enter the PARK?@@"
 
 UnnamedText_9e747:: ; 9e747 (27:6747)
-	text "That'll be ¥500"
-	line "please!"
+	text "Great!"
 
-	para "We only use a"
-	line "special # BALL"
-	cont "here."
+	para "Inside, there"
+	line "is a BICYCLE with"
+	cont "a little bit of"
+	cont "air in the tires."
 
-	para $52, " received"
-	line "30 SAFARI BALLs!@@"
+	para "You'll have to"
+	line "keep an eye on"
+	cont "the air pressure.@@"
 
 _UnnamedText_75360:: ; 9e79f (27:679f)
 	db $0
-	para "We'll call you on"
-	line "the PA when you"
-	cont "run out of time"
-	cont "or SAFARI BALLs!"
+	para "Enter the door to"
+	line "your left to"
+	cont "start your ride!"
 	done
 
 _UnnamedText_75365:: ; 9e7e3 (27:67e3)
-	text "OK! Please come"
-	line "again!"
+	text "OK! Keep it"
+	line "real, man!"
 	done
 
 _UnnamedText_7536a:: ; 9e7fb (27:67fb)
@@ -51,7 +60,7 @@ _UnnamedText_753bb:: ; 9e825 (27:6825)
 	done
 
 _UnnamedText_753c0:: ; 9e854 (27:6854)
-	text "Good Luck!"
+	text "Have a sick ride!"
 	done
 
 _UnnamedText_753c5:: ; 9e860 (27:6860)

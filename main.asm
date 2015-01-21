@@ -36281,7 +36281,7 @@ CinnabarIslandObject: ; 0x1c022 (size=71)
 	db $5, $9, $0, MANSION_1
 	db $7, $17, $0, CINNABAR_MART
 	db $b, $e, $0, BATTLE_FACTORY
-	db $17, $5, $0, SAFARI_ZONE_EAST
+	db $17, $5, $2, SAFARIZONEENTRANCE
 	db $17, $d, $0, CINNABAR_POKECENTER
 	db $17, $18, $0, CINNABAR_GYM
 
@@ -41181,7 +41181,7 @@ asm_1e9b0: ; 1e9b0 (7:69b0)
 	ld [$d528], a
 	ld a, SAFARIZONEENTRANCE
 	ld [H_DOWNARROWBLINKCNT1], a ; $FF00+$8b
-	ld a, $3
+	ld a, $0
 	ld [$d42f], a
 	ld a, $5
 	ld [W_SAFARIZONEENTRANCECURSCRIPT], a
@@ -106812,7 +106812,7 @@ SafariZoneEntranceScript0: ; 751e7 (1d:51e7)
 	ld hl, CoordsData_75221
 	call ArePlayerCoordsInArray
 	ret nc
-	ld a, $3
+	ld a, $1
 	ld [$ff00+$8c], a
 	call DisplayTextID
 	ld a, $ff
@@ -106821,14 +106821,14 @@ SafariZoneEntranceScript0: ; 751e7 (1d:51e7)
 	ld [H_CURRENTPRESSEDBUTTONS], a
 	ld a, $c
 	ld [$c109], a
-	ld a, [$cd3d]
-	cp $1
-	jr z, .asm_7520f ; 0x75207 $6
+	ld a, [$cd3d] ; index of matching CoordsData
+	cp $2
+	jr z, .walkUpOnce
 	ld a, $2
 	ld [W_SAFARIZONEENTRANCECURSCRIPT], a
 	ret
-.asm_7520f
-	ld a, $10
+.walkUpOnce
+	ld a, $40
 	ld c, $1
 	call Func_752a3
 	ld a, $f0
@@ -106838,8 +106838,8 @@ SafariZoneEntranceScript0: ; 751e7 (1d:51e7)
 	ret
 
 CoordsData_75221: ; 75221 (1d:5221)
-	db $02,$03
-	db $02,$04
+	db $04,$02
+	db $05,$02
 	db $FF
 
 SafariZoneEntranceScript1: ; 75226 (1d:5226)
@@ -106882,7 +106882,7 @@ SafariZoneEntranceScript5: ; 7524e (1d:524e)
 	call DisplayTextID
 	xor a
 	ld [$da47], a
-	ld a, $80
+	ld a, $10
 	ld c, $3
 	call Func_752a3
 	ld a, $4
@@ -106952,7 +106952,7 @@ SafariZoneEntranceText4: ; 752ca (1d:52ca)
 	jp nz, .asm_75346
 	xor a
 	ld [$ff00+$9f], a
-	ld a, $5
+	ld a, $6
 	ld [$ff00+$a0], a
 	ld a, $0
 	ld [$ff00+$a1], a
@@ -106964,7 +106964,7 @@ SafariZoneEntranceText4: ; 752ca (1d:52ca)
 .asm_752f9
 	xor a
 	ld [$cd3d], a
-	ld a, $5
+	ld a, $6
 	ld [$cd3e], a
 	ld a, $0
 	ld [$cd3f], a
@@ -106980,11 +106980,11 @@ SafariZoneEntranceText4: ; 752ca (1d:52ca)
 	call PrintText
 	ld a, $1e
 	ld [$da47], a
-	ld a, 502 / $100
+	ld a, 60 / $100
 	ld [wSafariSteps], a
-	ld a, 502 % $100
+	ld a, 60 % $100
 	ld [wSafariSteps + 1], a
-	ld a, $40
+	ld a, $20
 	ld c, $3
 	call Func_752a3
 	ld hl, $d790
@@ -106997,7 +106997,7 @@ SafariZoneEntranceText4: ; 752ca (1d:52ca)
 	ld hl, UnnamedText_75365
 	call PrintText
 .asm_7534c
-	ld a, $80
+	ld a, $10
 	ld c, $1
 	call Func_752a3
 	ld a, $4
@@ -107070,21 +107070,17 @@ SafariZoneEntranceText6: ; 753c5 (1d:53c5)
 
 SafariZoneEntranceText2: ; 753ca (1d:53ca)
 	db $08 ; asm
-	ld hl, UnnamedText_753e6
+	ld hl, UnnamedText_753f0
 	call PrintText
 	call YesNoChoice
 	ld a, [$cc26]
 	and a
 	ld hl, UnnamedText_753f0
-	jr nz, .asm_278a6 ; 0x753db
+	jr nz, .saidNo ; 0x753db
 	ld hl, UnnamedText_753eb
-.asm_278a6 ; 0x753e0
+.saidNo
 	call PrintText
 	jp TextScriptEnd
-
-UnnamedText_753e6: ; 753e6 (1d:53e6)
-	TX_FAR _UnnamedText_753e6
-	db "@"
 
 UnnamedText_753eb: ; 753eb (1d:53eb)
 	TX_FAR _UnnamedText_753eb
@@ -107098,22 +107094,21 @@ SafariZoneEntranceObject: ; 0x753f5 (size=48)
 	db $a ; border tile
 
 	db $4 ; warps
-	db $5, $3, $4, $ff
-	db $5, $4, $4, $ff
-	db $0, $3, $0, SAFARI_ZONE_CENTER
-	db $0, $4, $1, SAFARI_ZONE_CENTER
+	db $4, $0, $0, SAFARI_ZONE_EAST
+	db $5, $0, $1, SAFARI_ZONE_EAST
+	db $4, $7, $3, CINNABAR_ISLAND
+	db $5, $7, $3, CINNABAR_ISLAND
 
 	db $0 ; signs
 
-	db $2 ; people
-	db SPRITE_WHITE_PLAYER, $2 + 4, $6 + 4, $ff, $d2, $1 ; person
-	db SPRITE_WHITE_PLAYER, $4 + 4, $1 + 4, $ff, $d3, $2 ; person
+	db $1 ; people
+	db SPRITE_WHITE_PLAYER, $2 + 4, $2 + 4, $ff, $d0, $1 ; person
 
 	; warp-to
-	EVENT_DISP $4, $5, $3
-	EVENT_DISP $4, $5, $4
-	EVENT_DISP $4, $0, $3 ; SAFARI_ZONE_CENTER
-	EVENT_DISP $4, $0, $4 ; SAFARI_ZONE_CENTER
+	EVENT_DISP SAFARIZONEENTRANCE_WIDTH, $4, $0
+	EVENT_DISP SAFARIZONEENTRANCE_WIDTH, $5, $0
+	EVENT_DISP SAFARIZONEENTRANCE_WIDTH, $4, $7
+	EVENT_DISP SAFARIZONEENTRANCE_WIDTH, $5, $7
 
 SafariZoneEntranceBlocks: ; 75425 (1d:5425)
 	INCBIN "maps/safarizoneentrance.blk"
