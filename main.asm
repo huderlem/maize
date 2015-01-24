@@ -121001,8 +121001,8 @@ LoneMoves: ; 39d22 (e:5d22)
 ; second byte: move
 ; unterminated
 	db 1,SWIFT
-	db 1,DIG
-	db 2,FIRE_BLAST
+	db 3,DIG
+	db 3,FIRE_BLAST
 	db 3,IRON_HEAD
 	db 3,TOXIC
 	db 3,PSYWAVE
@@ -121266,7 +121266,7 @@ SailorData: ; 39e58 (e:5e58)
 	db 21,PIKACHU,PIKACHU,0
 JrTrainerMData: ; 39e78 (e:5e78)
 	db 11,MACHOP,EKANS,0 ; Route 3
-	db 13,PIDGEY,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
+	db 13,HOOTHOOT,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 14,PIDGEY,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 17,SANDSHREW,0 ; Route 4 (south of Agate)
 	db 16,MACHOP,FLAAFFY,0 ; Route 5 (east of Copper Town)
@@ -121277,7 +121277,7 @@ JrTrainerMData: ; 39e78 (e:5e78)
 JrTrainerFData: ; 39e9d (e:5e9d)
 	db 14,VULPIX,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 16,SANDSHREW,DIGLETT,0 ; Agate City Gym
-	db 16,PIDGEY,PIDGEY,PIDGEY,0 ; Route 6 (south of Copper Town)
+	db 16,PIDGEY,HOOTHOOT,PIDGEY,0 ; Route 6 (south of Copper Town)
 	db 22,BULBASAUR,0 ; Route 6 (south of Copper Town)
 	db 26,STEELIX,0 ; Pyrite City Gym
 	db 23,MEOWTH,0
@@ -121323,7 +121323,7 @@ SuperNerdData: ; 39f26 (e:5f26)
 HikerData: ; 39f5e (e:5f5e)
 	db 10,GEODUDE,ONIX,GEODUDE,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 14,GEODUDE,GEODUDE,MACHOP,ONIX,0 ; Route 4 (south of Agate)
-	db 15,MACHOP,0 ; Route 4 (south of Agate)
+	db 15,BONSLY,0 ; Route 4 (south of Agate)
 	db 18,MACHOP,ZUBAT,0 ; Rocky Point 1 (MT_MOON_1)
 	db 32,GRAVELER,MACHOKE,GOLBAT,0 ; Fighting Club Route (West of Quartz City)
 	db 20,GEODUDE,MACHOP,GEODUDE,0
@@ -121507,7 +121507,7 @@ ChiefData: ; 3a241 (e:6241)
 ScientistData: ; 3a241 (e:6241)
 	db 35,EEVEE,WEEPINBELL,FARFETCH_D,0 ; Quartz City Gym
 	db 34,GRIMER,PRIMEAPE,SUDOWOODO,GOLBAT,0 ; Quartz City Gym
-	db 34,GLIGAR,NIDORINO,TANGELA,0 ; Quartz City Gym
+	db 34,CROBAT,NIDORINO,TANGELA,0 ; Quartz City Gym
 	db 37,FEAROW,WEEZING,0 ; Quartz City Gym
 	db 33,ELECTRODE,0
 	db 26,MAGNETON,KOFFING,WEEZING,MAGNEMITE,0
@@ -121604,13 +121604,9 @@ CooltrainerFData: ; 3a385 (e:6385)
 BrunoData: ; 3a3a9 (e:63a9)
 	db $FF,53,ONIX,55,HITMONCHAN,55,HITMONLEE,56,ONIX,58,MACHAMP,0
 BrockData: ; 3a3b5 (e:63b5)
-if _YELLOW
-	db $FF,10,GEODUDE,12,ONIX,0
-else
-	db $FF,9,CLEFAIRY,10,PORYGON,11,SPEAROW,0 ; Blandy
-endc
+	db $FF,10,HOOTHOOT,12,MEOWTH,11,JIGGLYPUFF,0 ; Blandy
 MistyData: ; 3a3bb (e:63bb)
-	db $FF,20,ONIX,22,RHYHORN,0
+	db $FF,20,ONIX,20,GLIGAR,21,RHYHORN,22,SANDSLASH,0
 LtSurgeData: ; 3a3c1 (e:63c1)
 if _YELLOW
 	db $FF,28,RAICHU,0
@@ -121618,11 +121614,11 @@ else
 	db $FF,21,VOLTORB,18,PIKACHU,24,RAICHU,0
 endc
 ErikaData: ; 3a3c9 (e:63c9)
-	db $FF,22,HOUNDOUR,22,PONYTA,26,CHARMELEON,0
+	db $FF,22,HOUNDOUR,22,PONYTA,24,CHARMELEON,26,HOUNDOOM,0
 KogaData: ; 3a3d1 (e:63d1)
 	db $FE,37,1,POLIWHIRL,1,MR_MIME,-2,DODRIO,2,DUGTRIO,0
 BlaineData: ; 3a3db (e:63db)
-	db $FD,1,37,38,39,41,0
+	db $FD,3,37,38,39,41,0
 SabrinaData: ; 3a3e5 (e:63e5)
 	db $FF,24,MAGNEMITE,27,STEELIX,28,EXCADRILL,29,SCIZOR,0
 GentlemanData: ; 3a3ef (e:63ef)
@@ -121774,25 +121770,27 @@ RandomTeamClass2:
 	db RATTATA
 	db PIDGEOTTO
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+RandomTeamClass3:
+	db 19; num entries in list
+	db CLEFABLE
+	db MACHOKE
+	db NOCTOWL
+	db PIDGEOT
+	db MUK
+	db SUDOWOODO
+	db BEEDRILL
+	db SYLVEON
+	db HONCHKROW
+	db ESPEON
+	db WEAVILE
+	db DRAGONAIR
+	db BLASTOISE
+	db CHARIZARD
+	db VENUSAUR
+	db HOUNDOOM
+	db HAUNTER
+	db GLISCOR
+	db AMPHAROS
 
 
 BattleFactory_h:
