@@ -93,3 +93,47 @@ _Route18Text6:: ; 918c3 (24:58c3)
 	text "The elevator door"
 	line "is locked..."
 	done
+
+_Route18ShrubText1::
+	text "I hope you freeze"
+	line "in there."
+
+	para "True SHRUBBERS"
+	line "can handle"
+	cont "anything!"
+	done
+
+_Route18ShrubText2::
+	text "(This SHRUB will"
+	line "tell you"
+	cont "something"
+	cont "important in the"
+	cont "final version of"
+	cont "the game.)"
+	done
+
+;	text "Oh boy!"
+;	line "Oh girl!"
+;
+;	para "What's a fancy"
+;	line "SHRUBBER like"
+;	cont "yourself doing in"
+;	cont "a place like"
+;	cont "this?"
+;
+;	para "We spend too much"
+;	line "of our lives"
+;	cont "tethered to the"
+;	cont "ground."
+;
+;	para "Give gravity a"
+;	line "push back and"
+;	cont "take to the"
+;	cont "skies!"
+;
+;	para "A land of clouds"
+;	line "awaits you!"
+;
+;	para "Fly by JET, and"
+;	line "you'll see!"
+;	done

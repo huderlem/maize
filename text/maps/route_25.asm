@@ -160,3 +160,62 @@ _Route25Text11:: ; 945d3 (25:45d3)
 	text "CARL's House"
 	done
 
+_Route25ShrubText1::
+	text "Ah!"
+
+	para "You found me!"
+
+	para "Leave me alone!"
+
+	para "You're not a"
+	line "SHRUBBER!"
+	done
+
+_Route25ShrubText2::
+	text "Oh praise!"
+	line "Oh prophet!"
+
+	para "Blessed be your"
+	line "soul, kind"
+	cont "SHRUBBER!"
+
+	para "May the light of"
+	line "HELIX shine down"
+	cont "upon you always!"
+
+	para "..."
+
+	para "Ahem."
+
+	para "I'm practicing my"
+	line "HELIX praising."
+
+	para "I was banished"
+	line "from TWITCH ISLE"
+	cont "when the forces"
+	cont "of the universe"
+	cont "turned on me."
+
+	para "I pray I will"
+	line "return one day."
+
+	para "But you..."
+
+	para "You must never"
+	line "go there."
+
+	para "The chaos will"
+	line "drive you mad!"
+
+	para "I can live in"
+	line "peace knowing you"
+	cont "will never see it"
+	cont "because it's"
+	cont "impossible to"
+	cont "cross the waters"
+	cont "west of"
+	cont "RUBY DOCKS!"
+
+	para "Praise HELIX,"
+	line "young SHRUBBER."
+	done

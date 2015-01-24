@@ -203,3 +203,52 @@ _CopperTownOutpostText2::
 	text "You can thank me"
 	line "later."
 	done
+
+_VermilionShrubText1::
+	text "Fufufufu."
+
+	para "A SHRUBBER, you"
+	line "are not!"
+
+	para "I would walk away"
+	line "if I had legs!"
+	done
+
+_VermilionShrubText2::
+	text "Oh joy!"
+	line "Oh happy!"
+
+	para "A SHRUBBER has"
+	line "graced me with"
+	cont "his presence!"
+
+	para "I hail from"
+	line "SUDORAND WOODS."
+
+	para "It's not the bushy"
+	line "woods I used to"
+	cont "know, anymore."
+
+	para "Ever since the"
+	line "SUDOWOODO took"
+	cont "over, we SHRUBS"
+	cont "were forced to"
+	cont "migrate."
+
+	para "Although, some"
+	line "stayed behind."
+
+	para "I heard they"
+	line "took refuge in"
+	cont "a secret lair"
+	cont "underground."
+
+	para "I even heard the"
+	line "entrance is only"
+	cont "open if you're"
+	cont "lucky!"
+
+	para "I would seek this"
+	line "lair myself, but"
+	cont "I can't walk!"
+	done

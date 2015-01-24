@@ -193,3 +193,67 @@ _AlreadyGaveMedicineText::
 	line "PROF. CEDAR while"
 	cont "I recover."
 	done
+
+_ViridianShrubText1::
+	text "Nyah!"
+
+	para "You're no SHRUBBER"
+	line "of mine!"
+
+	para "Begone, you!"
+	done
+
+_ViridianShrubText2::
+	text "Do mine SHRUB"
+	line "eyes deceive me?"
+
+	para "A SHRUBBER stands"
+	line "beside me!"
+
+	para "Oh, glory!"
+	line "Oh, heavens!"
+
+	para "I used to be a"
+	line "tumbleweed in the"
+	cont "ocean..."
+
+	para "That is, until my"
+	line "roots took hold"
+	cont "here!"
+
+	para "I saw the wonders"
+	line "of the world as I"
+	cont "floated by."
+
+	para "There is one"
+	line "piece of beauty"
+	cont "I'll never forget."
+
+	para "As the waves"
+	line "carried me past"
+	cont "ROCKY POINT, the"
+	cont "tiniest of"
+	cont "objects caught"
+	cont "the sunlight just"
+	cont "right."
+
+	para "A RING, no bigger"
+	line "than an acorn,"
+	cont "was resting atop"
+	cont "a rock just out"
+	cont "of arm's reach"
+	cont "from the dock."
+
+	para "Such a pretty"
+	line "object does not"
+	cont "belong in nature."
+
+	para "I wonder if it's"
+	line "still there?"
+
+	para "..."
+
+	para "From a SHRUB to a"
+	line "SHRUBBER,"
+	cont "farewell!"
+	done

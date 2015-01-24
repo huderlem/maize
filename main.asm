@@ -32446,7 +32446,7 @@ ViridianCityObject: ; 0x18384 (size=104)
 	db $19, $10, $b ; MartSignText
 	db $19, $a, $c ; PokeCenterSignText
 	db $1, $17, $d ; ViridianCityText13
-	db $1d, $4, $8 ; talking bush
+	db $1d, $4, $10 ; talking bush
 
 	db $7 ; people
 	db SPRITE_BUG_CATCHER, $14 + 4, $7 + 4, $fe, $0, $1 ; person
@@ -32498,7 +32498,7 @@ PewterCityObject: ; 0x18577 (size=111)
 	db $5, $21, $a ; PewterCityText10
 	db $19, $f, $b ; PewterCityText11
 	db $11, $13, $c ; PewterCityText12
-	db $11, $6, $6 ; talking bush
+	db $11, $6, $f ; talking bush
 
 	db $5 ; people
 	db SPRITE_LASS, $9 + 4, $10 + 4, $ff, $ff, $1 ; person
@@ -32610,11 +32610,11 @@ VermilionCityObject: ; 0x189ba (size=133)
 	db $7, $21, $b ; VermilionCityText11
 	db $7, $f, $c ; VermilionCityText12
 	db $7, $19, $d ; VermilionCityText13
-	db $5, $e, $7 ; talking bush
+	db $5, $e, $e ; talking bush
 
 	db $6 ; people
 	db SPRITE_LASS, $d + 4, $13 + 4, $fe, $2, $1 ; person
-	db SPRITE_BLACK_HAIR_BOY_1, $6 + 4, $e + 4, $ff, $ff, $2 ; person
+	db SPRITE_BLACK_HAIR_BOY_1, $8 + 4, $d + 4, $ff, $ff, $2 ; person
 	db SPRITE_BLACK_HAIR_BOY_2, $0 + 4, $0 + 4, $ff, $d1, $3 ; person
 	db SPRITE_GUARD, $8 + 4, $1a + 4, $ff, $ff, $4 ; person
 	db SPRITE_LYING_OLD_MAN_UNUSED_2, $17 + 4, $b + 4, $fe, $1, $5 ; person
@@ -33132,6 +33132,29 @@ ViridianCityTextPointers: ; 190e4 (6:50e4)
 	dw ViridianCityText13
 	dw ViridianCityText14
 	dw ViridianCityText15
+	dw ViridianCityText16
+
+ViridianCityText16:
+	db $08 ; asm
+	; is player in the bush covenant?
+	ld a, [W_COVENANT]
+	cp a, SHRUB_COVENANT
+	jr nz, .notMember
+	ld hl, ViridianShrubText2
+	jr .printText
+.notMember
+	ld hl, ViridianShrubText1
+.printText
+	call PrintText
+	jp TextScriptEnd
+
+ViridianShrubText1:
+	TX_FAR _ViridianShrubText1
+	db "@"
+
+ViridianShrubText2:
+	TX_FAR _ViridianShrubText2
+	db "@"
 
 ViridianCityText1: ; 19102 (6:5102)
 	TX_FAR _ViridianCityText1
@@ -33542,6 +33565,29 @@ PewterCityTextPointers: ; 1938b (6:538b)
 	dw PewterCityText12
 	dw PewterCityText13
 	dw PewterCityText14
+	dw PewterCityText15
+
+PewterCityText15:
+	db $08 ; asm
+	; is player in the bush covenant?
+	ld a, [W_COVENANT]
+	cp a, SHRUB_COVENANT
+	jr nz, .notMember
+	ld hl, PewterShrubText2
+	jr .printText
+.notMember
+	ld hl, PewterShrubText1
+.printText
+	call PrintText
+	jp TextScriptEnd
+
+PewterShrubText1:
+	TX_FAR _PewterShrubText1
+	db "@"
+
+PewterShrubText2:
+	TX_FAR _PewterShrubText2
+	db "@"
 
 PewterCityText1: ; 193a7 (6:53a7)
 	TX_FAR _PewterCityText1
@@ -34333,6 +34379,29 @@ VermilionCityTextPointers: ; 1986f (6:586f)
 	dw VermilionCityText11
 	dw VermilionCityText12
 	dw VermilionCityText13
+	dw VermilionCityText14
+
+VermilionCityText14:
+	db $08 ; asm
+	; is player in the bush covenant?
+	ld a, [W_COVENANT]
+	cp a, SHRUB_COVENANT
+	jr nz, .notMember
+	ld hl, VermilionShrubText2
+	jr .printText
+.notMember
+	ld hl, VermilionShrubText1
+.printText
+	call PrintText
+	jp TextScriptEnd
+
+VermilionShrubText1:
+	TX_FAR _VermilionShrubText1
+	db "@"
+
+VermilionShrubText2:
+	TX_FAR _VermilionShrubText2
+	db "@"
 
 VermilionCityText1: ; 19889 (6:5889)
 	TX_FAR _VermilionCityText1
@@ -34606,7 +34675,25 @@ CeladonCityText17: ; 19a21 (6:5a21)
 	db "@"
 
 CeladonCityText18: ; 19a26 (6:5a26)
-	TX_FAR _CeladonCityText18
+	db $08 ; asm
+	; is player in the bush covenant?
+	ld a, [W_COVENANT]
+	cp a, SHRUB_COVENANT
+	jr nz, .notMember
+	ld hl, CeladonShrubText2
+	jr .printText
+.notMember
+	ld hl, CeladonShrubText1
+.printText
+	call PrintText
+	jp TextScriptEnd
+
+CeladonShrubText1:
+	TX_FAR _CeladonShrubText1
+	db "@"
+
+CeladonShrubText2:
+	TX_FAR _CeladonShrubText2
 	db "@"
 
 FuchsiaCityScript: ; 19a2b (6:5a2b)
@@ -78396,7 +78483,7 @@ Route25Object: ; 0x507b2 (size=94)
 
 	db $2 ; signs
 	db $25, $b, $b ; Route25Text11
-	db $1d, $4, $b ; Talking bush
+	db $1d, $4, $c ; Talking bush
 
 	db $a ; people
 	db SPRITE_BUG_CATCHER, $2c + 4, $4 + 4, $ff, $d1, $41, YOUNGSTER + $C8, $3 ; trainer
@@ -80072,6 +80159,29 @@ Route25TextPointers: ; 51628 (14:5628)
 	dw Route25Text9
 	dw Predef5CText
 	dw Route25Text11
+	dw Route25Text12
+
+Route25Text12: ; 19a26 (6:5a26)
+	db $08 ; asm
+	; is player in the bush covenant?
+	ld a, [W_COVENANT]
+	cp a, SHRUB_COVENANT
+	jr nz, .notMember
+	ld hl, Route25ShrubText2
+	jr .printText
+.notMember
+	ld hl, Route25ShrubText1
+.printText
+	call PrintText
+	jp TextScriptEnd
+
+Route25ShrubText1:
+	TX_FAR _Route25ShrubText1
+	db "@"
+
+Route25ShrubText2:
+	TX_FAR _Route25ShrubText2
+	db "@"
 
 Route25TrainerHeaders: ; 5163e (14:563e)
 Route25TrainerHeader0: ; 5163e (14:563e)
@@ -87131,7 +87241,7 @@ Route18Object: ; 0x58c5a (size=66)
 	db $3 ; signs
 	db $1f, $9, $4 ; Route18Text4
 	db $27, $d, $5 ; Route18Text5
-	db $2d, $e, $4 ; talking bush
+	db $2d, $e, $7 ; talking bush
 
 	db $3 ; people
 	db SPRITE_GAMBLER, $14 + 4, $9 + 4, $ff, $d1, $41, GAMBLER + $C8, $3 ; trainer
@@ -89195,6 +89305,29 @@ Route18TextPointers: ; 59ae0 (16:5ae0)
 	dw Route18Text4
 	dw Route18Text5
 	dw Route18Text6
+	dw Route18Text7
+
+Route18Text7:
+	db $08 ; asm
+	; is player in the bush covenant?
+	ld a, [W_COVENANT]
+	cp a, SHRUB_COVENANT
+	jr nz, .notMember
+	ld hl, Route18ShrubText2
+	jr .printText
+.notMember
+	ld hl, Route18ShrubText1
+.printText
+	call PrintText
+	jp TextScriptEnd
+
+Route18ShrubText1:
+	TX_FAR _Route18ShrubText1
+	db "@"
+
+Route18ShrubText2:
+	TX_FAR _Route18ShrubText2
+	db "@"
 
 Route18TrainerHeaders: ; 59aea (16:5aea)
 Route18TrainerHeader0: ; 59aea (16:5aea)

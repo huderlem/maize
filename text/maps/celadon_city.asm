@@ -128,3 +128,53 @@ _CeladonCityText18:: ; a5e6a (29:5e6a)
 	para "Talk talk talk."
 	done
 
+_CeladonShrubText1::
+	text "What?"
+
+	para "Ya never seen"
+	line "a talking SHRUB?"
+
+	para "Get lost, pal."
+	done
+
+_CeladonShrubText2::
+	text "Oh me!"
+	line "Oh my!"
+
+	para "You're a SHRUBBER,"
+	line "aren't ya?"
+
+	para "What a day!"
+
+	para "First, I woke up"
+	line "and now this!"
+
+	para "Listen, pal."
+
+	para "I've seen things"
+	line "that would make"
+	cont "your skin crawl."
+
+	para "Under this city,"
+	line "there's a winding"
+	cont "sewer system like"
+	cont "ya wouldn't"
+	cont "believe!"
+
+	para "I was floating"
+	line "through there,"
+	cont "and ya know what?"
+
+	para "I passed an old"
+	line "man who was tied"
+	cont "up like a dog!"
+
+	para "Maybe he was a"
+	line "sailor..."
+
+	para "He had that hat"
+	line "on."
+
+	para "Ya know, one of"
+	line "them sailer hats."
+	done

@@ -163,3 +163,56 @@ _PewterCityText12:: ; a4d0c (29:4d0c)
 	cont "not change."
 	done
 
+_PewterShrubText1::
+	text "Hah."
+
+	para "You're bland,"
+	line "just like BLANDY."
+	done
+
+_PewterShrubText2::
+	text "Oh interesting!"
+	line "Oh fascinating!"
+
+	para "I've never seen"
+	line "a SHRUBBER quite"
+	cont "like you!"
+
+	para "I was imported"
+	line "from QUARTZ CITY,"
+	cont "so I've seen some"
+	cont "amazing things!"
+
+	para "Science things!"
+
+	para "For instance, did"
+	line "you know there"
+	cont "are rocks with"
+	cont "evolutionary"
+	cont "powers?"
+
+	para "I'm not even"
+	line "talking about"
+	cont "things like"
+	cont "WATER STONEs."
+
+	para "I'm referring to"
+	line "plain old rocks!"
+
+	para "I thought I heard"
+	line "a researcher say"
+	cont "there was one in"
+	cont "ARBOR HOLLOW..."
+
+	para "Yes, that's it."
+
+	para "He mentioned"
+	line "HARDWATER HOLE,"
+	cont "too!"
+
+	para "He also mentioned"
+	line "something about"
+	cont "EEVY."
+
+	para "What's an EEVY?"
+	done
