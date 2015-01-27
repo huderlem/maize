@@ -20146,7 +20146,7 @@ Func_c754: ; c754 (3:4754)
 	ret
 
 DungeonTilesetIDs: ; c7b2 (3:47b2)
-	db $03,$0A,$0D,$11,$12,$13,$0C,$14,$16,$0F,$07,$FF
+	db $03,$0A,$0D,$11,$12,$13,$0C,$14,$16,$0F,$07,$06,$FF
 
 TilesetsHeadPtr: ; c7be (3:47be)
 	TSETHEAD Tset00_Block,Tset00_GFX,Tset00_Coll,$FF,$FF,$FF,$52,2
@@ -21249,9 +21249,9 @@ WildDataPointers: ; ceeb (3:4eeb)
 	dw MansionMons3
 	dw MansionMonsB1
 	dw NoMons
-	dw ZoneMons2
-	dw ZoneMons3
-	dw ZoneMonsCenter
+	dw NoMons
+	dw NoMons
+	dw NoMons
 	dw NoMons
 	dw NoMons
 	dw NoMons
@@ -41224,6 +41224,7 @@ UnnamedText_1e983: ; 1e983 (7:6983)
 	db "@"
 
 Func_1e988: ; 1e988 (7:6988)
+	ret
 	ld hl, $d790
 	bit 7, [hl]
 	jr z, asm_1e9ab
@@ -71218,7 +71219,220 @@ SafariZoneEast_h: ; 0x4585f to 0x4586b (12 bytes) (bank=11) (id=217)
 
 SafariZoneEastScript: ; 4586b (11:586b)
 	call EnableAutoTextBoxDrawing
-	; check if current tile is left arrow
+	FuncCoord 9, 9 ; $c45d
+	ld hl, Coord
+	ld a, [hl]
+	cp $2f ; left arrow tile
+	jr z, .startSlidingLeft
+	cp $26 ; up arrow tile
+	jr z, .startSlidingUp
+	cp $24 ; right arrow tile
+	jr z, .startSlidingRight
+	cp $28 ; down arrow tile
+	jr z, .startSlidingDown
+	; check for pressure switch 1
+	ld a, [W_PRIZE2]
+	bit 0, a
+	jr nz, .noSwitch1
+	ld a, [W_YCOORD]
+	cp $16
+	jr nz, .noSwitch1
+	ld a, [W_XCOORD]
+	cp $d
+	jr nz, .noSwitch1
+.pressureSwitch1
+	; remove tires
+	xor a
+	ld [$d09f], a
+	ld bc, $0a07
+	ld a, $17
+	call Predef
+	ld hl, W_PRIZE2
+	set 0, [hl]
+.noSwitch1
+	; check for pressure switch 2
+	ld a, [W_PRIZE2]
+	bit 1, a
+	jr nz, .noSwitch2
+	ld a, [W_YCOORD]
+	cp $14
+	jr nz, .noSwitch2
+	ld a, [W_XCOORD]
+	cp $9
+	jr nz, .noSwitch2
+.pressureSwitch2
+	; remove tires
+	xor a
+	ld [$d09f], a
+	ld bc, $0b01
+	ld a, $17
+	call Predef
+	ld hl, W_PRIZE2
+	set 1, [hl]
+.noSwitch2
+	ret
+.startSlidingLeft
+	; disable input, press appropriate directional button
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_LEFT
+	jr .pressButton
+.startSlidingUp
+	; disable input, press appropriate directional button
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_UP
+	jr .pressButton
+.startSlidingRight
+	; disable input, press appropriate directional button
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_RIGHT
+	jr .pressButton
+.startSlidingDown
+	; disable input, press appropriate directional button
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_DOWN
+.pressButton
+	ld [$ccd3],a ; base address of simulated button presses
+	xor a
+	ld [$cd39],a
+	inc a
+	ld [$cd38],a ; index of current simulated button press
+	ld hl,$d730
+	set 7,[hl]
+	ret
+
+SafariZoneEastTextPointers: ; 4586e (11:586e)
+	dw Predef5CText
+	dw Predef5CText
+	dw Predef5CText
+	dw Predef5CText
+	dw BikePark1Switch
+	dw BikePark1Pump1
+	dw SafariZoneEastText7
+	dw BikePark1Pump2
+
+BikePark1Switch: ; 4587c (11:587c)
+	TX_FAR _BikePark1Switch
+	db "@"
+
+BikePark1Pump1:
+	db $08 ; asm
+	ld a, [W_PRIZE1] ; air pump flags
+	bit 0, a ; has pump been used?
+	jr nz, .alreadyUsed
+	; add air to tired
+	ld b, 50 ; 50 air
+	ld a, [wSafariSteps + 1]
+	add b
+	ld [wSafariSteps + 1], a
+	jr nc, .addedAir
+	ld hl, wSafariSteps
+	inc [hl]
+.addedAir
+	ld hl, W_PRIZE1
+	set 0, [hl]
+	ld hl, UsePumpText
+	jr .printText
+.alreadyUsed
+	ld hl, AlreadyUsedPumpText
+.printText
+	call PrintText
+	jp TextScriptEnd
+
+BikePark1Pump2:
+	db $08 ; asm
+	ld a, [W_PRIZE1] ; air pump flags
+	bit 1, a ; has pump been used?
+	jr nz, .alreadyUsed
+	; add air to tired
+	ld b, 50 ; 50 air
+	ld a, [wSafariSteps + 1]
+	add b
+	ld [wSafariSteps + 1], a
+	jr nc, .addedAir
+	ld hl, wSafariSteps
+	inc [hl]
+.addedAir
+	ld hl, W_PRIZE1
+	set 1, [hl]
+	ld hl, UsePumpText
+	jr .printText
+.alreadyUsed
+	ld hl, AlreadyUsedPumpText
+.printText
+	call PrintText
+	jp TextScriptEnd
+
+UsePumpText:
+	TX_FAR _UsePumpText
+	db "@"
+
+AlreadyUsedPumpText:
+	TX_FAR _AlreadyUsedPumpText
+	db "@"
+
+SafariZoneEastText6: ; 45881 (11:5881)
+	TX_FAR _SafariZoneEastText6
+	db "@"
+
+SafariZoneEastText7: ; 45886 (11:5886)
+	TX_FAR _SafariZoneEastText7
+	db "@"
+
+SafariZoneEastObject: ; 0x4588b (size=81)
+	db $24 ; border tile
+
+	db $6 ; warps
+	db $16, $1d, $3, CINNABAR_ISLAND
+	db $17, $1d, $3, CINNABAR_ISLAND
+	db $4, $1d, $2, SAFARI_ZONE_NORTH
+	db $5, $1d, $3, SAFARI_ZONE_NORTH
+	db $0, $10, $2, SAFARI_ZONE_CENTER
+	db $0, $11, $3, SAFARI_ZONE_CENTER
+	
+	db $4 ; signs
+	db $16, $d, $5
+	db $9, $17, $6
+	db $5,  $f, $8
+	db $14, $9, $5
+	
+	db $0 ; people
+	;db SPRITE_BALL, $a + 4, $15 + 4, $ff, $ff, $81, FULL_RESTORE ; item
+	;db SPRITE_BALL, $7 + 4, $3 + 4, $ff, $ff, $82, MAX_POTION ; item
+	;db SPRITE_BALL, $d + 4, $14 + 4, $ff, $ff, $83, CARBOS ; item
+	;db SPRITE_BALL, $c + 4, $f + 4, $ff, $ff, $84, TM_37 ; item
+
+	; warp-to
+	EVENT_DISP SAFARI_ZONE_EAST_WIDTH, $16, $1d ; SAFARI_ZONE_NORTH
+	EVENT_DISP SAFARI_ZONE_EAST_WIDTH, $17, $1d ; SAFARI_ZONE_NORTH
+	EVENT_DISP SAFARI_ZONE_EAST_WIDTH, $4, $1d ; SAFARI_ZONE_NORTH
+	EVENT_DISP SAFARI_ZONE_EAST_WIDTH, $5, $1d ; SAFARI_ZONE_NORTH
+	EVENT_DISP SAFARI_ZONE_EAST_WIDTH, $0, $10 ; SAFARI_ZONE_NORTH
+	EVENT_DISP SAFARI_ZONE_EAST_WIDTH, $0, $11 ; SAFARI_ZONE_NORTH
+
+SafariZoneEastBlocks: ; 458dc (11:58dc)
+	INCBIN "maps/safarizoneeast.blk"
+
+SafariZoneNorth_h: ; 0x4599f to 0x459ab (12 bytes) (bank=11) (id=218)
+	db $06 ; tileset
+	db SAFARI_ZONE_NORTH_HEIGHT, SAFARI_ZONE_NORTH_WIDTH ; dimensions (y, x)
+	dw SafariZoneNorthBlocks, SafariZoneNorthTextPointers, SafariZoneNorthScript ; blocks, texts, scripts
+	db $00 ; connections
+	dw SafariZoneNorthObject ; objects
+
+SafariZoneNorthScript: ; 459ab (11:59ab)
+	call EnableAutoTextBoxDrawing
 	FuncCoord 9, 9 ; $c45d
 	ld hl, Coord
 	ld a, [hl]
@@ -71272,67 +71486,14 @@ SafariZoneEastScript: ; 4586b (11:586b)
 	set 7,[hl]
 	ret
 
-SafariZoneEastTextPointers: ; 4586e (11:586e)
-	dw Predef5CText
-	dw Predef5CText
-	dw Predef5CText
-	dw Predef5CText
-	dw SafariZoneEastText5
-	dw SafariZoneEastText6
-	dw SafariZoneEastText7
-
-SafariZoneEastText5: ; 4587c (11:587c)
-	TX_FAR _SafariZoneEastText5
-	db "@"
-
-SafariZoneEastText6: ; 45881 (11:5881)
-	TX_FAR _SafariZoneEastText6
-	db "@"
-
-SafariZoneEastText7: ; 45886 (11:5886)
-	TX_FAR _SafariZoneEastText7
-	db "@"
-
-SafariZoneEastObject: ; 0x4588b (size=81)
-	db $24 ; border tile
-
-	db $2 ; warps
-	db $16, $1d, $3, CINNABAR_ISLAND
-	db $17, $1d, $3, CINNABAR_ISLAND
-	
-	db $0 ; signs
-	
-	db $0 ; people
-	;db SPRITE_BALL, $a + 4, $15 + 4, $ff, $ff, $81, FULL_RESTORE ; item
-	;db SPRITE_BALL, $7 + 4, $3 + 4, $ff, $ff, $82, MAX_POTION ; item
-	;db SPRITE_BALL, $d + 4, $14 + 4, $ff, $ff, $83, CARBOS ; item
-	;db SPRITE_BALL, $c + 4, $f + 4, $ff, $ff, $84, TM_37 ; item
-
-	; warp-to
-	EVENT_DISP SAFARI_ZONE_EAST_WIDTH, $16, $1d ; SAFARI_ZONE_NORTH
-	EVENT_DISP SAFARI_ZONE_EAST_WIDTH, $17, $1d ; SAFARI_ZONE_NORTH
-
-SafariZoneEastBlocks: ; 458dc (11:58dc)
-	INCBIN "maps/safarizoneeast.blk"
-
-SafariZoneNorth_h: ; 0x4599f to 0x459ab (12 bytes) (bank=11) (id=218)
-	db $03 ; tileset
-	db SAFARI_ZONE_NORTH_HEIGHT, SAFARI_ZONE_NORTH_WIDTH ; dimensions (y, x)
-	dw SafariZoneNorthBlocks, SafariZoneNorthTextPointers, SafariZoneNorthScript ; blocks, texts, scripts
-	db $00 ; connections
-	dw SafariZoneNorthObject ; objects
-
-SafariZoneNorthScript: ; 459ab (11:59ab)
-	jp EnableAutoTextBoxDrawing
-
 SafariZoneNorthTextPointers: ; 459ae (11:59ae)
 	dw Predef5CText
 	dw Predef5CText
 	dw SafariZoneNorthText3
 	dw SafariZoneNorthText4
-	dw SafariZoneNorthText5
-	dw SafariZoneNorthText6
-	dw SafariZoneNorthText7
+	dw BikePark2Pump1
+	dw BikePark2Pump2
+	dw BikePark2Pump3
 
 SafariZoneNorthText3: ; 459bc (11:59bc)
 	TX_FAR _SafariZoneNorthText3
@@ -71342,59 +71503,107 @@ SafariZoneNorthText4: ; 459c1 (11:59c1)
 	TX_FAR _SafariZoneNorthText4
 	db "@"
 
-SafariZoneNorthText5: ; 459c6 (11:59c6)
-	TX_FAR _SafariZoneNorthText5
-	db "@"
+BikePark2Pump1:
+	db $08 ; asm
+	ld a, [W_PRIZE1] ; air pump flags
+	bit 2, a ; has pump been used?
+	jr nz, .alreadyUsed
+	; add air to tired
+	ld b, 50 ; 50 air
+	ld a, [wSafariSteps + 1]
+	add b
+	ld [wSafariSteps + 1], a
+	jr nc, .addedAir
+	ld hl, wSafariSteps
+	inc [hl]
+.addedAir
+	ld hl, W_PRIZE1
+	set 2, [hl]
+	ld hl, UsePumpText
+	jr .printText
+.alreadyUsed
+	ld hl, AlreadyUsedPumpText
+.printText
+	call PrintText
+	jp TextScriptEnd
 
-SafariZoneNorthText6: ; 459cb (11:59cb)
-	TX_FAR _SafariZoneNorthText6
-	db "@"
+BikePark2Pump2:
+	db $08 ; asm
+	ld a, [W_PRIZE1] ; air pump flags
+	bit 3, a ; has pump been used?
+	jr nz, .alreadyUsed
+	; add air to tired
+	ld b, 50 ; 50 air
+	ld a, [wSafariSteps + 1]
+	add b
+	ld [wSafariSteps + 1], a
+	jr nc, .addedAir
+	ld hl, wSafariSteps
+	inc [hl]
+.addedAir
+	ld hl, W_PRIZE1
+	set 3, [hl]
+	ld hl, UsePumpText
+	jr .printText
+.alreadyUsed
+	ld hl, AlreadyUsedPumpText
+.printText
+	call PrintText
+	jp TextScriptEnd
 
-SafariZoneNorthText7: ; 459d0 (11:59d0)
-	TX_FAR _SafariZoneNorthText7
-	db "@"
+BikePark2Pump3:
+	db $08 ; asm
+	ld a, [W_PRIZE1] ; air pump flags
+	bit 4, a ; has pump been used?
+	jr nz, .alreadyUsed
+	; add air to tired
+	ld b, 50 ; 50 air
+	ld a, [wSafariSteps + 1]
+	add b
+	ld [wSafariSteps + 1], a
+	jr nc, .addedAir
+	ld hl, wSafariSteps
+	inc [hl]
+.addedAir
+	ld hl, W_PRIZE1
+	set 4, [hl]
+	ld hl, UsePumpText
+	jr .printText
+.alreadyUsed
+	ld hl, AlreadyUsedPumpText
+.printText
+	call PrintText
+	jp TextScriptEnd
 
 SafariZoneNorthObject: ; 0x459d5 (size=105)
-	db $0 ; border tile
+	db $24 ; border tile
 
-	db $9 ; warps
-	db $23, $2, $0, SAFARI_ZONE_WEST
-	db $23, $3, $1, SAFARI_ZONE_WEST
-	db $23, $8, $2, SAFARI_ZONE_WEST
-	db $23, $9, $3, SAFARI_ZONE_WEST
-	db $23, $14, $4, SAFARI_ZONE_CENTER
-	db $23, $15, $5, SAFARI_ZONE_CENTER
-	db $1e, $27, $0, SAFARI_ZONE_EAST
-	db $1f, $27, $1, SAFARI_ZONE_EAST
-	db $3, $23, $0, SAFARI_ZONE_REST_HOUSE_4
+	db $4 ; warps
+	db $0, $18, $0, SAFARI_ZONE_WEST
+	db $0, $19, $1, SAFARI_ZONE_WEST
+	db $6,  $0, $2, SAFARI_ZONE_EAST
+	db $7,  $0, $3, SAFARI_ZONE_EAST
 
-	db $5 ; signs
-	db $4, $24, $3 ; SafariZoneNorthText3
-	db $19, $4, $4 ; SafariZoneNorthText4
-	db $1f, $d, $5 ; SafariZoneNorthText5
-	db $21, $13, $6 ; SafariZoneNorthText6
-	db $1c, $1a, $7 ; SafariZoneNorthText7
+	db $3 ; signs
+	db $11,  $3, $5 ; SafariZoneNorthText3
+	db $1d,  $f, $6 ; SafariZoneNorthText4
+	db  $b, $1d, $7 ; SafariZoneNorthText5
 
-	db $2 ; people
-	db SPRITE_BALL, $1 + 4, $19 + 4, $ff, $ff, $81, PROTEIN ; item
-	db SPRITE_BALL, $7 + 4, $13 + 4, $ff, $ff, $82, TM_40 ; item
+	db $0 ; people
+	;db SPRITE_BALL, $1 + 4, $19 + 4, $ff, $ff, $81, PROTEIN ; item
+	;db SPRITE_BALL, $7 + 4, $13 + 4, $ff, $ff, $82, TM_40 ; item
 
 	; warp-to
-	EVENT_DISP $14, $23, $2 ; SAFARI_ZONE_WEST
-	EVENT_DISP $14, $23, $3 ; SAFARI_ZONE_WEST
-	EVENT_DISP $14, $23, $8 ; SAFARI_ZONE_WEST
-	EVENT_DISP $14, $23, $9 ; SAFARI_ZONE_WEST
-	EVENT_DISP $14, $23, $14 ; SAFARI_ZONE_CENTER
-	EVENT_DISP $14, $23, $15 ; SAFARI_ZONE_CENTER
-	EVENT_DISP $14, $1e, $27 ; SAFARI_ZONE_EAST
-	EVENT_DISP $14, $1f, $27 ; SAFARI_ZONE_EAST
-	EVENT_DISP $14, $3, $23 ; SAFARI_ZONE_REST_HOUSE_4
+	EVENT_DISP SAFARI_ZONE_NORTH_WIDTH, $0, $18 ; SAFARI_ZONE_WEST
+	EVENT_DISP SAFARI_ZONE_NORTH_WIDTH, $0, $19 ; SAFARI_ZONE_WEST
+	EVENT_DISP SAFARI_ZONE_NORTH_WIDTH,  $6, $0 ; SAFARI_ZONE_EAST
+	EVENT_DISP SAFARI_ZONE_NORTH_WIDTH,  $7, $0 ; SAFARI_ZONE_EAST
 
 SafariZoneNorthBlocks: ; 45a3e (11:5a3e)
 	INCBIN "maps/safarizonenorth.blk"
 
 SafariZoneCenter_h: ; 0x45ba6 to 0x45bb2 (12 bytes) (bank=11) (id=220)
-	db $03 ; tileset
+	db $06 ; tileset
 	db SAFARI_ZONE_CENTER_HEIGHT, SAFARI_ZONE_CENTER_WIDTH ; dimensions (y, x)
 	dw SafariZoneCenterBlocks, SafariZoneCenterTextPointers, SafariZoneCenterScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -71419,16 +71628,11 @@ SafariZoneCenterText3: ; 45bc0 (11:5bc0)
 SafariZoneCenterObject: ; 0x45bc5 (size=89)
 	db $0 ; border tile
 
-	db $9 ; warps
-	db $19, $e, $2, SAFARIZONEENTRANCE
-	db $19, $f, $3, SAFARIZONEENTRANCE
-	db $a, $0, $4, SAFARI_ZONE_WEST
-	db $b, $0, $5, SAFARI_ZONE_WEST
-	db $0, $e, $4, SAFARI_ZONE_NORTH
-	db $0, $f, $5, SAFARI_ZONE_NORTH
-	db $a, $1d, $2, SAFARI_ZONE_EAST
-	db $b, $1d, $3, SAFARI_ZONE_EAST
-	db $13, $11, $0, SAFARI_ZONE_REST_HOUSE_1
+	db $4 ; warps
+	db $a, $1d, $2, SAFARI_ZONE_WEST
+	db $b, $1d, $3, SAFARI_ZONE_WEST
+	db $19, $8, $4, SAFARI_ZONE_EAST
+	db $19, $9, $5, SAFARI_ZONE_EAST
 
 	db $2 ; signs
 	db $14, $12, $2 ; SafariZoneCenterText2
@@ -71438,15 +71642,10 @@ SafariZoneCenterObject: ; 0x45bc5 (size=89)
 	db SPRITE_BALL, $a + 4, $e + 4, $ff, $ff, $81, NUGGET ; item
 
 	; warp-to
-	EVENT_DISP $f, $19, $e ; SAFARIZONEENTRANCE
-	EVENT_DISP $f, $19, $f ; SAFARIZONEENTRANCE
-	EVENT_DISP $f, $a, $0 ; SAFARI_ZONE_WEST
-	EVENT_DISP $f, $b, $0 ; SAFARI_ZONE_WEST
-	EVENT_DISP $f, $0, $e ; SAFARI_ZONE_NORTH
-	EVENT_DISP $f, $0, $f ; SAFARI_ZONE_NORTH
-	EVENT_DISP $f, $a, $1d ; SAFARI_ZONE_EAST
-	EVENT_DISP $f, $b, $1d ; SAFARI_ZONE_EAST
-	EVENT_DISP $f, $13, $11 ; SAFARI_ZONE_REST_HOUSE_1
+	EVENT_DISP SAFARI_ZONE_CENTER_WIDTH, $a, $1d ; SAFARI_ZONE_WEST
+	EVENT_DISP SAFARI_ZONE_CENTER_WIDTH, $b, $1d ; SAFARI_ZONE_WEST
+	EVENT_DISP SAFARI_ZONE_CENTER_WIDTH, $19, $8 ; SAFARI_ZONE_EAST
+	EVENT_DISP SAFARI_ZONE_CENTER_WIDTH, $19, $9 ; SAFARI_ZONE_EAST
 
 SafariZoneCenterBlocks: ; 45c1e (11:5c1e)
 	INCBIN "maps/safarizonecenter.blk"
@@ -77738,59 +77937,199 @@ MtMoon3Blocks: ; 4a041 (12:6041)
 	INCBIN "maps/mtmoon3.blk"
 
 SafariZoneWest_h: ; 0x4a1a9 to 0x4a1b5 (12 bytes) (id=219)
-	db $03 ; tileset
+	db $06 ; tileset
 	db SAFARI_ZONE_WEST_HEIGHT, SAFARI_ZONE_WEST_WIDTH ; dimensions (y, x)
 	dw SafariZoneWestBlocks, SafariZoneWestTextPointers, SafariZoneWestScript ; blocks, texts, scripts
 	db $00 ; connections
 	dw SafariZoneWestObject ; objects
 
 SafariZoneWestScript: ; 4a1b5 (12:61b5)
-	jp EnableAutoTextBoxDrawing
+	call EnableAutoTextBoxDrawing
+	FuncCoord 9, 9 ; $c45d
+	ld hl, Coord
+	ld a, [hl]
+	cp $2f ; left arrow tile
+	jr z, .startSlidingLeft
+	cp $26 ; up arrow tile
+	jr z, .startSlidingUp
+	cp $24 ; right arrow tile
+	jr z, .startSlidingRight
+	cp $28 ; down arrow tile
+	jr z, .startSlidingDown
+	; check for pressure switch 1
+	ld a, [W_PRIZE2]
+	bit 2, a
+	jr nz, .noSwitch1
+	ld a, [W_YCOORD]
+	cp $14
+	jr nz, .noSwitch1
+	ld a, [W_XCOORD]
+	cp $11
+	jr nz, .noSwitch1
+.pressureSwitch1
+	; remove tires
+	xor a
+	ld [$d09f], a
+	ld bc, $0a09
+	ld a, $17
+	call Predef
+	ld hl, W_PRIZE2
+	set 2, [hl]
+.noSwitch1
+	; check for pressure switch 2
+	ld a, [W_PRIZE2]
+	bit 3, a
+	jr nz, .noSwitch2
+	ld a, [W_YCOORD]
+	cp $a
+	jr nz, .noSwitch2
+	ld a, [W_XCOORD]
+	cp $15
+	jr nz, .noSwitch2
+.pressureSwitch2
+	; remove tires
+	xor a
+	ld [$d09f], a
+	ld bc, $0509
+	ld a, $17
+	call Predef
+	xor a
+	ld [$d09f], a
+	ld bc, $0507
+	ld a, $17
+	call Predef
+	ld hl, W_PRIZE2
+	set 3, [hl]
+.noSwitch2
+	ret
+.startSlidingLeft
+	; disable input, press appropriate directional button
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_LEFT
+	jr .pressButton
+.startSlidingUp
+	; disable input, press appropriate directional button
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_UP
+	jr .pressButton
+.startSlidingRight
+	; disable input, press appropriate directional button
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_RIGHT
+	jr .pressButton
+.startSlidingDown
+	; disable input, press appropriate directional button
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_DOWN
+.pressButton
+	ld [$ccd3],a ; base address of simulated button presses
+	xor a
+	ld [$cd39],a
+	inc a
+	ld [$cd38],a ; index of current simulated button press
+	ld hl,$d730
+	set 7,[hl]
+	ret
 
 SafariZoneWestTextPointers: ; 4a1b8 (12:61b8)
 	dw Predef5CText
 	dw Predef5CText
 	dw Predef5CText
 	dw Predef5CText
-	dw SafariZoneWestText5
-	dw SafariZoneWestText6
-	dw SafariZoneWestText7
-	dw SafariZoneWestText8
+	dw BikePark3Pump1
+	dw BikePark3Pump2
+	dw BikePark3Switch
+
+BikePark3Switch: ; 4587c (11:587c)
+	TX_FAR _BikePark1Switch
+	db "@"
 
 SafariZoneWestText5: ; 4a1c8 (12:61c8)
 	TX_FAR _SafariZoneWestText5
 	db "@"
 
-SafariZoneWestText6: ; 4a1cd (12:61cd)
-	TX_FAR _SafariZoneWestText6
+BikePark3Pump1:
+	db $08 ; asm
+	ld a, [W_PRIZE1] ; air pump flags
+	bit 5, a ; has pump been used?
+	jr nz, .alreadyUsed
+	; add air to tired
+	ld b, 50 ; 50 air
+	ld a, [wSafariSteps + 1]
+	add b
+	ld [wSafariSteps + 1], a
+	jr nc, .addedAir
+	ld hl, wSafariSteps
+	inc [hl]
+.addedAir
+	ld hl, W_PRIZE1
+	set 5, [hl]
+	ld hl, UsePumpText2
+	jr .printText
+.alreadyUsed
+	ld hl, AlreadyUsedPumpText2
+.printText
+	call PrintText
+	jp TextScriptEnd
+
+BikePark3Pump2:
+	db $08 ; asm
+	ld a, [W_PRIZE1] ; air pump flags
+	bit 6, a ; has pump been used?
+	jr nz, .alreadyUsed
+	; add air to tired
+	ld b, 50 ; 50 air
+	ld a, [wSafariSteps + 1]
+	add b
+	ld [wSafariSteps + 1], a
+	jr nc, .addedAir
+	ld hl, wSafariSteps
+	inc [hl]
+.addedAir
+	ld hl, W_PRIZE1
+	set 6, [hl]
+	ld hl, UsePumpText2
+	jr .printText
+.alreadyUsed
+	ld hl, AlreadyUsedPumpText2
+.printText
+	call PrintText
+	jp TextScriptEnd
+
+UsePumpText2:
+	TX_FAR _UsePumpText
 	db "@"
 
-SafariZoneWestText7: ; 4a1d2 (12:61d2)
-	TX_FAR _SafariZoneWestText7
-	db "@"
-
-SafariZoneWestText8: ; 4a1d7 (12:61d7)
-	TX_FAR _SafariZoneWestText8
+AlreadyUsedPumpText2:
+	TX_FAR _AlreadyUsedPumpText
 	db "@"
 
 SafariZoneWestObject: ; 0x4a1dc (size=108)
-	db $0 ; border tile
+	db $24 ; border tile
 
-	db $8 ; warps
-	db $0, $14, $0, SAFARI_ZONE_NORTH
-	db $0, $15, $1, SAFARI_ZONE_NORTH
-	db $0, $1a, $2, SAFARI_ZONE_NORTH
-	db $0, $1b, $3, SAFARI_ZONE_NORTH
-	db $16, $1d, $2, SAFARI_ZONE_CENTER
-	db $17, $1d, $3, SAFARI_ZONE_CENTER
-	db $3, $3, $0, SAFARI_ZONE_SECRET_HOUSE
-	db $b, $b, $0, SAFARI_ZONE_REST_HOUSE_2
+	db $4 ; warps
+	db $19, $10, $0, SAFARI_ZONE_NORTH
+	db $19, $11, $1, SAFARI_ZONE_NORTH
+	db $a, $0, $0, SAFARI_ZONE_CENTER
+	db $b, $0, $1, SAFARI_ZONE_CENTER
 
 	db $4 ; signs
-	db $c, $c, $5 ; SafariZoneWestText5
-	db $3, $11, $6 ; SafariZoneWestText6
-	db $4, $1a, $7 ; SafariZoneWestText7
-	db $16, $18, $8 ; SafariZoneWestText8
+	db $14, $11, $7 ; SafariZoneWestText5
+	db $15, $1b, $5 ; SafariZoneWestText6
+	db $a, $15, $7 ; SafariZoneWestText7
+	db $13, $5, $6 ; SafariZoneWestText8
 
 	db $4 ; people
 	db SPRITE_BALL, $14 + 4, $8 + 4, $ff, $ff, $81, MAX_POTION ; item
@@ -77799,14 +78138,10 @@ SafariZoneWestObject: ; 0x4a1dc (size=108)
 	db SPRITE_BALL, $7 + 4, $13 + 4, $ff, $ff, $84, GOLD_TEETH ; item
 
 	; warp-to
-	EVENT_DISP $f, $0, $14 ; SAFARI_ZONE_NORTH
-	EVENT_DISP $f, $0, $15 ; SAFARI_ZONE_NORTH
-	EVENT_DISP $f, $0, $1a ; SAFARI_ZONE_NORTH
-	EVENT_DISP $f, $0, $1b ; SAFARI_ZONE_NORTH
-	EVENT_DISP $f, $16, $1d ; SAFARI_ZONE_CENTER
-	EVENT_DISP $f, $17, $1d ; SAFARI_ZONE_CENTER
-	EVENT_DISP $f, $3, $3 ; SAFARI_ZONE_SECRET_HOUSE
-	EVENT_DISP $f, $b, $b ; SAFARI_ZONE_REST_HOUSE_2
+	EVENT_DISP SAFARI_ZONE_WEST_WIDTH, $19, $10 ; SAFARI_ZONE_NORTH
+	EVENT_DISP SAFARI_ZONE_WEST_WIDTH, $19, $11 ; SAFARI_ZONE_NORTH
+	EVENT_DISP SAFARI_ZONE_WEST_WIDTH, $a, $0 ; SAFARI_ZONE_CENTER
+	EVENT_DISP SAFARI_ZONE_WEST_WIDTH, $b, $0 ; SAFARI_ZONE_CENTER
 
 SafariZoneWestBlocks: ; 4a248 (12:6248)
 	INCBIN "maps/safarizonewest.blk"
@@ -107113,10 +107448,13 @@ SafariZoneEntranceText4: ; 752ca (1d:52ca)
 	call PrintText
 	ld a, $1e
 	ld [$da47], a
-	ld a, 60 / $100
+	ld a, 600 / $100
 	ld [wSafariSteps], a
-	ld a, 60 % $100
+	ld a, 600 % $100
 	ld [wSafariSteps + 1], a
+	xor a
+	ld [W_PRIZE1], a ; reset air pump flags
+	ld [W_PRIZE2], a ; reset pressure switch flags
 	ld a, $20
 	ld c, $3
 	call Func_752a3

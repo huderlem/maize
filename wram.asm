@@ -777,8 +777,10 @@ W_ISLINKBATTLE:: ; d12b
 
 W_PRIZE1:: ; d13d
 ; 1 = alt mon sprite
+; bike park pump flags. reset this byte every time player enters bike park.
 	ds 1
 W_PRIZE2:: ; d13e
+; bike park pressure switch flags. reset this byte every time player enters bike park.
 	ds 1
 W_PRIZE3:: ; d13f
 	ds 1
