@@ -41241,6 +41241,16 @@ Func_1e997: ; 1e997 (7:6997)
 	or b
 	jr z, asm_1e9b0
 	dec bc
+	; should we dec again because gravel?
+	FuncCoord 9, 9 ; $c45d
+	ld hl, Coord
+	ld a, [hl]
+	cp $0f ; gravel
+	jr nz, .save
+	dec bc
+	dec bc
+	dec bc
+.save
 	ld a, b
 	ld [wSafariSteps], a ; $d70d
 	ld a, c
@@ -71227,9 +71237,9 @@ SafariZoneEastScript: ; 4586b (11:586b)
 	cp $26 ; up arrow tile
 	jr z, .startSlidingUp
 	cp $24 ; right arrow tile
-	jr z, .startSlidingRight
+	jp z, .startSlidingRight
 	cp $28 ; down arrow tile
-	jr z, .startSlidingDown
+	jp z, .startSlidingDown
 	; check for pressure switch 1
 	ld a, [W_PRIZE2]
 	bit 0, a
@@ -71270,6 +71280,19 @@ SafariZoneEastScript: ; 4586b (11:586b)
 	ld hl, W_PRIZE2
 	set 1, [hl]
 .noSwitch2
+	; check for crumble bricks
+	ld a,[$cfc6] ; tile in front of player
+	cp $19 ; crumbly brick
+	jr nz, .notBrick
+	; remove brick
+	ld a, $ad
+	call PlaySound
+	ld a, $1e
+	ld [$d09f], a
+	ld bc, $0701
+	ld a, $17
+	call Predef
+.notBrick
 	ret
 .startSlidingLeft
 	; disable input, press appropriate directional button
@@ -71332,7 +71355,7 @@ BikePark1Pump1:
 	bit 0, a ; has pump been used?
 	jr nz, .alreadyUsed
 	; add air to tired
-	ld b, 50 ; 50 air
+	ld b, 30 ; 30 air
 	ld a, [wSafariSteps + 1]
 	add b
 	ld [wSafariSteps + 1], a
@@ -71407,11 +71430,11 @@ SafariZoneEastObject: ; 0x4588b (size=81)
 	db $5,  $f, $8
 	db $14, $9, $5
 	
-	db $0 ; people
-	;db SPRITE_BALL, $a + 4, $15 + 4, $ff, $ff, $81, FULL_RESTORE ; item
-	;db SPRITE_BALL, $7 + 4, $3 + 4, $ff, $ff, $82, MAX_POTION ; item
-	;db SPRITE_BALL, $d + 4, $14 + 4, $ff, $ff, $83, CARBOS ; item
-	;db SPRITE_BALL, $c + 4, $f + 4, $ff, $ff, $84, TM_37 ; item
+	db $4 ; people
+	db SPRITE_BALL, $c + 4, $10 + 4, $ff, $ff, $81, DV_BALL ; item
+	db SPRITE_BALL, $3 + 4, $1b + 4, $ff, $ff, $82, HYPER_POTION ; item
+	db SPRITE_BALL, $2 + 4, $2 + 4, $ff, $ff, $83, REVIVE ; item
+	db SPRITE_BALL, $18 + 4, $2 + 4, $ff, $ff, $84, HM_04 ; item
 
 	; warp-to
 	EVENT_DISP SAFARI_ZONE_EAST_WIDTH, $16, $1d ; SAFARI_ZONE_NORTH
@@ -71444,6 +71467,19 @@ SafariZoneNorthScript: ; 459ab (11:59ab)
 	jr z, .startSlidingRight
 	cp $28 ; down arrow tile
 	jr z, .startSlidingDown
+	; check for crumble bricks
+	ld a,[$cfc6] ; tile in front of player
+	cp $19 ; crumbly brick
+	jr nz, .notBrick
+	; remove brick
+	ld a, $ad
+	call PlaySound
+	ld a, $1e
+	ld [$d09f], a
+	ld bc, $0512
+	ld a, $17
+	call Predef
+.notBrick
 	ret
 .startSlidingLeft
 	; disable input, press appropriate directional button
@@ -71509,7 +71545,7 @@ BikePark2Pump1:
 	bit 2, a ; has pump been used?
 	jr nz, .alreadyUsed
 	; add air to tired
-	ld b, 50 ; 50 air
+	ld b, 80 ; 80 air
 	ld a, [wSafariSteps + 1]
 	add b
 	ld [wSafariSteps + 1], a
@@ -71533,7 +71569,7 @@ BikePark2Pump2:
 	bit 3, a ; has pump been used?
 	jr nz, .alreadyUsed
 	; add air to tired
-	ld b, 50 ; 50 air
+	ld b, 70 ; 70 air
 	ld a, [wSafariSteps + 1]
 	add b
 	ld [wSafariSteps + 1], a
@@ -71557,7 +71593,7 @@ BikePark2Pump3:
 	bit 4, a ; has pump been used?
 	jr nz, .alreadyUsed
 	; add air to tired
-	ld b, 50 ; 50 air
+	ld b, 75 ; 75 air
 	ld a, [wSafariSteps + 1]
 	add b
 	ld [wSafariSteps + 1], a
@@ -71589,9 +71625,9 @@ SafariZoneNorthObject: ; 0x459d5 (size=105)
 	db $1d,  $f, $6 ; SafariZoneNorthText4
 	db  $b, $1d, $7 ; SafariZoneNorthText5
 
-	db $0 ; people
-	;db SPRITE_BALL, $1 + 4, $19 + 4, $ff, $ff, $81, PROTEIN ; item
-	;db SPRITE_BALL, $7 + 4, $13 + 4, $ff, $ff, $82, TM_40 ; item
+	db $2 ; people
+	db SPRITE_BALL, $2 + 4, $3 + 4, $ff, $ff, $81, TM_08 ; item
+	db SPRITE_BALL, $21 + 4, $9 + 4, $ff, $ff, $82, WONDER_RING ; item
 
 	; warp-to
 	EVENT_DISP SAFARI_ZONE_NORTH_WIDTH, $0, $18 ; SAFARI_ZONE_WEST
@@ -71610,15 +71646,137 @@ SafariZoneCenter_h: ; 0x45ba6 to 0x45bb2 (12 bytes) (bank=11) (id=220)
 	dw SafariZoneCenterObject ; objects
 
 SafariZoneCenterScript: ; 45bb2 (11:5bb2)
-	jp EnableAutoTextBoxDrawing
+	call EnableAutoTextBoxDrawing
+	FuncCoord 9, 9 ; $c45d
+	ld hl, Coord
+	ld a, [hl]
+	cp $2f ; left arrow tile
+	jr z, .startSlidingLeft
+	cp $26 ; up arrow tile
+	jr z, .startSlidingUp
+	cp $24 ; right arrow tile
+	jr z, .startSlidingRight
+	cp $28 ; down arrow tile
+	jr z, .startSlidingDown
+	; check for pressure switch 1
+	ld a, [W_PRIZE2]
+	bit 4, a
+	jr nz, .noSwitch1
+	ld a, [W_YCOORD]
+	cp $12
+	jr nz, .noSwitch1
+	ld a, [W_XCOORD]
+	cp $1b
+	jr nz, .noSwitch1
+.pressureSwitch1
+	; remove tires
+	xor a
+	ld [$d09f], a
+	ld bc, $0903
+	ld a, $17
+	call Predef
+	ld hl, W_PRIZE2
+	set 4, [hl]
+	ret
+.noSwitch1
+	; check for crumble bricks
+	ld a,[$cfc6] ; tile in front of player
+	cp $19 ; crumbly brick
+	jr nz, .notBrick
+	; remove brick
+	ld a, $ad
+	call PlaySound
+	ld a, $1e
+	ld [$d09f], a
+	ld a, [W_YCOORD]
+	cp $10
+	jr nc, .lowerBrick
+.upperBrick
+	ld bc, $0604
+	jr .removeIt
+.lowerBrick
+	ld bc, $0a04
+.removeIt
+	ld a, $17
+	call Predef
+.notBrick
+	ret
+.startSlidingLeft
+	; disable input, press appropriate directional button
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_LEFT
+	jr .pressButton
+.startSlidingUp
+	; disable input, press appropriate directional button
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_UP
+	jr .pressButton
+.startSlidingRight
+	; disable input, press appropriate directional button
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_RIGHT
+	jr .pressButton
+.startSlidingDown
+	; disable input, press appropriate directional button
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_DOWN
+.pressButton
+	ld [$ccd3],a ; base address of simulated button presses
+	xor a
+	ld [$cd39],a
+	inc a
+	ld [$cd38],a ; index of current simulated button press
+	ld hl,$d730
+	set 7,[hl]
+	ret
 
 SafariZoneCenterTextPointers: ; 45bb5 (11:5bb5)
 	dw Predef5CText
-	dw SafariZoneCenterText2
-	dw SafariZoneCenterText3
+	dw BikePark4Pump1
+	dw BikePark3Switch
 
-SafariZoneCenterText2: ; 45bbb (11:5bbb)
-	TX_FAR _SafariZoneCenterText2
+BikePark4Pump1:
+	db $08 ; asm
+	ld a, [W_PRIZE1] ; air pump flags
+	bit 7, a ; has pump been used?
+	jr nz, .alreadyUsed
+	; add air to tired
+	ld b, 50 ; 50 air
+	ld a, [wSafariSteps + 1]
+	add b
+	ld [wSafariSteps + 1], a
+	jr nc, .addedAir
+	ld hl, wSafariSteps
+	inc [hl]
+.addedAir
+	ld hl, W_PRIZE1
+	set 7, [hl]
+	ld hl, UsePumpText3
+	jr .printText
+.alreadyUsed
+	ld hl, AlreadyUsedPumpText3
+.printText
+	call PrintText
+	jp TextScriptEnd
+
+UsePumpText3:
+	TX_FAR _UsePumpText
+	db "@"
+
+AlreadyUsedPumpText3:
+	TX_FAR _AlreadyUsedPumpText
 	db "@"
 
 SafariZoneCenterText3: ; 45bc0 (11:5bc0)
@@ -71626,7 +71784,7 @@ SafariZoneCenterText3: ; 45bc0 (11:5bc0)
 	db "@"
 
 SafariZoneCenterObject: ; 0x45bc5 (size=89)
-	db $0 ; border tile
+	db $24 ; border tile
 
 	db $4 ; warps
 	db $a, $1d, $2, SAFARI_ZONE_WEST
@@ -71635,11 +71793,11 @@ SafariZoneCenterObject: ; 0x45bc5 (size=89)
 	db $19, $9, $5, SAFARI_ZONE_EAST
 
 	db $2 ; signs
-	db $14, $12, $2 ; SafariZoneCenterText2
-	db $16, $e, $3 ; SafariZoneCenterText3
+	db $7, $13, $2 ; SafariZoneCenterText2
+	db $12, $1b, $3 ; SafariZoneCenterText3
 
 	db $1 ; people
-	db SPRITE_BALL, $a + 4, $e + 4, $ff, $ff, $81, NUGGET ; item
+	db SPRITE_BALL, $12 + 4, $4 + 4, $ff, $ff, $81, MOON_STONE ; item
 
 	; warp-to
 	EVENT_DISP SAFARI_ZONE_CENTER_WIDTH, $a, $1d ; SAFARI_ZONE_WEST
@@ -78066,7 +78224,7 @@ BikePark3Pump1:
 	bit 5, a ; has pump been used?
 	jr nz, .alreadyUsed
 	; add air to tired
-	ld b, 50 ; 50 air
+	ld b, 80 ; 80 air
 	ld a, [wSafariSteps + 1]
 	add b
 	ld [wSafariSteps + 1], a
@@ -78131,11 +78289,11 @@ SafariZoneWestObject: ; 0x4a1dc (size=108)
 	db $a, $15, $7 ; SafariZoneWestText7
 	db $13, $5, $6 ; SafariZoneWestText8
 
-	db $4 ; people
-	db SPRITE_BALL, $14 + 4, $8 + 4, $ff, $ff, $81, MAX_POTION ; item
-	db SPRITE_BALL, $7 + 4, $9 + 4, $ff, $ff, $82, TM_32 ; item
-	db SPRITE_BALL, $12 + 4, $12 + 4, $ff, $ff, $83, MAX_REVIVE ; item
-	db SPRITE_BALL, $7 + 4, $13 + 4, $ff, $ff, $84, GOLD_TEETH ; item
+	db $2 ; people
+	db SPRITE_BALL, $2 + 4, $a + 4, $ff, $ff, $81, TM_11 ; item
+	db SPRITE_BALL, $4 + 4, $10 + 4, $ff, $ff, $82, FULL_HEAL ; item
+	;db SPRITE_BALL, $12 + 4, $12 + 4, $ff, $ff, $83, MAX_REVIVE ; item unused
+	;db SPRITE_BALL, $7 + 4, $13 + 4, $ff, $ff, $84, GOLD_TEETH ; item unused
 
 	; warp-to
 	EVENT_DISP SAFARI_ZONE_WEST_WIDTH, $19, $10 ; SAFARI_ZONE_NORTH
@@ -107448,9 +107606,9 @@ SafariZoneEntranceText4: ; 752ca (1d:52ca)
 	call PrintText
 	ld a, $1e
 	ld [$da47], a
-	ld a, 600 / $100
+	ld a, 60 / $100
 	ld [wSafariSteps], a
-	ld a, 600 % $100
+	ld a, 60 % $100
 	ld [wSafariSteps + 1], a
 	xor a
 	ld [W_PRIZE1], a ; reset air pump flags
