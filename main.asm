@@ -19703,42 +19703,25 @@ Func_c52f: ; c52f (3:452f)
 	ret c
 	cp UNKNOWN_DUNGEON_2
 	ret nc
-	ld hl, wTileMap
-	ld b, $3
-	ld c, $7
+	ld hl,$d730
+	set 6,[hl] ; turn off letter printing delay
+	FuncCoord 0, 6 ; $c3b5
+	ld hl, Coord
+	ld b, $4
+	ld c, $8
 	call TextBoxBorder
-	FuncCoord 1, 1 ; $c3b5
+	FuncCoord 1, 8 ; $c3b5
+	ld hl, Coord
+	ld de, AirLeftText
+	call PlaceString
+	FuncCoord 3, 9 ; $c3dd
 	ld hl, Coord
 	ld de, wSafariSteps ; $d70d
 	ld bc, $203
-	call PrintNumber
-	FuncCoord 4, 1 ; $c3b8
-	ld hl, Coord
-	ld de, SafariSteps ; $4579
-	call PlaceString
-	FuncCoord 1, 3 ; $c3dd
-	ld hl, Coord
-	ld de, SafariBallText ; $457e
-	call PlaceString
-	ld a, [W_NUMSAFARIBALLS] ; $da47
-	cp $a
-	jr nc, .asm_c56d
-	FuncCoord 5, 3 ; $c3e1
-	ld hl, Coord
-	ld a, $7f
-	ld [hl], a
-.asm_c56d
-	FuncCoord 6, 3 ; $c3e2
-	ld hl, Coord
-	ld de, W_NUMSAFARIBALLS ; $da47
-	ld bc, $102
 	jp PrintNumber
 
-SafariSteps: ; c579 (3:4579)
-	db "/500@"
-
-SafariBallText: ; c57e (3:457e)
-	db "BALL×× @"
+AirLeftText: ; c57e (3:457e)
+	db "AIR LEFT@"
 
 Func_c586: ; c586 (3:4586)
 	call Load16BitRegisters
@@ -41279,7 +41262,7 @@ asm_1e9b0: ; 1e9b0 (7:69b0)
 	ld [$d528], a
 	ld a, SAFARIZONEENTRANCE
 	ld [H_DOWNARROWBLINKCNT1], a ; $FF00+$8b
-	ld a, $0
+	ld a, $4
 	ld [$d42f], a
 	ld a, $5
 	ld [W_SAFARIZONEENTRANCECURSCRIPT], a
@@ -41287,6 +41270,8 @@ asm_1e9b0: ; 1e9b0 (7:69b0)
 	set 6, [hl]
 	ld a, $1
 	ld [$da46], a
+	xor a
+	ld [$d700],a ; change player state to walking
 	ret
 
 Func_1e9ed: ; 1e9ed (7:69ed)
@@ -107508,9 +107493,9 @@ SafariZoneEntranceScript5: ; 7524e (1d:524e)
 	call DisplayTextID
 	xor a
 	ld [$da47], a
-	ld a, $10
-	ld c, $3
-	call Func_752a3
+	ld [$da46], a
+	ld hl, $d732
+	res 5, [hl]
 	ld a, $4
 	ld [W_SAFARIZONEENTRANCECURSCRIPT], a
 	jr .asm_75286 ; 0x7527d $7
@@ -107522,8 +107507,6 @@ SafariZoneEntranceScript5: ; 7524e (1d:524e)
 	ret
 
 SafariZoneEntranceScript4: ; 75287 (1d:5287)
-	call Func_752b4
-	ret nz
 	xor a
 	ld [wJoypadForbiddenButtonsMask], a
 	ld a, $0
@@ -107722,11 +107705,12 @@ UnnamedText_753f0: ; 753f0 (1d:53f0)
 SafariZoneEntranceObject: ; 0x753f5 (size=48)
 	db $a ; border tile
 
-	db $4 ; warps
+	db $5 ; warps
 	db $4, $0, $0, SAFARI_ZONE_EAST
 	db $5, $0, $1, SAFARI_ZONE_EAST
 	db $4, $7, $3, CINNABAR_ISLAND
 	db $5, $7, $3, CINNABAR_ISLAND
+	db $0, $0, $0, $0
 
 	db $0 ; signs
 
@@ -107738,6 +107722,7 @@ SafariZoneEntranceObject: ; 0x753f5 (size=48)
 	EVENT_DISP SAFARIZONEENTRANCE_WIDTH, $5, $0
 	EVENT_DISP SAFARIZONEENTRANCE_WIDTH, $4, $7
 	EVENT_DISP SAFARIZONEENTRANCE_WIDTH, $5, $7
+	EVENT_DISP SAFARIZONEENTRANCE_WIDTH, $4, $3
 
 SafariZoneEntranceBlocks: ; 75425 (1d:5425)
 	INCBIN "maps/safarizoneentrance.blk"

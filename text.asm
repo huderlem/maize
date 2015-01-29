@@ -553,14 +553,12 @@ _UnnamedText_1e983:: ; 88742 (22:4742)
 	done
 
 _UnnamedText_1ea0d:: ; 8877e (22:477e)
-	text "PA: Ding-dong!"
-
-	para "Time's up!"
+	text "SSSSSsssssss..."
 	prompt
 
 _UnnamedText_1ea12:: ; 88798 (22:4798)
-	text "PA: Your SAFARI"
-	line "GAME is over!"
+	text "The tires have"
+	line "gone flat."
 	done
 
 _CinnabarGymQuizIntroText:: ; 887b7 (22:47b7)

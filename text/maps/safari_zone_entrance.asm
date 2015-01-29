@@ -64,9 +64,13 @@ _UnnamedText_753c0:: ; 9e854 (27:6854)
 	done
 
 _UnnamedText_753c5:: ; 9e860 (27:6860)
-	text "Did you get a"
-	line "good haul?"
-	cont "Come again!"
+	text "Oh dear, your"
+	line "tires went flat!"
+
+	para "Be sure to fill"
+	line "them up when you"
+	cont "come across bike"
+	cont "pumps!"
 	done
 
 _UnnamedText_753e6:: ; 9e886 (27:6886)
