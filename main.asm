@@ -36388,7 +36388,7 @@ CinnabarIslandObject: ; 0x1c022 (size=71)
 	db $5, $9, $0, MANSION_1
 	db $7, $17, $0, CINNABAR_MART
 	db $b, $e, $0, BATTLE_FACTORY
-	db $17, $5, $2, SAFARIZONEENTRANCE
+	db $17, $4, $2, SAFARIZONEENTRANCE
 	db $17, $d, $0, CINNABAR_POKECENTER
 	db $17, $18, $0, CINNABAR_GYM
 
@@ -36396,7 +36396,7 @@ CinnabarIslandObject: ; 0x1c022 (size=71)
 	db $7, $18,  $5  ; Pokemart
 	db $d,  $b,  $6  ; CinnabarIslandText6
 	db $11, $11, $7  ; CinnabarIslandText7
-	db $17, $3,  $8  ; CinnabarIslandText8
+	db $19, $7,  $8  ; CinnabarIslandText8
 	db $17, $e,  $9  ; Pokecenter
 	db $17, $13, $a ; CinnabarIslandText10
 
@@ -36410,7 +36410,7 @@ CinnabarIslandObject: ; 0x1c022 (size=71)
 	EVENT_DISP CINNABAR_ISLAND_WIDTH, $5, $9 ; MANSION_1
 	EVENT_DISP CINNABAR_ISLAND_WIDTH, $7, $17 ; CINNABAR_MART
 	EVENT_DISP CINNABAR_ISLAND_WIDTH, $b, $e ; BATTLE_FACTORY
-	EVENT_DISP CINNABAR_ISLAND_WIDTH, $17, $5 ; CINNABAR_POKECENTER
+	EVENT_DISP CINNABAR_ISLAND_WIDTH, $17, $4 ; CINNABAR_POKECENTER
 	EVENT_DISP CINNABAR_ISLAND_WIDTH, $17, $d ; CINNABAR_POKECENTER
 	EVENT_DISP CINNABAR_ISLAND_WIDTH, $17, $18 ; CINNABAR_GYM
 
@@ -41267,9 +41267,20 @@ Func_1e997: ; 1e997 (7:6997)
 	ld a, [hl]
 	cp $0f ; gravel
 	jr nz, .save
+	ld d, 3 + 1
+.decLoop
+	dec d
+	jr z, .save
+	; make sure we not already at 0
+	ld a, b
+	and a
+	jr nz, .notZero
+	ld a, c
+	and a
+	jr z, .save
+.notZero
 	dec bc
-	dec bc
-	dec bc
+	jr .decLoop
 .save
 	ld a, b
 	ld [wSafariSteps], a ; $d70d
@@ -107836,8 +107847,8 @@ SafariZoneEntranceObject: ; 0x753f5 (size=48)
 	db $5 ; warps
 	db $4, $0, $0, SAFARI_ZONE_EAST
 	db $5, $0, $1, SAFARI_ZONE_EAST
-	db $4, $7, $3, CINNABAR_ISLAND
-	db $5, $7, $3, CINNABAR_ISLAND
+	db $7, $4, $3, CINNABAR_ISLAND
+	db $7, $5, $3, CINNABAR_ISLAND
 	db $0, $0, $0, $0
 
 	db $0 ; signs
@@ -107848,8 +107859,8 @@ SafariZoneEntranceObject: ; 0x753f5 (size=48)
 	; warp-to
 	EVENT_DISP SAFARIZONEENTRANCE_WIDTH, $4, $0
 	EVENT_DISP SAFARIZONEENTRANCE_WIDTH, $5, $0
-	EVENT_DISP SAFARIZONEENTRANCE_WIDTH, $4, $7
-	EVENT_DISP SAFARIZONEENTRANCE_WIDTH, $5, $7
+	EVENT_DISP SAFARIZONEENTRANCE_WIDTH, $7, $4
+	EVENT_DISP SAFARIZONEENTRANCE_WIDTH, $7, $5
 	EVENT_DISP SAFARIZONEENTRANCE_WIDTH, $4, $3
 
 SafariZoneEntranceBlocks: ; 75425 (1d:5425)

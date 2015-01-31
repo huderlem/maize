@@ -1,6 +1,14 @@
 _SafariZoneEntranceText1:: ; 9e6c7 (27:66c7)
 	text "You look like a"
 	line "thrill seeker!"
+
+	para "This used to be"
+	line "an OUTPOST, but"
+	cont "I got bored!"
+
+	para "I should probably"
+	line "change the sign"
+	cont "out front."
 	done
 
 UnnamedText_9e6e4::
