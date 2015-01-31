@@ -29115,6 +29115,12 @@ StartMenu_Pokemon: ; 130a9 (4:70a9)
 	ld a,[W_NUMINPARTY]
 	and a
 	jp z,RedisplayStartMenu
+	ld a, [W_CURMAP]
+	cp SAFARI_ZONE_EAST
+	jr c, .canOpenPokemon
+	cp SAFARI_ZONE_CENTER + 1
+	jp c, RedisplayStartMenu
+.canOpenPokemon
 	xor a
 	ld [$cc35],a
 	ld [$d07d],a
@@ -29544,7 +29550,13 @@ StartMenu_Item: ; 13302 (4:7302)
 	set 6,[hl] ; no pauses between printing each letter
 	ld a, [W_INCHALLENGE]
 	and a
-	jr z, .doMenu
+	jr nz, .notItemsNow
+	ld a, [W_CURMAP]
+	cp SAFARI_ZONE_EAST
+	jr c, .doMenu
+	cp SAFARI_ZONE_CENTER + 1
+	jr nc, .doMenu
+.notItemsNow
 	ld hl, CantUseItemsNowText
 	call PrintText
 	jr .exitMenu
@@ -32416,7 +32428,7 @@ PalletTownObject: ; 0x182c3 (size=58)
 	db $f ; border tile
 
 	db $3 ; warps
-	db $d, $3, $0, FUCHSIA_GYM
+	db $d, $3, $0, REDS_HOUSE_1F
 	db $7, $3, $0, BLUES_HOUSE
 	db $b, $c, $1, OAKS_LAB
 
@@ -87569,7 +87581,7 @@ Route8Object: ; 0x5814f (size=119)
 	db $b, $35, $1, ROUTE_8_GATE
 	db $a, $3a, $2, ROUTE_8_GATE
 	db $b, $3a, $3, ROUTE_8_GATE
-	db $5, $2a, $0, PATH_ENTRANCE_ROUTE_8
+	db $5, $2a, $0, POKEMONTOWER_7
 	db $8, $1, $0, ROUTE_8_GATE_2
 	db $9, $1, $1, ROUTE_8_GATE_2
 	db $8, $8, $2, ROUTE_8_GATE_2
@@ -96872,20 +96884,20 @@ PokemonTower6Blocks: ; 60c95 (18:4c95)
 	INCBIN "maps/unusedblocks60cef.blk"
 
 PokemonTower7_h: ; 0x60cf9 to 0x60d05 (12 bytes) (id=148)
-	db $0f ; tileset
+	db $0a ; tileset
 	db POKEMONTOWER_7_HEIGHT, POKEMONTOWER_7_WIDTH ; dimensions (y, x)
 	dw PokemonTower7Blocks, PokemonTower7TextPointers, PokemonTower7Script ; blocks, texts, scripts
 	db $00 ; connections
 	dw PokemonTower7Object ; objects
 
 PokemonTower7Script: ; 60d05 (18:4d05)
-	call EnableAutoTextBoxDrawing
-	ld hl, PokemonTower7TrainerHeaders
-	ld de, PokemonTower7ScriptPointers
-	ld a, [W_POKEMONTOWER7CURSCRIPT]
-	call ExecuteCurMapScriptInTable
-	ld [W_POKEMONTOWER7CURSCRIPT], a
-	ret
+	jp EnableAutoTextBoxDrawing
+	;ld hl, PokemonTower7TrainerHeaders
+	;ld de, PokemonTower7ScriptPointers
+	;ld a, [W_POKEMONTOWER7CURSCRIPT]
+	;call ExecuteCurMapScriptInTable
+	;ld [W_POKEMONTOWER7CURSCRIPT], a
+	;ret
 
 Func_60d18: ; 60d18 (18:4d18)
 	xor a
@@ -97043,10 +97055,15 @@ MovementData_60e37: ; 60e37
 	db $C0,$00,$00,$00,$00,$00,$00,$FF
 
 PokemonTower7TextPointers: ; 60e3f (18:4e3f)
-	dw PokemonTower7Text1
-	dw PokemonTower7Text2
+	dw BoulderText
+	dw BoulderText
 	dw PokemonTower7Text3
 	dw PokemonTower7Text4
+	dw PokemonTower7Text5
+
+PokemonTower7Text5:
+	TX_FAR _PokemonTower7Text5
+	db "@"
 
 PokemonTower7TrainerHeaders: ; 60e47 (18:4e47)
 PokemonTower7TrainerHeader0: ; 60e47 (18:4e47)
@@ -97162,21 +97179,24 @@ PokemonTower7AfterBattleText3: ; 60ef1 (18:4ef1)
 	db "@"
 
 PokemonTower7Object: ; 0x60ef6 (size=42)
-	db $1 ; border tile
+	db $3 ; border tile
 
-	db $1 ; warps
-	db $10, $9, $1, POKEMONTOWER_6
+	db $2 ; warps
+	db $11, $4, $4, ROUTE_8
+	db $11, $5, $4, ROUTE_8
 
-	db $0 ; signs
+	db $1 ; signs
+	db $b, $5, $5
 
 	db $4 ; people
-	db SPRITE_ROCKET, $b + 4, $9 + 4, $ff, $d3, $41, ROCKET + $C8, $13 ; trainer
-	db SPRITE_ROCKET, $9 + 4, $c + 4, $ff, $d2, $42, ROCKET + $C8, $14 ; trainer
-	db SPRITE_ROCKET, $7 + 4, $9 + 4, $ff, $d3, $43, ROCKET + $C8, $15 ; trainer
-	db SPRITE_MR_FUJI, $3 + 4, $a + 4, $ff, $d0, $4 ; person
+	db SPRITE_BOULDER, $e + 4, $4 + 4, $ff, $10, $1 ; person
+	db SPRITE_BOULDER, $e + 4, $5 + 4, $ff, $10, $2 ; person
+	db SPRITE_ROCKET, $0 + 4, $9 + 4, $ff, $d3, $43, ROCKET + $C8, $15 ; trainer
+	db SPRITE_MR_FUJI, $0 + 4, $a + 4, $ff, $d0, $4 ; person
 
 	; warp-to
-	EVENT_DISP $a, $10, $9 ; POKEMONTOWER_6
+	EVENT_DISP POKEMONTOWER_7_WIDTH, $11, $4 ; ROUTE_8
+	EVENT_DISP POKEMONTOWER_7_WIDTH, $11, $5 ; ROUTE_8
 
 PokemonTower7Blocks: ; 60f20 (18:4f20)
 	INCBIN "maps/pokemontower7.blk"
@@ -120750,6 +120770,12 @@ WriteMonMoves_ShiftMoveData_2:
 	ret
 
 GoHome:
+	ld a, [W_CURMAP]
+	cp SAFARI_ZONE_EAST
+	jr c, .continue
+	cp SAFARI_ZONE_CENTER + 1
+	ret c
+.continue
 ; make player sacrifice pokemon if they want to go home
 	ld a, [W_NEWFLAGS1]
 	bit 2, a

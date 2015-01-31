@@ -77,3 +77,13 @@ _PokemonTower7AfterBattleText3:: ; 99e6a (26:5e6a)
 	line "away with this!"
 	done
 
+_PokemonTower7Text5::
+	text "END OF BETA 3"
+
+	para "Thanks for"
+	line "playing!"
+
+	para "Stay tuned for"
+	line "the final version"
+	cont "of #MON MAIZE!"
+	done

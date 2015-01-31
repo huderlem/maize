@@ -4328,8 +4328,5 @@ _CantUseMoveNowText::
 
 _CantUseItemsNowText::
 	text "You can't use"
-	line "items now because"
-	cont "you're competing"
-	cont "in the BATTLE"
-	cont "FACTORY."
+	line "items now."
 	prompt
