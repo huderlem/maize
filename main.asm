@@ -31511,7 +31511,7 @@ SplitMapSpriteSets: ; 17a89 (5:7a89)
 	db $01,$39,$04,$08 ; $f3
 	db $02,$15,$03,$08 ; $f4
 	db $01,$08,$0A,$08 ; $f5
-	db $01,$18,$09,$05 ; $f6
+	db $01,$32,$09,$02 ; $f6
 	db $01,$0C,$0A,$09 ; $f7
 	db $01,$35,$01,$0A ; $f8
 	db $02,$21,$02,$07 ; $f9
@@ -87575,19 +87575,20 @@ Route8Object: ; 0x5814f (size=119)
 	db $8, $8, $2, ROUTE_8_GATE_2
 	db $9, $8, $3, ROUTE_8_GATE_2
 
-	db $2 ; signs
+	db $3 ; signs
 	db $7, $27, $9 ; Route8Text10
 	db $d, $2d, $a
+	db $7, $30, $b ; bush
 
 	db $8 ; people
-	db SPRITE_BLACK_HAIR_BOY_1, $3 + 4, $19 + 4, $ff, $d0, $41, SUPER_NERD + $C8, $1 ; trainer
-	db SPRITE_GAMBLER, $3 + 4, $1a + 4, $ff, $d0, $42, GAMBLER + $C8, $1 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_1, $5 + 4, $20 + 4, $ff, $ff, $43, SUPER_NERD + $C8, $1 ; trainer
-	db SPRITE_LASS, $6 + 4, $29 + 4, $ff, $d0, $44, LASS + $C8, $1 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_1, $8 + 4, $2f + 4, $ff, $ff, $45, SUPER_NERD + $C8, $1 ; trainer
-	db SPRITE_LASS, $9 + 4, $24 + 4, $ff, $d2, $46, LASS + $C8, $1 ; trainer
-	db SPRITE_LASS, $c + 4, $10 + 4, $ff, $d3, $47, LASS + $C8, $1 ; trainer
-	db SPRITE_GAMBLER, $c + 4, $20 + 4, $ff, $d0, $48, GAMBLER + $C8, $1 ; trainer
+	db SPRITE_BLACK_HAIR_BOY_1, $3 + 4, $19 + 4, $ff, $d0, $41, BIRD_KEEPER + $C8, $2 ; trainer
+	db SPRITE_BUG_CATCHER, $3 + 4, $1a + 4, $ff, $d0, $42, BUG_CATCHER + $C8, $9 ; trainer
+	db SPRITE_BLACK_HAIR_BOY_1, $5 + 4, $20 + 4, $ff, $ff, $43, BIRD_KEEPER + $C8, $3 ; trainer
+	db SPRITE_LASS, $6 + 4, $29 + 4, $ff, $d0, $44, JR__TRAINER_F + $C8, $6 ; trainer
+	db SPRITE_BLACK_HAIR_BOY_1, $8 + 4, $2f + 4, $ff, $ff, $45, POKEMANIAC + $C8, $4 ; trainer
+	db SPRITE_LASS, $9 + 4, $24 + 4, $ff, $d2, $46, JR__TRAINER_F + $C8, $7 ; trainer
+	db SPRITE_LASS, $c + 4, $10 + 4, $ff, $d3, $47, BEAUTY + $C8, $5 ; trainer
+	db SPRITE_BUG_CATCHER, $c + 4, $20 + 4, $ff, $d0, $48, BUG_CATCHER + $C8, $a ; trainer
 
 	; warp-to
 	EVENT_DISP ROUTE_8_WIDTH, $a, $35 ; ROUTE_8_GATE
@@ -88604,8 +88605,35 @@ Route8TextPointers: ; 591cf (16:51cf)
 	dw Route8Text6
 	dw Route8Text7
 	dw Route8Text8
+	dw Route8Text9
 	dw Route8Text10
-	dw Route8Text10
+	dw Route8Text11
+
+Route8Text11:
+	db $08 ; asm
+	; is player in the bush covenant?
+	ld a, [W_COVENANT]
+	cp a, SHRUB_COVENANT
+	jr nz, .notMember
+	ld hl, Route8ShrubText2
+	jr .printText
+.notMember
+	ld hl, Route8ShrubText1
+.printText
+	call PrintText
+	jp TextScriptEnd
+
+Route8ShrubText1:
+	TX_FAR _Route8ShrubText1
+	db "@"
+
+Route8ShrubText2:
+	TX_FAR _Route8ShrubText2
+	db "@"
+
+Route8Text9:
+	TX_FAR _Route8Text9
+	db "@"
 
 Route8TrainerHeaders: ; 591e3 (16:51e3)
 Route8TrainerHeader0: ; 591e3 (16:51e3)
@@ -88673,7 +88701,7 @@ Route8TrainerHeader6: ; 5922b (16:522b)
 
 Route8TrainerHeader7: ; 59237 (16:5237)
 	db $8 ; flag's bit
-	db ($3 << 4) ; trainer's view range
+	db ($0 << 4) ; trainer's view range
 	dw $d7cd ; flag's byte
 	dw Route8BattleText8 ; 0x5309 TextBeforeBattle
 	dw Route8AfterBattleText8 ; 0x5313 TextAfterBattle
@@ -93186,25 +93214,6 @@ SwarmDataReporter:
 	dbw EXEGGCUTE, SwarmMapName14
 	dbw GROWLITHE, SwarmMapName15
 	dbw STARYU, SwarmMapName16
-
-	db ROUTE_3, ODDISH, 7
-	db ROUTE_24, MURKROW, 11
-	db ROUTE_22, SCYTHER, 15
-	db ROUTE_2, PONYTA, 9
-	db ROCK_TUNNEL_1, GASTLY, 12
-	db ROUTE_25, VENONAT, 13
-	db ROUTE_5, MACHOP, 14
-	db ROUTE_1, DITTO, 10
-
-	db ROUTE_8, ABRA, 15
-	db ROUTE_6, MAGNEMITE, 15
-	db ROUTE_9, LICKITUNG, 24
-	db ROUTE_18, DODUO, 25
-	db ROUTE_10, SKARMORY, 25
-	db VIRIDIAN_FOREST, EXEGGCUTE, 17
-	db MT_MOON_1, GROWLITHE, 16
-	db POKEMONTOWER_3, STARYU, 20
-
 
 SwarmMapNames:
 SwarmMapName1:
@@ -122073,8 +122082,8 @@ BugCatcherData: ; 39dce (e:5dce)
 	db 16,BUTTERFREE,BEEDRILL,0 ; Route 5 (east of Copper Town)
 	db 11,WEEDLE,KAKUNA,0 ; Route 6 (south of Copper Town)
 	db 10,CATERPIE,METAPOD,CATERPIE,0 ; Route 6 (south of Copper Town)
-	db 14,CATERPIE,WEEDLE,0
-	db 16,WEEDLE,CATERPIE,WEEDLE,0
+	db 36,BEEDRILL,BUTTERFREE,0 ; Route 8 (East of Entropia City)
+	db 35,PINSIR,VENONAT,PARASECT,0 ; Route 8 (East of Entropia City)
 	db 20,BUTTERFREE,0
 	db 18,METAPOD,CATERPIE,VENONAT,0
 	db 19,BEEDRILL,BEEDRILL,0
@@ -122123,8 +122132,8 @@ JrTrainerFData: ; 39e9d (e:5e9d)
 	db 16,PIDGEY,HOOTHOOT,PIDGEY,0 ; Route 6 (south of Copper Town)
 	db 22,BULBASAUR,0 ; Route 6 (south of Copper Town)
 	db 26,STEELIX,0 ; Pyrite City Gym
-	db 23,MEOWTH,0
-	db 20,PIKACHU,CLEFAIRY,0
+	db 36,PERSIAN,0 ; Route 8 (East of Entropia City)
+	db 36,PIKACHU,WARTORTLE,IVYSAUR,0 ; Route 8 (East of Entropia City)
 	db 21,PIDGEY,PIDGEOTTO,0
 	db 21,JIGGLYPUFF,PIDGEY,MEOWTH,0
 	db 22,ODDISH,BULBASAUR,0
@@ -122146,7 +122155,7 @@ PokemaniacData: ; 39f09 (e:5f09)
 	db 12,ODDISH,BELLSPROUT,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 16,DIGLETT,SANDSHREW,0 ; Route 5 (east of Copper Town)
 	db 23,BONSLY,SUDOWOODO,0 ; Route 6 (North of Pyrite City)
-	db 22,CHARMANDER,CUBONE,0
+	db 23,HOUNDOUR,TANGELA,0 ; Route 8 (East of Entropia City)
 	db 25,SLOWPOKE,0
 	db 40,CHARMELEON,LAPRAS,LICKITUNG,0
 	db 23,CUBONE,SLOWPOKE,0
@@ -122261,7 +122270,7 @@ BeautyData: ; 3a0d1 (e:60d1)
 	db 25,STEELIX,0 ; Pyrite City Gym
 	db 23,DRILBUR,DRILBUR,0 ; Pyrite City Gym
 	db 23,MAGNEMITE,MAGNEMITE,DRILBUR,0 ; Pyrite City Gym
-	db 23,EEVEE,FLAAFFY,PONYTA,0
+	db 35,EEVEE,ESPEON,SYLVEON,0 ; Route 8 (East of Entropia City)
 	db 35,SEAKING,0
 	db 30,SHELLDER,SHELLDER,CLOYSTER,0
 	db 31,POLIWAG,SEAKING,0
@@ -122302,8 +122311,8 @@ TamerData: ; 3a151 (e:6151)
 	db 42,RHYHORN,PRIMEAPE,ARBOK,TAUROS,0
 BirdKeeperData: ; 3a16b (e:616b)
 	db 22,PIDGEOTTO,FEAROW,NOCTOWL,0 ; Route 6 (North of Pyrite City)
-	db 25,SPEAROW,PIDGEY,PIDGEY,SPEAROW,SPEAROW,0
-	db 26,PIDGEY,PIDGEOTTO,SPEAROW,FEAROW,0
+	db 34,HOOTHOOT,PIDGEY,NOCTOWL,PIDGEOTTO,FEAROW,0 ; Route 8 (East of Entropia City)
+	db 35,MURKROW,HONCHKROW,SPEAROW,FEAROW,0 ; Route 8 (East of Entropia City)
 	db 33,FARFETCH_D,0
 	db 29,SPEAROW,FEAROW,0
 	db 26,PIDGEOTTO,FARFETCH_D,DODUO,PIDGEY,0
