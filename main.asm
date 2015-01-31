@@ -21580,7 +21580,7 @@ Route8Mons: ; d281 (3:5281)
 
 	db $00
 
-Route7Mons: ; d297 (3:5297)
+Route7Mons: ; d297 (3:5297) todo
 	db $0F
 	db 19,PIDGEY
 	db 19,ODDISH
@@ -21632,10 +21632,10 @@ TowerMons3: ; d2b1 (3:52b1)
 	db 22,SNEASEL
 	db 23,SEEL
 	db 21,ZUBAT
-	db 20,GASTLY
+	db 20,ZUBAT
 	db 22,SEEL
-	db 21,GASTLY
-	db 23,GASTLY
+	db 21,ZUBAT
+	db 23,ZUBAT
 	db 24,SNEASEL
 
 	db $00
@@ -30886,7 +30886,15 @@ SwarmData:
 	db ROCK_TUNNEL_1, GASTLY, 12
 	db ROUTE_25, VENONAT, 13
 	db ROUTE_5, MACHOP, 14
-	db ROUTE_1, DITTO, 7
+	db ROUTE_1, DITTO, 10
+	db ROUTE_8, ABRA, 15
+	db ROUTE_6, MAGNEMITE, 15
+	db ROUTE_9, LICKITUNG, 24
+	db ROUTE_18, DODUO, 25
+	db ROUTE_10, SKARMORY, 25
+	db VIRIDIAN_FOREST, EXEGGCUTE, 17
+	db MT_MOON_1, GROWLITHE, 16
+	db POKEMONTOWER_3, STARYU, 20
 
 SECTION "bank5",ROMX,BANK[$5]
 
@@ -93037,7 +93045,7 @@ VermilionPokecenterText5:
 	; swarm reporter
 	; get swarm id based on gameplay time
 	ld a, [W_PLAYTIMEHOURS + 1] ; low byte of hours played
-	and %00000111 ; TODO update this when changing number of swarms
+	and %00001111 ; TODO update this when changing number of swarms
 	ld b, 0
 	ld c, a
 	ld hl, SwarmDataReporter
@@ -93074,24 +93082,67 @@ SwarmDataReporter:
 	dbw VENONAT, SwarmMapName6
 	dbw MACHOP, SwarmMapName7
 	dbw DITTO, SwarmMapName8
+	dbw ABRA, SwarmMapName9
+	dbw MAGNEMITE, SwarmMapName10
+	dbw LICKITUNG, SwarmMapName11
+	dbw DODUO, SwarmMapName12
+	dbw SKARMORY, SwarmMapName13
+	dbw EXEGGCUTE, SwarmMapName14
+	dbw GROWLITHE, SwarmMapName15
+	dbw STARYU, SwarmMapName16
+
+	db ROUTE_3, ODDISH, 7
+	db ROUTE_24, MURKROW, 11
+	db ROUTE_22, SCYTHER, 15
+	db ROUTE_2, PONYTA, 9
+	db ROCK_TUNNEL_1, GASTLY, 12
+	db ROUTE_25, VENONAT, 13
+	db ROUTE_5, MACHOP, 14
+	db ROUTE_1, DITTO, 10
+
+	db ROUTE_8, ABRA, 15
+	db ROUTE_6, MAGNEMITE, 15
+	db ROUTE_9, LICKITUNG, 24
+	db ROUTE_18, DODUO, 25
+	db ROUTE_10, SKARMORY, 25
+	db VIRIDIAN_FOREST, EXEGGCUTE, 17
+	db MT_MOON_1, GROWLITHE, 16
+	db POKEMONTOWER_3, STARYU, 20
+
 
 SwarmMapNames:
 SwarmMapName1:
 	db "ROUTE 3@"
 SwarmMapName2:
 	db "ROUTE 5@"
-SwarmMapName3
+SwarmMapName3:
 	db "ROUTE 10@"
-SwarmMapName4
+SwarmMapName4:
 	db "ROUTE 2@"
-SwarmMapName5
+SwarmMapName5:
 	db "ARBOR HOLLOW@"
-SwarmMapName6
+SwarmMapName6:
 	db "ROUTE 4@"
-SwarmMapName7
+SwarmMapName7:
 	db "ROUTE 8@"
-SwarmMapName8
+SwarmMapName8:
 	db "ROUTE 1@"
+SwarmMapName9:
+	db "ROUTE 9@"
+SwarmMapName10:
+	db "ROUTE 6@"
+SwarmMapName11:
+	db "ROUTE 14@"
+SwarmMapName12:
+	db "ROUTE 15@"
+SwarmMapName13:
+	db "ROUTE 16@"
+SwarmMapName14:
+	db "SUDORAND WOODS@"
+SwarmMapName15:
+	db "ROCKY POINT@"
+SwarmMapName16:
+	db "HARDWATER HOLE@"
 
 VermilionPokecenterObject: ; 0x5c9a9 (size=44)
 	db $0 ; border tile
