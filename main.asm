@@ -294,7 +294,7 @@ MapHeaderPointers:: ; 01ae (0:01ae)
 	dw VictoryRoad1_h
 	dw PyriteCityGate_h
 	dw Route8Gate2_h
-	dw Lance_h ; unused
+	dw ShrubHaven_h
 	dw Lance_h ; unused
 	dw Lance_h
 	dw Lance_h ; unused
@@ -19218,7 +19218,7 @@ MapHeaderBanks: ; c23d (3:423d)
 	db BANK(VictoryRoad1_h)
 	db BANK(PyriteCityGate_h)
 	db BANK(Route8Gate2_h)
-	db $1D ;unused
+	db BANK(ShrubHaven_h)
 	db $1D ;unused
 	db BANK(Lance_h)
 	db $1D ;unused
@@ -97545,7 +97545,7 @@ ViridianForestObject: ; 0x611da (size=127)
 	db $1f, $10, $4, ROUTE_6
 	db $1f, $11, $4, ROUTE_6
 	db $1, $1, $0, VIRIDIAN_FOREST_ENTRANCE
-	db $1e, $4, $4, ROUTE_6
+	db $1e, $4, $0, SHRUB_HAVEN
 	
 	db $0 ; signs TODO
 	;db $6 ; signs
@@ -110830,6 +110830,42 @@ Route8Gate2Object:
     EVENT_DISP ROUTE_8_GATE_2_WIDTH, $3, $0 ; ROUTE_8
     EVENT_DISP ROUTE_8_GATE_2_WIDTH, $2, $7 ; ROUTE_8
     EVENT_DISP ROUTE_8_GATE_2_WIDTH, $3, $7 ; ROUTE_8
+
+ShrubHaven_h:
+	db $05 ; tileset
+    db SHRUB_HAVEN_HEIGHT, SHRUB_HAVEN_WIDTH ; dimensions (y, x)
+    dw ShrubHavenBlocks, ShrubHavenTextPointers, ShrubHavenScript ; blocks, texts, scripts
+    db $00 ; connections
+    dw ShrubHavenObject ; objects
+
+ShrubHavenBlocks:
+	INCBIN "maps/shrubhaven.blk"
+
+ShrubHavenTextPointers:
+	dw ShrubHavenText1
+
+ShrubHavenText1:
+	TX_FAR _ShrubHavenText1
+	db "@"
+
+ShrubHavenScript:
+	jp EnableAutoTextBoxDrawing
+
+ShrubHavenObject:
+	db $34 ; border tile
+
+    db $2 ; warps
+    db $7, $2, $3, VIRIDIAN_FOREST
+    db $7, $3, $3, VIRIDIAN_FOREST
+	
+    db $1 ; signs
+    db $3, $4, $1
+
+    db $0 ; people
+
+    ; warp-to
+    EVENT_DISP SHRUB_HAVEN_WIDTH, $7, $2
+    EVENT_DISP SHRUB_HAVEN_WIDTH, $7, $3
 
 
 SECTION "bank1E",ROMX,BANK[$1E]

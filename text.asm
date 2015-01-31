@@ -4336,3 +4336,14 @@ _CantUseItemsNowText::
 	text "You can't use"
 	line "items now."
 	prompt
+
+_ShrubHavenText1::
+	text "This secret area"
+	line "is not complete"
+	cont "in Beta 3."
+
+	para "The final version"
+	line "will have"
+	cont "something awesome"
+	cont "in here."
+	done
