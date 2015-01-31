@@ -21120,8 +21120,8 @@ WildDataPointers: ; ceeb (3:4eeb)
 	dw NoMons
 	dw NoMons
 	dw DeepSea1Mons ; DEEP_SEA_1
-	dw NoMons
-	dw NoMons
+	dw DeepSea2Mons ; DEEP_SEA_2
+	dw DeepSea3Mons ; DEEP_SEA_3
 	dw PlateauMons1
 	dw NoMons
 	dw NoMons
@@ -21468,7 +21468,7 @@ Route5Mons: ; d1e7 (3:51e7)
 	db 15,MANKEY
 	db 17,BUTTERFREE
 	db 17,BELLSPROUT
-	db 18,ODDISH
+	db 18,BELLSPROUT
 	db 17,BEEDRILL
 	db 18,BEEDRILL
 	db 19,BEEDRILL
@@ -21477,13 +21477,13 @@ Route5Mons: ; d1e7 (3:51e7)
 
 Route6Mons: ; d1fd (3:51fd)
 	db $0F
-	db 13,ODDISH
+	db 13,BELLSPROUT
 	db 13,PIDGEY
 	db 15,PIDGEY
 	db 10,MANKEY
 	db 12,MAREEP
 	db 15,MAREEP
-	db 16,ODDISH
+	db 16,BELLSPROUT
 	db 16,PIDGEY
 	db 14,MANKEY
 	db 16,MANKEY
@@ -21565,22 +21565,22 @@ Route12Mons: ; d26b (3:526b)
 
 	db $00
 
-Route8Mons: ; d281 (3:5281)
+Route8Mons: ; d281 (3:5281) (east of entropia city)
 	db $0F
-	db 18,PIDGEY
-	db 18,MANKEY
-	db 17,EKANS
-	db 16,GROWLITHE
-	db 20,PIDGEY
-	db 20,MANKEY
-	db 19,EKANS
-	db 17,GROWLITHE
-	db 15,GROWLITHE
-	db 18,GROWLITHE
+	db 19,SANDSHREW
+	db 23,DROWZEE
+	db 22,SLOWPOKE
+	db 24,DROWZEE
+	db 21,SLOWPOKE
+	db 21,SANDSHREW
+	db 23,JIGGLYPUFF
+	db 24,JIGGLYPUFF
+	db 25,JIGGLYPUFF
+	db 23,DRILBUR
 
 	db $00
 
-Route7Mons: ; d297 (3:5297) todo
+Route7Mons: ; d297 (3:5297) todo (east of quartz city)
 	db $0F
 	db 19,PIDGEY
 	db 19,ODDISH
@@ -21780,7 +21780,7 @@ Route18Mons: ; d38d (3:538d)
 	db 21,SNEASEL
 	db 22,PSYDUCK
 	db 22,VENONAT
-	db 23,DODUO
+	db 23,RATICATE
 	db 23,FLAAFFY
 	db 21,PSYDUCK
 	db 20,VENONAT
@@ -22160,6 +22160,35 @@ DeepSea1Mons:
 
 	db $00
 
+DeepSea2Mons:
+	db $19
+	db 20,KRABBY
+	db 21,KRABBY
+	db 20,SHELLDER
+	db 21,SHELLDER
+	db 21,HORSEA
+	db 20,HORSEA
+	db 21,TENTACOOL
+	db 21,GOLDEEN
+	db 21,GOLDEEN
+	db 21,KRABBY
+
+	db $00
+
+DeepSea3Mons:
+	db $19
+	db 20,KRABBY
+	db 21,KRABBY
+	db 20,SHELLDER
+	db 21,SHELLDER
+	db 21,HORSEA
+	db 20,HORSEA
+	db 21,TENTACOOL
+	db 21,GOLDEEN
+	db 21,GOLDEEN
+	db 21,KRABBY
+
+	db $00
 
 UseItem_: ; d5c7 (3:55c7)
 	ld a,1
@@ -52900,12 +52929,14 @@ Func_3ad71: ; 3ad71 (e:6d71)
 	cp $32
 	jr z, asm_3ad2e
 	ld a, b
+	cp EV_HAPPINESS_FAIRY
+	jr z, .happinessFairy
 	cp EV_HAPPINESS_DAY
-	jr z, .happinessDayEvo
+	jp z, .happinessDayEvo
 	cp EV_HAPPINESS_NIGHT
-	jr z, .happinessNightEvo	
+	jp z, .happinessNightEvo	
 	cp EV_HAPPINESS
-	jr z, .happiness
+	jp z, .happiness
 	cp EV_MOSS_ROCK
 	jp z, .mossRock
 	cp EV_ICE_ROCK
@@ -52936,6 +52967,51 @@ Func_3ad71: ; 3ad71 (e:6d71)
 	cp b
 	jp c, asm_3ad2e
 	jp .asm_3adb6
+.happinessFairy
+	; does mon have fairy type move?
+	push hl
+	ld bc, 11
+	ld a, [wWhichPokemon]
+	ld hl, W_PARTYMON1_MOVE1
+	call AddNTimes ; hl points to move1 byte
+	ld b, 4 + 1
+.checkFairyMoveLoop
+	dec b
+	jr z, .noFairyMove
+	push bc
+	ld a, [hli]
+	push hl
+	and a
+	pop hl
+	pop bc
+	jr z, .noFairyMove
+	push bc
+	push hl
+	dec a
+	ld hl, Moves ; $4000
+	ld bc, $6
+	call AddNTimes
+	ld de, W_PLAYERMOVENUM
+	ld a, [$cee9]
+	push af
+	ld a, BANK(Moves)
+	call FarCopyData
+	pop af
+	ld [$cee9], a
+	ld a, [W_PLAYERMOVETYPE]
+	cp FAIRY
+	jr z, .knowsFairyMove
+	pop hl
+	pop bc
+	jr .checkFairyMoveLoop
+.noFairyMove
+	pop hl
+	jp Func_3aed9
+.knowsFairyMove
+	pop hl
+	pop bc
+	pop hl
+	jr .happiness
 .happinessDayEvo
 	; is it day?
 	ld a, [W_PLAYTIMEMINUTES + 1]
@@ -54977,6 +55053,7 @@ Mon133_EvosMoves: ; 3b644 (e:7644)
 	db EV_ITEM,WATER_STONE ,1,VAPOREON
 	db EV_MOSS_ROCK,1,LEAFEON
 	db EV_ICE_ROCK,1,GLACEON
+	db EV_HAPPINESS_FAIRY,1,SYLVEON
 	db EV_HAPPINESS_DAY,1,ESPEON
 	db EV_HAPPINESS_NIGHT,1,UMBREON
 	db 0
@@ -120055,12 +120132,14 @@ Func_3ad71_2: ; 3ad71 (e:6d71)
 	cp $32
 	jr z, asm_3ad2e_2
 	ld a, b
+	cp EV_HAPPINESS_FAIRY
+	jr z, .happinessFairy_2
 	cp EV_HAPPINESS_DAY
-	jr z, .happinessDayEvo_2
+	jp z, .happinessDayEvo_2
 	cp EV_HAPPINESS_NIGHT
-	jr z, .happinessNightEvo_2
+	jp z, .happinessNightEvo_2
 	cp EV_HAPPINESS
-	jr z, .happiness
+	jp z, .happiness
 	cp EV_MOSS_ROCK
 	jp z, .mossRock_2
 	cp EV_ICE_ROCK
@@ -120091,6 +120170,51 @@ Func_3ad71_2: ; 3ad71 (e:6d71)
 	cp b
 	jp c, asm_3ad2e_2
 	jp .asm_3adb6_2
+.happinessFairy_2
+	; does mon have fairy type move?
+	push hl
+	ld bc, 11
+	ld a, [wWhichPokemon]
+	ld hl, W_PARTYMON1_MOVE1
+	call AddNTimes ; hl points to move1 byte
+	ld b, 4 + 1
+.checkFairyMoveLoop_2
+	dec b
+	jr z, .noFairyMove_2
+	push bc
+	ld a, [hli]
+	push hl
+	and a
+	pop hl
+	pop bc
+	jr z, .noFairyMove_2
+	push bc
+	push hl
+	dec a
+	ld hl, Moves ; $4000
+	ld bc, $6
+	call AddNTimes
+	ld de, W_PLAYERMOVENUM
+	ld a, [$cee9]
+	push af
+	ld a, BANK(Moves)
+	call FarCopyData
+	pop af
+	ld [$cee9], a
+	ld a, [W_PLAYERMOVETYPE]
+	cp FAIRY
+	jr z, .knowsFairyMove_2
+	pop hl
+	pop bc
+	jr .checkFairyMoveLoop_2
+.noFairyMove_2
+	pop hl
+	jp Func_3aed9_2
+.knowsFairyMove_2
+	pop hl
+	pop bc
+	pop hl
+	jr .happiness
 .happinessDayEvo_2
 	; is it day?
 	ld a, [W_PLAYTIMEMINUTES + 1]
@@ -121937,7 +122061,7 @@ JrTrainerMData: ; 39e78 (e:5e78)
 	db 16,MACHOP,FLAAFFY,0 ; Route 5 (east of Copper Town)
 	db 17,BELLSPROUT,VULPIX,0 ; Route 5 (east of Copper Town)
 	db 21,GROWLITHE,CHARMANDER,0 ; Route 6 (south of Copper Town)
-	db 19,RATTATA,DIGLETT,EKANS,SANDSHREW,0 ; Route 6 (south of Copper Town)
+	db 19,RATTATA,DIGLETT,BONSLY,SANDSHREW,0 ; Route 6 (south of Copper Town)
 	db 29,NIDORAN_M,NIDORINO,0
 JrTrainerFData: ; 39e9d (e:5e9d)
 	db 14,VULPIX,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
@@ -121989,7 +122113,7 @@ HikerData: ; 39f5e (e:5f5e)
 	db 10,GEODUDE,ONIX,GEODUDE,0 ; Arbor Hollow 1f (ROCK_TUNNEL_1)
 	db 14,GEODUDE,GEODUDE,MACHOP,ONIX,0 ; Route 4 (south of Agate)
 	db 15,BONSLY,0 ; Route 4 (south of Agate)
-	db 18,MACHOP,ZUBAT,0 ; Rocky Point 1 (MT_MOON_1)
+	db 18,MACHOP,GLIGAR,0 ; Rocky Point 1 (MT_MOON_1)
 	db 32,GRAVELER,MACHOKE,GOLBAT,0 ; Fighting Club Route (West of Quartz City)
 	db 20,GEODUDE,MACHOP,GEODUDE,0
 	db 21,GEODUDE,ONIX,0
@@ -122036,8 +122160,8 @@ FisherData: ; 3a013 (e:6013)
 	db  4,MAGIKARP,MAGIKARP,GOLDEEN,0 ; route south of Jade Village
 	db 27,SEAKING,SEAKING,0 ; route 21 (south of Jade Village)
 	db 26,GOLDEEN,POLIWHIRL,TENTACOOL,0 ; Route 21 (south of Jade Village)
-	db 28,STARYU,KRABBY,GYARADOS,0 ; Route 21 (south of Jade Village)
-	db 32,KINGLER,GOLDUCK,0 ; Route 21 (south of Jade Village)
+	db 28,STARYU,KRABBY,POLITOED,0 ; Route 21 (south of Jade Village)
+	db 32,KINGLER,GOLDUCK,SLOWKING,0 ; Route 21 (south of Jade Village)
 	db 33,SNEASEL,SEEL,SNEASEL,JYNX,0
 	db 28,SEAKING,GOLDEEN,SEAKING,SEAKING,0
 	db 31,SHELLDER,CLOYSTER,0
@@ -122123,7 +122247,7 @@ TamerData: ; 3a151 (e:6151)
 	db 44,PERSIAN,GOLDUCK,0
 	db 42,RHYHORN,PRIMEAPE,ARBOK,TAUROS,0
 BirdKeeperData: ; 3a16b (e:616b)
-	db 22,PIDGEOTTO,FEAROW,MURKROW,0 ; Route 6 (North of Pyrite City)
+	db 22,PIDGEOTTO,FEAROW,NOCTOWL,0 ; Route 6 (North of Pyrite City)
 	db 25,SPEAROW,PIDGEY,PIDGEY,SPEAROW,SPEAROW,0
 	db 26,PIDGEY,PIDGEOTTO,SPEAROW,FEAROW,0
 	db 33,FARFETCH_D,0
@@ -122351,7 +122475,7 @@ RandomTeamClassesPointers:
 	dw RandomTeamClass2
 
 RandomTeamClass1:
-	db 72 ; num entries in list
+	db 73 ; num entries in list
 	db CHARMELEON
 	db WARTORTLE
 	db IVYSAUR
@@ -122424,6 +122548,7 @@ RandomTeamClass1:
 	db SUDOWOODO
 	db HITMONTOP
 	db SNEASEL
+	db NOCTOWL
 
 RandomTeamClass2:
 	db 7 ; num entries in list
@@ -122456,7 +122581,6 @@ RandomTeamClass3:
 	db HAUNTER
 	db GLISCOR
 	db AMPHAROS
-
 
 BattleFactory_h:
 	db $13 ; tileset
@@ -124957,8 +125081,12 @@ NightWildMonPointers:
 	dw Route2NightMons
 	dw NoNightMons
 	dw NoNightMons
+	dw Route5NightMons
+	dw Route6NightMons
 	dw NoNightMons
+	dw Route8NightMons
 	dw NoNightMons
+	dw Route10NightMons
 	dw NoNightMons
 	dw NoNightMons
 	dw NoNightMons
@@ -124966,10 +125094,14 @@ NightWildMonPointers:
 	dw NoNightMons
 	dw NoNightMons
 	dw NoNightMons
+	dw Route18NightMons
 	dw NoNightMons
 	dw NoNightMons
 	dw NoNightMons
+	dw Route22NightMons
 	dw NoNightMons
+	dw Route24NightMons
+	dw Route25NightMons
 	dw NoNightMons
 	dw NoNightMons
 	dw NoNightMons
@@ -125015,15 +125147,7 @@ NightWildMonPointers:
 	dw NoNightMons
 	dw NoNightMons
 	dw NoNightMons
-	dw NoNightMons
-	dw NoNightMons
-	dw NoNightMons
-	dw NoNightMons
-	dw NoNightMons
-	dw NoNightMons
-	dw NoNightMons
-	dw NoNightMons
-	dw NoNightMons
+	dw ArborHollow1NightMons
 	dw NoNightMons
 	dw NoNightMons
 	dw NoNightMons
@@ -125208,6 +125332,56 @@ Route2NightMons:
 	db 5, HOOTHOOT
 	db 6, HOOTHOOT
 	db 4, ODDISH
+
+Route3NightMons:
+	db 6, HOOTHOOT
+	db 7, HOOTHOOT
+	db 8, MAREEP
+
+ArborHollow1NightMons:
+	db 8, HOOTHOOT
+	db 9, PARAS
+	db 10, MURKROW
+
+Route25NightMons:
+	db 12, HOOTHOOT
+	db 13, ODDISH
+	db 14, POLIWAG
+
+Route24NightMons:
+	db 12, BELLSPROUT
+	db 12, HOOTHOOT
+	db 14, BELLSPROUT
+
+Route5NightMons:
+	db 18, VOLTORB
+	db 15, HOOTHOOT
+	db 18, ODDISH
+
+Route6NightMons:
+	db 13, ODDISH
+	db 12, HOOTHOOT
+	db 16, ODDISH
+
+Route22NightMons:
+	db 15, CLEFAIRY
+	db 15, CLEFAIRY
+	db 14, CLEFAIRY
+
+Route18NightMons:
+	db 21, SNEASEL
+	db 23, SNEASEL
+	db 20, SNEASEL
+
+Route10NightMons:
+	db 20, HOOTHOOT
+	db 21, NOCTOWL
+	db 20, MURKROW
+
+Route8NightMons:
+	db 19, HOOTHOOT
+	db 24, DROWZEE
+	db 23, CLEFAIRY
 
 WriteEventMovesFunc:
 	ld hl, W_EVENTDATA + 1
