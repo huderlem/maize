@@ -293,7 +293,7 @@ MapHeaderPointers:: ; 01ae (0:01ae)
 	dw DeepSea3_h
 	dw VictoryRoad1_h
 	dw PyriteCityGate_h
-	dw Lance_h ; unused ;id=110
+	dw Route8Gate2_h
 	dw Lance_h ; unused
 	dw Lance_h ; unused
 	dw Lance_h
@@ -19217,7 +19217,7 @@ MapHeaderBanks: ; c23d (3:423d)
 	db BANK(DeepSea3_h)
 	db BANK(VictoryRoad1_h)
 	db BANK(PyriteCityGate_h)
-	db $1D ;unused
+	db BANK(Route8Gate2_h)
 	db $1D ;unused
 	db $1D ;unused
 	db BANK(Lance_h)
@@ -21567,16 +21567,16 @@ Route12Mons: ; d26b (3:526b)
 
 Route8Mons: ; d281 (3:5281) (east of entropia city)
 	db $0F
-	db 19,SANDSHREW
-	db 23,DROWZEE
-	db 22,SLOWPOKE
+	db 20,SANDSHREW
 	db 24,DROWZEE
-	db 21,SLOWPOKE
-	db 21,SANDSHREW
-	db 23,JIGGLYPUFF
+	db 23,SLOWPOKE
+	db 25,DROWZEE
+	db 22,SLOWPOKE
+	db 22,SANDSHREW
 	db 24,JIGGLYPUFF
 	db 25,JIGGLYPUFF
-	db 23,DRILBUR
+	db 26,JIGGLYPUFF
+	db 24,DRILBUR
 
 	db $00
 
@@ -31479,7 +31479,7 @@ MapSpriteSets: ; 17a64 (5:7a64)
 	db $02 ; ROUTE_5
 	db $09 ; ROUTE_6
 	db $f7 ; ROUTE_7
-	db $fc ; ROUTE_8
+	db $06 ; ROUTE_8
 	db $0a ; ROUTE_9
 	db $f2 ; ROUTE_10
 	db $01 ; ROUTE_11
@@ -87564,23 +87564,27 @@ Route8_h: ; 0x5812d to 0x5814f (34 bytes) (id=19)
 Route8Object: ; 0x5814f (size=119)
 	db $0a ; border tile
 
-	db $5 ; warps
+	db $9 ; warps
 	db $a, $35, $0, ROUTE_8_GATE
 	db $b, $35, $1, ROUTE_8_GATE
 	db $a, $3a, $2, ROUTE_8_GATE
 	db $b, $3a, $3, ROUTE_8_GATE
 	db $5, $2a, $0, PATH_ENTRANCE_ROUTE_8
+	db $8, $1, $0, ROUTE_8_GATE_2
+	db $9, $1, $1, ROUTE_8_GATE_2
+	db $8, $8, $2, ROUTE_8_GATE_2
+	db $9, $8, $3, ROUTE_8_GATE_2
 
 	db $2 ; signs
 	db $7, $27, $9 ; Route8Text10
 	db $d, $2d, $a
 
 	db $8 ; people
-	db SPRITE_BLACK_HAIR_BOY_2, $3 + 4, $19 + 4, $ff, $d0, $41, SUPER_NERD + $C8, $1 ; trainer
+	db SPRITE_BLACK_HAIR_BOY_1, $3 + 4, $19 + 4, $ff, $d0, $41, SUPER_NERD + $C8, $1 ; trainer
 	db SPRITE_GAMBLER, $3 + 4, $1a + 4, $ff, $d0, $42, GAMBLER + $C8, $1 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_2, $5 + 4, $20 + 4, $ff, $ff, $43, SUPER_NERD + $C8, $1 ; trainer
+	db SPRITE_BLACK_HAIR_BOY_1, $5 + 4, $20 + 4, $ff, $ff, $43, SUPER_NERD + $C8, $1 ; trainer
 	db SPRITE_LASS, $6 + 4, $29 + 4, $ff, $d0, $44, LASS + $C8, $1 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_2, $8 + 4, $2f + 4, $ff, $ff, $45, SUPER_NERD + $C8, $1 ; trainer
+	db SPRITE_BLACK_HAIR_BOY_1, $8 + 4, $2f + 4, $ff, $ff, $45, SUPER_NERD + $C8, $1 ; trainer
 	db SPRITE_LASS, $9 + 4, $24 + 4, $ff, $d2, $46, LASS + $C8, $1 ; trainer
 	db SPRITE_LASS, $c + 4, $10 + 4, $ff, $d3, $47, LASS + $C8, $1 ; trainer
 	db SPRITE_GAMBLER, $c + 4, $20 + 4, $ff, $d0, $48, GAMBLER + $C8, $1 ; trainer
@@ -87591,6 +87595,10 @@ Route8Object: ; 0x5814f (size=119)
 	EVENT_DISP ROUTE_8_WIDTH, $a, $3a ; ROUTE_8_GATE
 	EVENT_DISP ROUTE_8_WIDTH, $b, $3a ; ROUTE_8_GATE
 	EVENT_DISP ROUTE_8_WIDTH, $5, $2a ; PATH_ENTRANCE_ROUTE_8
+	EVENT_DISP ROUTE_8_WIDTH, $8, $1 ; ROUTE_8
+	EVENT_DISP ROUTE_8_WIDTH, $9, $1 ; ROUTE_8
+	EVENT_DISP ROUTE_8_WIDTH, $8, $8 ; ROUTE_8
+	EVENT_DISP ROUTE_8_WIDTH, $9, $8 ; ROUTE_8
 
 Route8Blocks: ; 581c6 (16:41c6)
 	INCBIN "maps/route8.blk"
@@ -110758,6 +110766,41 @@ PyriteCityGateObject:
     EVENT_DISP PYRITE_CITY_GATE_WIDTH, $0, $3 ; ROUTE_6
     EVENT_DISP PYRITE_CITY_GATE_WIDTH, $5, $2 ; ROUTE_6
     EVENT_DISP PYRITE_CITY_GATE_WIDTH, $5, $3 ; ROUTE_6
+
+Route8Gate2_h:
+	db $09 ; tileset
+    db ROUTE_8_GATE_2_HEIGHT, ROUTE_8_GATE_2_WIDTH ; dimensions (y, x)
+    dw Route8Gate2Blocks, Route8Gate2TextPointers, Route8Gate2Script ; blocks, texts, scripts
+    db $00 ; connections
+    dw Route8Gate2Object ; objects
+
+Route8Gate2Blocks:
+	INCBIN "maps/route8gate2.blk"
+
+Route8Gate2TextPointers:
+	db "@"
+
+Route8Gate2Script:
+	jp EnableAutoTextBoxDrawing
+
+Route8Gate2Object:
+	db $a ; border tile
+
+    db $4 ; warps
+    db $2, $0, $5, ROUTE_8
+    db $3, $0, $6, ROUTE_8
+    db $2, $7, $7, ROUTE_8
+    db $3, $7, $8, ROUTE_8
+	
+    db $0 ; signs
+
+    db $0 ; people
+
+    ; warp-to
+    EVENT_DISP ROUTE_8_GATE_2_WIDTH, $2, $0 ; ROUTE_8
+    EVENT_DISP ROUTE_8_GATE_2_WIDTH, $3, $0 ; ROUTE_8
+    EVENT_DISP ROUTE_8_GATE_2_WIDTH, $2, $7 ; ROUTE_8
+    EVENT_DISP ROUTE_8_GATE_2_WIDTH, $3, $7 ; ROUTE_8
 
 
 SECTION "bank1E",ROMX,BANK[$1E]
