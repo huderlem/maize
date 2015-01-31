@@ -1,22 +1,28 @@
 _CinnabarPokecenterText2:: ; a12de (28:52de)
 _CinnabarPokecenterText1:: ; a12de (28:52de)
-	text "You can cancel"
-	line "evolution."
+	text "I'm disappointed"
+	line "in the man who"
+	cont "runs the BIKE"
+	cont "PARK."
 
-	para "When a #MON is"
-	line "evolving, you can"
-	cont "stop it and leave"
-	cont "it the way it is."
+	para "We used to have"
+	line "an OUTPOST, but"
+	cont "grew hungry for"
+	cont "money!"
+
+	para "He turned the"
+	line "protective"
+	cont "OUTPOST into a"
+	cont "lucrative"
+	cont "tourist"
+	cont "attraction!"
 	done
 
 _CinnabarPokecenterText3:: ; a133e (28:533e)
-	text "Do you have any"
-	line "friends?"
+	text "Some #MON"
+	line "only come out at"
+	cont "night!"
 
-	para "#MON you get"
-	line "in trades grow"
-	cont "very quickly."
-
-	para "I think it's"
-	line "worth a try!"
+	para "HOOTHOOT is"
+	line "famous for that."
 	done

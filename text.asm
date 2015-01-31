@@ -495,14 +495,20 @@ _FuchsiaCityPokecenterGuyText:: ; 8855f (22:455f)
 	done
 
 _CinnabarPokecenterGuyText:: ; 885af (22:45af)
-	text "#MON can still"
-	line "learn techniques"
-	cont "after canceling"
-	cont "evolution."
+	text "One day..."
 
-	para "Evolution can wait"
-	line "until new moves"
-	cont "have been learned."
+	para "I'm going to get"
+	line "up from this"
+	cont "bench and conquer"
+	cont "the BATTLE"
+	cont "FACTORY!"
+
+	para "You can win some"
+	line "nice prizes!"
+
+	para "That's all the"
+	line "motivation I"
+	cont "need!"
 	done
 
 _SaffronCityPokecenterGuyText1:: ; 88621 (22:4621)
