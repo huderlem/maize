@@ -91,7 +91,7 @@ _RockTunnel1AfterBattleText5:: ; 8c506 (23:4506)
 	done
 
 _RockTunnel1BattleText6:: ; 8c526 (23:4526)
-	text "Go, PIDGEY!!!"
+	text "Go, HOOTHOOT!!!"
 	done
 
 _RockTunnel1EndBattleText6:: ; 8c541 (23:4541)

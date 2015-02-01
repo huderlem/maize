@@ -18858,7 +18858,7 @@ HandleJoypadResetButtons: ; c03c (3:403c)
 MapSongBanks: ; c04d (3:404d)
 	db MUSIC_PALLET_TOWN, BANK(Music_PalletTown) ;PALLET_TOWN
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; VIRIDIAN_CITY
-	db MUSIC_GAME_CORNER, BANK(Music_GameCorner) ; PEWTER_CITY
+	db MUSIC_CITIES1, BANK(Music_Cities1) ; PEWTER_CITY
 	db MUSIC_CITIES2, BANK(Music_Cities2) ; CERULEAN_CITY
 	db MUSIC_LAVENDER, BANK(Music_Lavender) ; LAVENDER_TOWN
 	db MUSIC_VERMILION, BANK(Music_Vermilion) ; VERMILION_CITY
@@ -18957,9 +18957,9 @@ MapSongBanks: ; c04d (3:404d)
 	db MUSIC_SS_ANNE, BANK(Music_SSAnne) ; SSAnne4
 	db MUSIC_SS_ANNE, BANK(Music_SSAnne) ; SSAnne5
 	db MUSIC_SS_ANNE, BANK(Music_SSAnne) ; SSAnne6
-	db MUSIC_SS_ANNE, BANK(Music_SSAnne) ; SSAnne7
-	db MUSIC_SS_ANNE, BANK(Music_SSAnne) ; SSAnne8
-	db MUSIC_SS_ANNE, BANK(Music_SSAnne) ; SSAnne9
+	db MUSIC_CINNABAR, BANK(Music_Cinnabar) ; SSAnne7
+	db MUSIC_CINNABAR, BANK(Music_Cinnabar) ; SSAnne8
+	db MUSIC_CINNABAR, BANK(Music_Cinnabar) ; SSAnne9
 	db MUSIC_SS_ANNE, BANK(Music_SSAnne) ; SSAnne10
 	db MUSIC_DUNGEON2, BANK(Music_Dungeon2) ; DeepSea1
 	db MUSIC_DUNGEON2, BANK(Music_Dungeon2) ; DeepSea2
@@ -26565,6 +26565,17 @@ _AddPokemonToParty: ; f2e5 (3:72e5)
 	call Predef ; indirect jump to WriteMonMoves (3afb8 (e:6fb8))
 .wroteMoves
 	pop de
+	; only do OT name stuff for player mons
+	inc de
+	inc de
+	push de
+	ld a, [$cc49]
+	and $f
+	jr nz, .afterExtraBytesStuff
+	pop de
+	dec de
+	dec de
+
 	ld a, [wPlayerID]  ; set trainer ID to player ID
 	inc de
 	ld [de], a
@@ -92680,7 +92691,7 @@ CeruleanPokecenterObject: ; 0x5c65f (size=44)
 	db SPRITE_BLACK_HAIR_BOY_2, $5 + 4, $a + 4, $fe, $0, $2 ; person
 	db SPRITE_GENTLEMAN, $5 + 4, $6 + 4, $ff, $ff, $3 ; person
 	db SPRITE_CABLE_CLUB_WOMAN, $2 + 4, $b + 4, $ff, $d0, $4 ; person
-	db SPRITE_OAK_AIDE, $3 + 4, $4 + 4, $ff, $d0, $5 ; person
+	db SPRITE_OAK_AIDE, $3 + 4, $6 + 4, $ff, $d0, $5 ; person
 
 	; warp-to
 	EVENT_DISP $7, $7, $3
@@ -93070,8 +93081,8 @@ LavenderPokecenterObject: ; 0x5c8f4 (size=44)
 	db $0 ; border tile
 
 	db $2 ; warps
-	db $7, $3, $0, $ff
-	db $7, $4, $0, $ff
+	db $7, $3, $2, $ff
+	db $7, $4, $2, $ff
 
 	db $0 ; signs
 
@@ -121110,8 +121121,12 @@ GenSudoRandWoodMap:
 AnimateWater:
 	ld hl,$9140 ; water tile pattern VRAM location
 	call AnimateWater_
+	ld a, [W_CURMAPTILESET]
+	and a
+	jr nz, .noDarkWater
 	ld hl,$95e0
 	call AnimateWater_
+.noDarkWater
 	ld a,[$d085]
 	inc a
 	and a,$07
@@ -122419,10 +122434,10 @@ ProfOakData: ; 3a21d (e:621d)
 ChiefData: ; 3a241 (e:6241)
 ; none
 ScientistData: ; 3a241 (e:6241)
-	db 35,EEVEE,WEEPINBELL,FARFETCH_D,0 ; Quartz City Gym
-	db 34,GRIMER,PRIMEAPE,SUDOWOODO,GOLBAT,0 ; Quartz City Gym
-	db 34,CROBAT,NIDORINO,TANGELA,0 ; Quartz City Gym
-	db 37,FEAROW,WEEZING,0 ; Quartz City Gym
+	db 33,EEVEE,WEEPINBELL,FARFETCH_D,0 ; Quartz City Gym
+	db 32,GRIMER,PRIMEAPE,SUDOWOODO,GOLBAT,0 ; Quartz City Gym
+	db 32,CROBAT,NIDORINO,TANGELA,0 ; Quartz City Gym
+	db 34,FEAROW,WEEZING,0 ; Quartz City Gym
 	db 33,ELECTRODE,0
 	db 26,MAGNETON,KOFFING,WEEZING,MAGNEMITE,0
 	db 25,VOLTORB,KOFFING,MAGNETON,MAGNEMITE,KOFFING,0
@@ -122530,7 +122545,7 @@ endc
 ErikaData: ; 3a3c9 (e:63c9)
 	db $FF,22,HOUNDOUR,22,PONYTA,24,CHARMELEON,26,HOUNDOOM,0
 KogaData: ; 3a3d1 (e:63d1)
-	db $FE,37,1,POLIWHIRL,1,MR_MIME,-2,DODRIO,2,DUGTRIO,0
+	db $FE,34,1,POLIWHIRL,1,MR_MIME,-1,DODRIO,2,DUGTRIO,0
 BlaineData: ; 3a3db (e:63db)
 	db $FD,3,37,38,39,41,0
 SabrinaData: ; 3a3e5 (e:63e5)
