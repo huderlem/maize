@@ -7126,7 +7126,7 @@ CountSetBits:: ; 2b7f (0:2b7f)
 	ld d,8
 .innerLoop ; count how many bits are set in the current byte
 	srl e
-	xor a
+	ld a, 0
 	adc c
 	ld c,a
 	dec d
@@ -65286,7 +65286,7 @@ HandlePokedexListMenu: ; 40111 (10:4111)
 	call PlaceString
 ; find the highest pokedex number among the pokemon the player has seen
 	ld hl,wPokedexSeen + 28
-	ld b,249
+	ld b,233
 .maxSeenPokemonLoop
 	ld a,[hld]
 	ld c,8
@@ -122613,6 +122613,7 @@ TimmyData:
 RandomTeamClassesPointers:
 	dw RandomTeamClass1
 	dw RandomTeamClass2
+	dw RandomTeamClass3
 
 RandomTeamClass1:
 	db 73 ; num entries in list

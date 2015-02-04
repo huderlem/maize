@@ -100,8 +100,8 @@ _RockTunnel1EndBattleText6:: ; 8c541 (23:4541)
 	prompt
 
 _RockTunnel1AfterBattleText6:: ; 8c552 (23:4552)
-	text "My PIDGEY must be"
-	line "one of those"
+	text "My HOOTHOOT must"
+	line "be one of those"
 	cont "lower-percentage"
 	cont "#MON."
 	done
