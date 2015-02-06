@@ -2485,21 +2485,9 @@ LoadBikePlayerSpriteGraphics:: ; 105d (0:105d)
 	ld hl,$8000
 
 LoadPlayerSpriteGraphicsCommon:: ; 1063 (0:1063)
-	push de
-	push hl
-	ld bc,(BANK(RedSprite) << 8) + $0c
-	call CopyVideoData
-	pop hl
-	pop de
-	ld a,$c0
-	add e
-	ld e,a
-	jr nc,.noCarry
-	inc d
-.noCarry
-	set 3,h
-	ld bc,$050c
-	jp CopyVideoData
+	ld hl, _LoadPlayerSpriteGraphicsCommon
+	ld b, BANK(_LoadPlayerSpriteGraphicsCommon)
+	jp Bankswitch
 
 ; function to load data from the map header
 LoadMapHeader:: ; 107c (0:107c)
@@ -31675,9 +31663,9 @@ SpriteSets: ; 17ab9 (5:7ab9)
 
 SpriteSheetPointerTable: ; 17b27 (5:7b27)
 	; SPRITE_RED
-	dw RedSprite
+	dw BushSprite
 	db $c0 ; byte count
-	db BANK(RedSprite)
+	db BANK(BushSprite)
 
 	; SPRITE_BLUE
 	dw BlueSprite
@@ -62724,11 +62712,24 @@ Func_3ec81: ; 3ec81 (f:6c81)
 Func_3ec92: ; 3ec92 (f:6c92)
 	ld a, [W_BATTLETYPE] ; $d05a
 	dec a
-	ld de, RedPicBack ; $7e0a
-	jr nz, .asm_3ec9e
+	jr nz, .notOldMan
 	ld de, OldManPic ; $7e9a
-.asm_3ec9e
+	ld a, BANK(OldManPic)
+	jr .uncompressSprite
+.notOldMan
+	ld a, [W_NEWFLAGS3]
+	bit 0, a
+	jr z, .notBush
+	ld a, [W_PLAYTIMEMINUTES + 1]
+	cp 30
+	jr c, .notBush
+	ld de, BushSpriteBack
+	ld a, BANK(BushSpriteBack)
+	jr .uncompressSprite
+.notBush
+	ld de, RedPicBack
 	ld a, BANK(RedPicBack)
+.uncompressSprite
 	call UncompressSpriteFromDE
 	ld a, $3
 	call Predef ; indirect jump to ScaleSpriteByTwo (2fe40 (b:7e40))
@@ -125538,6 +125539,51 @@ WriteEventMovesFunc:
 	ld a, [hl]
 	ld [de], a
 	ret
+
+BushSprite:
+	INCBIN "gfx/sprites/red_bush.2bpp"
+
+BushSpriteBack:
+	INCBIN "pic/trainer/bush-back.pic"
+
+_LoadPlayerSpriteGraphicsCommon::
+	ld hl, $8000
+	ld a, [W_NEWFLAGS3]
+	bit 0, a
+	jr z, .notBush
+	ld a, [W_PLAYTIMEMINUTES + 1]
+	cp 30
+	jr c, .notBush
+	ld b, BANK(BushSprite)
+	ld de, BushSprite
+	jr .continue
+.notBush
+	ld b, BANK(RedSprite)
+.continue
+	ld hl, $8000
+	push de
+	push hl
+	ld c, $0c
+	call CopyVideoData
+	pop hl
+	pop de
+	ld a,$c0
+	add e
+	ld e,a
+	jr nc,.noCarry
+	inc d
+.noCarry
+	set 3,h
+	ld bc, $050c
+	ld a, [W_NEWFLAGS3]
+	bit 0, a
+	jr z, .copyData
+	ld a, [W_PLAYTIMEMINUTES + 1]
+	cp 30
+	jr c, .copyData
+	ld b, BANK(BushSprite)
+.copyData
+	jp CopyVideoData
 
 SECTION "Alt Pics", ROMX, BANK[$3b]
 

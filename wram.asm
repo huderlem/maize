@@ -1554,6 +1554,11 @@ W_FACTORY_REWARD::
 	ds 1
 
 W_RING::
+	ds 1
+
+W_NEWFLAGS3::
+	ds 1
+	; 0: shrub sprite
 W_LAST_NEW_BYTE::
 	ds 1
 

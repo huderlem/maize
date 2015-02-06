@@ -1,3 +1,5 @@
+*.ips
+
 # global label defs are generated
 globals.asm
 
