@@ -924,9 +924,9 @@ wTempDiveCurMap::
 wTempDiveWarpID::
 	ds 1
 
-wNumBagItems:: ; d31d
+wNumBoxItems:: ; d31d
 	ds 1
-wBagItems:: ; d31e
+wBoxItems:: ; d31e
 ; item, quantity
 	ds 20 * 2
 	ds 1 ; end
@@ -1065,9 +1065,9 @@ W_GRASSTILE:: ; d535
 
 SECTION "Items", WRAMX[$d53a], BANK[1]
 
-wNumBoxItems:: ; d53a
+wNumBagItems:: ; d53a
 	ds 1
-wBoxItems:: ; d53b
+wBagItems:: ; d53b
 ; item, quantity
 	ds 50 * 2
 	ds 1 ; end

@@ -15012,7 +15012,7 @@ OakSpeech: ; 6115 (1:6115)
 	call Func_60ca
 	ld a,$18
 	call Predef ; indirect jump to InitializePlayerData
-	ld hl,$D53A
+	ld hl,wNumBoxItems
 	ld a,POTION
 	ld [$CF91],a
 	ld a,1
@@ -20822,7 +20822,7 @@ AddItemToInventory_: ; ce04 (3:4e04)
 	push de
 	push hl
 	push hl
-	ld d,50 ; PC box can hold 50 items
+	ld d,20 ; PC box can hold 20 items
 	ld a,wNumBagItems & $FF
 	cp l
 	jr nz,.checkIfInventoryFull
@@ -20830,7 +20830,7 @@ AddItemToInventory_: ; ce04 (3:4e04)
 	cp h
 	jr nz,.checkIfInventoryFull
 ; if the destination is the bag
-	ld d,20 ; bag can hold 20 items
+	ld d,50 ; bag can hold 50 items
 .checkIfInventoryFull
 	ld a,[hl]
 	sub d
@@ -22779,7 +22779,7 @@ ItemUseBall: ; d687 (3:5687)
 	ld a,[W_BATTLETYPE]
 	and a
 	ret nz
-	ld hl,$d31d
+	ld hl,wNumBagItems
 	inc a
 	ld [$cf96],a
 	jp RemoveItemFromInventory	;remove ITEM (XXX)
@@ -37550,7 +37550,7 @@ OaksLabScript_1d00a: ; 1d00a (7:500a)
 	inc c
 	jr .asm_1d010 ; 0x1d01a $f4
 .GotParcel
-	ld hl, $d31d
+	ld hl, wNumBagItems
 	ld a, c
 	ld [wWhichPokemon], a
 	ld a, $1
@@ -102665,7 +102665,7 @@ PewterCityName: ; 7148d (1c:548d)
 CeruleanCityName: ; 71499 (1c:5499)
 	db "AGATE CITY@"
 LavenderTownName: ; 714a7 (1c:54a7)
-	db "LAVENDER TOWN@"
+	db "RUBY DOCKS@"
 VermilionCityName: ; 714b5 (1c:54b5)
 	db "COPPER TOWN@"
 CeladonCityName: ; 714c4 (1c:54c4)
