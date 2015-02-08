@@ -110854,10 +110854,124 @@ ShrubHavenBlocks:
 	INCBIN "maps/shrubhaven.blk"
 
 ShrubHavenTextPointers:
-	dw ShrubHavenText1
+	dw ShrubHavenText
 
-ShrubHavenText1:
+ShrubHavenText:
+	db $08 ; asm
+	ld a, [W_NEWFLAGS3]
+	bit 0, a
+	jp nz, .alreadyCursed
+	ld a, $ff
+	call PlaySound
+	ld hl, ShrubHavenText1
+	call PrintText
+	call GBFadeOut2
+
+	ld a,$a7
+	call PlaySound ; play sound
+	; make other bushes appear
+	ld a, $35
+	ld [$d09f], a
+	ld bc, $0000
+	ld a, $17
+	call Predef
+
+	ld a,$a7
+	call PlaySound ; play sound
+	ld a, $3b
+	ld [$d09f], a
+	ld bc, $0002
+	ld a, $17
+	call Predef
+
+	ld a,$a7
+	call PlaySound ; play sound
+	ld a, $35
+	ld [$d09f], a
+	ld bc, $0003
+	ld a, $17
+	call Predef
+
+	ld a,$a7
+	call PlaySound ; play sound
+	ld a, $3a
+	ld [$d09f], a
+	ld bc, $0101
+	ld a, $17
+	call Predef
+
+	ld a,$a7
+	call PlaySound ; play sound
+	ld a, $36
+	ld [$d09f], a
+	ld bc, $0103
+	ld a, $17
+	call Predef
+
+	ld a,$a7
+	call PlaySound ; play sound
+	ld a, $39
+	ld [$d09f], a
+	ld bc, $0200
+	ld a, $17
+	call Predef
+
+	ld a,$a7
+	call PlaySound ; play sound
+	ld a, $36
+	ld [$d09f], a
+	ld bc, $0201
+	ld a, $17
+	call Predef
+
+	ld a, $36
+	ld [$d09f], a
+	ld bc, $0202
+	ld a, $17
+	call Predef
+
+	ld a, $35
+	ld [$d09f], a
+	ld bc, $0203
+	ld a, $17
+	call Predef
+
+	ld a, $38
+	ld [$d09f], a
+	ld bc, $0300
+	ld a, $17
+	call Predef
+
+	ld a, $36
+	ld [$d09f], a
+	ld bc, $0302
+	ld a, $17
+	call Predef
+
+	call GBFadeIn2
+
+	ld hl, ShrubHavenText3
+	call PrintText
+
+	ld hl, W_NEWFLAGS3 ; set werebush curse bit
+	set 0, [hl]
+	jr .done
+.alreadyCursed
+	ld hl, ShrubHavenText2
+	call PrintText
+.done
+	jp TextScriptEnd
+
+ShrubHavenText1
 	TX_FAR _ShrubHavenText1
+	db "@"
+
+ShrubHavenText2
+	TX_FAR _ShrubHavenText2
+	db "@"
+
+ShrubHavenText3
+	TX_FAR _ShrubHavenText3
 	db "@"
 
 ShrubHavenScript:

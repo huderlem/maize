@@ -4338,12 +4338,42 @@ _CantUseItemsNowText::
 	prompt
 
 _ShrubHavenText1::
-	text "This secret area"
-	line "is not complete"
-	cont "in Beta 3."
+	text "Do you know where"
+	line "you step?"
 
-	para "The final version"
-	line "will have"
-	cont "something awesome"
-	cont "in here."
+	para "This place is a"
+	line "haven, and all"
+	cont "ousiders must"
+	cont "leave."
+
+	para "We SHRUBS do not"
+	line "tolerate the"
+	cont "surface walkers!"
+
+	para "Be cursed!"
+	done
+
+_ShrubHavenText2::
+	text "Hahaha."
+
+	para "A WEREBUSH, you"
+	line "are!"
+
+	para "Slither off, you"
+	line "slimy surface"
+	cont "scum!"
+	done
+
+_ShrubHavenText3::
+	text "Oh-ho-ho-ho..."
+
+	para "A WEREBUSH, you"
+	line "are!"
+
+	para "At night, you'll"
+	line "be a fright!"
+
+	para "Slither off, you"
+	line "slimy surface"
+	cont "scum!"
 	done
