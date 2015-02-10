@@ -3064,7 +3064,7 @@ LoadFrontSpriteByMonIndex:: ; 1389 (0:1389)
 	and a
 	pop hl
 	jr z, .invalidDexNumber  ; dex #0 invalid
-	cp 182 ; num mons in dex + 1
+	cp 183 ; num mons in dex + 1
 	jr c, .validDexNumber    ; dex >#151 invalid
 .invalidDexNumber
 	ld a, RHYDON ; $1
@@ -36652,7 +36652,7 @@ MonsterNames: ; 1c21e (7:421e)
 	db "SEAKING@@@"
 	db "HOOTHOOT@@"
 	db "NOCTOWL@@@"
-	db "MISSINGNO."
+	db "PICHU@@@@@"
 	db "MISSINGNO."
 	db "PONYTA@@@@"
 	db "RAPIDASH@@"
@@ -51152,7 +51152,44 @@ NoctowlBaseStats:
 	db %00101110
 	db %01001010
 
-	db Bank(HoothootPicFront)
+	db Bank(NoctowlPicFront)
+
+PichuBaseStats:
+	db DEX_PICHU ; pokedex id
+	db 20    ; base hp
+	db 40   ; base attack
+	db 15   ; base defense
+	db 60    ; base speed
+	db 35    ; base special
+
+	db ELECTRIC     ; species type 1
+	db ELECTRIC     ; species type 2
+
+	db 190  ; catch rate
+	db 42 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw PichuPicFront
+	dw PichuPicBack
+
+	; attacks known at lvl 0
+	db THUNDERSHOCK
+	db GROWL
+	db 0
+	db 0
+
+	db 0 ; growth rate
+
+	; learnset
+	db %10111001
+	db %10000011
+	db %10001101
+	db %11000001
+	db %11000011
+	db %00011000
+	db %01000010
+
+	db Bank(PichuPicFront)
 
 CryData: ; 39446 (e:5446)
 	;$BaseCry, $Pitch, $Length
@@ -51316,7 +51353,7 @@ CryData: ; 39446 (e:5446)
 	db $16, $10, $FF; Seaking
 	db $14, $60, $10; Hoothoot
 	db $14, $40, $20; Noctowl
-	db $00, $00, $00; MissingNo.
+	db $0F, $FF, $0A; Pichu
 	db $00, $00, $00; MissingNo.
 	db $25, $00, $80; Ponyta
 	db $25, $20, $C0; Rapidash
@@ -65879,7 +65916,7 @@ PokedexEntryPointers: ; 4047e (10:447e)
 	dw SeakingDexEntry
 	dw HoothootDexEntry
 	dw NoctowlDexEntry
-	dw MissingNoDexEntry
+	dw PichuDexEntry
 	dw MissingNoDexEntry
 	dw PonytaDexEntry
 	dw RapidashDexEntry
@@ -67182,6 +67219,13 @@ NoctowlDexEntry:
 	TX_FAR _NoctowlDexEntry
 	db "@"
 
+PichuDexEntry:
+	db "TINY MOUSE@"
+	db 1, 0
+	dw 44
+	TX_FAR _PichuDexEntry
+	db "@"
+
 MissingNoDexEntry: ; 40fe5 (10:4fe5)
 	db "???@"
 	db 10 ; 1.0 m
@@ -67386,7 +67430,7 @@ PokedexOrder: ; 41024 (10:5024)
 	db DEX_SEAKING
 	db DEX_HOOTHOOT
 	db DEX_NOCTOWL
-	db 0 ; MISSINGNO.
+	db DEX_PICHU
 	db 0 ; MISSINGNO.
 	db DEX_PONYTA
 	db DEX_RAPIDASH
@@ -103380,7 +103424,7 @@ MonOverworldData: ; 7190d (1c:590d)
 	dn SPRITE_MON, SPRITE_MON               ;Sneasel/Weavile
 	dn SPRITE_MON, SPRITE_MON               ;Slowking/Politoed
 	dn SPRITE_MON, SPRITE_BIRD              ;Crobat/Hoothoot
-	dn SPRITE_BIRD_M, SPRITE_BIRD_M         ;Noctowl/
+	dn SPRITE_BIRD_M, SPRITE_FAIRY          ;Noctowl/Pichu
 	db 0
 
 MonOverworldSprites: ; 71959 (1c:5959)
@@ -104727,6 +104771,7 @@ MonsterPalettes: ; 725c8 (1c:65c8)
 	db PAL_PURPLEMON ; Crobat
 	db PAL_BROWNMON  ; Hoothoot
 	db PAL_BROWNMON  ; Noctowl
+	db PAL_YELLOWMON ; Pichu
 
 ; palettes for overworlds, title screen, monsters
 SuperPalettes: ; 72660 (1c:6660)
@@ -119244,7 +119289,9 @@ HealingRing:
 	jr z, .healingRingLogic
 	dec a
 	ld d, a
+	push af
 	call UpdateHappiness
+	pop af
 	jr .partyLoop
 .healingRingLogic
 ; try and heal pokemon in party
@@ -119966,10 +120013,14 @@ Mon181_EvosMoves: ; 3b89c (e:789c)
 	db 0
 
 Mon182_EvosMoves: ; 3b89e (e:789e)
-;MISSINGNO
+;PICHU
 ;Evolutions
+	db EV_HAPPINESS,1,PIKACHU
 	db 0
 ;Learnset
+	db 6,TAIL_WHIP
+	db 8,THUNDER_WAVE
+	db 11,SWEET_KISS
 	db 0
 
 Mon183_EvosMoves: ; 3b8a0 (e:78a0)
@@ -125285,6 +125336,10 @@ NoctowlPicFront:
 	INCBIN "pic/bmon/noctowl.pic"
 NoctowlPicBack:
 	INCBIN "pic/monback/noctowlb.pic"
+PichuPicFront:
+	INCBIN "pic/bmon/pichu.pic"
+PichuPicBack:
+	INCBIN "pic/monback/pichub.pic"
 
 MiniSprites3: ; mons 179-?
 	INCBIN "gfx/mini_sprites/mini_sprites_3.2bpp"

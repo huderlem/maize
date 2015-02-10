@@ -3408,6 +3408,16 @@ _NoctowlDexEntry::
 	next "its IQ"
 	dex
 
+_PichuDexEntry::
+	text "It's so cute, but"
+	next "it's such a joke"
+	next "when it comes to"
+
+	page "fighting. It even"
+	next "damages itself in"
+	next "Super Smash Bros"
+	dex
+
 _BattleFactoryText2::
 	text "Hello, ", $52, "!"
 
