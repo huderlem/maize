@@ -3064,7 +3064,7 @@ LoadFrontSpriteByMonIndex:: ; 1389 (0:1389)
 	and a
 	pop hl
 	jr z, .invalidDexNumber  ; dex #0 invalid
-	cp 183 ; num mons in dex + 1
+	cp 184 ; num mons in dex + 1
 	jr c, .validDexNumber    ; dex >#151 invalid
 .invalidDexNumber
 	ld a, RHYDON ; $1
@@ -21270,9 +21270,9 @@ NoMons: ; d0dd (3:50dd)
 
 Route1Mons: ; d0df (3:50df)
 	db $19
-	db 3,SPEAROW
-	db 3,RATTATA
-	db 4,RATTATA
+	db 3,ELEKID
+	db 3,ELEKID
+	db 4,ELEKID
 	db 4,SPEAROW
 	db 2,SPEAROW
 	db 5,SPEAROW
@@ -36653,7 +36653,7 @@ MonsterNames: ; 1c21e (7:421e)
 	db "HOOTHOOT@@"
 	db "NOCTOWL@@@"
 	db "PICHU@@@@@"
-	db "MISSINGNO."
+	db "ELEKID@@@@"
 	db "PONYTA@@@@"
 	db "RAPIDASH@@"
 	db "RATTATA@@@"
@@ -51191,6 +51191,43 @@ PichuBaseStats:
 
 	db Bank(PichuPicFront)
 
+ElekidBaseStats:
+	db DEX_ELEKID ; pokedex id
+	db 45    ; base hp
+	db 63   ; base attack
+	db 37   ; base defense
+	db 95    ; base speed
+	db 60    ; base special
+
+	db ELECTRIC     ; species type 1
+	db ELECTRIC     ; species type 2
+
+	db 45  ; catch rate
+	db 106 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw ElekidPicFront
+	dw ElekidPicBack
+
+	; attacks known at lvl 0
+	db QUICK_ATTACK
+	db LEER
+	db 0
+	db 0
+
+	db 0 ; growth rate
+
+	; learnset
+	db %10111001
+	db %01000011
+	db %10001111
+	db %11010001
+	db %11000111
+	db %00111000
+	db %01100010
+
+	db Bank(ElekidPicFront)
+
 CryData: ; 39446 (e:5446)
 	;$BaseCry, $Pitch, $Length
 	db $11, $00, $80; Rhydon
@@ -51354,7 +51391,7 @@ CryData: ; 39446 (e:5446)
 	db $14, $60, $10; Hoothoot
 	db $14, $40, $20; Noctowl
 	db $0F, $FF, $0A; Pichu
-	db $00, $00, $00; MissingNo.
+	db $06, $C0, $80; Elekid
 	db $25, $00, $80; Ponyta
 	db $25, $20, $C0; Rapidash
 	db $22, $00, $80; Rattata
@@ -65917,7 +65954,7 @@ PokedexEntryPointers: ; 4047e (10:447e)
 	dw HoothootDexEntry
 	dw NoctowlDexEntry
 	dw PichuDexEntry
-	dw MissingNoDexEntry
+	dw ElekidDexEntry
 	dw PonytaDexEntry
 	dw RapidashDexEntry
 	dw RattataDexEntry
@@ -67226,6 +67263,13 @@ PichuDexEntry:
 	TX_FAR _PichuDexEntry
 	db "@"
 
+ElekidDexEntry:
+	db "ELECTRIC@"
+	db 2, 0
+	dw 518
+	TX_FAR _ElekidDexEntry
+	db "@"
+
 MissingNoDexEntry: ; 40fe5 (10:4fe5)
 	db "???@"
 	db 10 ; 1.0 m
@@ -67431,7 +67475,7 @@ PokedexOrder: ; 41024 (10:5024)
 	db DEX_HOOTHOOT
 	db DEX_NOCTOWL
 	db DEX_PICHU
-	db 0 ; MISSINGNO.
+	db DEX_ELEKID
 	db DEX_PONYTA
 	db DEX_RAPIDASH
 	db DEX_RATTATA
@@ -103425,6 +103469,7 @@ MonOverworldData: ; 7190d (1c:590d)
 	dn SPRITE_MON, SPRITE_MON               ;Slowking/Politoed
 	dn SPRITE_MON, SPRITE_BIRD              ;Crobat/Hoothoot
 	dn SPRITE_BIRD_M, SPRITE_FAIRY          ;Noctowl/Pichu
+	dn SPRITE_MON, SPRITE_MON                ;Elekid
 	db 0
 
 MonOverworldSprites: ; 71959 (1c:5959)
@@ -104772,6 +104817,7 @@ MonsterPalettes: ; 725c8 (1c:65c8)
 	db PAL_BROWNMON  ; Hoothoot
 	db PAL_BROWNMON  ; Noctowl
 	db PAL_YELLOWMON ; Pichu
+	db PAL_YELLOWMON ; Elekid
 
 ; palettes for overworlds, title screen, monsters
 SuperPalettes: ; 72660 (1c:6660)
@@ -120024,10 +120070,18 @@ Mon182_EvosMoves: ; 3b89e (e:789e)
 	db 0
 
 Mon183_EvosMoves: ; 3b8a0 (e:78a0)
-;MISSINGNO
+;ELEKID
 ;Evolutions
+	db EV_HAPPINESS,1,ELECTABUZZ
 	db 0
 ;Learnset
+	db 9,THUNDERPUNCH
+	db 16,LOW_KICK
+	db 21,LIGHT_SCREEN
+	db 25,SWIFT
+	db 33,SCREECH
+	db 41,THUNDERBOLT
+	db 49,THUNDER
 	db 0
 Mon077_EvosMoves: ; 3b8a2 (e:78a2)
 ;PONYTA
@@ -125340,6 +125394,10 @@ PichuPicFront:
 	INCBIN "pic/bmon/pichu.pic"
 PichuPicBack:
 	INCBIN "pic/monback/pichub.pic"
+ElekidPicFront:
+	INCBIN "pic/bmon/elekid.pic"
+ElekidPicBack:
+	INCBIN "pic/monback/elekidb.pic"
 
 MiniSprites3: ; mons 179-?
 	INCBIN "gfx/mini_sprites/mini_sprites_3.2bpp"

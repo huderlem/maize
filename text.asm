@@ -3418,6 +3418,16 @@ _PichuDexEntry::
 	next "Super Smash Bros"
 	dex
 
+_ElekidDexEntry::
+	text "ELEKID can often"
+	next "be found sticking"
+	next "out of wall"
+
+	page "outlets. That's"
+	next "how it recharges"
+	next "itself"
+	dex
+
 _BattleFactoryText2::
 	text "Hello, ", $52, "!"
 
