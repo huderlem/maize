@@ -3428,6 +3428,16 @@ _ElekidDexEntry::
 	next "itself"
 	dex
 
+_MagbyDexEntry::
+	text "The DIGI-EGG of"
+	next "COURAGE looks"
+	next "like a MAGBY egg."
+
+	page "Really, look it"
+	next "up. FLAMEDRAMON"
+	next "is MAGBY"
+	dex
+
 _BattleFactoryText2::
 	text "Hello, ", $52, "!"
 

@@ -3064,7 +3064,7 @@ LoadFrontSpriteByMonIndex:: ; 1389 (0:1389)
 	and a
 	pop hl
 	jr z, .invalidDexNumber  ; dex #0 invalid
-	cp 184 ; num mons in dex + 1
+	cp 185 ; num mons in dex + 1
 	jr c, .validDexNumber    ; dex >#151 invalid
 .invalidDexNumber
 	ld a, RHYDON ; $1
@@ -21270,9 +21270,9 @@ NoMons: ; d0dd (3:50dd)
 
 Route1Mons: ; d0df (3:50df)
 	db $19
-	db 3,ELEKID
-	db 3,ELEKID
-	db 4,ELEKID
+	db 3,SPEAROW
+	db 3,RATTATA
+	db 4,RATTATA
 	db 4,SPEAROW
 	db 2,SPEAROW
 	db 5,SPEAROW
@@ -36663,7 +36663,7 @@ MonsterNames: ; 1c21e (7:421e)
 	db "GEODUDE@@@"
 	db "PORYGON@@@"
 	db "AERODACTYL"
-	db "MISSINGNO."
+	db "MAGBY@@@@@"
 	db "MAGNEMITE@"
 	db "MISSINGNO."
 	db "MISSINGNO."
@@ -51228,6 +51228,43 @@ ElekidBaseStats:
 
 	db Bank(ElekidPicFront)
 
+MagbyBaseStats:
+	db DEX_MAGBY ; pokedex id
+	db 45    ; base hp
+	db 75   ; base attack
+	db 37   ; base defense
+	db 83    ; base speed
+	db 62    ; base special
+
+	db FIRE     ; species type 1
+	db FIRE     ; species type 2
+
+	db 45  ; catch rate
+	db 117 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw MagbyPicFront
+	dw MagbyPicBack
+
+	; attacks known at lvl 0
+	db EMBER
+	db 0
+	db 0
+	db 0
+
+	db 0 ; growth rate
+
+	; learnset
+	db %10111001
+	db %01000011
+	db %00001111
+	db %11010000
+	db %10100110
+	db %00101000
+	db %00100010
+
+	db Bank(MagbyPicFront)
+
 CryData: ; 39446 (e:5446)
 	;$BaseCry, $Pitch, $Length
 	db $11, $00, $80; Rhydon
@@ -51401,7 +51438,7 @@ CryData: ; 39446 (e:5446)
 	db $24, $F0, $10; Geodude
 	db $25, $AA, $FF; Porygon
 	db $23, $20, $F0; Aerodactyl
-	db $00, $00, $00; MissingNo.
+	db $04, $CF, $10; Magby
 	db $1C, $80, $60; Magnemite
 	db $00, $00, $00; MissingNo.
 	db $00, $00, $00; MissingNo.
@@ -65964,7 +66001,7 @@ PokedexEntryPointers: ; 4047e (10:447e)
 	dw GeodudeDexEntry
 	dw PorygonDexEntry
 	dw AerodactylDexEntry
-	dw MissingNoDexEntry
+	dw MagbyDexEntry
 	dw MagnemiteDexEntry
 	dw MissingNoDexEntry
 	dw MissingNoDexEntry
@@ -67270,6 +67307,13 @@ ElekidDexEntry:
 	TX_FAR _ElekidDexEntry
 	db "@"
 
+MagbyDexEntry:
+	db "LIVE COAL@"
+	db 2, 4
+	dw 472
+	TX_FAR _MagbyDexEntry
+	db "@"
+
 MissingNoDexEntry: ; 40fe5 (10:4fe5)
 	db "???@"
 	db 10 ; 1.0 m
@@ -67485,7 +67529,7 @@ PokedexOrder: ; 41024 (10:5024)
 	db DEX_GEODUDE
 	db DEX_PORYGON
 	db DEX_AERODACTYL
-	db 0 ; MISSINGNO.
+	db DEX_MAGBY
 	db DEX_MAGNEMITE
 	db 0 ; MISSINGNO.
 	db 0 ; MISSINGNO.
@@ -103469,7 +103513,7 @@ MonOverworldData: ; 7190d (1c:590d)
 	dn SPRITE_MON, SPRITE_MON               ;Slowking/Politoed
 	dn SPRITE_MON, SPRITE_BIRD              ;Crobat/Hoothoot
 	dn SPRITE_BIRD_M, SPRITE_FAIRY          ;Noctowl/Pichu
-	dn SPRITE_MON, SPRITE_MON                ;Elekid
+	dn SPRITE_MON, SPRITE_MON               ;Elekid/Magby
 	db 0
 
 MonOverworldSprites: ; 71959 (1c:5959)
@@ -104818,6 +104862,7 @@ MonsterPalettes: ; 725c8 (1c:65c8)
 	db PAL_BROWNMON  ; Noctowl
 	db PAL_YELLOWMON ; Pichu
 	db PAL_YELLOWMON ; Elekid
+	db PAL_REDMON    ; Magby
 
 ; palettes for overworlds, title screen, monsters
 SuperPalettes: ; 72660 (1c:6660)
@@ -120198,11 +120243,21 @@ Mon142_EvosMoves: ; 3b917 (e:7917)
 	db 0
 
 Mon184_EvosMoves: ; 3b921 (e:7921)
-;MISSINGNO
+;MAGBY
 ;Evolutions
+	db EV_HAPPINESS,1,MAGMAR
 	db 0
 ;Learnset
+	db 7,LEER
+	db 13,SMOG
+	db 19,FIRE_PUNCH
+	db 25,SMOKESCREEN
+	db 30,FEINT_ATTACK
+	db 35,FLAMETHROWER
+	db 41,CONFUSE_RAY
+	db 48,FIRE_BLAST
 	db 0
+
 Mon081_EvosMoves: ; 3b923 (e:7923)
 ;MAGNEMITE
 ;Evolutions
@@ -125398,6 +125453,10 @@ ElekidPicFront:
 	INCBIN "pic/bmon/elekid.pic"
 ElekidPicBack:
 	INCBIN "pic/monback/elekidb.pic"
+MagbyPicFront:
+	INCBIN "pic/bmon/magby.pic"
+MagbyPicBack:
+	INCBIN "pic/monback/magbyb.pic"
 
 MiniSprites3: ; mons 179-?
 	INCBIN "gfx/mini_sprites/mini_sprites_3.2bpp"
