@@ -3438,6 +3438,16 @@ _MagbyDexEntry::
 	next "is MAGBY"
 	dex
 
+_SmoochumDexEntry::
+	text "# researchers"
+	next "have concluded"
+	next "that this is what"
+
+	page "the baby of JYNX"
+	next "would look like."
+	next "Wow. Astonishing"
+	dex
+
 _BattleFactoryText2::
 	text "Hello, ", $52, "!"
 

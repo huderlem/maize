@@ -3064,7 +3064,7 @@ LoadFrontSpriteByMonIndex:: ; 1389 (0:1389)
 	and a
 	pop hl
 	jr z, .invalidDexNumber  ; dex #0 invalid
-	cp 185 ; num mons in dex + 1
+	cp 186 ; num mons in dex + 1
 	jr c, .validDexNumber    ; dex >#151 invalid
 .invalidDexNumber
 	ld a, RHYDON ; $1
@@ -36665,7 +36665,7 @@ MonsterNames: ; 1c21e (7:421e)
 	db "AERODACTYL"
 	db "MAGBY@@@@@"
 	db "MAGNEMITE@"
-	db "MISSINGNO."
+	db "SMOOCHUM@@"
 	db "MISSINGNO."
 	db "CHARMANDER"
 	db "SQUIRTLE@@"
@@ -51265,6 +51265,43 @@ MagbyBaseStats:
 
 	db Bank(MagbyPicFront)
 
+SmoochumBaseStats:
+	db DEX_SMOOCHUM ; pokedex id
+	db 45    ; base hp
+	db 30   ; base attack
+	db 15   ; base defense
+	db 65    ; base speed
+	db 75    ; base special
+
+	db ICE     ; species type 1
+	db PSYCHIC     ; species type 2
+
+	db 45  ; catch rate
+	db 87 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw SmoochumPicFront
+	dw SmoochumPicBack
+
+	; attacks known at lvl 0
+	db POUND
+	db LICK
+	db 0
+	db 0
+
+	db 0 ; growth rate
+
+	; learnset
+	db %10110001
+	db %01111111
+	db %00001111
+	db %11010000
+	db %10000111
+	db %00101000
+	db %00000010
+
+	db Bank(SmoochumPicFront)
+
 CryData: ; 39446 (e:5446)
 	;$BaseCry, $Pitch, $Length
 	db $11, $00, $80; Rhydon
@@ -51440,7 +51477,7 @@ CryData: ; 39446 (e:5446)
 	db $23, $20, $F0; Aerodactyl
 	db $04, $CF, $10; Magby
 	db $1C, $80, $60; Magnemite
-	db $00, $00, $00; MissingNo.
+	db $0D, $FF, $20; Smoochum
 	db $00, $00, $00; MissingNo.
 	db $04, $60, $40; Charmander
 	db $1D, $60, $40; Squirtle
@@ -66003,7 +66040,7 @@ PokedexEntryPointers: ; 4047e (10:447e)
 	dw AerodactylDexEntry
 	dw MagbyDexEntry
 	dw MagnemiteDexEntry
-	dw MissingNoDexEntry
+	dw SmoochumDexEntry
 	dw MissingNoDexEntry
 	dw CharmanderDexEntry
 	dw SquirtleDexEntry
@@ -67314,6 +67351,13 @@ MagbyDexEntry:
 	TX_FAR _MagbyDexEntry
 	db "@"
 
+SmoochumDexEntry:
+	db "KISS@"
+	db 1, 4
+	dw 132
+	TX_FAR _SmoochumDexEntry
+	db "@"
+
 MissingNoDexEntry: ; 40fe5 (10:4fe5)
 	db "???@"
 	db 10 ; 1.0 m
@@ -67531,7 +67575,7 @@ PokedexOrder: ; 41024 (10:5024)
 	db DEX_AERODACTYL
 	db DEX_MAGBY
 	db DEX_MAGNEMITE
-	db 0 ; MISSINGNO.
+	db DEX_SMOOCHUM
 	db 0 ; MISSINGNO.
 	db DEX_CHARMANDER
 	db DEX_SQUIRTLE
@@ -103514,6 +103558,7 @@ MonOverworldData: ; 7190d (1c:590d)
 	dn SPRITE_MON, SPRITE_BIRD              ;Crobat/Hoothoot
 	dn SPRITE_BIRD_M, SPRITE_FAIRY          ;Noctowl/Pichu
 	dn SPRITE_MON, SPRITE_MON               ;Elekid/Magby
+	dn SPRITE_MON, SPRITE_MON               ;Smoochum
 	db 0
 
 MonOverworldSprites: ; 71959 (1c:5959)
@@ -104863,6 +104908,7 @@ MonsterPalettes: ; 725c8 (1c:65c8)
 	db PAL_YELLOWMON ; Pichu
 	db PAL_YELLOWMON ; Elekid
 	db PAL_REDMON    ; Magby
+	db PAL_PINKMON   ; Smoochum
 
 ; palettes for overworlds, title screen, monsters
 SuperPalettes: ; 72660 (1c:6660)
@@ -120275,10 +120321,17 @@ Mon081_EvosMoves: ; 3b923 (e:7923)
 	db 0
 
 Mon185_EvosMoves: ; 3b934 (e:7934)
-;MISSINGNO
+;SMOOCHUM
 ;Evolutions
+	db EV_HAPPINESS,1,JYNX
 	db 0
 ;Learnset
+	db 9,SWEET_KISS
+	db 15,DOUBLESLAP
+	db 21,CONFUSION
+	db 25,SING
+	db 36,PSYCHIC_M
+	db 45,BLIZZARD
 	db 0
 
 Mon186_EvosMoves: ; 3b936 (e:7936)
@@ -125457,6 +125510,10 @@ MagbyPicFront:
 	INCBIN "pic/bmon/magby.pic"
 MagbyPicBack:
 	INCBIN "pic/monback/magbyb.pic"
+SmoochumPicFront:
+	INCBIN "pic/bmon/smoochum.pic"
+SmoochumPicBack:
+	INCBIN "pic/monback/smoochumb.pic"
 
 MiniSprites3: ; mons 179-?
 	INCBIN "gfx/mini_sprites/mini_sprites_3.2bpp"
