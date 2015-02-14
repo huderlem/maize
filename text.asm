@@ -3448,6 +3448,26 @@ _SmoochumDexEntry::
 	next "Wow. Astonishing"
 	dex
 
+_CleffaDexEntry::
+	text "Because of its"
+	next "unusual star-like"
+	next "silhouette,"
+
+	page "people often"
+	next "mistake it for a"
+	next "STARYU"
+	dex
+
+_IgglybuffDexEntry::
+	text "Once it starts to"
+	next "bounce, it can be"
+	next "impossible to"
+
+	page "stop. This is"
+	next "perfect for"
+	next "racquetball"
+	dex
+
 _BattleFactoryText2::
 	text "Hello, ", $52, "!"
 

@@ -3064,7 +3064,7 @@ LoadFrontSpriteByMonIndex:: ; 1389 (0:1389)
 	and a
 	pop hl
 	jr z, .invalidDexNumber  ; dex #0 invalid
-	cp 186 ; num mons in dex + 1
+	cp 188 ; num mons in dex + 1
 	jr c, .validDexNumber    ; dex >#151 invalid
 .invalidDexNumber
 	ld a, RHYDON ; $1
@@ -21270,12 +21270,12 @@ NoMons: ; d0dd (3:50dd)
 
 Route1Mons: ; d0df (3:50df)
 	db $19
-	db 3,SPEAROW
-	db 3,RATTATA
-	db 4,RATTATA
-	db 4,SPEAROW
-	db 2,SPEAROW
-	db 5,SPEAROW
+	db 3,CLEFFA
+	db 3,CLEFFA
+	db 4,CLEFFA
+	db 4,IGGLYBUFF
+	db 2,IGGLYBUFF
+	db 5,IGGLYBUFF
 	db 3,PIDGEY
 	db 5,RATTATA
 	db 5,NIDORAN_M
@@ -36666,13 +36666,13 @@ MonsterNames: ; 1c21e (7:421e)
 	db "MAGBY@@@@@"
 	db "MAGNEMITE@"
 	db "SMOOCHUM@@"
-	db "MISSINGNO."
+	db "CLEFFA@@@@"
 	db "CHARMANDER"
 	db "SQUIRTLE@@"
 	db "CHARMELEON"
 	db "WARTORTLE@"
 	db "CHARIZARD@"
-	db "MISSINGNO."
+	db "IGGLYBUFF@"
 	db "MISSINGNO."
 	db "MISSINGNO."
 	db "MISSINGNO."
@@ -51302,6 +51302,80 @@ SmoochumBaseStats:
 
 	db Bank(SmoochumPicFront)
 
+CleffaBaseStats:
+	db DEX_CLEFFA ; pokedex id
+	db 50    ; base hp
+	db 25   ; base attack
+	db 28   ; base defense
+	db 15    ; base speed
+	db 50    ; base special
+
+	db FAIRY     ; species type 1
+	db FAIRY     ; species type 2
+
+	db 150  ; catch rate
+	db 37 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw CleffaPicFront
+	dw CleffaPicBack
+
+	; attacks known at lvl 0
+	db POUND
+	db GROWL
+	db 0
+	db 0
+
+	db 4 ; growth rate
+
+	; learnset
+	db %10111001
+	db %00111111
+	db %10101111
+	db %11010001
+	db %10100111
+	db %00111000
+	db %01100011
+
+	db Bank(CleffaPicFront)
+
+IgglybuffBaseStats:
+	db DEX_IGGLYBUFF ; pokedex id
+	db 90    ; base hp
+	db 30   ; base attack
+	db 15   ; base defense
+	db 15    ; base speed
+	db 30    ; base special
+
+	db NORMAL     ; species type 1
+	db FAIRY     ; species type 2
+
+	db 170  ; catch rate
+	db 39 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw IgglybuffPicFront
+	dw IgglybuffPicBack
+
+	; attacks known at lvl 0
+	db SING
+	db 0
+	db 0
+	db 0
+
+	db 4 ; growth rate
+
+	; learnset
+	db %10110001
+	db %00111111
+	db %10101111
+	db %11010001
+	db %10100011
+	db %00111000
+	db %01100011
+
+	db Bank(IgglybuffPicFront)
+
 CryData: ; 39446 (e:5446)
 	;$BaseCry, $Pitch, $Length
 	db $11, $00, $80; Rhydon
@@ -51478,13 +51552,13 @@ CryData: ; 39446 (e:5446)
 	db $04, $CF, $10; Magby
 	db $1C, $80, $60; Magnemite
 	db $0D, $FF, $20; Smoochum
-	db $00, $00, $00; MissingNo.
+	db $19, $F0, $30; Cleffa
 	db $04, $60, $40; Charmander
 	db $1D, $60, $40; Squirtle
 	db $04, $20, $40; Charmeleon
 	db $1D, $20, $40; Wartortle
 	db $04, $00, $80; Charizard
-	db $1D, $00, $80; MissingNo.
+	db $0E, $FF, $01; Igglybuff
 	db $00, $00, $00; MissingNo.
 	db $00, $00, $00; MissingNo.
 	db $00, $00, $00; MissingNo.
@@ -66041,13 +66115,13 @@ PokedexEntryPointers: ; 4047e (10:447e)
 	dw MagbyDexEntry
 	dw MagnemiteDexEntry
 	dw SmoochumDexEntry
-	dw MissingNoDexEntry
+	dw CleffaDexEntry
 	dw CharmanderDexEntry
 	dw SquirtleDexEntry
 	dw CharmeleonDexEntry
 	dw WartortleDexEntry
 	dw CharizardDexEntry
-	dw MissingNoDexEntry
+	dw IgglybuffDexEntry
 	dw MissingNoDexEntry
 	dw MissingNoDexEntry
 	dw MissingNoDexEntry
@@ -67358,6 +67432,20 @@ SmoochumDexEntry:
 	TX_FAR _SmoochumDexEntry
 	db "@"
 
+CleffaDexEntry:
+	db "STAR SHAPE@"
+	db 1, 0
+	dw 66
+	TX_FAR _CleffaDexEntry
+	db "@"
+
+IgglybuffDexEntry:
+	db "BALLOON@"
+	db 1, 0
+	dw 22
+	TX_FAR _IgglybuffDexEntry
+	db "@"
+
 MissingNoDexEntry: ; 40fe5 (10:4fe5)
 	db "???@"
 	db 10 ; 1.0 m
@@ -67576,13 +67664,13 @@ PokedexOrder: ; 41024 (10:5024)
 	db DEX_MAGBY
 	db DEX_MAGNEMITE
 	db DEX_SMOOCHUM
-	db 0 ; MISSINGNO.
+	db DEX_CLEFFA
 	db DEX_CHARMANDER
 	db DEX_SQUIRTLE
 	db DEX_CHARMELEON
 	db DEX_WARTORTLE
 	db DEX_CHARIZARD
-	db 0 ; MISSINGNO.
+	db DEX_IGGLYBUFF
 	db 0 ; MISSINGNO.
 	db 0 ; MISSINGNO.
 	db 0 ; MISSINGNO.
@@ -103558,7 +103646,8 @@ MonOverworldData: ; 7190d (1c:590d)
 	dn SPRITE_MON, SPRITE_BIRD              ;Crobat/Hoothoot
 	dn SPRITE_BIRD_M, SPRITE_FAIRY          ;Noctowl/Pichu
 	dn SPRITE_MON, SPRITE_MON               ;Elekid/Magby
-	dn SPRITE_MON, SPRITE_MON               ;Smoochum
+	dn SPRITE_MON, SPRITE_FAIRY             ;Smoochum/Cleffa
+	dn SPRITE_FAIRY, SPRITE_MON             ;Igglybuff/
 	db 0
 
 MonOverworldSprites: ; 71959 (1c:5959)
@@ -104909,6 +104998,8 @@ MonsterPalettes: ; 725c8 (1c:65c8)
 	db PAL_YELLOWMON ; Elekid
 	db PAL_REDMON    ; Magby
 	db PAL_PINKMON   ; Smoochum
+	db PAL_PINKMON   ; Cleffa
+	db PAL_PINKMON   ; Igglybuff
 
 ; palettes for overworlds, title screen, monsters
 SuperPalettes: ; 72660 (1c:6660)
@@ -120335,10 +120426,13 @@ Mon185_EvosMoves: ; 3b934 (e:7934)
 	db 0
 
 Mon186_EvosMoves: ; 3b936 (e:7936)
-;MISSINGNO
+;CLEFFA
 ;Evolutions
+	db EV_HAPPINESS,1,CLEFAIRY
 	db 0
 ;Learnset
+	db 8,SING
+	db 13,SWEET_KISS
 	db 0
 Mon004_EvosMoves: ; 3b938 (e:7938)
 ;CHARMANDER
@@ -120411,10 +120505,14 @@ Mon006_EvosMoves: ; 3b97c (e:797c)
 	db 0
 
 Mon187_EvosMoves: ; 3b98a (e:798a)
-;MISSINGNO
+;IGGLYBUFF
 ;Evolutions
+	db EV_HAPPINESS,1,JIGGLYPUFF
 	db 0
 ;Learnset
+	db 4,DEFENSE_CURL
+	db 9,POUND
+	db 14,SWEET_KISS
 	db 0
 
 Mon188_EvosMoves: ; 3b98c (e:798c)
@@ -125514,6 +125612,14 @@ SmoochumPicFront:
 	INCBIN "pic/bmon/smoochum.pic"
 SmoochumPicBack:
 	INCBIN "pic/monback/smoochumb.pic"
+CleffaPicFront:
+	INCBIN "pic/bmon/cleffa.pic"
+CleffaPicBack:
+	INCBIN "pic/monback/cleffab.pic"
+IgglybuffPicFront:
+	INCBIN "pic/bmon/igglybuff.pic"
+IgglybuffPicBack:
+	INCBIN "pic/monback/igglybuffb.pic"
 
 MiniSprites3: ; mons 179-?
 	INCBIN "gfx/mini_sprites/mini_sprites_3.2bpp"
