@@ -3064,7 +3064,7 @@ LoadFrontSpriteByMonIndex:: ; 1389 (0:1389)
 	and a
 	pop hl
 	jr z, .invalidDexNumber  ; dex #0 invalid
-	cp 188 ; num mons in dex + 1
+	cp 189 ; num mons in dex + 1
 	jr c, .validDexNumber    ; dex >#151 invalid
 .invalidDexNumber
 	ld a, RHYDON ; $1
@@ -21270,12 +21270,12 @@ NoMons: ; d0dd (3:50dd)
 
 Route1Mons: ; d0df (3:50df)
 	db $19
-	db 3,CLEFFA
-	db 3,CLEFFA
-	db 4,CLEFFA
-	db 4,IGGLYBUFF
-	db 2,IGGLYBUFF
-	db 5,IGGLYBUFF
+	db 3,MUNCHLAX
+	db 3,MUNCHLAX
+	db 4,MUNCHLAX
+	db 4,MUNCHLAX
+	db 2,MUNCHLAX
+	db 5,MUNCHLAX
 	db 3,PIDGEY
 	db 5,RATTATA
 	db 5,NIDORAN_M
@@ -36682,6 +36682,7 @@ MonsterNames: ; 1c21e (7:421e)
 	db "BELLSPROUT"
 	db "WEEPINBELL"
 	db "VICTREEBEL"
+	db "MUNCHLAX@@"
 
 Func_1c98a: ; 1c98a (7:498a)
 	; clear saved data
@@ -51376,6 +51377,43 @@ IgglybuffBaseStats:
 
 	db Bank(IgglybuffPicFront)
 
+MunchlaxBaseStats:
+	db DEX_MUNCHLAX ; pokedex id
+	db 135    ; base hp
+	db 85   ; base attack
+	db 40   ; base defense
+	db 5    ; base speed
+	db 62    ; base special
+
+	db NORMAL     ; species type 1
+	db NORMAL     ; species type 2
+
+	db 50  ; catch rate
+	db 94 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw MunchlaxPicFront
+	dw MunchlaxPicBack
+
+	; attacks known at lvl 0
+	db TACKLE
+	db METRONOME
+	db 0
+	db 0
+
+	db 5 ; growth rate
+
+	; learnset
+	db %10110001
+	db %11111111
+	db %10101111
+	db %11010111
+	db %10101111
+	db %10101000
+	db %00110010
+
+	db Bank(MunchlaxPicFront)
+
 CryData: ; 39446 (e:5446)
 	;$BaseCry, $Pitch, $Length
 	db $11, $00, $80; Rhydon
@@ -51568,6 +51606,7 @@ CryData: ; 39446 (e:5446)
 	db $21, $55, $01; Bellsprout
 	db $25, $44, $20; Weepinbell
 	db $25, $66, $CC; Victreebel
+	db $05, $90, $10; Munchlax
 
 Func_39680: ; 39680 (e:5680)
 	ld a, [H_WHOSETURN] ; $FF00+$f3
@@ -66131,6 +66170,7 @@ PokedexEntryPointers: ; 4047e (10:447e)
 	dw BellsproutDexEntry
 	dw WeepinbellDexEntry
 	dw VictreebelDexEntry
+	dw MunchlaxDexEntry
 
 ; string: species name
 ; height in feet, inches
@@ -67446,6 +67486,13 @@ IgglybuffDexEntry:
 	TX_FAR _IgglybuffDexEntry
 	db "@"
 
+MunchlaxDexEntry:
+	db "BIG EATER@"
+	db 2, 0
+	dw 2315
+	TX_FAR _MunchlaxDexEntry
+	db "@"
+
 MissingNoDexEntry: ; 40fe5 (10:4fe5)
 	db "???@"
 	db 10 ; 1.0 m
@@ -67680,6 +67727,7 @@ PokedexOrder: ; 41024 (10:5024)
 	db DEX_BELLSPROUT
 	db DEX_WEEPINBELL
 	db DEX_VICTREEBEL
+	db DEX_MUNCHLAX
 
 Func_410e2: ; 410e2 (10:50e2)
 	ld a, [wWhichTrade] ; $cd3d
@@ -103647,7 +103695,7 @@ MonOverworldData: ; 7190d (1c:590d)
 	dn SPRITE_BIRD_M, SPRITE_FAIRY          ;Noctowl/Pichu
 	dn SPRITE_MON, SPRITE_MON               ;Elekid/Magby
 	dn SPRITE_MON, SPRITE_FAIRY             ;Smoochum/Cleffa
-	dn SPRITE_FAIRY, SPRITE_MON             ;Igglybuff/
+	dn SPRITE_FAIRY, SPRITE_MON             ;Igglybuff/Munchlax
 	db 0
 
 MonOverworldSprites: ; 71959 (1c:5959)
@@ -105000,6 +105048,7 @@ MonsterPalettes: ; 725c8 (1c:65c8)
 	db PAL_PINKMON   ; Smoochum
 	db PAL_PINKMON   ; Cleffa
 	db PAL_PINKMON   ; Igglybuff
+	db PAL_BLUEMON   ; Munchlax
 
 ; palettes for overworlds, title screen, monsters
 SuperPalettes: ; 72660 (1c:6660)
@@ -119782,16 +119831,17 @@ EvosMovesPointerTable2:
 	dw Mon005_EvosMoves
 	dw Mon008_EvosMoves
 	dw Mon006_EvosMoves
-	dw Mon187_EvosMoves	;MissingNo
-	dw Mon188_EvosMoves	;MissingNo
-	dw Mon189_EvosMoves	;MissingNo
-	dw Mon190_EvosMoves	;MissingNo
+	dw Mon187_EvosMoves	;Igglybuff
+	dw Mon188x_EvosMoves ;MissingNo
+	dw Mon189x_EvosMoves ;MissingNo
+	dw Mon190x_EvosMoves ;MissingNo
 	dw Mon043_EvosMoves
 	dw Mon044_EvosMoves
 	dw Mon045_EvosMoves
 	dw Mon069_EvosMoves
 	dw Mon070_EvosMoves
 	dw Mon071_EvosMoves
+	dw Mon188_EvosMoves ;Munchlax
 
 Mon010_EvosMoves: ; 3b742 (e:7742)
 ;CATERPIE
@@ -120515,21 +120565,21 @@ Mon187_EvosMoves: ; 3b98a (e:798a)
 	db 14,SWEET_KISS
 	db 0
 
-Mon188_EvosMoves: ; 3b98c (e:798c)
+Mon188x_EvosMoves: ; 3b98c (e:798c)
 ;MISSINGNO
 ;Evolutions
 	db 0
 ;Learnset
 	db 0
 
-Mon189_EvosMoves: ; 3b98e (e:798e)
+Mon189x_EvosMoves: ; 3b98e (e:798e)
 ;MISSINGNO
 ;Evolutions
 	db 0
 ;Learnset
 	db 0
 
-Mon190_EvosMoves: ; 3b990 (e:7990)
+Mon190x_EvosMoves: ; 3b990 (e:7990)
 ;MISSINGNO
 ;Evolutions
 	db 0
@@ -120610,6 +120660,19 @@ Mon071_EvosMoves: ; 3b9e4 (e:79e4)
 	db 15,POISONPOWDER
 	db 18,SLEEP_POWDER
 	db 45,SEED_FLARE
+	db 0
+
+Mon188_EvosMoves: ; 3b9e4 (e:79e4)
+;MUNCHLAX
+;Evolutions
+	db EV_HAPPINESS,1,SNORLAX
+	db 0
+;Learnset
+	db 9,DEFENSE_CURL
+	db 14,AMNESIA
+	db 19,LICK
+	db 25,SCREECH
+	db 33,BODY_SLAM
 	db 0
 
 Func_3ad1c_2:
@@ -125620,6 +125683,10 @@ IgglybuffPicFront:
 	INCBIN "pic/bmon/igglybuff.pic"
 IgglybuffPicBack:
 	INCBIN "pic/monback/igglybuffb.pic"
+MunchlaxPicFront:
+	INCBIN "pic/bmon/munchlax.pic"
+MunchlaxPicBack:
+	INCBIN "pic/monback/munchlaxb.pic"
 
 MiniSprites3: ; mons 179-?
 	INCBIN "gfx/mini_sprites/mini_sprites_3.2bpp"

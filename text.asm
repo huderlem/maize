@@ -3468,6 +3468,16 @@ _IgglybuffDexEntry::
 	next "racquetball"
 	dex
 
+_MunchlaxDexEntry::
+	text "Each day, it eats"
+	next "its full body"
+	next "weight in food."
+
+	page "Also, look how"
+	next "adorable it is!"
+	next "Sooooo cute"
+	dex
+
 _BattleFactoryText2::
 	text "Hello, ", $52, "!"
 
