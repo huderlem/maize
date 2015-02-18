@@ -3064,7 +3064,7 @@ LoadFrontSpriteByMonIndex:: ; 1389 (0:1389)
 	and a
 	pop hl
 	jr z, .invalidDexNumber  ; dex #0 invalid
-	cp 189 ; num mons in dex + 1
+	cp 190 ; num mons in dex + 1
 	jr c, .validDexNumber    ; dex >#151 invalid
 .invalidDexNumber
 	ld a, RHYDON ; $1
@@ -21270,12 +21270,12 @@ NoMons: ; d0dd (3:50dd)
 
 Route1Mons: ; d0df (3:50df)
 	db $19
-	db 3,MUNCHLAX
-	db 3,MUNCHLAX
-	db 4,MUNCHLAX
-	db 4,MUNCHLAX
-	db 2,MUNCHLAX
-	db 5,MUNCHLAX
+	db 3,TOGEPI
+	db 3,TOGEPI
+	db 4,TOGEPI
+	db 4,TOGEPI
+	db 2,TOGEPI
+	db 5,TOGEPI
 	db 3,PIDGEY
 	db 5,RATTATA
 	db 5,NIDORAN_M
@@ -36683,6 +36683,7 @@ MonsterNames: ; 1c21e (7:421e)
 	db "WEEPINBELL"
 	db "VICTREEBEL"
 	db "MUNCHLAX@@"
+	db "TOGEPI@@@@"
 
 Func_1c98a: ; 1c98a (7:498a)
 	; clear saved data
@@ -51414,6 +51415,43 @@ MunchlaxBaseStats:
 
 	db Bank(MunchlaxPicFront)
 
+TogepiBaseStats:
+	db DEX_TOGEPI ; pokedex id
+	db 35    ; base hp
+	db 20   ; base attack
+	db 65   ; base defense
+	db 20    ; base speed
+	db 53    ; base special
+
+	db FAIRY     ; species type 1
+	db FAIRY     ; species type 2
+
+	db 190  ; catch rate
+	db 74 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw TogepiPicFront
+	dw TogepiPicBack
+
+	; attacks known at lvl 0
+	db GROWL
+	db 0
+	db 0
+	db 0
+
+	db 4 ; growth rate
+
+	; learnset
+	db %10110001
+	db %00000010
+	db %00101110
+	db %11010000
+	db %01100101
+	db %00011011
+	db %01000011
+
+	db Bank(TogepiPicFront)
+
 CryData: ; 39446 (e:5446)
 	;$BaseCry, $Pitch, $Length
 	db $11, $00, $80; Rhydon
@@ -51607,6 +51645,7 @@ CryData: ; 39446 (e:5446)
 	db $25, $44, $20; Weepinbell
 	db $25, $66, $CC; Victreebel
 	db $05, $90, $10; Munchlax
+	db $19, $20, $01; Togepi
 
 Func_39680: ; 39680 (e:5680)
 	ld a, [H_WHOSETURN] ; $FF00+$f3
@@ -66171,6 +66210,7 @@ PokedexEntryPointers: ; 4047e (10:447e)
 	dw WeepinbellDexEntry
 	dw VictreebelDexEntry
 	dw MunchlaxDexEntry
+	dw TogepiDexEntry
 
 ; string: species name
 ; height in feet, inches
@@ -67493,6 +67533,13 @@ MunchlaxDexEntry:
 	TX_FAR _MunchlaxDexEntry
 	db "@"
 
+TogepiDexEntry:
+	db "SPIKE BALL@"
+	db 1, 0
+	dw 33
+	TX_FAR _TogepiDexEntry
+	db "@"
+
 MissingNoDexEntry: ; 40fe5 (10:4fe5)
 	db "???@"
 	db 10 ; 1.0 m
@@ -67728,6 +67775,7 @@ PokedexOrder: ; 41024 (10:5024)
 	db DEX_WEEPINBELL
 	db DEX_VICTREEBEL
 	db DEX_MUNCHLAX
+	db DEX_TOGEPI
 
 Func_410e2: ; 410e2 (10:50e2)
 	ld a, [wWhichTrade] ; $cd3d
@@ -103696,6 +103744,7 @@ MonOverworldData: ; 7190d (1c:590d)
 	dn SPRITE_MON, SPRITE_MON               ;Elekid/Magby
 	dn SPRITE_MON, SPRITE_FAIRY             ;Smoochum/Cleffa
 	dn SPRITE_FAIRY, SPRITE_MON             ;Igglybuff/Munchlax
+	dn SPRITE_FAIRY, SPRITE_BIRD            ;Togepi/
 	db 0
 
 MonOverworldSprites: ; 71959 (1c:5959)
@@ -104149,7 +104198,7 @@ Func_71e4f: ; 71e4f (1c:5e4f)
 	ld bc, $10
 	call CopyData
 	ld a, [$cf91]
-	cp MUNCHLAX + 1
+	cp TOGEPI + 1
 	jr c, .pokemon
 	ld a, $1 ; not pokemon
 .pokemon
@@ -105049,6 +105098,7 @@ MonsterPalettes: ; 725c8 (1c:65c8)
 	db PAL_PINKMON   ; Cleffa
 	db PAL_PINKMON   ; Igglybuff
 	db PAL_BLUEMON   ; Munchlax
+	db PAL_MEWMON    ; Togepi
 
 ; palettes for overworlds, title screen, monsters
 SuperPalettes: ; 72660 (1c:6660)
@@ -119842,6 +119892,7 @@ EvosMovesPointerTable2:
 	dw Mon070_EvosMoves
 	dw Mon071_EvosMoves
 	dw Mon188_EvosMoves ;Munchlax
+	dw Mon189_EvosMoves ;Togepi
 
 Mon010_EvosMoves: ; 3b742 (e:7742)
 ;CATERPIE
@@ -120673,6 +120724,18 @@ Mon188_EvosMoves: ; 3b9e4 (e:79e4)
 	db 19,LICK
 	db 25,SCREECH
 	db 33,BODY_SLAM
+	db 0
+
+Mon189_EvosMoves: ; 3b9e4 (e:79e4)
+;TOGEPI
+;Evolutions
+	db EV_HAPPINESS,1,CLEFAIRY ; todo
+	db 0
+;Learnset
+	db 7,METRONOME
+	db 18,SWEET_KISS
+	db 24,DEFENSE_CURL
+	db 38,DOUBLE_EDGE
 	db 0
 
 Func_3ad1c_2:
@@ -125687,6 +125750,10 @@ MunchlaxPicFront:
 	INCBIN "pic/bmon/munchlax.pic"
 MunchlaxPicBack:
 	INCBIN "pic/monback/munchlaxb.pic"
+TogepiPicFront:
+	INCBIN "pic/bmon/togepi.pic"
+TogepiPicBack:
+	INCBIN "pic/monback/togepib.pic"
 
 MiniSprites3: ; mons 179-?
 	INCBIN "gfx/mini_sprites/mini_sprites_3.2bpp"

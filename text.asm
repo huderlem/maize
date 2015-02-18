@@ -3478,6 +3478,16 @@ _MunchlaxDexEntry::
 	next "Sooooo cute"
 	dex
 
+_TogepiDexEntry::
+	text "It's possible to"
+	next "faint from pure"
+	next "happiness if you"
+
+	page "get too close to"
+	next "TOGEPI. And then"
+	next "you blow up"
+	dex
+
 _BattleFactoryText2::
 	text "Hello, ", $52, "!"
 
