@@ -3488,6 +3488,26 @@ _TogepiDexEntry::
 	next "you blow up"
 	dex
 
+_TogeticDexEntry::
+	text "It brings joy"
+	next "and happiness to"
+	next "anything that"
+
+	page "moves. Even the"
+	next "Ocean smiles in"
+	next "its presence"
+	dex
+
+_TogekissDexEntry::
+	text "It's so happy that"
+	next "it can never be"
+	next "saddened."
+
+	page "Even being traded"
+	next "away doesn't lower"
+	next "its spirits"
+	dex
+
 _BattleFactoryText2::
 	text "Hello, ", $52, "!"
 
