@@ -6920,9 +6920,9 @@ PokemartGreetingText:: ; 2a55 (0:2a55)
 LoadItemList:: ; 2a5a (0:2a5a)
 	ld a, [W_NEWFLAGS1]
 	bit 2, a
-	jr nz, .continue
+	jr nz, LoadItemListNotNuzlocke
 	inc hl ; skip over SLAVE_BALL
-.continue
+LoadItemListNotNuzlocke::
 	ld a,$01
 	ld [$cfcb],a
 	ld a,h
@@ -75201,14 +75201,13 @@ CeladonMartElevatorScript_4862a: ; 4862a (12:462a)
 
 CeladonMartElevatorScript_48631: ; 48631 (12:4631)
 	ld hl, CeladonMartElavatorFloors ; $4643
-	call LoadItemList
+	call LoadItemListNotNuzlocke
 	ld hl, CeldaonMartElevatorWarpMaps ; $464a
 	ld de, $cc5b
 	ld bc, $000a
 	jp CopyData
 
 CeladonMartElavatorFloors: ; 48643 (12:4643)
-	db $02 ; num elements in list
 	db $56, $61 ; "1F", "B4F"
 	db $FF ; terminator
 
