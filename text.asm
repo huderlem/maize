@@ -3508,6 +3508,16 @@ _TogekissDexEntry::
 	next "its spirits"
 	dex
 
+_MimeJrDexEntry::
+	text "It mimics"
+	next "everything it"
+	next "sees. When it"
+
+	page "fights SUDOWOODO,"
+	next "it's like a double"
+	next "METAPOD battle"
+	dex
+
 _BattleFactoryText2::
 	text "Hello, ", $52, "!"
 

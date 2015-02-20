@@ -3064,7 +3064,7 @@ LoadFrontSpriteByMonIndex:: ; 1389 (0:1389)
 	and a
 	pop hl
 	jr z, .invalidDexNumber  ; dex #0 invalid
-	cp 192 ; num mons in dex + 1
+	cp 193 ; num mons in dex + 1
 	jr c, .validDexNumber    ; dex >#151 invalid
 .invalidDexNumber
 	ld a, RHYDON ; $1
@@ -21270,12 +21270,12 @@ NoMons: ; d0dd (3:50dd)
 
 Route1Mons: ; d0df (3:50df)
 	db $19
-	db 3,TOGETIC
-	db 3,TOGETIC
-	db 4,TOGETIC
-	db 4,TOGETIC
-	db 2,TOGEKISS
-	db 5,TOGEKISS
+	db 3,MIME_JR
+	db 3,MIME_JR
+	db 4,MIME_JR
+	db 4,MIME_JR
+	db 2,MIME_JR
+	db 5,MIME_JR
 	db 3,PIDGEY
 	db 5,RATTATA
 	db 5,NIDORAN_M
@@ -36686,6 +36686,7 @@ MonsterNames: ; 1c21e (7:421e)
 	db "TOGEPI@@@@"
 	db "TOGETIC@@@"
 	db "TOGEKISS@@"
+	db "MIME JR.@@"
 
 Func_1c98a: ; 1c98a (7:498a)
 	; clear saved data
@@ -51528,6 +51529,43 @@ TogekissBaseStats:
 
 	db Bank(TogekissPicFront)
 
+MimeJrBaseStats:
+	db DEX_MIME_JR ; pokedex id
+	db 20    ; base hp
+	db 25   ; base attack
+	db 45   ; base defense
+	db 60    ; base speed
+	db 80    ; base special
+
+	db PSYCHIC     ; species type 1
+	db FAIRY     ; species type 2
+
+	db 145  ; catch rate
+	db 78 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw MimeJrPicFront
+	dw MimeJrPicBack
+
+	; attacks known at lvl 0
+	db CONFUSION
+	db BARRIER
+	db 0
+	db 0
+
+	db 0 ; growth rate
+
+	; learnset
+	db %10110001
+	db %01000011
+	db %10101111
+	db %11010001
+	db %10000111
+	db %00111000
+	db %01000010
+
+	db Bank(MimeJrPicFront)
+
 CryData: ; 39446 (e:5446)
 	;$BaseCry, $Pitch, $Length
 	db $11, $00, $80; Rhydon
@@ -51724,6 +51762,7 @@ CryData: ; 39446 (e:5446)
 	db $19, $20, $01; Togepi
 	db $19, $60, $40; Togetic
 	db $19, $80, $A0; Togekiss
+	db $20, $C0, $40; Mime Jr.
 
 Func_39680: ; 39680 (e:5680)
 	ld a, [H_WHOSETURN] ; $FF00+$f3
@@ -66291,6 +66330,7 @@ PokedexEntryPointers: ; 4047e (10:447e)
 	dw TogepiDexEntry
 	dw TogeticDexEntry
 	dw TogekissDexEntry
+	dw MimeJrDexEntry
 
 ; string: species name
 ; height in feet, inches
@@ -67634,6 +67674,13 @@ TogekissDexEntry:
 	TX_FAR _TogekissDexEntry
 	db "@"
 
+MimeJrDexEntry:
+	db "MIME@"
+	db 2, 0
+	dw 287
+	TX_FAR _MimeJrDexEntry
+	db "@"
+
 MissingNoDexEntry: ; 40fe5 (10:4fe5)
 	db "???@"
 	db 10 ; 1.0 m
@@ -67872,6 +67919,7 @@ PokedexOrder: ; 41024 (10:5024)
 	db DEX_TOGEPI
 	db DEX_TOGETIC
 	db DEX_TOGEKISS
+	db DEX_MIME_JR
 
 Func_410e2: ; 410e2 (10:50e2)
 	ld a, [wWhichTrade] ; $cd3d
@@ -103841,7 +103889,7 @@ MonOverworldData: ; 7190d (1c:590d)
 	dn SPRITE_MON, SPRITE_FAIRY             ;Smoochum/Cleffa
 	dn SPRITE_FAIRY, SPRITE_MON             ;Igglybuff/Munchlax
 	dn SPRITE_FAIRY, SPRITE_BIRD            ;Togepi/Togetic
-	dn SPRITE_BIRD, SPRITE_MON              ;Togekiss
+	dn SPRITE_BIRD, SPRITE_MON              ;Togekiss/Mime Jr.
 	db 0
 
 MonOverworldSprites: ; 71959 (1c:5959)
@@ -104295,7 +104343,7 @@ Func_71e4f: ; 71e4f (1c:5e4f)
 	ld bc, $10
 	call CopyData
 	ld a, [$cf91]
-	cp TOGEKISS + 1
+	cp MIME_JR + 1
 	jr c, .pokemon
 	ld a, $1 ; not pokemon
 .pokemon
@@ -105198,6 +105246,7 @@ MonsterPalettes: ; 725c8 (1c:65c8)
 	db PAL_MEWMON    ; Togepi
 	db PAL_MEWMON    ; Togetic
 	db PAL_MEWMON    ; Togekiss
+	db PAL_PINKMON   ; Mime Jr.
 
 ; palettes for overworlds, title screen, monsters
 SuperPalettes: ; 72660 (1c:6660)
@@ -119994,6 +120043,7 @@ EvosMovesPointerTable2:
 	dw Mon189_EvosMoves ;Togepi
 	dw Mon190_EvosMoves ;Togetic
 	dw Mon191_EvosMoves ;Togekiss
+	dw Mon192_EvosMoves ;Mime Jr.
 
 Mon010_EvosMoves: ; 3b742 (e:7742)
 ;CATERPIE
@@ -120856,6 +120906,21 @@ Mon191_EvosMoves: ; 3b9e4 (e:79e4)
 ;Evolutions
 	db 0
 ;Learnset
+	db 0
+
+Mon192_EvosMoves: ; 3b9e4 (e:79e4)
+;MIME_JR
+;Evolutions
+	db EV_MOVE,MIMIC,1,MR_MIME
+	db 0
+;Learnset
+	db 12,DOUBLESLAP
+	db 18,MIMIC
+	db 23,LIGHT_SCREEN
+	db 23,REFLECT
+	db 29,PSYBEAM
+	db 33,SUBSTITUTE
+	db 39,PSYCHIC_M
 	db 0
 
 Func_3ad1c_2:
@@ -125882,6 +125947,10 @@ TogekissPicFront:
 	INCBIN "pic/bmon/togekiss.pic"
 TogekissPicBack:
 	INCBIN "pic/monback/togekissb.pic"
+MimeJrPicFront:
+	INCBIN "pic/bmon/mime_jr.pic"
+MimeJrPicBack:
+	INCBIN "pic/monback/mime_jrb.pic"
 
 MiniSprites3: ; mons 179-?
 	INCBIN "gfx/mini_sprites/mini_sprites_3.2bpp"
