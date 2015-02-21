@@ -25,7 +25,7 @@ _CeladonCityText3:: ; a5a79 (29:5a79)
 	done
 
 _CeladonCityText4:: ; a5aa6 (29:5aa6)
-	text "I'm trying to bend"
+	text "I'm trying to"
 	line "bend this fence"
 	cont "with my mind!"
 	done
