@@ -60323,7 +60323,7 @@ UnknownMovesList_3dba3: ; 3dba3 (f:5ba3)
 	db $00
 	db MEDITATE, AGILITY, TELEPORT, MIMIC, DOUBLE_TEAM, BARRAGE
 	db $00
-	db POUND, SCRATCH, VICEGRIP, WING_ATTACK, FLY, BIND, SLAM, HORN_ATTACK, BODY_SLAM
+	db FLY, BIND, BODY_SLAM
 	db WRAP, THRASH, TAIL_WHIP, LEER, BITE, GROWL, ROAR, SING, PECK, COUNTER
 	db STRENGTH, ABSORB, STRING_SHOT, EARTHQUAKE, FISSURE, DIG, TOXIC, SCREECH, HARDEN
 	db MINIMIZE, WITHDRAW, DEFENSE_CURL, METRONOME, LICK, CLAMP, CONSTRICT, POISON_GAS
@@ -61695,17 +61695,21 @@ MirrorMoveCopyMove: ; 3e2fd (f:62fd)
 	ld a,[$ccf2]
 	ld hl,wPlayerSelectedMove
 	ld de,W_PLAYERMOVENUM
+	ld bc,wEnemySelectedMove
 	jr z,.next
 ; values for enemy turn
 	ld a,[$ccf1]
 	ld de,W_ENEMYMOVENUM
 	ld hl,wEnemySelectedMove
+	ld bc,wPlayerSelectedMove
 .next
-	ld [hl],a
 	cp a,MIRROR_MOVE ; did the target pokemon also use Mirror Move?
 	jr z,.mirrorMoveFailed
 	and a ; null move?
-	jr nz,ReloadMoveData
+	jr z, .mirrorMoveFailed
+	ld a, [bc]
+	ld [hl], a
+	jr ReloadMoveData
 .mirrorMoveFailed
 ; Mirror Move fails on itself and null moves
 	ld hl,MirrorMoveFailedText
@@ -64754,7 +64758,7 @@ Func_3f6e5: ; 3f6e5 (f:76e5)
 	inc a
 	ld [bc], a
 	ld a, [H_WHOSETURN]
-	add $ae
+	add XSTATITEM_ANIM
 	jp Func_3fb96
 
 Func_3f717: ; 3f717 (f:7717)
@@ -64969,7 +64973,7 @@ Func_3f88c: ; 3f88c (f:788c)
 	ld de, W_PLAYERMOVEEFFECT ; $cfd3
 	ld a, [H_WHOSETURN] ; $FF00+$f3
 	and a
-	ld b, $ae
+	ld b, XSTATITEM_ANIM
 	jr z, .asm_3f8a1
 	ld hl, W_ENEMYBATTSTATUS1 ; $d067
 	ld de, W_ENEMYMOVEEFFECT ; $cfcd
