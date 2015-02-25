@@ -295,12 +295,12 @@ MapHeaderPointers:: ; 01ae (0:01ae)
 	dw PyriteCityGate_h
 	dw Route8Gate2_h
 	dw ShrubHaven_h
-	dw Lance_h ; unused
+	dw Macer1_h
 	dw Lance_h
-	dw Lance_h ; unused
-	dw Lance_h ; unused
-	dw Lance_h ; unused
-	dw Lance_h ; unused
+	dw Macer2_h
+	dw Macer3_h
+	dw Macer4_h
+	dw Macer5_h
 	dw HallofFameRoom_h
 	dw UndergroundPathNS_h
 	dw Gary_h ;id=120
@@ -19207,12 +19207,12 @@ MapHeaderBanks: ; c23d (3:423d)
 	db BANK(PyriteCityGate_h)
 	db BANK(Route8Gate2_h)
 	db BANK(ShrubHaven_h)
-	db $1D ;unused
+	db BANK(Macer1_h)
 	db BANK(Lance_h)
-	db $1D ;unused
-	db $1D ;unused
-	db $1D ;unused
-	db $1D ;unused
+	db BANK(Macer2_h)
+	db BANK(Macer3_h)
+	db BANK(Macer4_h)
+	db BANK(Macer5_h)
 	db BANK(HallofFameRoom_h)
 	db BANK(UndergroundPathNS_h)
 	db BANK(Gary_h)
@@ -111515,6 +111515,172 @@ ShrubHavenObject:
     ; warp-to
     EVENT_DISP SHRUB_HAVEN_WIDTH, $7, $2
     EVENT_DISP SHRUB_HAVEN_WIDTH, $7, $3
+
+Macer1_h:
+	db $0a ; tileset
+    db MACER_HEIGHT, MACER_WIDTH ; dimensions (y, x)
+    dw Macer1Blocks, Macer1TextPointers, Macer1Script ; blocks, texts, scripts
+    db $00 ; connections
+    dw Macer1Object ; objects
+
+Macer1Blocks:
+	INCBIN "maps/macer1.blk"
+
+Macer1TextPointers:
+	dw Macer1Text1
+
+Macer1Text1:
+	TX_FAR _Macer1Text1
+	db "@"
+
+Macer1Script:
+	jp EnableAutoTextBoxDrawing
+
+Macer1Object:
+	db $19 ; border tile
+
+    db $0 ; warps
+	
+    db $1 ; signs
+    db $7, $7, $1
+
+    db $0 ; people
+
+    ; warp-to
+
+Macer2_h:
+	db $0a ; tileset
+    db MACER_HEIGHT, MACER_WIDTH ; dimensions (y, x)
+    dw Macer2Blocks, Macer2TextPointers, Macer2Script ; blocks, texts, scripts
+    db $00 ; connections
+    dw Macer2Object ; objects
+
+Macer2Blocks:
+	INCBIN "maps/macer2.blk"
+
+Macer2TextPointers:
+	dw Macer2Text1
+
+Macer2Text1:
+	TX_FAR _Macer2Text1
+	db "@"
+
+Macer2Script:
+	jp EnableAutoTextBoxDrawing
+
+Macer2Object:
+	db $19 ; border tile
+
+    db $0 ; warps
+	
+    db $1 ; signs
+    db $7, $7, $1
+
+    db $0 ; people
+
+    ; warp-to
+
+Macer3_h:
+	db $0a ; tileset
+    db MACER_HEIGHT, MACER_WIDTH ; dimensions (y, x)
+    dw Macer3Blocks, Macer3TextPointers, Macer3Script ; blocks, texts, scripts
+    db $00 ; connections
+    dw Macer3Object ; objects
+
+Macer3Blocks:
+	INCBIN "maps/macer3.blk"
+
+Macer3TextPointers:
+	dw Macer3Text1
+
+Macer3Text1:
+	TX_FAR _Macer3Text1
+	db "@"
+
+Macer3Script:
+	jp EnableAutoTextBoxDrawing
+
+Macer3Object:
+	db $19 ; border tile
+
+    db $0 ; warps
+	
+    db $1 ; signs
+    db $7, $7, $1
+
+    db $0 ; people
+
+    ; warp-to
+
+Macer4_h:
+	db $0a ; tileset
+    db MACER_HEIGHT, MACER_WIDTH ; dimensions (y, x)
+    dw Macer4Blocks, Macer4TextPointers, Macer4Script ; blocks, texts, scripts
+    db $00 ; connections
+    dw Macer4Object ; objects
+
+Macer4Blocks:
+	INCBIN "maps/macer4.blk"
+
+Macer4TextPointers:
+	dw Macer4Text1
+	dw Macer4Text2
+
+Macer4Text1:
+	TX_FAR _Macer4Text1
+	db "@"
+
+Macer4Text2:
+	TX_FAR _Macer4Text2
+	db "@"
+
+Macer4Script:
+	jp EnableAutoTextBoxDrawing
+
+Macer4Object:
+	db $19 ; border tile
+
+    db $0 ; warps
+	
+    db $2 ; signs
+    db $7, $7, $1
+    db $7, $8, $2
+
+    db $0 ; people
+
+    ; warp-to
+
+Macer5_h:
+	db $0a ; tileset
+    db MACER_HEIGHT, MACER_WIDTH ; dimensions (y, x)
+    dw Macer5Blocks, Macer5TextPointers, Macer5Script ; blocks, texts, scripts
+    db $00 ; connections
+    dw Macer5Object ; objects
+
+Macer5Blocks:
+	INCBIN "maps/macer5.blk"
+
+Macer5TextPointers:
+	dw Macer5Text1
+
+Macer5Text1:
+	TX_FAR _Macer5Text1
+	db "@"
+
+Macer5Script:
+	jp EnableAutoTextBoxDrawing
+
+Macer5Object:
+	db $19 ; border tile
+
+    db $0 ; warps
+	
+    db $1 ; signs
+    db $7, $7, $1
+
+    db $0 ; people
+
+    ; warp-to
 
 
 SECTION "bank1E",ROMX,BANK[$1E]

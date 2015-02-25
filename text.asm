@@ -4487,3 +4487,31 @@ _ShrubHavenText3::
 	line "slimy surface"
 	cont "scum!"
 	done
+
+_Macer1Text1::
+	text "--Day 1--"
+
+	para "I must venture"
+	cont "further into this"
+	cont "acursed cavern."
+	done
+
+_Macer2Text1::
+	text "--Day 2--"
+	done
+
+_Macer3Text1::
+	text "--Day 3--"
+	done
+
+_Macer4Text1::
+	text "--Day 4--"
+	done
+
+_Macer4Text2::
+	text "Valve."
+	done
+
+_Macer5Text1::
+	text "--Day 5--"
+	done
