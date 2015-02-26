@@ -21270,12 +21270,12 @@ NoMons: ; d0dd (3:50dd)
 
 Route1Mons: ; d0df (3:50df)
 	db $19
-	db 3,MIME_JR
-	db 3,MIME_JR
-	db 4,MIME_JR
-	db 4,MIME_JR
-	db 2,MIME_JR
-	db 5,MIME_JR
+	db 3,SPEAROW
+	db 3,RATTATA
+	db 4,RATTATA
+	db 4,SPEAROW
+	db 2,SPEAROW
+	db 5,SPEAROW
 	db 3,PIDGEY
 	db 5,RATTATA
 	db 5,NIDORAN_M
