@@ -20097,12 +20097,25 @@ Func_c754: ; c754 (3:4754)
 	pop de
 	pop hl
 	jr c, .asm_c797
+.notDungeon
 	ld a, [W_CURMAPTILESET] ; $d367
 	ld b, a
 	ld a, [H_DOWNARROWBLINKCNT1] ; $FF00+$8b
 	cp b
 	jr z, .asm_c7b1
+	jr .handleDungeon
 .asm_c797
+	; fix connections in macer tunnels
+	ld a, [W_CURMAP]
+	push hl
+	push de
+	ld hl, DungeonsWithConnections
+	ld de, $1
+	call IsInArray
+	pop de
+	pop hl
+	jr c, .notDungeon
+.handleDungeon
 	ld a, [$d42f]
 	cp $ff
 	jr z, .asm_c7b1
@@ -20118,6 +20131,9 @@ Func_c754: ; c754 (3:4754)
 
 DungeonTilesetIDs: ; c7b2 (3:47b2)
 	db $03,$0A,$0D,$11,$12,$13,$0C,$14,$16,$0F,$07,$06,$FF
+
+DungeonsWithConnections:
+	db POKEMONTOWER_7, MACER_1, MACER_2, MACER_3, MACER_4, MACER_5, $FF
 
 TilesetsHeadPtr: ; c7be (3:47be)
 	TSETHEAD Tset00_Block,Tset00_GFX,Tset00_Coll,$FF,$FF,$FF,$52,2
@@ -21150,7 +21166,7 @@ WildDataPointers: ; ceeb (3:4eeb)
 	dw TowerMons4
 	dw NoMons
 	dw NoMons
-	dw TowerMons7
+	dw NoMons
 	dw NoMons
 	dw NoMons
 	dw NoMons
@@ -21674,7 +21690,7 @@ TowerMons6: ; d2f3 (3:52f3)
 	db $00
 
 TowerMons7: ; d309 (3:5309)
-	db $0F
+	db $01
 	db 21,GASTLY
 	db 22,GASTLY
 	db 23,GASTLY
@@ -97403,10 +97419,11 @@ PokemonTower6Blocks: ; 60c95 (18:4c95)
 	INCBIN "maps/unusedblocks60cef.blk"
 
 PokemonTower7_h: ; 0x60cf9 to 0x60d05 (12 bytes) (id=148)
-	db $0a ; tileset
+	db $11 ; tileset
 	db POKEMONTOWER_7_HEIGHT, POKEMONTOWER_7_WIDTH ; dimensions (y, x)
 	dw PokemonTower7Blocks, PokemonTower7TextPointers, PokemonTower7Script ; blocks, texts, scripts
-	db $00 ; connections
+	db EAST ; connections
+	EAST_MAP_CONNECTION MACER_1, MACER_WIDTH, 0, 0, MACER_HEIGHT, Macer1Blocks, POKEMONTOWER_7_WIDTH
 	dw PokemonTower7Object ; objects
 
 PokemonTower7Script: ; 60d05 (18:4d05)
@@ -111517,10 +111534,14 @@ ShrubHavenObject:
     EVENT_DISP SHRUB_HAVEN_WIDTH, $7, $3
 
 Macer1_h:
-	db $0a ; tileset
+	db $11 ; tileset
     db MACER_HEIGHT, MACER_WIDTH ; dimensions (y, x)
     dw Macer1Blocks, Macer1TextPointers, Macer1Script ; blocks, texts, scripts
-    db $00 ; connections
+    db NORTH | SOUTH | WEST | EAST ; connections
+    NORTH_MAP_CONNECTION MACER_1, MACER_WIDTH, MACER_HEIGHT, 0, 0, MACER_WIDTH, Macer1Blocks
+    SOUTH_MAP_CONNECTION MACER_2, MACER_WIDTH, 0, 0, MACER_WIDTH, Macer2Blocks, MACER_WIDTH, MACER_HEIGHT
+    WEST_MAP_CONNECTION POKEMONTOWER_7, POKEMONTOWER_7_WIDTH, 0, 0, MACER_HEIGHT, PokemonTower7Blocks, MACER_WIDTH
+    EAST_MAP_CONNECTION MACER_1, MACER_WIDTH, 0, 0, MACER_HEIGHT, Macer1Blocks, MACER_WIDTH
     dw Macer1Object ; objects
 
 Macer1Blocks:
@@ -111549,7 +111570,7 @@ Macer1Object:
     ; warp-to
 
 Macer2_h:
-	db $0a ; tileset
+	db $11 ; tileset
     db MACER_HEIGHT, MACER_WIDTH ; dimensions (y, x)
     dw Macer2Blocks, Macer2TextPointers, Macer2Script ; blocks, texts, scripts
     db $00 ; connections
@@ -111574,14 +111595,14 @@ Macer2Object:
     db $0 ; warps
 	
     db $1 ; signs
-    db $7, $7, $1
+    db $7, $9, $1
 
     db $0 ; people
 
     ; warp-to
 
 Macer3_h:
-	db $0a ; tileset
+	db $11 ; tileset
     db MACER_HEIGHT, MACER_WIDTH ; dimensions (y, x)
     dw Macer3Blocks, Macer3TextPointers, Macer3Script ; blocks, texts, scripts
     db $00 ; connections
@@ -111606,14 +111627,14 @@ Macer3Object:
     db $0 ; warps
 	
     db $1 ; signs
-    db $7, $7, $1
+    db $9, $9, $1
 
     db $0 ; people
 
     ; warp-to
 
 Macer4_h:
-	db $0a ; tileset
+	db $11 ; tileset
     db MACER_HEIGHT, MACER_WIDTH ; dimensions (y, x)
     dw Macer4Blocks, Macer4TextPointers, Macer4Script ; blocks, texts, scripts
     db $00 ; connections
@@ -111643,15 +111664,15 @@ Macer4Object:
     db $0 ; warps
 	
     db $2 ; signs
-    db $7, $7, $1
-    db $7, $8, $2
+    db $5, $7, $1
+    db $a, $9, $2
 
     db $0 ; people
 
     ; warp-to
 
 Macer5_h:
-	db $0a ; tileset
+	db $11 ; tileset
     db MACER_HEIGHT, MACER_WIDTH ; dimensions (y, x)
     dw Macer5Blocks, Macer5TextPointers, Macer5Script ; blocks, texts, scripts
     db $00 ; connections
@@ -111676,7 +111697,7 @@ Macer5Object:
     db $0 ; warps
 	
     db $1 ; signs
-    db $7, $7, $1
+    db $7, $5, $1
 
     db $0 ; people
 
