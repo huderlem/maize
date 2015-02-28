@@ -4492,20 +4492,33 @@ _Macer1Text1::
 	text "--Day 1--"
 
 	para "I must venture"
-	cont "further into this"
+	line "further into this"
 	cont "acursed cavern."
 	done
 
 _Macer2Text1::
 	text "--Day 2--"
+
+	para "Are my eyes"
+	line "playing tricks on"
+	cont "me?"
 	done
 
 _Macer3Text1::
 	text "--Day 3--"
+
+	para "I feel like I'm"
+	line "walking in"
+	cont "circles..."
 	done
 
 _Macer4Text1::
 	text "--Day 4--"
+
+	para "I hear rushing"
+	line "water..."
+
+	para "So thirsty..."
 	done
 
 _Macer4Text2::
@@ -4514,4 +4527,6 @@ _Macer4Text2::
 
 _Macer5Text1::
 	text "--Day 5--"
+
+	para "..."
 	done

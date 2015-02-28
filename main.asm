@@ -111573,7 +111573,11 @@ Macer2_h:
 	db $11 ; tileset
     db MACER_HEIGHT, MACER_WIDTH ; dimensions (y, x)
     dw Macer2Blocks, Macer2TextPointers, Macer2Script ; blocks, texts, scripts
-    db $00 ; connections
+    db NORTH | SOUTH | WEST | EAST ; connections
+    NORTH_MAP_CONNECTION MACER_1, MACER_WIDTH, MACER_HEIGHT, 0, 0, MACER_WIDTH, Macer1Blocks
+    SOUTH_MAP_CONNECTION MACER_2, MACER_WIDTH, 0, 0, MACER_WIDTH, Macer2Blocks, MACER_WIDTH, MACER_HEIGHT
+    WEST_MAP_CONNECTION MACER_2, MACER_WIDTH, 0, 0, MACER_HEIGHT, Macer2Blocks, MACER_WIDTH
+    EAST_MAP_CONNECTION MACER_3, MACER_WIDTH, 0, 0, MACER_HEIGHT, Macer3Blocks, MACER_WIDTH
     dw Macer2Object ; objects
 
 Macer2Blocks:
@@ -111605,7 +111609,11 @@ Macer3_h:
 	db $11 ; tileset
     db MACER_HEIGHT, MACER_WIDTH ; dimensions (y, x)
     dw Macer3Blocks, Macer3TextPointers, Macer3Script ; blocks, texts, scripts
-    db $00 ; connections
+    db NORTH | SOUTH | WEST | EAST ; connections
+    NORTH_MAP_CONNECTION MACER_3, MACER_WIDTH, MACER_HEIGHT, 0, 0, MACER_WIDTH, Macer3Blocks
+    SOUTH_MAP_CONNECTION MACER_3, MACER_WIDTH, 0, 0, MACER_WIDTH, Macer3Blocks, MACER_WIDTH, MACER_HEIGHT
+    WEST_MAP_CONNECTION MACER_2, MACER_WIDTH, 0, 0, MACER_HEIGHT, Macer2Blocks, MACER_WIDTH
+    EAST_MAP_CONNECTION MACER_4, MACER_WIDTH, 0, 0, MACER_HEIGHT, Macer4Blocks, MACER_WIDTH
     dw Macer3Object ; objects
 
 Macer3Blocks:
@@ -111637,7 +111645,11 @@ Macer4_h:
 	db $11 ; tileset
     db MACER_HEIGHT, MACER_WIDTH ; dimensions (y, x)
     dw Macer4Blocks, Macer4TextPointers, Macer4Script ; blocks, texts, scripts
-    db $00 ; connections
+    db NORTH | SOUTH | WEST | EAST ; connections
+    NORTH_MAP_CONNECTION MACER_5, MACER_WIDTH, MACER_HEIGHT, 0, 0, MACER_WIDTH, Macer5Blocks
+    SOUTH_MAP_CONNECTION MACER_4, MACER_WIDTH, 0, 0, MACER_WIDTH, Macer4Blocks, MACER_WIDTH, MACER_HEIGHT
+    WEST_MAP_CONNECTION MACER_3, MACER_WIDTH, 0, 0, MACER_HEIGHT, Macer3Blocks, MACER_WIDTH
+    EAST_MAP_CONNECTION MACER_4, MACER_WIDTH, 0, 0, MACER_HEIGHT, Macer4Blocks, MACER_WIDTH
     dw Macer4Object ; objects
 
 Macer4Blocks:
@@ -111675,7 +111687,11 @@ Macer5_h:
 	db $11 ; tileset
     db MACER_HEIGHT, MACER_WIDTH ; dimensions (y, x)
     dw Macer5Blocks, Macer5TextPointers, Macer5Script ; blocks, texts, scripts
-    db $00 ; connections
+    db NORTH | SOUTH | EAST ; connections
+    NORTH_MAP_CONNECTION MACER_5, MACER_WIDTH, MACER_HEIGHT, 0, 0, MACER_WIDTH, Macer1Blocks
+    SOUTH_MAP_CONNECTION MACER_4, MACER_WIDTH, 0, 0, MACER_WIDTH, Macer4Blocks, MACER_WIDTH, MACER_HEIGHT
+    ;WEST_MAP_CONNECTION MACER_5, MACER_WIDTH, 0, 0, MACER_HEIGHT, Macer2Blocks, MACER_WIDTH
+    EAST_MAP_CONNECTION MACER_5, MACER_WIDTH, 0, 0, MACER_HEIGHT, Macer5Blocks, MACER_WIDTH
     dw Macer5Object ; objects
 
 Macer5Blocks:
