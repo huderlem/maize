@@ -1559,6 +1559,7 @@ W_RING::
 W_NEWFLAGS3::
 	ds 1
 	; 0: shrub sprite
+	; 1: opened the pyrite valve
 W_LAST_NEW_BYTE::
 	ds 1
 

@@ -4521,12 +4521,87 @@ _Macer4Text1::
 	para "So thirsty..."
 	done
 
-_Macer4Text2::
-	text "Valve."
+_Macer4EntranceAppearedText::
+	text "Oh!  An entrance"
+	line "appeared!"
+	done
+
+_Macer4ButtonText::
+	text $52, " leaned"
+	line "against the rock"
+	cont "to rest."
 	done
 
 _Macer5Text1::
 	text "--Day 5--"
 
 	para "..."
+	done
+
+_OpenValveText1::
+	text "It's a big metal"
+	line "contraption!"
+
+	para "A label says:"
+
+	para "PYRITE CITY VALVE"
+
+	para "IN CASE OF FLOOD,"
+	line "OPEN VALVE TO"
+	cont "DRAIN CITY."
+
+	para "It appears that"
+	line "a number code"
+	cont "is required to"
+	cont "turn the valve."
+
+	para "Will ", $52
+	line "enter the code to"
+	cont "open the valve?"
+	done
+
+_ChoseNotToOpenValveText::
+	text "Maybe later."
+
+	para "Someone in PYRITE"
+	line "CITY must know"
+	cont "the code..."
+	done
+
+_AlreadyOpenedValveText::
+	text "The PYRITE CITY"
+	line "VALVE is open."
+
+	para "The flooding"
+	line "should have gone"
+	cont "down by now."
+	done
+
+_TurnedValveText::
+	text "The lock opened"
+	line "with a click!"
+
+	para $52, " turned"
+	line "the valve!"
+
+	para "A deep rumbling"
+	line "sound is coming"
+	cont "from deep"
+	cont "underground."
+
+	para "The water must be"
+	line "draining from"
+	cont "PYRITE CITY!"
+	done
+
+_WrongValveCode::
+	text "The lock won't"
+	line "budge."
+
+	para "The code was"
+	line "incorrect."
+
+	para "Someone in"
+	line "PYRITE CITY must"
+	cont "know the code!"
 	done

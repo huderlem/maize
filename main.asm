@@ -387,7 +387,7 @@ MapHeaderPointers:: ; 01ae (0:01ae)
 	dw RocketHideout3_h
 	dw RocketHideout4_h
 	dw RocketHideoutElevator_h
-	dw RocketHideoutElevator_h ; unused
+	dw PyriteValve_h
 	dw RocketHideoutElevator_h ; unused
 	dw RocketHideoutElevator_h ; unused
 	dw SilphCo2_h
@@ -19048,7 +19048,7 @@ MapSongBanks: ; c04d (3:404d)
 	db MUSIC_DUNGEON1, BANK(Music_Dungeon1) ; RocketHideout3
 	db MUSIC_DUNGEON1, BANK(Music_Dungeon1) ; RocketHideout4
 	db MUSIC_DUNGEON1, BANK(Music_Dungeon1) ; RocketHideoutElevator
-	db MUSIC_DUNGEON1, BANK(Music_Dungeon1)
+	db MUSIC_DUNGEON1, BANK(Music_Dungeon1) ; PyriteValve
 	db MUSIC_DUNGEON1, BANK(Music_Dungeon1)
 	db MUSIC_DUNGEON1, BANK(Music_Dungeon1)
 	db MUSIC_SILPH_CO, BANK(Music_SilphCo) ; SilphCo2
@@ -19299,7 +19299,7 @@ MapHeaderBanks: ; c23d (3:423d)
 	db BANK(RocketHideout3_h)
 	db BANK(RocketHideout4_h)
 	db BANK(RocketHideoutElevator_h)
-	db $01
+	db BANK(PyriteValve_h)
 	db $01
 	db $01
 	db BANK(SilphCo2_h)
@@ -111664,7 +111664,27 @@ Macer4Text1:
 	db "@"
 
 Macer4Text2:
-	TX_FAR _Macer4Text2
+	db $08 ; asm
+	ld hl, Macer4ButtonText
+	call PrintText
+	; reveal the ladder
+	ld a, $27
+	ld [$d09f], a
+	ld bc, $0604
+	ld a, $17
+	call Predef
+	ld a, $ad
+	call PlaySound
+	ld hl, Macer4EntranceAppearedText
+	call PrintText
+	jp TextScriptEnd
+
+Macer4EntranceAppearedText:
+	TX_FAR _Macer4EntranceAppearedText
+	db "@"
+
+Macer4ButtonText:
+	TX_FAR _Macer4ButtonText
 	db "@"
 
 Macer4Script:
@@ -111673,7 +111693,8 @@ Macer4Script:
 Macer4Object:
 	db $19 ; border tile
 
-    db $0 ; warps
+    db $1 ; warps
+    db $c, $8, $0, PYRITE_VALVE
 	
     db $2 ; signs
     db $5, $7, $1
@@ -111682,6 +111703,7 @@ Macer4Object:
     db $0 ; people
 
     ; warp-to
+    EVENT_DISP MACER_WIDTH, $c, $8
 
 Macer5_h:
 	db $11 ; tileset
@@ -111719,6 +111741,246 @@ Macer5Object:
 
     ; warp-to
 
+PyriteValve_h:
+	db $11 ; tileset
+    db PYRITE_VALVE_HEIGHT, PYRITE_VALVE_WIDTH ; dimensions (y, x)
+    dw PyriteValve5Blocks, PyriteValve5TextPointers, PyriteValve5Script ; blocks, texts, scripts
+    db $0 ; connections
+    dw PyriteValve5Object ; objects
+
+PyriteValve5Blocks:
+	INCBIN "maps/pyritevalve.blk"
+
+PyriteValve5TextPointers:
+	dw PyriteValveText1
+
+PyriteValveText1:
+	db $08 ; asm
+	ld a, [W_NEWFLAGS3]
+	bit 1, a ; has player already opened the valve?
+	jp nz, .alreadyOpenedValve
+	; hasn't opened valve
+	ld hl, OpenValveText1
+	call PrintText
+	call YesNoChoice
+	ld a, [wCurrentMenuItem] ; $cc26
+	and a
+	jp nz, .choseNotToOpenValve
+	; ask for code to open valve
+	xor a
+	ld [W_EVENTDATA], a  ; reuse W_EVENTDATA to store whether or not the player enters the correct code
+
+	ld a, 9
+	ld [$cf97], a ; max quantity
+
+	call DisplayChooseNumberMenu_Bank1D
+	ld a, [$cf96] ; a = number that was selected
+	cp 8
+	jr z, .number2
+	ld a, 1
+	ld [W_EVENTDATA], a
+.number2
+	ld hl, EventTextNumber2_1d
+	call PrintText
+	call DisplayChooseNumberMenu_Bank1D
+	ld a, [$cf96] ; a = number that was selected
+	cp 6
+	jr z, .number3
+	ld a, 1
+	ld [W_EVENTDATA], a
+.number3
+	ld hl, EventTextNumber3_1d
+	call PrintText
+	call DisplayChooseNumberMenu_Bank1D
+	ld a, [$cf96] ; a = number that was selected
+	cp 7
+	jr z, .number4
+	ld a, 1
+	ld [W_EVENTDATA], a
+.number4
+	ld hl, EventTextNumber4_1d
+	call PrintText
+	call DisplayChooseNumberMenu_Bank1D
+	ld a, [$cf96] ; a = number that was selected
+	cp 5
+	jr z, .number5
+	ld a, 1
+	ld [W_EVENTDATA], a
+.number5
+	ld hl, EventTextNumber5_1d
+	call PrintText
+	call DisplayChooseNumberMenu_Bank1D
+	ld a, [$cf96] ; a = number that was selected
+	cp 3
+	jr z, .number6
+	ld a, 1
+	ld [W_EVENTDATA], a
+.number6
+	ld hl, EventTextNumber6_1d
+	call PrintText
+	call DisplayChooseNumberMenu_Bank1D
+	ld a, [$cf96] ; a = number that was selected
+	cp 0
+	jr z, .number7
+	ld a, 1
+	ld [W_EVENTDATA], a
+.number7
+	ld hl, EventTextNumber7_1d
+	call PrintText
+	call DisplayChooseNumberMenu_Bank1D
+	ld a, [$cf96] ; a = number that was selected
+	cp 9
+	jr z, .last
+	ld a, 1
+	ld [W_EVENTDATA], a
+.last
+	ld a, [W_EVENTDATA]
+	and a
+	jr nz, .invalidValveCode
+	; valid code!
+	ld hl, TurnedValveText
+	call PrintText
+	ld hl, W_NEWFLAGS3
+	set 1, [hl]
+	jr .done
+.invalidValveCode
+	ld hl, WrongValveCode
+	call PrintText
+	jr .done
+.choseNotToOpenValve
+	ld hl, ChoseNotToOpenValveText
+	call PrintText
+	jr .done
+.alreadyOpenedValve
+	ld hl, AlreadyOpenedValveText
+	call PrintText
+.done
+	jp TextScriptEnd
+
+OpenValveText1:
+	TX_FAR _OpenValveText1
+	db "@"
+
+ChoseNotToOpenValveText:
+	TX_FAR _ChoseNotToOpenValveText
+	db "@"
+
+AlreadyOpenedValveText:
+	TX_FAR _AlreadyOpenedValveText
+	db "@"
+
+TurnedValveText:
+	TX_FAR _TurnedValveText
+	db "@"
+
+PyriteValve5Script:
+	jp EnableAutoTextBoxDrawing
+
+WrongValveCode:
+	TX_FAR _WrongValveCode
+	db "@"
+
+EventTextNumber2_1d:
+	TX_FAR _EventTextNumber2
+	db "@"
+
+EventTextNumber3_1d:
+	TX_FAR _EventTextNumber3
+	db "@"
+
+EventTextNumber4_1d:
+	TX_FAR _EventTextNumber4
+	db "@"
+
+EventTextNumber5_1d:
+	TX_FAR _EventTextNumber5
+	db "@"
+
+EventTextNumber6_1d:
+	TX_FAR _EventTextNumber6
+	db "@"
+
+EventTextNumber7_1d:
+	TX_FAR _EventTextNumber7
+	db "@"
+
+PyriteValve5Object:
+	db $19 ; border tile
+
+	db $1 ; warps
+	db $3, $5, $4, ROUTE_8
+
+	db $1 ; signs
+	db $5, $3, $1
+
+	db $0 ; people
+
+	; warp-to
+	EVENT_DISP PYRITE_VALVE_WIDTH, $3, $5
+
+DisplayChooseNumberMenu_Bank1D::
+; choose number from 0 - [$cf97]
+; This function is modified from DisplayChooseQuantityMenu
+; text box dimensions/coordinates for just quantity
+	FuncCoord 6,1
+	ld hl,Coord
+	ld b,3 ; height
+	ld c,4 ; width
+.drawTextBox
+	call TextBoxBorder
+	FuncCoord 8,3
+	ld hl,Coord
+.printInitialQuantity
+	ld de, InitialNumberText_1d
+	call PlaceString
+	ld a, $ff
+	ld [$cf96],a ; initialize current quantity to 0
+	jp .incrementQuantity
+.waitForKeyPressLoop
+	call GetJoypadStateLowSensitivity
+	ld a,[H_NEWLYPRESSEDBUTTONS] ; newly pressed buttons
+	bit 0,a ; was the A button pressed?
+	jp nz,.buttonAPressed
+	bit 6,a ; was Up pressed?
+	jr nz,.incrementQuantity
+	bit 7,a ; was Down pressed?
+	jr nz,.decrementQuantity
+	jr .waitForKeyPressLoop
+.incrementQuantity
+	ld a,[$cf97] ; max quantity
+	inc a
+	ld b,a
+	ld hl,$cf96 ; current quantity
+	inc [hl]
+	ld a,[hl]
+	cp b
+	jr nz,.handleNewQuantity
+; wrap to 0 if the player goes above the max quantity
+	xor a
+	ld [hl],a
+	jr .handleNewQuantity
+.decrementQuantity
+	ld hl,$cf96 ; current quantity
+	dec [hl]
+	ld a, [hl]
+	cp $ff
+	jr nz,.handleNewQuantity
+; wrap to the max quantity if the player goes below 0
+	ld a,[$cf97] ; max quantity
+	ld [hl],a
+.handleNewQuantity
+	FuncCoord 9,3
+	ld hl,Coord
+.printQuantity
+	ld de,$cf96 ; current quantity
+	ld bc,$4101 ; no leading zeroes, 1 byte, 3 digits
+	call PrintNumber
+	jp .waitForKeyPressLoop
+.buttonAPressed ; the player selected the number
+	ret
+
+InitialNumberText_1d:
+	db "0@"
 
 SECTION "bank1E",ROMX,BANK[$1E]
 
