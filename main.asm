@@ -388,7 +388,7 @@ MapHeaderPointers:: ; 01ae (0:01ae)
 	dw RocketHideout4_h
 	dw RocketHideoutElevator_h
 	dw PyriteValve_h
-	dw RocketHideoutElevator_h ; unused
+	dw PyriteCityDrained_h
 	dw RocketHideoutElevator_h ; unused
 	dw SilphCo2_h
 	dw SilphCo3_h
@@ -2505,8 +2505,8 @@ LoadMapHeader:: ; 107c (0:107c)
 	ld [$ff8b],a
 	bit 7,b
 	ret nz
-	ld hl, HandleEndlessRoute
-	ld b, Bank(HandleEndlessRoute)
+	ld hl, HandleDynamicMaps
+	ld b, Bank(HandleDynamicMaps)
 	call Bankswitch
 	ld a, d
 	ld hl,MapHeaderPointers
@@ -19300,7 +19300,7 @@ MapHeaderBanks: ; c23d (3:423d)
 	db BANK(RocketHideout4_h)
 	db BANK(RocketHideoutElevator_h)
 	db BANK(PyriteValve_h)
-	db $01
+	db BANK(PyriteCityDrained_h)
 	db $01
 	db BANK(SilphCo2_h)
 	db BANK(SilphCo3_h)
@@ -32373,6 +32373,15 @@ CeladonCity_h: ; 18000 (6:4000)
 	EAST_MAP_CONNECTION ROUTE_4, ROUTE_4_WIDTH, 0, 0, ROUTE_4_HEIGHT, Route4Blocks, CELADON_CITY_WIDTH
 	dw CeladonCityObject ; objects
 
+PyriteCityDrained_h: ; 18000 (6:4000)
+	db $00 ; tileset
+	db CELADON_CITY_HEIGHT, CELADON_CITY_WIDTH ; dimensions (y, x)
+	dw PyriteCityDrainedBlocks, CeladonCityTextPointers, CeladonCityScript ; blocks, texts, scripts
+	db NORTH | EAST ; connections
+	NORTH_MAP_CONNECTION ROUTE_6, ROUTE_6_WIDTH, ROUTE_6_HEIGHT, 11, 0, ROUTE_6_WIDTH, Route6Blocks
+	EAST_MAP_CONNECTION ROUTE_4, ROUTE_4_WIDTH, 0, 0, ROUTE_4_HEIGHT, Route4Blocks, CELADON_CITY_WIDTH
+	dw CeladonCityObject ; objects
+
 CeladonCityObject: ; 0x18022 (size=189)
 	db $f ; border tile
 
@@ -32430,6 +32439,9 @@ CeladonCityObject: ; 0x18022 (size=189)
 
 CeladonCityBlocks: ; 180df (6:40df)
 	INCBIN "maps/celadoncity.blk"
+
+PyriteCityDrainedBlocks:
+	INCBIN "maps/pyritecity_drained.blk"
 
 PalletTown_h: ; 182a1 (6:42a1)
 	db $00 ; tileset
@@ -122365,19 +122377,24 @@ AnimateWater_:
 .done
 	ret
 
-HandleEndlessRoute:
+HandleDynamicMaps:
 	ld a, [W_CURMAP]
 	cp ROUTE_11
 	jr nz, .notRoute11
 	ld a, [W_COVENANT]
 	cp SEAFARER_COVENANT
-	jr nz, .endless
+	jr nz, .normal
 	ld d, $0B ; map id of non-endless route
 	ret
 .notRoute11
-	ld d, a
+	cp CELADON_CITY
+	jr nz, .normal
+	ld hl, W_NEWFLAGS3
+	bit 1, [hl]  ; has valve been opened?
+	jr z, .normal
+	ld d, PYRITE_CITY_DRAINED
 	ret
-.endless
+.normal
 	ld a, [W_CURMAP]
 	ld d, a
 	ret
