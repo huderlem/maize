@@ -4605,3 +4605,74 @@ _WrongValveCode::
 	line "PYRITE CITY must"
 	cont "know the code!"
 	done
+
+_PyriteSewersBattleText1::
+	text "Gluuuhhh!@@"
+
+_PyriteSewersBattleText2::
+	text "Duh.@@"
+
+_PyriteSewersBattleText3::
+	text "Shlaawwww!@@"
+
+_PyriteSewersCaptainText::
+	text "...Left......"
+	line "Right...."
+	cont ".........Left.."
+	cont "Up...Up...."
+
+	para "(", $52, " gave him"
+	line "a hug.)"
+
+	para "(The old man"
+	line "gazed upwards,"
+	cont "with sudden"
+	cont "clarity.)"
+
+	para "I am here."
+
+	para "Why am I here?"
+
+	para "I saw the light,"
+	line "yet all I recall"
+	cont "is chaos."
+
+	para "Forgive me, lad."
+
+	para "My name is"
+	line "Captain Gili, and"
+	cont "I lead the"
+	cont "world-renowned"
+	cont "SEAFARERS."
+
+	para "I was thrown"
+	line "overboard by a"
+	cont "violent wave"
+	cont "west of RUBY"
+	cont "DOCKS."
+
+	para "I washed ashore"
+	line "a forsaken isle,"
+	cont "where I wandered"
+	cont "into despair."
+
+	para "There were"
+	line "voices..."
+
+	para "Lad, I thank you"
+	line "for finding me"
+	cont "and bringing me"
+	cont "back to my"
+	cont "senses!"
+
+	para "Come visit the"
+	line "SEAFARERs and me"
+	cont "in RUBY DOCKS!"
+
+	para "I dare say we"
+	line "have some"
+	cont "adventuring ahead"
+	cont "of us!"
+
+	para "See you soon."
+	prompt

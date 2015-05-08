@@ -342,7 +342,7 @@ MapHeaderPointers:: ; 01ae (0:01ae)
 	dw SafariZoneEntrance_h
 	dw FuchsiaGym_h
 	dw FuchsiaMeetingRoom_h
-	dw SeafoamIslands2_h
+	dw PyriteSewers_h
 	dw SeafoamIslands3_h ;id=160
 	dw SeafoamIslands4_h
 	dw SeafoamIslands5_h
@@ -15391,8 +15391,8 @@ Func_62ff: ; 62ff (1:62ff)
 
 
 DungeonWarpList: ; 63bf (1:63bf)
-	db SEAFOAM_ISLANDS_2,$01
-	db SEAFOAM_ISLANDS_2,$02
+	db PYRITE_SEWERS,$01
+	db PYRITE_SEWERS,$02
 	db SEAFOAM_ISLANDS_3,$01
 	db SEAFOAM_ISLANDS_3,$02
 	db SEAFOAM_ISLANDS_4,$01
@@ -15411,8 +15411,8 @@ DungeonWarpList: ; 63bf (1:63bf)
 	db $FF
 
 DungeonWarpData: ; 63d8 (1:63d8)
-	FLYWARP_DATA SEAFOAM_ISLANDS_2_WIDTH,7,18
-	FLYWARP_DATA SEAFOAM_ISLANDS_2_WIDTH,7,23
+	FLYWARP_DATA PYRITE_SEWERS_WIDTH,7,18
+	FLYWARP_DATA PYRITE_SEWERS_WIDTH,7,23
 	FLYWARP_DATA SEAFOAM_ISLANDS_3_WIDTH,7,19
 	FLYWARP_DATA SEAFOAM_ISLANDS_3_WIDTH,7,22
 	FLYWARP_DATA SEAFOAM_ISLANDS_4_WIDTH,7,18
@@ -19003,7 +19003,7 @@ MapSongBanks: ; c04d (3:404d)
 	db MUSIC_CITIES2, BANK(Music_Cities2) ; SafariZoneEntrance
 	db MUSIC_GYM, BANK(Music_Gym) ; FuchsiaGym
 	db MUSIC_CITIES2, BANK(Music_Cities2) ; FuchsiaMeetingRoom
-	db MUSIC_DUNGEON2, BANK(Music_Dungeon2) ; SeafoamIslands2
+	db MUSIC_DUNGEON2, BANK(Music_Dungeon2) ; PyriteSewers
 	db MUSIC_DUNGEON2, BANK(Music_Dungeon2) ; SeafoamIslands3
 	db MUSIC_DUNGEON2, BANK(Music_Dungeon2) ; SeafoamIslands4
 	db MUSIC_DUNGEON2, BANK(Music_Dungeon2) ; SeafoamIslands5
@@ -19254,7 +19254,7 @@ MapHeaderBanks: ; c23d (3:423d)
 	db BANK(SafariZoneEntrance_h)
 	db BANK(FuchsiaGym_h)
 	db BANK(FuchsiaMeetingRoom_h)
-	db BANK(SeafoamIslands2_h)
+	db BANK(PyriteSewers_h)
 	db BANK(SeafoamIslands3_h)
 	db BANK(SeafoamIslands4_h)
 	db BANK(SeafoamIslands5_h)
@@ -20335,7 +20335,7 @@ MapHSPointers: ; c8f5 (3:48f5)
 	dw MapHS91
 	dw MapHS92
 	dw MapHS93
-	dw MapHS94
+	dw MapHSXX
 	dw MapHS95
 	dw MapHSXX
 	dw MapHSXX
@@ -20529,7 +20529,7 @@ MapHS8F: ; cb89 (3:4b89)
 	db POKEMONTOWER_2,$02,Show
 	db POKEMONTOWER_2,$03,Show
 	db POKEMONTOWER_2,$04,Show
-	db POKEMONTOWER_2,$01,Show
+	db POKEMONTOWER_2,$01,Show  ; $38
 MapHS90: ; cb95 (3:4b95)
 	db POKEMONTOWER_3,$04,Show
 MapHS91: ; cb98 (3:4b98)
@@ -20541,11 +20541,11 @@ MapHS92: ; cba1 (3:4ba1)
 MapHS93: ; cba4 (3:4ba4)
 	db POKEMONTOWER_6,$02,Show
 	db POKEMONTOWER_6,$03,Show
-MapHS94: ; cbaa (3:4baa)
-	db POKEMONTOWER_7,$01,Show
-	db POKEMONTOWER_7,$02,Show
-	db POKEMONTOWER_7,$03,Show
-	db POKEMONTOWER_7,$04,Show
+MapHS9F: ; cbaa (3:4baa)
+	db PYRITE_SEWERS,$01,Show ; $40
+	db PYRITE_SEWERS,$02,Show
+	db PYRITE_SEWERS,$03,Show
+	db PYRITE_SEWERS,$04,Show
 MapHS95: ; cbb6 (3:4bb6)
 	db LAVENDER_HOUSE_1,$05,Hide
 MapHS84: ; cbb9 (3:4bb9)
@@ -20741,9 +20741,9 @@ MapHS78: ; cd6c (3:4d6c)
 MapHSC0: ; cd6f (3:4d6f)
 	db SEAFOAM_ISLANDS_1,$01,Show
 	db SEAFOAM_ISLANDS_1,$02,Show
-MapHS9F: ; cd75 (3:4d75)
-	db SEAFOAM_ISLANDS_2,$01,Hide
-	db SEAFOAM_ISLANDS_2,$02,Hide
+; TODO: the following two are unused now!
+	db PYRITE_SEWERS,$01,Hide
+	db PYRITE_SEWERS,$02,Hide
 MapHSA0: ; cd7b (3:4d7b)
 	db SEAFOAM_ISLANDS_3,$01,Hide
 	db SEAFOAM_ISLANDS_3,$02,Hide
@@ -21870,17 +21870,17 @@ IslandMons1: ; d411 (3:5411)
 	db $00
 
 IslandMonsB1: ; d427 (3:5427)
-	db $0A
-	db 30,STARYU
-	db 30,HORSEA
-	db 32,SHELLDER
-	db 32,HORSEA
+	db $06
+	db 28,GRIMER
 	db 28,SLOWPOKE
-	db 30,SEEL
-	db 30,SLOWPOKE
-	db 28,SEEL
-	db 38,DEWGONG
-	db 37,SEADRA
+	db 29,ZUBAT
+	db 28,RATICATE
+	db 29,KOFFING
+	db 27,GRIMER
+	db 31,GOLBAT
+	db 28,SLOWPOKE
+	db 32,DROWZEE
+	db 31,DROWZEE
 
 	db $00
 
@@ -32394,7 +32394,7 @@ CeladonCityObject: ; 0x18022 (size=189)
 	db $9, $29, $0, CELADON_POKECENTER
 	db $17, $20, $0, CELADON_GYM
 	db $19, $13, $0, CELADON_MANSION_1
-	db $2, $6, $0, CELADON_MART_5 ; beta warp! no longer used
+	db $11, $f, $0, PYRITE_SEWERS
 	db $1f, $25, $0, CELADON_HOUSE
 	db $1, $1b, $1, PYRITE_CITY_GATE
 	db $2, $5, $0, CELADON_HOUSE
@@ -32424,14 +32424,14 @@ CeladonCityObject: ; 0x18022 (size=189)
 
 	; warp-to
 	EVENT_DISP CELADON_CITY_WIDTH, $c, $a ; CELADON_MART_1
-	EVENT_DISP CELADON_CITY_WIDTH, $7, $19 ; CELADON_MART_1
-	EVENT_DISP CELADON_CITY_WIDTH, $15, $d ; CELADON_MANSION_1
-	EVENT_DISP CELADON_CITY_WIDTH, $7, $c ; CELADON_MANSION_1
+	EVENT_DISP CELADON_CITY_WIDTH, $7, $19 ; LAVENDER_MART
+	EVENT_DISP CELADON_CITY_WIDTH, $15, $d ; CELADON_HOTEL
+	EVENT_DISP CELADON_CITY_WIDTH, $7, $c ; MUSEUM_1F
 	EVENT_DISP CELADON_CITY_WIDTH, $13, $2b ; CELADON_MANSION_1
 	EVENT_DISP CELADON_CITY_WIDTH, $9, $29 ; CELADON_POKECENTER
 	EVENT_DISP CELADON_CITY_WIDTH, $17, $20 ; CELADON_GYM
-	EVENT_DISP CELADON_CITY_WIDTH, $19, $13 ; GAME_CORNER
-	EVENT_DISP CELADON_CITY_WIDTH, $2, $6 ; CELADON_MART_5
+	EVENT_DISP CELADON_CITY_WIDTH, $19, $13 ; CELADON_MANSION_1
+	EVENT_DISP CELADON_CITY_WIDTH, $11, $f ; PYRITE_SEWERS
 	EVENT_DISP CELADON_CITY_WIDTH, $1f, $25 ; CELADONPRIZE_ROOM
 	EVENT_DISP CELADON_CITY_WIDTH, $1, $1b ; PYRITE_CITY_GATE
 	EVENT_DISP CELADON_CITY_WIDTH, $2, $5 ; CELADON_HOUSE
@@ -70056,9 +70056,9 @@ SeafoamIslands1Object: ; 0x4484f (size=72)
 	db $11, $5, $0, $ff
 	db $11, $1a, $1, $ff
 	db $11, $1b, $1, $ff
-	db $5, $7, $1, SEAFOAM_ISLANDS_2
-	db $3, $19, $6, SEAFOAM_ISLANDS_2
-	db $f, $17, $4, SEAFOAM_ISLANDS_2
+	db $5, $7, $1, PYRITE_SEWERS
+	db $3, $19, $6, PYRITE_SEWERS
+	db $f, $17, $4, PYRITE_SEWERS
 
 	db $0 ; signs
 
@@ -70071,9 +70071,9 @@ SeafoamIslands1Object: ; 0x4484f (size=72)
 	EVENT_DISP $f, $11, $5
 	EVENT_DISP $f, $11, $1a
 	EVENT_DISP $f, $11, $1b
-	EVENT_DISP $f, $5, $7 ; SEAFOAM_ISLANDS_2
-	EVENT_DISP $f, $3, $19 ; SEAFOAM_ISLANDS_2
-	EVENT_DISP $f, $f, $17 ; SEAFOAM_ISLANDS_2
+	EVENT_DISP $f, $5, $7 ; PYRITE_SEWERS
+	EVENT_DISP $f, $3, $19 ; PYRITE_SEWERS
+	EVENT_DISP $f, $f, $17 ; PYRITE_SEWERS
 
 	; holes
 	EVENT_DISP $f, $6, $11
@@ -73025,91 +73025,164 @@ RockTunnel2Object: ; 0x4613d (size=100)
 RockTunnel2Blocks: ; 461a1 (11:61a1)
 	INCBIN "maps/rocktunnel2.blk"
 
-SeafoamIslands2_h: ; 0x46309 to 0x46315 (12 bytes) (bank=11) (id=159)
+PyriteSewers_h: ; 0x46309 to 0x46315 (12 bytes) (bank=11) (id=159)
 	db $11 ; tileset
-	db SEAFOAM_ISLANDS_2_HEIGHT, SEAFOAM_ISLANDS_2_WIDTH ; dimensions (y, x)
-	dw SeafoamIslands2Blocks, SeafoamIslands2TextPointers, SeafoamIslands2Script ; blocks, texts, scripts
+	db PYRITE_SEWERS_HEIGHT, PYRITE_SEWERS_WIDTH ; dimensions (y, x)
+	dw PyriteSewersBlocks, PyriteSewersTextPointers, PyriteSewersScript ; blocks, texts, scripts
 	db $00 ; connections
-	dw SeafoamIslands2Object ; objects
+	dw PyriteSewersObject ; objects
 
-SeafoamIslands2Script: ; 46315 (11:6315)
+PyriteSewersScript: ; 46315 (11:6315)
 	call EnableAutoTextBoxDrawing
-	ld hl, wFlags_0xcd60
-	bit 7, [hl]
-	res 7, [hl]
-	jr z, .asm_46362 ; 0x4631f $41
-	ld hl, Seafoam2HolesCoords
-	call CheckBoulderCoords
-	ret nc
-	ld hl, $d87f
-	ld a, [$cd3d]
-	cp $1
-	jr nz, .asm_46340 ; 0x46330 $e
-	set 0, [hl]
-	ld a, $d9
-	ld [$d079], a
-	ld a, $db
-	ld [$d07a], a
-	jr .asm_4634c ; 0x4633e $c
-.asm_46340
-	set 1, [hl]
-	ld a, $da
-	ld [$d079], a
-	ld a, $dc
-	ld [$d07a], a
-.asm_4634c
-	ld a, [$d079]
+	ld hl, PyriteSewersTrainerHeaders
+	ld de, PyriteSewersScriptPointers
+	ld a, [W_PYRITESEWERSCURSCRIPT]
+	call ExecuteCurMapScriptInTable
+	ld [W_PYRITESEWERSCURSCRIPT], a
+	ret
+
+PyriteSewersScriptPointers: ; 45ffe (11:5ffe)
+	dw CheckFightingMapTrainers
+	dw Func_324c
+	dw EndTrainerBattle
+	dw PyriteSewersScript3
+
+PyriteSewersScript3_helper: ; 467a5 (11:67a5)
+	xor a
+	ld [W_PYRITESEWERSCURSCRIPT], a
+	ld [wJoypadForbiddenButtonsMask], a
+	ret
+
+PyriteSewersScript3: ; 51422 (14:5422) 
+	ld a, [W_ISINBATTLE] ; $d057
+	cp $ff
+	jp z, PyriteSewersScript3_helper
+	call EndTrainerBattle
+	ld a, $0
+	ld [W_SEAFOAMISLANDS5CURSCRIPT], a
+	ret
+
+PyriteSewersTextPointers: ; 46372 (11:6372)
+	dw FirstMonText
+	dw SecondMonText
+	dw ThirdMonText
+	dw SeafarerCaptainText
+
+FirstMonText:
+	db $08 ; asm
+	ld hl, PyriteSewersTrainerHeader0
+	call TalkToTrainer
+	ld a, $3
+	ld [W_PYRITESEWERSCURSCRIPT], a
+	jp TextScriptEnd
+
+SecondMonText:
+	db $08 ; asm
+	ld hl, PyriteSewersTrainerHeader1
+	call TalkToTrainer
+	ld a, $3
+	ld [W_PYRITESEWERSCURSCRIPT], a
+	jp TextScriptEnd
+
+ThirdMonText:
+	db $08 ; asm
+	ld hl, PyriteSewersTrainerHeader2
+	call TalkToTrainer
+	ld a, $3
+	ld [W_PYRITESEWERSCURSCRIPT], a
+	jp TextScriptEnd
+
+SeafarerCaptainText:
+	db $08 ; asm
+	ld hl, PyriteSewersCaptainText
+	call PrintText
+	; hide his sprite
+	call GBFadeOut2
+	call ReloadMapData
+	ld a, $43
 	ld [$cc4d], a
 	ld a, $11
-	call Predef
-	ld a, [$d07a]
-	ld [$cc4d], a
-	ld a, $15
-	jp Predef
-.asm_46362
-	ld a, $a0
-	ld [$d71d], a
-	ld hl, Seafoam2HolesCoords
-	jp Func_46981
+	call Predef ; indirect jump to RemoveMissableObject (f1d7 (3:71d7))
+	call GBFadeIn2
+	jp TextScriptEnd
 
-Seafoam2HolesCoords: ; 4636d (11:636d)
-	db $06,$12
-	db $06,$17
-	db $ff
+PyriteSewersCaptainText:
+	TX_FAR _PyriteSewersCaptainText
+	db "@"
 
-SeafoamIslands2TextPointers: ; 46372 (11:6372)
-	dw BoulderText
-	dw BoulderText
+PyriteSewersTrainerHeaders:
+PyriteSewersTrainerHeader0:
+	db $3 ; flag's bit
+	db ($0 << 4) ; trainer's view range
+	dw $d7f0 ; flag's byte
+	dw PyriteSewersBattleText1
+	dw PyriteSewersBattleText1
+	dw PyriteSewersBattleText1
+	dw PyriteSewersBattleText1
 
-SeafoamIslands2Object: ; 0x46376 (size=72)
-	db $7d ; border tile
+PyriteSewersTrainerHeader1: ; 489c8 (12:49c8)
+	db $4 ; flag's bit
+	db ($0 << 4) ; trainer's view range
+	dw $d7f0 ; flag's byte
+	dw PyriteSewersBattleText2
+	dw PyriteSewersBattleText2
+	dw PyriteSewersBattleText2
+	dw PyriteSewersBattleText2
 
-	db $7 ; warps
-	db $2, $4, $0, SEAFOAM_ISLANDS_3
-	db $5, $7, $4, SEAFOAM_ISLANDS_1
-	db $7, $d, $2, SEAFOAM_ISLANDS_3
-	db $f, $13, $3, SEAFOAM_ISLANDS_3
-	db $f, $17, $6, SEAFOAM_ISLANDS_1
-	db $b, $19, $5, SEAFOAM_ISLANDS_3
-	db $3, $19, $5, SEAFOAM_ISLANDS_1
+PyriteSewersTrainerHeader2: ; 489d4 (12:49d4)
+	db $5 ; flag's bit
+	db ($0 << 4) ; trainer's view range
+	dw $d7f0 ; flag's byte
+	dw PyriteSewersBattleText3
+	dw PyriteSewersBattleText3
+	dw PyriteSewersBattleText3
+	dw PyriteSewersBattleText3
+
+	db $ff ; terminator
+
+PyriteSewersBattleText1:
+	TX_FAR _PyriteSewersBattleText1
+	db $8
+	ld a, GRIMER
+	call PlayCry
+	call WaitForSoundToFinish
+	jp TextScriptEnd
+
+PyriteSewersBattleText2:
+	TX_FAR _PyriteSewersBattleText2
+	db $8
+	ld a, GRIMER
+	call PlayCry
+	call WaitForSoundToFinish
+	jp TextScriptEnd
+
+PyriteSewersBattleText3:
+	TX_FAR _PyriteSewersBattleText3
+	db $8
+	ld a, GRIMER
+	call PlayCry
+	call WaitForSoundToFinish
+	jp TextScriptEnd
+
+PyriteSewersObject:
+	db $3 ; border tile
+
+	db $1 ; warps
+	db $3, $3, $8, CELADON_CITY
 
 	db $0 ; signs
 
-	db $2 ; people
-	db SPRITE_BOULDER, $6 + 4, $11 + 4, $ff, $10, $1 ; person
-	db SPRITE_BOULDER, $6 + 4, $16 + 4, $ff, $10, $2 ; person
+	db $4 ; people
+	db SPRITE_SLOWBRO, $6 + 4, $1a + 4, $ff, $ff, $41, GRIMER, 30 ; person
+	db SPRITE_SLOWBRO, $a + 4, $2 + 4, $ff, $ff, $42, SLOWPOKE, 32 ; person
+	db SPRITE_SLOWBRO, $f + 4, $14 + 4, $ff, $ff, $43, MUK, 33 ; person
+	db SPRITE_OLD_PERSON, $f + 4, $17 + 4, $ff, $ff, $4 ; person
 
 	; warp-to
-	EVENT_DISP $f, $2, $4 ; SEAFOAM_ISLANDS_3
-	EVENT_DISP $f, $5, $7 ; SEAFOAM_ISLANDS_1
-	EVENT_DISP $f, $7, $d ; SEAFOAM_ISLANDS_3
-	EVENT_DISP $f, $f, $13 ; SEAFOAM_ISLANDS_3
-	EVENT_DISP $f, $f, $17 ; SEAFOAM_ISLANDS_1
-	EVENT_DISP $f, $b, $19 ; SEAFOAM_ISLANDS_3
-	EVENT_DISP $f, $3, $19 ; SEAFOAM_ISLANDS_1
+	EVENT_DISP PYRITE_SEWERS_WIDTH, $3, $3 ; SEAFOAM_ISLANDS_3
 
-SeafoamIslands2Blocks: ; 463be (11:63be)
-	INCBIN "maps/seafoamislands2.blk"
+PyriteSewersBlocks: ; 463be (11:63be)
+	INCBIN "maps/pyritesewers.blk"
 
 SeafoamIslands3_h: ; 0x46445 to 0x46451 (12 bytes) (bank=11) (id=160)
 	db $11 ; tileset
@@ -73171,12 +73244,12 @@ SeafoamIslands3Object: ; 0x464b2 (size=72)
 	db $7d ; border tile
 
 	db $7 ; warps
-	db $3, $5, $0, SEAFOAM_ISLANDS_2
+	db $3, $5, $0, PYRITE_SEWERS
 	db $d, $5, $0, SEAFOAM_ISLANDS_4
-	db $7, $d, $2, SEAFOAM_ISLANDS_2
-	db $f, $13, $3, SEAFOAM_ISLANDS_2
+	db $7, $d, $2, PYRITE_SEWERS
+	db $f, $13, $3, PYRITE_SEWERS
 	db $3, $19, $3, SEAFOAM_ISLANDS_4
-	db $b, $19, $5, SEAFOAM_ISLANDS_2
+	db $b, $19, $5, PYRITE_SEWERS
 	db $e, $19, $4, SEAFOAM_ISLANDS_4
 
 	db $0 ; signs
@@ -73186,12 +73259,12 @@ SeafoamIslands3Object: ; 0x464b2 (size=72)
 	db SPRITE_BOULDER, $6 + 4, $17 + 4, $ff, $10, $2 ; person
 
 	; warp-to
-	EVENT_DISP $f, $3, $5 ; SEAFOAM_ISLANDS_2
+	EVENT_DISP $f, $3, $5 ; PYRITE_SEWERS
 	EVENT_DISP $f, $d, $5 ; SEAFOAM_ISLANDS_4
-	EVENT_DISP $f, $7, $d ; SEAFOAM_ISLANDS_2
-	EVENT_DISP $f, $f, $13 ; SEAFOAM_ISLANDS_2
+	EVENT_DISP $f, $7, $d ; PYRITE_SEWERS
+	EVENT_DISP $f, $f, $13 ; PYRITE_SEWERS
 	EVENT_DISP $f, $3, $19 ; SEAFOAM_ISLANDS_4
-	EVENT_DISP $f, $b, $19 ; SEAFOAM_ISLANDS_2
+	EVENT_DISP $f, $b, $19 ; PYRITE_SEWERS
 	EVENT_DISP $f, $e, $19 ; SEAFOAM_ISLANDS_4
 
 SeafoamIslands3Blocks: ; 464fa (11:64fa)
@@ -73249,7 +73322,7 @@ SeafoamIslands4Script: ; 4658d (11:658d)
 	ret nz
 .asm_465ed
 	ld hl, SeafoamIslands4ScriptPointers
-	ld a, [W_SEAFOAMISLANDS4CURSCRIPT]
+	ld a, [W_PYRITESEWERSCURSCRIPT]
 	jp CallFunctionInTable
 
 Seafoam4HolesCoords: ; 465f6 (11:65f6)
@@ -73283,7 +73356,7 @@ SeafoamIslands4Script0: ; 46603 (11:6603)
 	ld hl, W_FLAGS_D733
 	set 2, [hl]
 	ld a, $1
-	ld [W_SEAFOAMISLANDS4CURSCRIPT], a
+	ld [W_PYRITESEWERSCURSCRIPT], a
 	ret
 
 RLEMovement46632: ; 46632 (11:6632)
@@ -73297,7 +73370,7 @@ SeafoamIslands4Script1: ; 46639 (11:6639)
 	and a
 	ret nz
 	ld a, $0
-	ld [W_SEAFOAMISLANDS4CURSCRIPT], a
+	ld [W_PYRITESEWERSCURSCRIPT], a
 	ret
 
 SeafoamIslands4Script2: ; 46644 (11:6644)
@@ -73328,7 +73401,7 @@ SeafoamIslands4Script2: ; 46644 (11:6644)
 	set 2, [hl]
 	ld a, $3
 .asm_4667b
-	ld [W_SEAFOAMISLANDS4CURSCRIPT], a
+	ld [W_PYRITESEWERSCURSCRIPT], a
 	ret
 
 RLEData_4667f: ; 4667f (11:667f)
@@ -73342,7 +73415,7 @@ SeafoamIslands4Script3: ; 4668f (11:668f)
 	and a
 	ret nz
 	ld a, $0
-	ld [W_SEAFOAMISLANDS4CURSCRIPT], a
+	ld [W_PYRITESEWERSCURSCRIPT], a
 	ret
 
 SeafoamIslands4TextPointers: ; 4669a (11:669a)
