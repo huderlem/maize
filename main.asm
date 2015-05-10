@@ -33196,9 +33196,9 @@ ViridianCityTextPointers: ; 190e4 (6:50e4)
 ViridianCityText16:
 	db $08 ; asm
 	; is player in the bush covenant?
-	ld a, [W_COVENANT]
-	cp a, SHRUB_COVENANT
-	jr nz, .notMember
+	ld a, [W_COVENANTS]
+	bit SHRUB_COVENANT, a
+	jr z, .notMember
 	ld hl, ViridianShrubText2
 	jr .printText
 .notMember
@@ -33629,9 +33629,9 @@ PewterCityTextPointers: ; 1938b (6:538b)
 PewterCityText15:
 	db $08 ; asm
 	; is player in the bush covenant?
-	ld a, [W_COVENANT]
-	cp a, SHRUB_COVENANT
-	jr nz, .notMember
+	ld a, [W_COVENANTS]
+	bit SHRUB_COVENANT, a
+	jr z, .notMember
 	ld hl, PewterShrubText2
 	jr .printText
 .notMember
@@ -34443,9 +34443,9 @@ VermilionCityTextPointers: ; 1986f (6:586f)
 VermilionCityText14:
 	db $08 ; asm
 	; is player in the bush covenant?
-	ld a, [W_COVENANT]
-	cp a, SHRUB_COVENANT
-	jr nz, .notMember
+	ld a, [W_COVENANTS]
+	bit SHRUB_COVENANT, a
+	jr z, .notMember
 	ld hl, VermilionShrubText2
 	jr .printText
 .notMember
@@ -34675,7 +34675,25 @@ CeladonCityText2: ; 1998f (6:598f)
 	db "@"
 
 CeladonCityText3: ; 19994 (6:5994)
+	db $08 ; asm
+	ld hl, W_NEWFLAGS3
+	bit 1, [hl]
+	jr nz, .drained
+	; water is still high
+	ld hl, CeladonCityText3_1
+	jr .printText
+.drained
+	ld hl, CeladonCityText3_2
+.printText
+	call PrintText
+	jp TextScriptEnd
+
+CeladonCityText3_1:
 	TX_FAR _CeladonCityText3
+	db "@"
+
+CeladonCityText3_2:
+	TX_FAR _CeladonCityText3_2
 	db "@"
 
 CeladonCityText4: ; 19999 (6:5999)
@@ -34736,9 +34754,9 @@ CeladonCityText17: ; 19a21 (6:5a21)
 CeladonCityText18: ; 19a26 (6:5a26)
 	db $08 ; asm
 	; is player in the bush covenant?
-	ld a, [W_COVENANT]
-	cp a, SHRUB_COVENANT
-	jr nz, .notMember
+	ld a, [W_COVENANTS]
+	bit SHRUB_COVENANT, a
+	jr z, .notMember
 	ld hl, CeladonShrubText2
 	jr .printText
 .notMember
@@ -39048,45 +39066,41 @@ LavenderHouse1Text4_2:
 
 LavenderHouse1Text5: ; 1d918 (7:5918)
 	db $08 ; asm
-	ld a, [$d76c]
-	bit 0, a
-	jr nz, .asm_15ac2 ; 0x1d91e
-	ld hl, UnnamedText_1d94c
+	ld a, [W_COVENANTS]
+	bit SEAFARER_COVENANT, a
+	jr nz, .alreadyMember
+	ld hl, SeafarerCaptainText1
 	call PrintText
-	ld bc, (POKE_FLUTE << 8) | 1
-	call GiveItem
-	jr nc, .BagFull
-	ld hl, ReceivedFluteText
+	ld a, $a5
+	call PlaySound
+	ld hl, SeafarerCaptainText2
 	call PrintText
-	ld hl, $d76c
-	set 0, [hl]
-	jr .asm_da749 ; 0x1d939
-.BagFull
-	ld hl, FluteNoRoomText
+	call WaitForSoundToFinish
+	ld hl, SeafarerCaptainText3
 	call PrintText
-	jr .asm_da749 ; 0x1d941
-.asm_15ac2 ; 0x1d943
-	ld hl, MrFujiAfterFluteText
+	ld hl, W_COVENANTS
+	set SEAFARER_COVENANT, [hl]
+	jr .done
+.alreadyMember
+	ld hl, SeafarerCaptainText4
 	call PrintText
-.asm_da749 ; 0x1d949
+.done
 	jp TextScriptEnd
 
-UnnamedText_1d94c: ; 1d94c (7:594c)
-	TX_FAR _UnnamedText_1d94c
+SeafarerCaptainText1:
+	TX_FAR _SeafarerCaptainText1
 	db "@"
 
-ReceivedFluteText: ; 1d951 (7:5951)
-	TX_FAR _ReceivedFluteText ; 0x99ffb
-	db $11
-	TX_FAR _FluteExplanationText ; 0x9a011
+SeafarerCaptainText2:
+	TX_FAR _SeafarerCaptainText2
 	db "@"
 
-FluteNoRoomText: ; 1d95b (7:595b)
-	TX_FAR _FluteNoRoomText
+SeafarerCaptainText3:
+	TX_FAR _SeafarerCaptainText3
 	db "@"
 
-MrFujiAfterFluteText: ; 1d960 (7:5960)
-	TX_FAR _MrFujiAfterFluteText
+SeafarerCaptainText4:
+	TX_FAR _SeafarerCaptainText4
 	db "@"
 
 LavenderHouse1Text6:
@@ -39124,7 +39138,7 @@ LavenderHouse1Object: ; 0x1d96a (size=56)
 	db SPRITE_SAILOR, $3 + 4, $2 + 4, $ff, $d3, $2 ; person
 	db SPRITE_SAILOR, $3 + 4, $5 + 4, $ff, $d2, $3 ; person
 	db SPRITE_SAILOR, $4 + 4, $2 + 4, $ff, $d3, $4 ; person
-	db SPRITE_SAILOR, $5 + 4, $3 + 4, $ff, $d1, $5 ; person
+	db SPRITE_OLD_PERSON, $5 + 4, $3 + 4, $ff, $d1, $5 ; person
 	db SPRITE_SAILOR, $4 + 4, $5 + 4, $ff, $d2, $6 ; person
 
 	; warp-to
@@ -73103,6 +73117,12 @@ SeafarerCaptainText:
 	ld [$cc4d], a
 	ld a, $11
 	call Predef ; indirect jump to RemoveMissableObject (f1d7 (3:71d7))
+	ld a, $44
+	ld [$cc4d], a
+	ld a, $15
+	call Predef ; indirect jump to AddMissableObject (f1c8 (3:71c8))
+	ld hl, W_NEWFLAGS2
+	set 1, [hl]
 	call GBFadeIn2
 	jp TextScriptEnd
 
@@ -81370,9 +81390,9 @@ Route25TextPointers: ; 51628 (14:5628)
 Route25Text12: ; 19a26 (6:5a26)
 	db $08 ; asm
 	; is player in the bush covenant?
-	ld a, [W_COVENANT]
-	cp a, SHRUB_COVENANT
-	jr nz, .notMember
+	ld a, [W_COVENANTS]
+	bit SHRUB_COVENANT, a
+	jr z, .notMember
 	ld hl, Route25ShrubText2
 	jr .printText
 .notMember
@@ -87309,9 +87329,9 @@ BushFoundGlasses:
 Route12HouseText2:
 	db $08 ; asm
 	; is player part of bush covenant?
-	ld a, [W_COVENANT]
-	cp a, SHRUB_COVENANT
-	jr nz, .notMember
+	ld a, [W_COVENANTS]
+	bit SHRUB_COVENANT, a
+	jr z, .notMember
 	call GenRandom
 	and $3
 	ld b, 0
@@ -87368,9 +87388,9 @@ Route12HouseText1: ; 56484 (15:6484)
 	ld hl, W_NEWFLAGS2
 	set 0, [hl]
 .gaveGlasses
-	ld a, [W_COVENANT]
-	cp SHRUB_COVENANT
-	jr nz, .askToJoin
+	ld a, [W_COVENANTS]
+	bit SHRUB_COVENANT, a
+	jr z, .askToJoin
 	ld hl, InCovenant
 	call PrintText
 	jr .done
@@ -87383,8 +87403,8 @@ Route12HouseText1: ; 56484 (15:6484)
 	jr nz, .notJoin
 	ld hl, AcceptShrubCovenant
 	call PrintText
-	ld a, SHRUB_COVENANT
-	ld [W_COVENANT], a
+	ld hl, W_COVENANTS
+	set SHRUB_COVENANT, [hl]
 	jr .done
 .notJoin
 	ld hl, RejectShrubCovenant
@@ -89244,9 +89264,9 @@ Route8TextPointers: ; 591cf (16:51cf)
 Route8Text11:
 	db $08 ; asm
 	; is player in the bush covenant?
-	ld a, [W_COVENANT]
-	cp a, SHRUB_COVENANT
-	jr nz, .notMember
+	ld a, [W_COVENANTS]
+	bit SHRUB_COVENANT, a
+	jr z, .notMember
 	ld hl, Route8ShrubText2
 	jr .printText
 .notMember
@@ -90552,9 +90572,9 @@ Route18TextPointers: ; 59ae0 (16:5ae0)
 Route18Text7:
 	db $08 ; asm
 	; is player in the bush covenant?
-	ld a, [W_COVENANT]
-	cp a, SHRUB_COVENANT
-	jr nz, .notMember
+	ld a, [W_COVENANTS]
+	bit SHRUB_COVENANT, a
+	jr z, .notMember
 	ld hl, Route18ShrubText2
 	jr .printText
 .notMember
@@ -122454,9 +122474,9 @@ HandleDynamicMaps:
 	ld a, [W_CURMAP]
 	cp ROUTE_11
 	jr nz, .notRoute11
-	ld a, [W_COVENANT]
-	cp SEAFARER_COVENANT
-	jr nz, .normal
+	ld hl, W_COVENANTS
+	bit SEAFARER_COVENANT, [hl]
+	jr z, .normal
 	ld d, $0B ; map id of non-endless route
 	ret
 .notRoute11

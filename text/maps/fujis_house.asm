@@ -84,45 +84,6 @@ _LavenderHouse1Text4_2::
 	line "sail westward!"
 	done
 
-_UnnamedText_1d94c:: ; 99f97 (26:5f97)
-	text "MR.FUJI: ", $52, "."
-
-	para "Your #DEX quest"
-	line "may fail without"
-	cont "love for your"
-	cont "#MON."
-
-	para "I think this may"
-	line "help your quest."
-	prompt
-
-_ReceivedFluteText:: ; 99ffb (26:5ffb)
-	text $52, " received"
-	line "a @"
-	TX_RAM $cf4b
-	text "!@@"
-
-_FluteExplanationText:: ; 9a011 (26:6011)
-	db $0
-	para "Upon hearing #"
-	line "FLUTE, sleeping"
-	cont "#MON will"
-	cont "spring awake."
-
-	para "It works on all"
-	line "sleeping #MON."
-	done
-
-_FluteNoRoomText:: ; 9a069 (26:6069)
-	text "You must make"
-	line "room for this!"
-	done
-
-_MrFujiAfterFluteText:: ; 9a087 (26:6087)
-	text "MR.FUJI: Has my"
-	line "FLUTE helped you?"
-	done
-
 _LavenderHouse1Text6_1::
 	text "We be the"
 	line "SEAFARER COVENANT"
@@ -156,4 +117,74 @@ _LavenderHouse1Text7::
 
 	para "The western half"
 	line "is uncharted."
+	done
+
+_SeafarerCaptainText1::
+	text "Aye!"
+
+	para "You be the boy"
+	line "who rescued me"
+	cont "from the PYRITE"
+	cont "SEWERS!"
+
+	para "My crew be"
+	line "happy to see me,"
+	cont "and they be very"
+	cont "grateful for your"
+	cont "boldness."
+
+	para "Say, lad."
+
+	para "Would you like to"
+	line "join us on the"
+	cont "high seas?"
+
+	para "We could use a"
+	line "new crew member."
+
+	para "..."
+
+	para "You do?"
+	line "Great!"
+	prompt
+
+_SeafarerCaptainText2::
+	text $52, " joined"
+	line "the SEAFARER"
+	cont "COVENANT!"
+	prompt
+
+_SeafarerCaptainText3::
+	text "My cursed journey"
+	line "to the west wasn't"
+	cont "all bad."
+
+	para "I was able to"
+	line "chart a map!"
+
+	para "(CAPTAIN GILI"
+	line "described the map"
+	cont "to ", $52, ".)"
+
+	para "There ya go,"
+	line "lad!"
+
+	para "Crossing the seas"
+	line "west of here"
+	cont "shouldn't give"
+	cont "you any problems"
+	cont "now that you know"
+	cont "the way!"
+
+	para "May your"
+	line "adventures be"
+	cont "ever grand!"
+	done
+
+_SeafarerCaptainText4::
+	text "Ahoy there, lad!"
+
+	para "Have you followed"
+	line "the winds west of"
+	cont "here, yet?"
 	done

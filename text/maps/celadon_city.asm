@@ -19,9 +19,30 @@ _CeladonCityText2:: ; a5a4b (29:5a4b)
 	done
 
 _CeladonCityText3:: ; a5a79 (29:5a79)
-	text "The GAME CORNER"
-	line "is bad for our"
-	cont "city's image!"
+	text "You know what?"
+
+	para "I'm actually"
+	line "standing on the"
+	cont "roof of my house."
+
+	para "Whenever the city"
+	line "floods, this"
+	cont "happens..."
+
+	para "Someone should"
+	line "drain the water."
+	done
+
+_CeladonCityText3_2::
+	text "Aw man."
+
+	para "Now I'm stuck on"
+	line "my rooftop!"
+
+	para "Someone needs to"
+	line "to warn me when"
+	cont "the water is"
+	cont "about to go down."
 	done
 
 _CeladonCityText4:: ; a5aa6 (29:5aa6)

@@ -72,10 +72,7 @@ _JoinShrubCovenant:: ; 8ca4f (23:4a4f)
 	cont "friendly to you!"
 
 	para "Join the"
-	line "SHRUB COVENANT"
-	cont "and leave any"
-	cont "covenant you're"
-	cont "already in?"
+	line "SHRUB COVENANT?"
 	done
 
 _RejectShrubCovenant:: ; 8caa1 (23:4aa1)

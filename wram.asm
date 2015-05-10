@@ -1513,7 +1513,9 @@ W_NEWFLAGS2::
 	; 6: sliding on ice
 	; 7: fixed bridge
 	
-W_COVENANT::
+W_COVENANTS::
+	; bit 0: shrub covenant
+	; bit 1: seafarers
 	ds 1
 
 W_FUCHSIAHOUSE1CURSCRIPT::
@@ -1573,5 +1575,4 @@ W_LAST_NEW_BYTE::
 ; 
 ; $d792: bits 6, 7 (from Quartz City Gym)
 ; bit 7 from byte in silph co 1 script
-; 
-
+; $d76c: bit 0 (from mr. fuji pokeflute event)
