@@ -217,7 +217,7 @@ MapHeaderPointers:: ; 01ae (0:01ae)
 	dw Route20_h
 	dw Route21_h
 	dw Route22_h
-	dw Route23_h
+	dw TwitchIsle_h
 	dw Route24_h
 	dw Route25_h
 	dw RedsHouse1F_h
@@ -1295,7 +1295,7 @@ LoadPlayerSpriteGraphics:: ; 0997 (0:0997)
 ; sets carry if bike is allowed, clears carry otherwise
 IsBikeRidingAllowed:: ; 09c5 (0:09c5)
 	ld a,[W_CURMAP]
-	cp a,ROUTE_23
+	cp a,TWITCH_ISLE
 	jr z,.allowed
 	cp a,INDIGO_PLATEAU
 	jr z,.allowed
@@ -18878,7 +18878,7 @@ MapSongBanks: ; c04d (3:404d)
 	db MUSIC_ROUTES3, BANK(Music_Routes3) ; ROUTE_20
 	db MUSIC_ROUTES3, BANK(Music_Routes3) ; ROUTE_21
 	db MUSIC_ROUTES3, BANK(Music_Routes3) ; ROUTE_22
-	db MUSIC_INDIGO_PLATEAU, BANK(Music_IndigoPlateau) ; ROUTE_23
+	db MUSIC_INDIGO_PLATEAU, BANK(Music_IndigoPlateau) ; TWITCH_ISLE
 	db MUSIC_ROUTES2, BANK(Music_Routes2) ; ROUTE_24
 	db MUSIC_ROUTES2, BANK(Music_Routes2) ; ROUTE_25
 	db MUSIC_PALLET_TOWN, BANK(Music_PalletTown) ; RedsHouse1F
@@ -19129,7 +19129,7 @@ MapHeaderBanks: ; c23d (3:423d)
 	db BANK(Route20_h) ; ROUTE_20
 	db BANK(Route21_h) ; ROUTE_21
 	db BANK(Route22_h) ; ROUTE_22
-	db BANK(Route23_h) ; ROUTE_23
+	db BANK(TwitchIsle_h) ; TWITCH_ISLE
 	db BANK(Route24_h) ; ROUTE_24
 	db BANK(Route25_h) ; ROUTE_25
 	db BANK(RedsHouse1F_h)
@@ -21052,7 +21052,7 @@ WildDataPointers: ; ceeb (3:4eeb)
 	dw WaterMons   ; ROUTE_20
 	dw WaterMons   ; ROUTE_21
 	dw Route22Mons ; ROUTE_22
-	dw Route23Mons ; ROUTE_23
+	dw TwitchIsleMons ; TWITCH_ISLE
 	dw Route24Mons ; ROUTE_24
 	dw Route25Mons ; ROUTE_25
 	dw NoMons      ; REDS_HOUSE_1F
@@ -22074,7 +22074,7 @@ PowerPlantMons: ; d543 (3:5543)
 
 	db $00
 
-Route23Mons: ; d559 (3:5559)
+TwitchIsleMons: ; d559 (3:5559)
 	db $0A
 	db 26,EKANS
 	db 33,DITTO
@@ -25344,7 +25344,7 @@ SuperRodData: ; e919 (3:6919)
 	dbw ROUTE_20, FishingGroup8
 	dbw ROUTE_21, FishingGroup8
 	dbw ROUTE_22, FishingGroup2
-	dbw ROUTE_23, FishingGroup9
+	dbw TWITCH_ISLE, FishingGroup9
 	dbw ROUTE_24, FishingGroup3
 	dbw ROUTE_25, FishingGroup3
 	dbw CERULEAN_GYM, FishingGroup3
@@ -31521,7 +31521,7 @@ MapSpriteSets: ; 17a64 (5:7a64)
 	db $f8 ; ROUTE_20
 	db $01 ; ROUTE_21
 	db $01 ; ROUTE_22
-	db $06 ; ROUTE_23
+	db $06 ; TWITCH_ISLE
 	db $02 ; ROUTE_24
 	db $02 ; ROUTE_25
 
@@ -73878,7 +73878,7 @@ HiddenObjectMaps: ; 46a40 (11:6a40)
 	db SEAFOAM_ISLANDS_5
 	db MANSION_1
 	db MANSION_3
-	db ROUTE_23
+	db TWITCH_ISLE
 	db VICTORY_ROAD_2
 	db $6F
 	db BILLS_HOUSE
@@ -73967,7 +73967,7 @@ HiddenObjectPointers: ; 46a96 (11:6a96)
 	dw SeafoamIslands5HiddenObjects
 	dw Mansion1HiddenObjects
 	dw Mansion3HiddenObjects
-	dw Route23HiddenObjects
+	dw TwitchIsleHiddenObjects
 	dw VictoryRoad2HiddenObjects
 	dw Unused6FHiddenObjects
 	dw BillsHouseHiddenObjects
@@ -74405,7 +74405,7 @@ Mansion4HiddenObjects: ; 46f4c (11:6f4c)
 	db $19,$12,$04 ; XXX, y, x
 	dbw Bank(Func_52420), Func_52420
 	db $FF
-Route23HiddenObjects: ; 46f5f (11:6f5f)
+TwitchIsleHiddenObjects: ; 46f5f (11:6f5f)
 	db $2c,$09,FULL_RESTORE
 	dbw BANK(HiddenItems),HiddenItems
 	db $46,$13,ULTRA_BALL
@@ -79624,17 +79624,16 @@ Route20Object: ; 0x50113 (size=106)
 Route20Blocks: ; 5017d (14:417d)
 	INCBIN "maps/route20.blk"
 
-Route23_h: ; 0x5033f to 0x50361 (34 bytes) (id=34)
-	db $17 ; tileset
-	db ROUTE_23_HEIGHT, ROUTE_23_WIDTH ; dimensions (y, x)
-	dw Route23Blocks, Route23TextPointers, Route23Script ; blocks, texts, scripts
-	db NORTH | SOUTH ; connections
-	NORTH_MAP_CONNECTION INDIGO_PLATEAU, INDIGO_PLATEAU_WIDTH, INDIGO_PLATEAU_HEIGHT, 0, 0, INDIGO_PLATEAU_WIDTH, IndigoPlateauBlocks
-	SOUTH_MAP_CONNECTION ROUTE_22, ROUTE_22_WIDTH, 0, 0, ROUTE_22_WIDTH - 7, Route22Blocks, ROUTE_23_WIDTH, ROUTE_23_HEIGHT
-	dw Route23Object ; objects
+TwitchIsle_h: ; 0x5033f to 0x50361 (34 bytes) (id=34)
+	db $0 ; tileset
+	db TWITCH_ISLE_HEIGHT, TWITCH_ISLE_WIDTH ; dimensions (y, x)
+	dw TwitchIsleBlocks, TwitchIsleTextPointers, TwitchIsleScript ; blocks, texts, scripts
+	db EAST ; connections
+	EAST_MAP_CONNECTION ROUTE_11, ROUTE_11_WIDTH, 9, 0, 11, Route11Blocks, TWITCH_ISLE_WIDTH
+	dw TwitchIsleObject ; objects
 
-Route23Object: ; 0x50361 (size=81)
-	db $f ; border tile
+TwitchIsleObject: ; 0x50361 (size=81)
+	db $43 ; border tile
 
 	db $4 ; warps
 	db $8b, $7, $2, ROUTE_22_GATE
@@ -79643,7 +79642,7 @@ Route23Object: ; 0x50361 (size=81)
 	db $1f, $e, $1, VICTORY_ROAD_2
 
 	db $1 ; signs
-	db $21, $3, $8 ; Route23Text8
+	db $21, $3, $8 ; TwitchIsleText8
 
 	db $7 ; people
 	db SPRITE_GUARD, $23 + 4, $4 + 4, $ff, $d0, $1 ; person
@@ -79660,8 +79659,8 @@ Route23Object: ; 0x50361 (size=81)
 	EVENT_DISP $a, $1f, $4 ; VICTORY_ROAD_1
 	EVENT_DISP $a, $1f, $e ; VICTORY_ROAD_2
 
-Route23Blocks: ; 503b2 (14:43b2)
-	INCBIN "maps/route23.blk"
+TwitchIsleBlocks: ; 503b2 (14:43b2)
+	INCBIN "maps/twitch_isle.blk"
 
 Route24_h: ; 0x50682 to 0x506a4 (34 bytes) (id=35)
 	db $00 ; tileset
@@ -79734,7 +79733,7 @@ IndigoPlateau_h: ; 0x5091e to 0x50935 (23 bytes) (id=9)
 	db INDIGO_PLATEAU_HEIGHT, INDIGO_PLATEAU_WIDTH ; dimensions (y, x)
 	dw IndigoPlateauBlocks, IndigoPlateauTextPointers, IndigoPlateauScript ; blocks, texts, scripts
 	db SOUTH ; connections
-	SOUTH_MAP_CONNECTION ROUTE_23, ROUTE_23_WIDTH, 0, 0, ROUTE_23_WIDTH, Route23Blocks, INDIGO_PLATEAU_WIDTH, INDIGO_PLATEAU_HEIGHT
+	SOUTH_MAP_CONNECTION TWITCH_ISLE, TWITCH_ISLE_WIDTH, 0, 0, TWITCH_ISLE_WIDTH, TwitchIsleBlocks, INDIGO_PLATEAU_WIDTH, INDIGO_PLATEAU_HEIGHT
 	dw IndigoPlateauObject ; objects
 
 IndigoPlateauScript: ; 50935 (14:4935)
@@ -80746,11 +80745,11 @@ Route22Text3: ; 511d5 (14:51d5)
 	TX_FAR _Route22Text3
 	db "@"
 
-Route23Script: ; 511da (14:51da)
+TwitchIsleScript: ; 511da (14:51da)
 	call Func_511e9
 	call EnableAutoTextBoxDrawing
-	ld hl, Route23ScriptPointers
-	ld a, [W_ROUTE23CURSCRIPT]
+	ld hl, TwitchIsleScriptPointers
+	ld a, [W_TWITCHISLECURSCRIPT]
 	jp CallFunctionInTable
 
 Func_511e9: ; 511e9 (14:51e9)
@@ -80773,12 +80772,12 @@ Func_511e9: ; 511e9 (14:51e9)
 	ld a, $11
 	jp Predef ; indirect jump to RemoveMissableObject (f1d7 (3:71d7))
 
-Route23ScriptPointers: ; 51213 (14:5213)
-	dw Route23Script0
-	dw Route23Script1
-	dw Route23Script2
+TwitchIsleScriptPointers: ; 51213 (14:5213)
+	dw TwitchIsleScript0
+	dw TwitchIsleScript1
+	dw TwitchIsleScript2
 
-Route23Script0: ; 51219 (14:5219)
+TwitchIsleScript0: ; 51219 (14:5219)
 	ld hl, YCoordsData_51255 ; $5255
 	ld a, [W_YCOORD]
 	ld b, a
@@ -80877,62 +80876,62 @@ Func_512d8: ; 512d8 (14:52d8)
 	ld [wJoypadForbiddenButtonsMask], a
 	jp Func_3486
 
-Route23Script1: ; 512ec (14:52ec)
+TwitchIsleScript1: ; 512ec (14:52ec)
 	ld a, [$cd38]
 	and a
 	ret nz
-Route23Script2: ; 512f1 (14:52f1)
+TwitchIsleScript2: ; 512f1 (14:52f1)
 	ld a, $0
-	ld [W_ROUTE23CURSCRIPT], a
+	ld [W_TWITCHISLECURSCRIPT], a
 	ret
 
-Route23TextPointers: ; 512f7 (14:52f7)
-	dw Route23Text1
-	dw Route23Text2
-	dw Route23Text3
-	dw Route23Text4
-	dw Route23Text5
-	dw Route23Text6
-	dw Route23Text7
-	dw Route23Text8
+TwitchIsleTextPointers: ; 512f7 (14:52f7)
+	dw TwitchIsleText1
+	dw TwitchIsleText2
+	dw TwitchIsleText3
+	dw TwitchIsleText4
+	dw TwitchIsleText5
+	dw TwitchIsleText6
+	dw TwitchIsleText7
+	dw TwitchIsleText8
 
-Route23Text1: ; 51307 (14:5307)
+TwitchIsleText1: ; 51307 (14:5307)
 	db $08 ; asm
 	ld a, $6
 	call Func_51346
 	jp TextScriptEnd
 
-Route23Text2: ; 51310 (14:5310)
+TwitchIsleText2: ; 51310 (14:5310)
 	db $08 ; asm
 	ld a, $5
 	call Func_51346
 	jp TextScriptEnd
 
-Route23Text3: ; 51319 (14:5319)
+TwitchIsleText3: ; 51319 (14:5319)
 	db $08 ; asm
 	ld a, $4
 	call Func_51346
 	jp TextScriptEnd
 
-Route23Text4: ; 51322 (14:5322)
+TwitchIsleText4: ; 51322 (14:5322)
 	db $08 ; asm
 	ld a, $3
 	call Func_51346
 	jp TextScriptEnd
 
-Route23Text5: ; 5132b (14:532b)
+TwitchIsleText5: ; 5132b (14:532b)
 	db $08 ; asm
 	ld a, $2
 	call Func_51346
 	jp TextScriptEnd
 
-Route23Text6: ; 51334 (14:5334)
+TwitchIsleText6: ; 51334 (14:5334)
 	db $08 ; asm
 	ld a, $1
 	call Func_51346
 	jp TextScriptEnd
 
-Route23Text7: ; 5133d (14:533d)
+TwitchIsleText7: ; 5133d (14:533d)
 	db $8
 	ld a, $0
 	call Func_51346
@@ -80955,7 +80954,7 @@ Func_51346: ; 51346 (14:5346)
 	call PrintText
 	call Func_512d8
 	ld a, $1
-	ld [W_ROUTE23CURSCRIPT], a
+	ld [W_TWITCHISLECURSCRIPT], a
 	ret
 .asm_5136e
 	ld hl, VictoryRoadGuardText2 ; $539e
@@ -80967,7 +80966,7 @@ Func_51346: ; 51346 (14:5346)
 	ld a, $10
 	call Predef ; indirect jump to HandleBitArray (f666 (3:7666))
 	ld a, $2
-	ld [W_ROUTE23CURSCRIPT], a
+	ld [W_TWITCHISLECURSCRIPT], a
 	ret
 
 Func_51388: ; 51388 (14:5388)
@@ -80988,8 +80987,8 @@ VictoryRoadGuardText2: ; 5139e (14:539e)
 	TX_FAR _UnnamedText_513a3
 	db "@"
 
-Route23Text8: ; 513a8 (14:53a8)
-	TX_FAR _Route23Text8
+TwitchIsleText8: ; 513a8 (14:53a8)
+	TX_FAR _TwitchIsleText8
 	db "@"
 
 Route24Script: ; 513ad (14:53ad)
@@ -88317,7 +88316,7 @@ Route11_h_2: ; 0x584be to 0x584e0 (34 bytes) (id=22)
 	db ROUTE_11_HEIGHT, ROUTE_11_WIDTH ; dimensions (y, x)
 	dw Route11Blocks, Route11TextPointers, Route11Script ; blocks, texts, scripts	
 	db WEST | EAST ; connections
-	WEST_MAP_CONNECTION LAVENDER_TOWN, LAVENDER_TOWN_WIDTH, 0, 0, LAVENDER_TOWN_HEIGHT, LavenderTownBlocks, ROUTE_11_WIDTH
+	WEST_MAP_CONNECTION TWITCH_ISLE, TWITCH_ISLE_WIDTH, -9, 0, TWITCH_ISLE_HEIGHT, TwitchIsleBlocks, ROUTE_11_WIDTH
 	EAST_MAP_CONNECTION LAVENDER_TOWN, LAVENDER_TOWN_WIDTH, 0, 0, 11, LavenderTownBlocks, ROUTE_11_WIDTH
 	dw Route11Object ; objects
 
@@ -103217,7 +103216,7 @@ ExternalMapEntries: ; 71313 (1c:5313)
 	EMAP $4,$F,Route20Name
 	EMAP $F,$C,Route21Name
 	EMAP $A,$D,Route22Name
-	EMAP $0,$6,Route23Name
+	EMAP $0,$6,TwitchIsleName
 	EMAP $9,$7,Route24Name
 	EMAP $A,$6,Route25Name
 
@@ -103351,7 +103350,7 @@ Route21Name: ; 715bd (1c:55bd)
 	db "SEA ROUTE 11@"
 Route22Name: ; 715ca (1c:55ca)
 	db "ROUTE 10@"
-Route23Name: ; 715d3 (1c:55d3)
+TwitchIsleName: ; 715d3 (1c:55d3)
 	db "ROUTE 23@"
 Route24Name: ; 715dc (1c:55dc)
 	db "ROUTE 5@"
@@ -111124,9 +111123,9 @@ HiddenItemCoords: ; 766b8 (1d:66b8)
 	db SEAFOAM_ISLANDS_5,$11,$19
 	db MANSION_1,$10,$08
 	db MANSION_3,$09,$01
-	db ROUTE_23,$2c,$09
-	db ROUTE_23,$46,$13
-	db ROUTE_23,$5a,$08
+	db TWITCH_ISLE,$2c,$09
+	db TWITCH_ISLE,$46,$13
+	db TWITCH_ISLE,$5a,$08
 	db VICTORY_ROAD_2,$02,$05
 	db VICTORY_ROAD_2,$07,$1a
 	db $6f,$0b,$0e

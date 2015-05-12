@@ -32,7 +32,7 @@ _UnnamedText_513a3:: ; 926dd (24:66dd)
 	line "go right ahead!"
 	done
 
-_Route23Text8:: ; 92700 (24:6700)
+_TwitchIsleText8:: ; 92700 (24:6700)
 	text "VICTORY ROAD GATE"
 	line "- #MON LEAGUE"
 	done
