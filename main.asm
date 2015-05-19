@@ -287,7 +287,7 @@ MapHeaderPointers:: ; 01ae (0:01ae)
 	dw SSAnne7_h
 	dw SSAnne8_h
 	dw SSAnne9_h
-	dw SSAnne10_h
+	dw TwitchIsleInside_h
 	dw DeepSea1_h
 	dw DeepSea2_h
 	dw DeepSea3_h
@@ -18948,7 +18948,7 @@ MapSongBanks: ; c04d (3:404d)
 	db MUSIC_CINNABAR, BANK(Music_Cinnabar) ; SSAnne7
 	db MUSIC_CINNABAR, BANK(Music_Cinnabar) ; SSAnne8
 	db MUSIC_CINNABAR, BANK(Music_Cinnabar) ; SSAnne9
-	db MUSIC_SS_ANNE, BANK(Music_SSAnne) ; SSAnne10
+	db MUSIC_SS_ANNE, BANK(Music_SSAnne) ; TwitchIsleInside
 	db MUSIC_DUNGEON2, BANK(Music_Dungeon2) ; DeepSea1
 	db MUSIC_DUNGEON2, BANK(Music_Dungeon2) ; DeepSea2
 	db MUSIC_DUNGEON2, BANK(Music_Dungeon2) ; DeepSea3
@@ -19199,7 +19199,7 @@ MapHeaderBanks: ; c23d (3:423d)
 	db BANK(SSAnne7_h)
 	db BANK(SSAnne8_h)
 	db BANK(SSAnne9_h)
-	db BANK(SSAnne10_h)
+	db BANK(TwitchIsleInside_h)
 	db BANK(DeepSea1_h)
 	db BANK(DeepSea2_h)
 	db BANK(DeepSea3_h)
@@ -20613,9 +20613,9 @@ MapHS67: ; cc43 (3:4c43)
 	db SS_ANNE_9,$06,Show
 	db SS_ANNE_9,$09,Show
 MapHS68: ; cc49 (3:4c49)
-	db SS_ANNE_10,$09,Show
-	db SS_ANNE_10,$0A,Show
-	db SS_ANNE_10,$0B,Show
+	db TWITCH_ISLE_INSIDE,$09,Show
+	db TWITCH_ISLE_INSIDE,$0A,Show
+	db TWITCH_ISLE_INSIDE,$0B,Show
 MapHSC6: ; cc52 (3:4c52)
 	db VICTORY_ROAD_3,$05,Show
 	db VICTORY_ROAD_3,$06,Show
@@ -73859,7 +73859,7 @@ HiddenObjectMaps: ; 46a40 (11:6a40)
 	db ROUTE_3
 	db ROUTE_9
 	db SS_ANNE_6
-	db SS_ANNE_10
+	db TWITCH_ISLE_INSIDE
 	db ROCKET_HIDEOUT_1
 	db ROCKET_HIDEOUT_3
 	db ROCKET_HIDEOUT_4
@@ -73948,7 +73948,7 @@ HiddenObjectPointers: ; 46a96 (11:6a96)
 	dw Route3HiddenObjects
 	dw Route9HiddenObjects
 	dw SSAnne6HiddenObjects
-	dw SSAnne10HiddenObjects
+	dw TwitchIsleInsideHiddenObjects
 	dw RocketHideout1HiddenObjects
 	dw RocketHideout3HiddenObjects
 	dw RocketHideout4HiddenObjects
@@ -74301,7 +74301,7 @@ SSAnne6HiddenObjects: ; 46e82 (11:6e82)
 	db $09,$0d,GREAT_BALL
 	dbw BANK(HiddenItems),HiddenItems
 	db $FF
-SSAnne10HiddenObjects: ; 46e95 (11:6e95)
+TwitchIsleInsideHiddenObjects: ; 46e95 (11:6e95)
 	db $01,$03,HYPER_POTION
 	dbw BANK(HiddenItems),HiddenItems
 	db $FF
@@ -79635,29 +79635,57 @@ TwitchIsle_h: ; 0x5033f to 0x50361 (34 bytes) (id=34)
 TwitchIsleObject: ; 0x50361 (size=81)
 	db $43 ; border tile
 
-	db $4 ; warps
-	db $8b, $7, $2, ROUTE_22_GATE
-	db $8b, $8, $3, ROUTE_22_GATE
-	db $1f, $4, $0, VICTORY_ROAD_1
-	db $1f, $e, $1, VICTORY_ROAD_2
+	db $11 ; warps
+	db $3, $3, $0, TWITCH_ISLE
+	db $7, $2a, $0, TWITCH_ISLE
+	db $11, $17, $0, TWITCH_ISLE
+	db $11, $19, $0, TWITCH_ISLE
+	db $11, $1b, $0, TWITCH_ISLE
+	db $11, $1d, $0, TWITCH_ISLE
+	db $11, $1f, $0, TWITCH_ISLE
+	db $11, $21, $0, TWITCH_ISLE
+	db $11, $23, $0, TWITCH_ISLE
+	db $11, $25, $0, TWITCH_ISLE
+	db $1b, $8, $0, TWITCH_ISLE
+	db $21, $2b, $0, TWITCH_ISLE
+	db $27, $c, $0, TWITCH_ISLE
+	db $2f, $c, $0, TWITCH_ISLE
+	db $2f, $2e, $0, TWITCH_ISLE
+	db $31, $2a, $0, TWITCH_ISLE
+	db $31, $34, $0, TWITCH_ISLE
 
-	db $1 ; signs
-	db $21, $3, $8 ; TwitchIsleText8
+	db $4 ; signs
+	db $11, $5, $8 ; TwitchIsleText8
+	db $15, $13, $8 ; TwitchIsleText8
+	db $21, $2f, $8 ; TwitchIsleText8
+	db $33, $35, $8 ; TwitchIsleText8
 
-	db $7 ; people
-	db SPRITE_GUARD, $23 + 4, $4 + 4, $ff, $d0, $1 ; person
-	db SPRITE_GUARD, $38 + 4, $a + 4, $ff, $d0, $2 ; person
-	db SPRITE_SWIMMER, $55 + 4, $8 + 4, $ff, $d0, $3 ; person
-	db SPRITE_SWIMMER, $60 + 4, $b + 4, $ff, $d0, $4 ; person
-	db SPRITE_GUARD, $69 + 4, $c + 4, $ff, $d0, $5 ; person
-	db SPRITE_GUARD, $77 + 4, $8 + 4, $ff, $d0, $6 ; person
-	db SPRITE_GUARD, $88 + 4, $8 + 4, $ff, $d0, $7 ; person
+	db $6 ; people
+	db SPRITE_SLOWBRO, $f + 4, $6 + 4, $ff, $ff, $1 ; person
+	db SPRITE_SLOWBRO, $10 + 4, $8 + 4, $ff, $ff, $2 ; person
+	db SPRITE_GUARD, $23 + 4, $1d + 4, $ff, $d0, $3 ; person
+	db SPRITE_GUARD, $23 + 4, $20 + 4, $ff, $d0, $4 ; person
+	db SPRITE_SLOWBRO, $34 + 4, $33 + 4, $ff, $ff, $5 ; person
+	db SPRITE_GUARD, $35 + 4, $35 + 4, $ff, $ff, $6 ; person
 
 	; warp-to
-	EVENT_DISP $a, $8b, $7 ; ROUTE_22_GATE
-	EVENT_DISP $a, $8b, $8 ; ROUTE_22_GATE
-	EVENT_DISP $a, $1f, $4 ; VICTORY_ROAD_1
-	EVENT_DISP $a, $1f, $e ; VICTORY_ROAD_2
+	EVENT_DISP TWITCH_ISLE_WIDTH, $3, $3
+	EVENT_DISP TWITCH_ISLE_WIDTH, $7, $2a
+	EVENT_DISP TWITCH_ISLE_WIDTH, $11, $17
+	EVENT_DISP TWITCH_ISLE_WIDTH, $11, $19
+	EVENT_DISP TWITCH_ISLE_WIDTH, $11, $1b
+	EVENT_DISP TWITCH_ISLE_WIDTH, $11, $1d
+	EVENT_DISP TWITCH_ISLE_WIDTH, $11, $1f
+	EVENT_DISP TWITCH_ISLE_WIDTH, $11, $21
+	EVENT_DISP TWITCH_ISLE_WIDTH, $11, $23
+	EVENT_DISP TWITCH_ISLE_WIDTH, $11, $25
+	EVENT_DISP TWITCH_ISLE_WIDTH, $1b, $8
+	EVENT_DISP TWITCH_ISLE_WIDTH, $21, $2b
+	EVENT_DISP TWITCH_ISLE_WIDTH, $27, $c
+	EVENT_DISP TWITCH_ISLE_WIDTH, $2f, $c
+	EVENT_DISP TWITCH_ISLE_WIDTH, $2f, $2e
+	EVENT_DISP TWITCH_ISLE_WIDTH, $31, $2a
+	EVENT_DISP TWITCH_ISLE_WIDTH, $31, $34
 
 TwitchIsleBlocks: ; 503b2 (14:43b2)
 	INCBIN "maps/twitch_isle.blk"
@@ -96574,7 +96602,7 @@ UndergroundPathWEBlocks: ; 601f4 (18:41f4)
 
 	INCBIN "maps/unusedblocks60258.blk"
 
-SSAnne10Blocks: ; 603c0 (18:43c0)
+TwitchIsleInsideBlocks: ; 603c0 (18:43c0)
 SSAnne9Blocks: ; 603c0 (18:43c0)
 	INCBIN "maps/ssanne9.blk"
 
@@ -98542,11 +98570,11 @@ SSAnne4Object: ; 0x61632 (size=52)
 	db $c ; border tile
 
 	db $6 ; warps
-	db $3, $17, $8, SS_ANNE_10
-	db $3, $13, $6, SS_ANNE_10
-	db $3, $f, $4, SS_ANNE_10
-	db $3, $b, $2, SS_ANNE_10
-	db $3, $7, $0, SS_ANNE_10
+	db $3, $17, $8, TWITCH_ISLE_INSIDE
+	db $3, $13, $6, TWITCH_ISLE_INSIDE
+	db $3, $f, $4, TWITCH_ISLE_INSIDE
+	db $3, $b, $2, TWITCH_ISLE_INSIDE
+	db $3, $7, $0, TWITCH_ISLE_INSIDE
 	db $5, $1b, $9, SS_ANNE_1
 
 	db $0 ; signs
@@ -98554,11 +98582,11 @@ SSAnne4Object: ; 0x61632 (size=52)
 	db $0 ; people
 
 	; warp-to
-	EVENT_DISP $f, $3, $17 ; SS_ANNE_10
-	EVENT_DISP $f, $3, $13 ; SS_ANNE_10
-	EVENT_DISP $f, $3, $f ; SS_ANNE_10
-	EVENT_DISP $f, $3, $b ; SS_ANNE_10
-	EVENT_DISP $f, $3, $7 ; SS_ANNE_10
+	EVENT_DISP $f, $3, $17 ; TWITCH_ISLE_INSIDE
+	EVENT_DISP $f, $3, $13 ; TWITCH_ISLE_INSIDE
+	EVENT_DISP $f, $3, $f ; TWITCH_ISLE_INSIDE
+	EVENT_DISP $f, $3, $b ; TWITCH_ISLE_INSIDE
+	EVENT_DISP $f, $3, $7 ; TWITCH_ISLE_INSIDE
 	EVENT_DISP $f, $5, $1b ; SS_ANNE_1
 
 SSAnne4Blocks: ; 61666 (18:5666)
@@ -99391,217 +99419,217 @@ SSAnne9Object: ; 0x61c8d (size=188)
 	EVENT_DISP $c, $f, $16 ; SS_ANNE_2
 	EVENT_DISP $c, $f, $17 ; SS_ANNE_2
 
-SSAnne10_h: ; 0x61d49 to 0x61d55 (12 bytes) (id=104)
+TwitchIsleInside_h: ; 0x61d49 to 0x61d55 (12 bytes) (id=104)
 	db $0d ; tileset
-	db SS_ANNE_10_HEIGHT, SS_ANNE_10_WIDTH ; dimensions (y, x)
-	dw SSAnne10Blocks, SSAnne10TextPointers, SSAnne10Script ; blocks, texts, scripts
+	db TWITCH_ISLE_INSIDE_HEIGHT, TWITCH_ISLE_INSIDE_WIDTH ; dimensions (y, x)
+	dw TwitchIsleInsideBlocks, TwitchIsleInsideTextPointers, TwitchIsleInsideScript ; blocks, texts, scripts
 	db $00 ; connections
-	dw SSAnne10Object ; objects
+	dw TwitchIsleInsideObject ; objects
 
-SSAnne10Script: ; 61d55 (18:5d55)
+TwitchIsleInsideScript: ; 61d55 (18:5d55)
 	call EnableAutoTextBoxDrawing
-	ld hl, SSAnne10TrainerHeaders
-	ld de, SSAnne10ScriptPointers
-	ld a, [W_SSANNE10CURSCRIPT]
+	ld hl, TwitchIsleInsideTrainerHeaders
+	ld de, TwitchIsleInsideScriptPointers
+	ld a, [W_TWITCHISLEINSIDECURSCRIPT]
 	call ExecuteCurMapScriptInTable
-	ld [W_SSANNE10CURSCRIPT], a
+	ld [W_TWITCHISLEINSIDECURSCRIPT], a
 	ret
 
-SSAnne10ScriptPointers: ; 61d68 (18:5d68)
+TwitchIsleInsideScriptPointers: ; 61d68 (18:5d68)
 	dw CheckFightingMapTrainers
 	dw Func_324c
 	dw EndTrainerBattle
 
-SSAnne10TextPointers: ; 61d6e (18:5d6e)
-	dw SSAnne10Text1
-	dw SSAnne10Text2
-	dw SSAnne10Text3
-	dw SSAnne10Text4
-	dw SSAnne10Text5
-	dw SSAnne10Text6
-	dw SSAnne10Text7
-	dw SSAnne10Text8
+TwitchIsleInsideTextPointers: ; 61d6e (18:5d6e)
+	dw TwitchIsleInsideText1
+	dw TwitchIsleInsideText2
+	dw TwitchIsleInsideText3
+	dw TwitchIsleInsideText4
+	dw TwitchIsleInsideText5
+	dw TwitchIsleInsideText6
+	dw TwitchIsleInsideText7
+	dw TwitchIsleInsideText8
 	dw Predef5CText
 	dw Predef5CText
 	dw Predef5CText
 
-SSAnne10TrainerHeaders: ; 61d84 (18:5d84)
-SSAnne10TrainerHeader0: ; 61d84 (18:5d84)
+TwitchIsleInsideTrainerHeaders: ; 61d84 (18:5d84)
+TwitchIsleInsideTrainerHeader0: ; 61d84 (18:5d84)
 	db $1 ; flag's bit
 	db ($2 << 4) ; trainer's view range
 	dw $d809 ; flag's byte
-	dw SSAnne10BattleText1 ; 0x5e16 TextBeforeBattle
-	dw SSAnne10AfterBattleText1 ; 0x5e20 TextAfterBattle
-	dw SSAnne10EndBattleText1 ; 0x5e1b TextEndBattle
-	dw SSAnne10EndBattleText1 ; 0x5e1b TextEndBattle
+	dw TwitchIsleInsideBattleText1 ; 0x5e16 TextBeforeBattle
+	dw TwitchIsleInsideAfterBattleText1 ; 0x5e20 TextAfterBattle
+	dw TwitchIsleInsideEndBattleText1 ; 0x5e1b TextEndBattle
+	dw TwitchIsleInsideEndBattleText1 ; 0x5e1b TextEndBattle
 
-SSAnne10TrainerHeader1: ; 61d90 (18:5d90)
+TwitchIsleInsideTrainerHeader1: ; 61d90 (18:5d90)
 	db $2 ; flag's bit
 	db ($3 << 4) ; trainer's view range
 	dw $d809 ; flag's byte
-	dw SSAnne10BattleText2 ; 0x5e25 TextBeforeBattle
-	dw SSAnne10AfterBattleText2 ; 0x5e2f TextAfterBattle
-	dw SSAnne10EndBattleText2 ; 0x5e2a TextEndBattle
-	dw SSAnne10EndBattleText2 ; 0x5e2a TextEndBattle
+	dw TwitchIsleInsideBattleText2 ; 0x5e25 TextBeforeBattle
+	dw TwitchIsleInsideAfterBattleText2 ; 0x5e2f TextAfterBattle
+	dw TwitchIsleInsideEndBattleText2 ; 0x5e2a TextEndBattle
+	dw TwitchIsleInsideEndBattleText2 ; 0x5e2a TextEndBattle
 
-SSAnne10TrainerHeader2: ; 61d9c (18:5d9c)
+TwitchIsleInsideTrainerHeader2: ; 61d9c (18:5d9c)
 	db $3 ; flag's bit
 	db ($2 << 4) ; trainer's view range
 	dw $d809 ; flag's byte
-	dw SSAnne10BattleText3 ; 0x5e34 TextBeforeBattle
-	dw SSAnne10AfterBattleText3 ; 0x5e3e TextAfterBattle
-	dw SSAnne10EndBattleText3 ; 0x5e39 TextEndBattle
-	dw SSAnne10EndBattleText3 ; 0x5e39 TextEndBattle
+	dw TwitchIsleInsideBattleText3 ; 0x5e34 TextBeforeBattle
+	dw TwitchIsleInsideAfterBattleText3 ; 0x5e3e TextAfterBattle
+	dw TwitchIsleInsideEndBattleText3 ; 0x5e39 TextEndBattle
+	dw TwitchIsleInsideEndBattleText3 ; 0x5e39 TextEndBattle
 
-SSAnne10TrainerHeader3: ; 61da8 (18:5da8)
+TwitchIsleInsideTrainerHeader3: ; 61da8 (18:5da8)
 	db $4 ; flag's bit
 	db ($2 << 4) ; trainer's view range
 	dw $d809 ; flag's byte
-	dw SSAnne10BattleText4 ; 0x5e43 TextBeforeBattle
-	dw SSAnne10AfterBattleText4 ; 0x5e4d TextAfterBattle
-	dw SSAnne10EndBattleText4 ; 0x5e48 TextEndBattle
-	dw SSAnne10EndBattleText4 ; 0x5e48 TextEndBattle
+	dw TwitchIsleInsideBattleText4 ; 0x5e43 TextBeforeBattle
+	dw TwitchIsleInsideAfterBattleText4 ; 0x5e4d TextAfterBattle
+	dw TwitchIsleInsideEndBattleText4 ; 0x5e48 TextEndBattle
+	dw TwitchIsleInsideEndBattleText4 ; 0x5e48 TextEndBattle
 
-SSAnne10TrainerHeader4: ; 61db4 (18:5db4)
+TwitchIsleInsideTrainerHeader4: ; 61db4 (18:5db4)
 	db $5 ; flag's bit
 	db ($2 << 4) ; trainer's view range
 	dw $d809 ; flag's byte
-	dw SSAnne10BattleText5 ; 0x5e52 TextBeforeBattle
-	dw SSAnne10AfterBattleText5 ; 0x5e5c TextAfterBattle
-	dw SSAnne10EndBattleText5 ; 0x5e57 TextEndBattle
-	dw SSAnne10EndBattleText5 ; 0x5e57 TextEndBattle
+	dw TwitchIsleInsideBattleText5 ; 0x5e52 TextBeforeBattle
+	dw TwitchIsleInsideAfterBattleText5 ; 0x5e5c TextAfterBattle
+	dw TwitchIsleInsideEndBattleText5 ; 0x5e57 TextEndBattle
+	dw TwitchIsleInsideEndBattleText5 ; 0x5e57 TextEndBattle
 
-SSAnne10TrainerHeader5: ; 61dc0 (18:5dc0)
+TwitchIsleInsideTrainerHeader5: ; 61dc0 (18:5dc0)
 	db $6 ; flag's bit
 	db ($3 << 4) ; trainer's view range
 	dw $d809 ; flag's byte
-	dw SSAnne10BattleText6 ; 0x5e61 TextBeforeBattle
-	dw SSAnne10AfterBattleText6 ; 0x5e6b TextAfterBattle
-	dw SSAnne10EndBattleText6 ; 0x5e66 TextEndBattle
-	dw SSAnne10EndBattleText6 ; 0x5e66 TextEndBattle
+	dw TwitchIsleInsideBattleText6 ; 0x5e61 TextBeforeBattle
+	dw TwitchIsleInsideAfterBattleText6 ; 0x5e6b TextAfterBattle
+	dw TwitchIsleInsideEndBattleText6 ; 0x5e66 TextEndBattle
+	dw TwitchIsleInsideEndBattleText6 ; 0x5e66 TextEndBattle
 
 	db $ff
 
-SSAnne10Text1: ; 61dcd (18:5dcd)
+TwitchIsleInsideText1: ; 61dcd (18:5dcd)
 	db $08 ; asm
-	ld hl, SSAnne10TrainerHeader0
+	ld hl, TwitchIsleInsideTrainerHeader0
 	call TalkToTrainer
 	jp TextScriptEnd
 
-SSAnne10Text2: ; 61dd7 (18:5dd7)
+TwitchIsleInsideText2: ; 61dd7 (18:5dd7)
 	db $08 ; asm
-	ld hl, SSAnne10TrainerHeader1
+	ld hl, TwitchIsleInsideTrainerHeader1
 	call TalkToTrainer
 	jp TextScriptEnd
 
-SSAnne10Text3: ; 61de1 (18:5de1)
+TwitchIsleInsideText3: ; 61de1 (18:5de1)
 	db $08 ; asm
-	ld hl, SSAnne10TrainerHeader2
+	ld hl, TwitchIsleInsideTrainerHeader2
 	call TalkToTrainer
 	jp TextScriptEnd
 
-SSAnne10Text4: ; 61deb (18:5deb)
+TwitchIsleInsideText4: ; 61deb (18:5deb)
 	db $08 ; asm
-	ld hl, SSAnne10TrainerHeader3
+	ld hl, TwitchIsleInsideTrainerHeader3
 	call TalkToTrainer
 	jp TextScriptEnd
 
-SSAnne10Text5: ; 61df5 (18:5df5)
+TwitchIsleInsideText5: ; 61df5 (18:5df5)
 	db $08 ; asm
-	ld hl, SSAnne10TrainerHeader4
+	ld hl, TwitchIsleInsideTrainerHeader4
 	call TalkToTrainer
 	jp TextScriptEnd
 
-SSAnne10Text6: ; 61dff (18:5dff)
+TwitchIsleInsideText6: ; 61dff (18:5dff)
 	db $08 ; asm
-	ld hl, SSAnne10TrainerHeader5
+	ld hl, TwitchIsleInsideTrainerHeader5
 	call TalkToTrainer
 	jp TextScriptEnd
 
-SSAnne10Text8: ; 61e09 (18:5e09)
-	TX_FAR _SSAnne10Text8
+TwitchIsleInsideText8: ; 61e09 (18:5e09)
+	TX_FAR _TwitchIsleInsideText8
 	db $8 ; 0x61e0d
 	ld a, MACHOKE
 	call PlayCry
 	jp TextScriptEnd
 
-SSAnne10BattleText1: ; 61e16 (18:5e16)
-	TX_FAR _SSAnne10BattleText1
+TwitchIsleInsideBattleText1: ; 61e16 (18:5e16)
+	TX_FAR _TwitchIsleInsideBattleText1
 	db "@"
 
-SSAnne10EndBattleText1: ; 61e1b (18:5e1b)
-	TX_FAR _SSAnne10EndBattleText1
+TwitchIsleInsideEndBattleText1: ; 61e1b (18:5e1b)
+	TX_FAR _TwitchIsleInsideEndBattleText1
 	db "@"
 
-SSAnne10AfterBattleText1: ; 61e20 (18:5e20)
-	TX_FAR _SSAnne10AfterBattleText1
+TwitchIsleInsideAfterBattleText1: ; 61e20 (18:5e20)
+	TX_FAR _TwitchIsleInsideAfterBattleText1
 	db "@"
 
-SSAnne10BattleText2: ; 61e25 (18:5e25)
-	TX_FAR _SSAnne10BattleText2
+TwitchIsleInsideBattleText2: ; 61e25 (18:5e25)
+	TX_FAR _TwitchIsleInsideBattleText2
 	db "@"
 
-SSAnne10EndBattleText2: ; 61e2a (18:5e2a)
-	TX_FAR _SSAnne10EndBattleText2
+TwitchIsleInsideEndBattleText2: ; 61e2a (18:5e2a)
+	TX_FAR _TwitchIsleInsideEndBattleText2
 	db "@"
 
-SSAnne10AfterBattleText2: ; 61e2f (18:5e2f)
-	TX_FAR _SSAnne10AfterBattleText2
+TwitchIsleInsideAfterBattleText2: ; 61e2f (18:5e2f)
+	TX_FAR _TwitchIsleInsideAfterBattleText2
 	db "@"
 
-SSAnne10BattleText3: ; 61e34 (18:5e34)
-	TX_FAR _SSAnne10BattleText3
+TwitchIsleInsideBattleText3: ; 61e34 (18:5e34)
+	TX_FAR _TwitchIsleInsideBattleText3
 	db "@"
 
-SSAnne10EndBattleText3: ; 61e39 (18:5e39)
-	TX_FAR _SSAnne10EndBattleText3
+TwitchIsleInsideEndBattleText3: ; 61e39 (18:5e39)
+	TX_FAR _TwitchIsleInsideEndBattleText3
 	db "@"
 
-SSAnne10AfterBattleText3: ; 61e3e (18:5e3e)
-	TX_FAR _SSAnne10AfterBattleText3
+TwitchIsleInsideAfterBattleText3: ; 61e3e (18:5e3e)
+	TX_FAR _TwitchIsleInsideAfterBattleText3
 	db "@"
 
-SSAnne10BattleText4: ; 61e43 (18:5e43)
-	TX_FAR _SSAnne10BattleText4
+TwitchIsleInsideBattleText4: ; 61e43 (18:5e43)
+	TX_FAR _TwitchIsleInsideBattleText4
 	db "@"
 
-SSAnne10EndBattleText4: ; 61e48 (18:5e48)
-	TX_FAR _SSAnne10EndBattleText4
+TwitchIsleInsideEndBattleText4: ; 61e48 (18:5e48)
+	TX_FAR _TwitchIsleInsideEndBattleText4
 	db "@"
 
-SSAnne10AfterBattleText4: ; 61e4d (18:5e4d)
-	TX_FAR _SSAnne10AfterBattleText4
+TwitchIsleInsideAfterBattleText4: ; 61e4d (18:5e4d)
+	TX_FAR _TwitchIsleInsideAfterBattleText4
 	db "@"
 
-SSAnne10BattleText5: ; 61e52 (18:5e52)
-	TX_FAR _SSAnne10BattleText5
+TwitchIsleInsideBattleText5: ; 61e52 (18:5e52)
+	TX_FAR _TwitchIsleInsideBattleText5
 	db "@"
 
-SSAnne10EndBattleText5: ; 61e57 (18:5e57)
-	TX_FAR _SSAnne10EndBattleText5
+TwitchIsleInsideEndBattleText5: ; 61e57 (18:5e57)
+	TX_FAR _TwitchIsleInsideEndBattleText5
 	db "@"
 
-SSAnne10AfterBattleText5: ; 61e5c (18:5e5c)
-	TX_FAR _SSAnne10AfterBattleText5
+TwitchIsleInsideAfterBattleText5: ; 61e5c (18:5e5c)
+	TX_FAR _TwitchIsleInsideAfterBattleText5
 	db "@"
 
-SSAnne10BattleText6: ; 61e61 (18:5e61)
-	TX_FAR _SSAnne10BattleText6
+TwitchIsleInsideBattleText6: ; 61e61 (18:5e61)
+	TX_FAR _TwitchIsleInsideBattleText6
 	db "@"
 
-SSAnne10EndBattleText6: ; 61e66 (18:5e66)
-	TX_FAR _SSAnne10EndBattleText6
+TwitchIsleInsideEndBattleText6: ; 61e66 (18:5e66)
+	TX_FAR _TwitchIsleInsideEndBattleText6
 	db "@"
 
-SSAnne10AfterBattleText6: ; 61e6b (18:5e6b)
-	TX_FAR _SSAnne10AfterBattleText6
+TwitchIsleInsideAfterBattleText6: ; 61e6b (18:5e6b)
+	TX_FAR _TwitchIsleInsideAfterBattleText6
 	db "@"
 
-SSAnne10Text7: ; 61e70 (18:5e70)
-	TX_FAR _SSAnne10Text7
+TwitchIsleInsideText7: ; 61e70 (18:5e70)
+	TX_FAR _TwitchIsleInsideText7
 	db "@"
 
-SSAnne10Object: ; 0x61e75 (size=165)
+TwitchIsleInsideObject: ; 0x61e75 (size=165)
 	db $c ; border tile
 
 	db $a ; warps
@@ -111100,7 +111128,7 @@ HiddenItemCoords: ; 766b8 (1d:66b8)
 	db ROUTE_25,$03,$26
 	db ROUTE_9,$06,$0d
 	db SS_ANNE_6,$09,$0d
-	db SS_ANNE_10,$01,$03
+	db TWITCH_ISLE_INSIDE,$01,$03
 	db ROUTE_10,$11,$09
 	db ROUTE_10,$35,$10
 	db ROCKET_HIDEOUT_1,$0f,$15
