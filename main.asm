@@ -1670,9 +1670,9 @@ CollisionCheckOnLand:: ; 0bd1 (0:0bd1)
 	bit 6,a ; is the player jumping?
 	jr nz,.noCollision
 ; if not jumping a ledge
-	ld a,[$cd38]
-	and a
-	jr nz,.noCollision
+	;ld a,[$cd38]
+	;and a
+	;jr nz,.noCollision
 	ld a,[$d52a] ; the direction that the player is trying to go in
 	ld d,a
 	ld a,[$c10c] ; the player sprite's collision data (bit field) (set in the sprite movement code)
@@ -79655,10 +79655,10 @@ TwitchIsleObject: ; 0x50361 (size=81)
 	db $31, $34, $0, TWITCH_ISLE
 
 	db $4 ; signs
-	db $11, $5, $8 ; TwitchIsleText8
+	db $11, $5, $7 ; TwitchIsleText8
 	db $15, $13, $8 ; TwitchIsleText8
-	db $21, $2f, $8 ; TwitchIsleText8
-	db $33, $35, $8 ; TwitchIsleText8
+	db $21, $2f, $9 ; TwitchIsleText8
+	db $33, $35, $a ; TwitchIsleText8
 
 	db $6 ; people
 	db SPRITE_SLOWBRO, $f + 4, $6 + 4, $ff, $ff, $1 ; person
@@ -80802,48 +80802,58 @@ Func_511e9: ; 511e9 (14:51e9)
 
 TwitchIsleScriptPointers: ; 51213 (14:5213)
 	dw TwitchIsleScript0
-	dw TwitchIsleScript1
-	dw TwitchIsleScript2
 
 TwitchIsleScript0: ; 51219 (14:5219)
-	ld hl, YCoordsData_51255 ; $5255
+	; check for ledge stuff
 	ld a, [W_YCOORD]
-	ld b, a
-	ld e, $0
-	ld c, $7
-.asm_51224
-	ld a, [hli]
-	cp $ff
-	ret z
-	inc e
-	dec c
-	cp b
-	jr nz, .asm_51224 ; 0x5122b $f7
-	cp $23
-	jr nz, .asm_51237 ; 0x5122f $6
+	cp $26
+	jr nz, .notLedge
 	ld a, [W_XCOORD]
-	cp $e
+	cp $18
+	jr c, .notLedge
+	cp $26
+	jr nc, .notLedge
+	ld a, [W_PLAYTIMEFRAMES]
+	cp 15
 	ret nc
-.asm_51237
-	ld a, e
-	ld [$ff00+$8c], a
-	ld a, c
-	ld [$cd3d], a
-	ld b, $2
-	ld hl, $d7ed
-	ld a, $10
-	call Predef
-	ld a, c
-	and a
-	ret nz
-	call Func_5125d
-	call DisplayTextID
+	; Make player move weird
+	call GenRandom
+	cp 160
+	ret nc
+	cp 80
+	jr nc, .moveDown
+.moveRight
 	xor a
 	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_RIGHT
+	ld [$ccd3],a ; base address of simulated button presses
+	xor a
+	ld [$cd39],a
+	inc a
+	ld [$cd38],a ; index of current simulated button press
+	ld hl,$d730
+	set 7,[hl]
 	ret
+.moveDown
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_DOWN
+	ld [$ccd3],a ; base address of simulated button presses
+	ld [$ccd4],a ; base address of simulated button presses
+	xor a
+	ld [$cd39],a
+	ld a,2
+	ld [$cd38],a ; index of current simulated button press
+	ld hl,$d730
+	set 7,[hl]
+	ret
+.notLedge
 
-YCoordsData_51255: ; 51255 (14:5255)
-	db $23,$38,$55,$60,$69,$77,$88,$FF
+	ret
 
 Func_5125d: ; 5125d (14:525d)
 	ld hl, BadgeTextPointers ; $5276
@@ -80904,15 +80914,6 @@ Func_512d8: ; 512d8 (14:52d8)
 	ld [wJoypadForbiddenButtonsMask], a
 	jp Func_3486
 
-TwitchIsleScript1: ; 512ec (14:52ec)
-	ld a, [$cd38]
-	and a
-	ret nz
-TwitchIsleScript2: ; 512f1 (14:52f1)
-	ld a, $0
-	ld [W_TWITCHISLECURSCRIPT], a
-	ret
-
 TwitchIsleTextPointers: ; 512f7 (14:52f7)
 	dw TwitchIsleText1
 	dw TwitchIsleText2
@@ -80922,6 +80923,7 @@ TwitchIsleTextPointers: ; 512f7 (14:52f7)
 	dw TwitchIsleText6
 	dw TwitchIsleText7
 	dw TwitchIsleText8
+	dw TwitchIsleText9
 
 TwitchIsleText1: ; 51307 (14:5307)
 	db $08 ; asm
@@ -80935,17 +80937,13 @@ TwitchIsleText2: ; 51310 (14:5310)
 	call Func_51346
 	jp TextScriptEnd
 
-TwitchIsleText3: ; 51319 (14:5319)
-	db $08 ; asm
-	ld a, $4
-	call Func_51346
-	jp TextScriptEnd
+TwitchIsleText3:
+	TX_FAR _TwitchIsleText3
+	db "@"
 
-TwitchIsleText4: ; 51322 (14:5322)
-	db $08 ; asm
-	ld a, $3
-	call Func_51346
-	jp TextScriptEnd
+TwitchIsleText4:
+	TX_FAR _TwitchIsleText4
+	db "@"
 
 TwitchIsleText5: ; 5132b (14:532b)
 	db $08 ; asm
@@ -81017,6 +81015,10 @@ VictoryRoadGuardText2: ; 5139e (14:539e)
 
 TwitchIsleText8: ; 513a8 (14:53a8)
 	TX_FAR _TwitchIsleText8
+	db "@"
+
+TwitchIsleText9: ; 5133d (14:533d)
+	TX_FAR _TwitchIsleText9
 	db "@"
 
 Route24Script: ; 513ad (14:53ad)

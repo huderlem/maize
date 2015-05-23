@@ -32,8 +32,47 @@ _UnnamedText_513a3:: ; 926dd (24:66dd)
 	line "go right ahead!"
 	done
 
+_TwitchIsleText3::
+	text "If you're having"
+	line "trouble crossing"
+	cont "the ledge, simply"
+	cont "persevere!"
+
+	para "If you keep at it"
+	line "long enough,"
+	cont "anything can be"
+	cont "accomplished."
+
+	para "That ledge is"
+	line "nothing compared"
+	cont "to the ledges in"
+	cont "TWITCH's past."
+
+	para "Why, I've heard"
+	line "a hero once spent"
+	cont "hours upon hours"
+	cont "trying to cross"
+	cont "one!"
+	done
+
+_TwitchIsleText4::
+	text "I am a master of"
+	line "of anarchy."
+
+	para "Let the will of"
+	line "the masses decide"
+	cont "our course, not a"
+	cont "calculated plan."
+	done
+
 _TwitchIsleText8:: ; 92700 (24:6700)
 	text "VICTORY ROAD GATE"
 	line "- #MON LEAGUE"
 	done
 
+_TwitchIsleText9::
+	text "TWITCH ISLE -"
+	line "UPSTARTABAABDOWNA"
+	cont "DOWNRIGHTRIGHTABB"
+	cont "LEFTSTARTASTARTUP"
+	done
