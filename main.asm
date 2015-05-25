@@ -79178,17 +79178,17 @@ BrunoPic: ; 4e943 (13:6943)
 BrockPic: ; 4eb3e (13:6b3e)
 	INCBIN "pic/trainer/brock.pic"
 MistyPic: ; 4ec40 (13:6c40)
-	INCBIN "pic/trainer/misty.pic"
+	INCBIN "pic/trainer/tara.pic"
 LtSurgePic: ; 4ed30 (13:6d30)
 	INCBIN "pic/trainer/lt.surge.pic"
 ErikaPic: ; 4eeb5 (13:6eb5)
 	INCBIN "pic/trainer/erika.pic"
 KogaPic: ; 4efd6 (13:6fd6)
-	INCBIN "pic/trainer/koga.pic"
+	INCBIN "pic/trainer/drroot.pic"
 BlainePic: ; 4f150 (13:7150)
-	INCBIN "pic/trainer/blaine.pic"
+	INCBIN "pic/trainer/chance.pic"
 SabrinaPic: ; 4f252 (13:7252)
-	INCBIN "pic/trainer/sabrina.pic"
+	INCBIN "pic/trainer/stella.pic"
 GentlemanPic: ; 4f3d0 (13:73d0)
 	INCBIN "pic/trainer/gentleman.pic"
 LoreleiPic: ; 4f779 (13:7779)
