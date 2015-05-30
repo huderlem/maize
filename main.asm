@@ -695,7 +695,7 @@ OverworldLoopLessDelay:: ; 0402 (0:0402)
 .noCollision
 	ld a,$08
 	ld [wWalkCounter],a
-	jr .moveAhead2
+	jr .noSpinning
 .moveAhead
 	ld a,[$d736]
 	bit 7,a
@@ -10747,91 +10747,6 @@ SpriteOAMParametersFlipped: ; 40a4 (1:40a4)
 	db $08,$08, OAMFLAG_VFLIPPED | OAMFLAG_CANBEMASKED
 	db $08,$00, OAMFLAG_VFLIPPED | OAMFLAG_CANBEMASKED | OAMFLAG_ENDOFDATA
 
-Func_40b0: ; 40b0 (1:40b0)
-	xor a
-	ld [$cf0b], a
-	ld [$d700], a
-	ld [W_ISINBATTLE], a ; $d057
-	ld [$d35d], a
-	ld [$cf10], a
-	ld [H_CURRENTPRESSEDBUTTONS], a
-	ld [$cc57], a
-	ld [wFlags_0xcd60], a
-	ld [$FF00+$9f], a
-	ld [$FF00+$a0], a
-	ld [$FF00+$a1], a
-	call HasEnoughMoney
-	jr c, .asm_40ff
-	ld a, [wPlayerMoney] ; $d347
-	ld [$FF00+$9f], a
-	ld a, [wPlayerMoney + 1] ; $d348
-	ld [$FF00+$a0], a
-	ld a, [wPlayerMoney + 2] ; $d349
-	ld [$FF00+$a1], a
-	xor a
-	ld [$FF00+$a2], a
-	ld [$FF00+$a3], a
-	ld a, $2
-	ld [$FF00+$a4], a
-	ld a, $d
-	call Predef ; indirect jump to Func_f71e (f71e (3:771e))
-	ld a, [$FF00+$a2]
-	ld [wPlayerMoney], a ; $d347
-	ld a, [$FF00+$a3]
-	ld [wPlayerMoney + 1], a ; $d348
-	ld a, [$FF00+$a4]
-	ld [wPlayerMoney + 2], a ; $d349
-.asm_40ff
-	ld hl, $d732
-	set 2, [hl]
-	res 3, [hl]
-	set 6, [hl]
-	ld a, $ff
-	ld [wJoypadForbiddenButtonsMask], a
-	ld a, $7
-	jp Predef ; indirect jump to HealParty (f6a5 (3:76a5))
-
-MewPicFront: ; 4112 (1:4112)
-	INCBIN "pic/bmon/mew.pic"
-MewPicBack: ; 4205 (1:4205)
-	INCBIN "pic/monback/mewb.pic"
-
-MewBaseStats: ; 425b (1:425b)
-	db DEX_MEW ; pokedex id
-	db 100 ; base hp
-	db 100 ; base attack
-	db 100 ; base defense
-	db 100 ; base speed
-	db 100 ; base special
-
-	db PSYCHIC ; species type 1
-	db PSYCHIC ; species type 2
-
-	db 45 ; catch rate
-	db 64 ; base exp yield
-	db $55 ; sprite dimensions
-
-	dw MewPicFront
-	dw MewPicBack
-
-	; attacks known at lvl 0
-	db POUND
-	db 0
-	db 0
-	db 0
-
-	db 3 ; growth rate
-
-	; include learnset directly
-	db %11111111
-	db %11111111
-	db %11111111
-	db %11111111
-	db %11111111
-	db %11111111
-	db %11111111
-	db %11111111 ; usually spacing
-
 Func_4277: ; 4277 (1:4277)
 	ld hl, $cce9
 	ld a, [hl]
@@ -12521,7 +12436,7 @@ Func_4ed1: ; 4ed1 (1:4ed1)
 	ld a, [H_CURRENTSPRITEOFFSET]
 	ld l, a
 	inc l
-	ld a, [hl]        ; c1x1
+	ld a, [hl]        ; c1x1 movement status
 	and a
 	jp z, InitializeSpriteStatus
 	call CheckSpriteAvailability
@@ -12542,15 +12457,27 @@ Func_4ed1: ; 4ed1 (1:4ed1)
 	jp z, UpdateSpriteMovementDelay  ; c1x1 == 2
 	cp $3
 	jp z, UpdateSpriteInWalkingAnimation  ; c1x1 == 3
+
+	ld h, $c2
+	ld a, [H_CURRENTSPRITEOFFSET]
+	add $6
+	ld l, a
+	ld a, [hl]       ; c2x6: movement byte 1
+	cp $20
+	jr z, .skipPlayerMovingCheck
+
 	ld a, [wWalkCounter] ; $cfc5
 	and a
 	ret nz           ; don't do anything yet if player is currently moving (redundant, already tested in CheckSpriteAvailability)
+.skipPlayerMovingCheck
 	call InitializeSpriteScreenPosition
 	ld h, $c2
 	ld a, [H_CURRENTSPRITEOFFSET]
 	add $6
 	ld l, a
 	ld a, [hl]       ; c2x6: movement byte 1
+	cp $20
+	jp z, .followingSprite
 	inc a
 	jr z, .asm_4f59  ; value $FF
 	inc a
@@ -12608,7 +12535,7 @@ Func_4ed1: ; 4ed1 (1:4ed1)
 	ld de, $100
 
 	ld bc, $400
-	jr TryWalking
+	jp TryWalking
 .notDown
 	cp $80             ; $40 <= a < $80: up (or right)
 	jr nc, .notUp
@@ -12642,6 +12569,62 @@ Func_4ed1: ; 4ed1 (1:4ed1)
 	inc hl             ; move tile pointer two columns right
 	ld de, $1
 	ld bc, $10c
+	jr TryWalking
+.followingSprite
+	; If player just started walking, walk where player used to be
+	; First, check if player just started walking.
+	ld a, [wWalkCounter]
+	cp 8
+	ret nz
+	; Determine which direction to move based on player's location
+	; relative to this sprite
+	ld h, $c1
+	ld a, [H_CURRENTSPRITEOFFSET]
+	add $4
+	ld l, a
+	ld a, [hli]  ; c1x4
+	inc hl
+	; a = y screen position
+	cp $3C
+	jr z, .leftOrRight
+	; moving down or up
+	jr c, .movingDown
+	; moving up
+	call getTileSpriteStandsOn
+	ld de, -2*20 ; $ffd8
+	add hl, de         ; move tile pointer two rows up
+	ld de, $fe00
+	ld bc, $804
+	jr .done
+.movingDown
+	; moving down
+	call getTileSpriteStandsOn
+	ld de, 2*20
+	add hl, de         ; move tile pointer two rows down
+	ld de, $200
+	ld bc, $400
+	jr .done
+.leftOrRight
+	; moving left or right
+	ld a, [hl]
+	; a = x screen position
+	cp $40
+	jr c, .movingRight
+	; moving left
+	call getTileSpriteStandsOn
+	dec hl
+	dec hl             ; move tile pointer two columns left
+	ld de, $fe
+	ld bc, $208
+	jr .done
+.movingRight
+	; moving right
+	call getTileSpriteStandsOn
+	inc hl
+	inc hl
+	ld de, $2
+	ld bc, $10c
+.done
 	jr TryWalking
 
 ; changes facing direction by zeroing the movement delta and calling TryWalking
@@ -12680,14 +12663,52 @@ TryWalking: ; 4fcb (1:4fcb)
 	add $4
 	ld l, a
 	ld a, [hl]          ; c2x4: Y position
-	add d
+	ld b, a
+	ld a, d
+	cp $fe
+	jr c, .checkPositiveD
+	ld a, -1
+	jr .updateY
+.checkPositiveD
+	and a
+	jr z, .updateY
+	ld a, 1
+.updateY
+	add b
 	ld [hli], a         ; update Y position
+
 	ld a, [hl]          ; c2x5: X position
-	add e
+	ld b, a
+	ld a, e
+	cp $fe
+	jr c, .checkPositiveE
+	ld a, -1
+	jr .updateX
+.checkPositiveE
+	and a
+	jr z, .updateX
+	ld a, 1
+.updateX
+	add b
 	ld [hl], a          ; update X position
 	ld a, [H_CURRENTSPRITEOFFSET]
 	ld l, a
-	ld [hl], $10        ; c2x0=16: walk animation counter
+
+	push hl
+	ld h, $c2
+	ld a, [H_CURRENTSPRITEOFFSET]
+	add $6
+	ld l, a
+	ld a, [hl]       ; c2x6: movement byte 1
+	pop hl
+	cp $20
+	jr nz, .normal
+	ld a, 8
+	jr .saveAnimationCounter
+.normal
+	ld a, $10
+.saveAnimationCounter
+	ld [hl], a        ; c2x0=16: walk animation counter
 	dec h
 	inc l
 	ld [hl], $3         ; c1x1: set movement status to walking
@@ -12695,6 +12716,21 @@ TryWalking: ; 4fcb (1:4fcb)
 
 ; update the walking animation parameters for a sprite that is currently walking
 UpdateSpriteInWalkingAnimation: ; 4ffe (1:4ffe)
+	push hl
+	ld h, $c2
+	ld a, [H_CURRENTSPRITEOFFSET]
+	add $6
+	ld l, a
+	ld a, [hl]       ; c2x6: movement byte 1
+	pop hl
+	cp $20
+	jr nz, .normal
+	ld d, h
+	ld e, l
+	ld b, Bank(UpdateFollowingSpriteInWalkingAnimation)
+	ld hl, UpdateFollowingSpriteInWalkingAnimation
+	jp Bankswitch
+.normal
 	ld a, [H_CURRENTSPRITEOFFSET]
 	add $7
 	ld l, a
@@ -12898,7 +12934,10 @@ CheckSpriteAvailability: ; 50dc (1:50dc)
 	cp b
 	jr c, .spriteInvisible  ; right of screen region
 .skipXVisibilityTest
+	ld e, a ; e contains movement byte 1
+	push de
 	call getTileSpriteStandsOn
+	pop de
 	ld d, $60
 	ld a, [hli]
 	cp d
@@ -12924,9 +12963,13 @@ CheckSpriteAvailability: ; 50dc (1:50dc)
 	jr .done
 .spriteVisible
 	ld c, a
+	ld a, e
+	cp $20
+	jr z, .skipPlayerWalkingTest
 	ld a, [wWalkCounter] ; $cfc5
 	and a
 	jr nz, .done           ; if player is currently walking, we're done
+.skipPlayerWalkingTest
 	call UpdateSpriteImage
 	inc h
 	ld a, [H_CURRENTSPRITEOFFSET]
@@ -126971,6 +127014,143 @@ _LoadPlayerSpriteGraphicsCommon::
 	ld b, BANK(BushSprite)
 .copyData
 	jp CopyVideoData
+
+Func_40b0: ; 40b0 (1:40b0)
+	xor a
+	ld [$cf0b], a
+	ld [$d700], a
+	ld [W_ISINBATTLE], a ; $d057
+	ld [$d35d], a
+	ld [$cf10], a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld [$cc57], a
+	ld [wFlags_0xcd60], a
+	ld [$FF00+$9f], a
+	ld [$FF00+$a0], a
+	ld [$FF00+$a1], a
+	call HasEnoughMoney
+	jr c, .asm_40ff
+	ld a, [wPlayerMoney] ; $d347
+	ld [$FF00+$9f], a
+	ld a, [wPlayerMoney + 1] ; $d348
+	ld [$FF00+$a0], a
+	ld a, [wPlayerMoney + 2] ; $d349
+	ld [$FF00+$a1], a
+	xor a
+	ld [$FF00+$a2], a
+	ld [$FF00+$a3], a
+	ld a, $2
+	ld [$FF00+$a4], a
+	ld a, $d
+	call Predef ; indirect jump to Func_f71e (f71e (3:771e))
+	ld a, [$FF00+$a2]
+	ld [wPlayerMoney], a ; $d347
+	ld a, [$FF00+$a3]
+	ld [wPlayerMoney + 1], a ; $d348
+	ld a, [$FF00+$a4]
+	ld [wPlayerMoney + 2], a ; $d349
+.asm_40ff
+	ld hl, $d732
+	set 2, [hl]
+	res 3, [hl]
+	set 6, [hl]
+	ld a, $ff
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, $7
+	jp Predef ; indirect jump to HealParty (f6a5 (3:76a5))
+
+UpdateFollowingSpriteInWalkingAnimation:
+	ld h, d
+	ld l, e
+	ld a, [H_CURRENTSPRITEOFFSET]
+	add $7
+	ld l, a
+	ld a, [hl]                       ; c1x7 (counter until next walk animation frame)
+	inc a
+	ld [hl], a                       ; c1x7 += 1
+	cp $4
+	jr nz, .noNextAnimationFrame
+	xor a
+	ld [hl], a                       ; c1x7 = 0
+	inc l
+	ld a, [hl]                       ; c1x8 (walk animation frame)
+	inc a
+	and $3
+	ld [hl], a                       ; advance to next animation frame every 4 ticks (16 ticks total for one step)
+.noNextAnimationFrame
+	ld a, [H_CURRENTSPRITEOFFSET]
+	add $3
+	ld l, a
+	ld a, [hli]                      ; c1x3 (movement Y delta)
+	ld b, a
+	ld a, [hl]                       ; c1x4 (screen Y position)
+	add b
+	ld [hli], a                      ; update screen Y position
+	ld a, [hli]                      ; c1x5 (movement X delta)
+	ld b, a
+	ld a, [hl]                       ; c1x6 (screen X position)
+	add b
+	ld [hl], a                       ; update screen X position
+	ld a, [H_CURRENTSPRITEOFFSET]
+	ld l, a
+	inc h
+	ld a, [hl]                       ; c2x0 (walk animantion counter)
+	dec a
+	ld [hl], a                       ; update walk animantion counter
+	ret nz
+	ld a, $6                         ; walking finished, update state
+	add l
+	ld l, a
+	ld a, [hl]                       ; c2x6 (movement byte 1)
+	
+	ld a, [H_CURRENTSPRITEOFFSET]
+	inc a
+	ld l, a
+	dec h
+	ld [hl], $1                      ; c1x1 = 1 (movement status ready)
+	ret
+
+MewPicFront: ; 4112 (1:4112)
+	INCBIN "pic/bmon/mew.pic"
+MewPicBack: ; 4205 (1:4205)
+	INCBIN "pic/monback/mewb.pic"
+
+MewBaseStats: ; 425b (1:425b)
+	db DEX_MEW ; pokedex id
+	db 100 ; base hp
+	db 100 ; base attack
+	db 100 ; base defense
+	db 100 ; base speed
+	db 100 ; base special
+
+	db PSYCHIC ; species type 1
+	db PSYCHIC ; species type 2
+
+	db 45 ; catch rate
+	db 64 ; base exp yield
+	db $55 ; sprite dimensions
+
+	dw MewPicFront
+	dw MewPicBack
+
+	; attacks known at lvl 0
+	db POUND
+	db 0
+	db 0
+	db 0
+
+	db 3 ; growth rate
+
+	; include learnset directly
+	db %11111111
+	db %11111111
+	db %11111111
+	db %11111111
+	db %11111111
+	db %11111111
+	db %11111111
+	db %11111111 ; usually spacing
+
 
 SECTION "Alt Pics", ROMX, BANK[$3b]
 

@@ -1576,3 +1576,6 @@ W_LAST_NEW_BYTE::
 ; $d792: bits 6, 7 (from Quartz City Gym)
 ; bit 7 from byte in silph co 1 script
 ; $d76c: bit 0 (from mr. fuji pokeflute event)
+
+
+; TODO: test blacking out (moved Func_40b0 out of Bank 1)
