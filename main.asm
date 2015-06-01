@@ -3064,7 +3064,7 @@ LoadFrontSpriteByMonIndex:: ; 1389 (0:1389)
 	and a
 	pop hl
 	jr z, .invalidDexNumber  ; dex #0 invalid
-	cp 193 ; num mons in dex + 1
+	cp 194 ; num mons in dex + 1
 	jr c, .validDexNumber    ; dex >#151 invalid
 .invalidDexNumber
 	ld a, RHYDON ; $1
@@ -28264,6 +28264,13 @@ StatusScreen: ; 12953 (4:6953)
 	ld hl, $9720
 	ld bc,(BANK(PTile) << 8 | $01)
 	call CopyVideoDataDouble ; P (for PP), inline
+	ld a, [$cf91]
+	cp EGG
+	jr nz, .normalMon
+	ld b, Bank(DisplayEggStatusScreen)
+	ld hl, DisplayEggStatusScreen
+	jp Bankswitch
+.normalMon
 	ld a, [$ff00+$d7]
 	push af
 	xor a
@@ -36776,6 +36783,7 @@ MonsterNames: ; 1c21e (7:421e)
 	db "TOGETIC@@@"
 	db "TOGEKISS@@"
 	db "MIME JR.@@"
+	db "EGG@@@@@@@"
 
 Func_1c98a: ; 1c98a (7:498a)
 	; clear saved data
@@ -51650,6 +51658,45 @@ MimeJrBaseStats:
 	db %01000010
 
 	db Bank(MimeJrPicFront)
+
+
+
+EggBaseStats:
+	db DEX_EGG ; pokedex id
+	db 20    ; base hp
+	db 20   ; base attack
+	db 20   ; base defense
+	db 20    ; base speed
+	db 20    ; base special
+
+	db NORMAL     ; species type 1
+	db NORMAL     ; species type 2
+
+	db 30  ; catch rate
+	db 50 ; base exp yield
+	db $77 ; sprite dimensions
+
+	dw EggPic
+	dw EggPic
+
+	; attacks known at lvl 0
+	db HARDEN
+	db 0
+	db 0
+	db 0
+
+	db 0 ; growth rate
+
+	; learnset
+	db %00000000
+	db %00000000
+	db %00000000
+	db %00000000
+	db %00000000
+	db %00000000
+	db %00000000
+
+	db Bank(EggPic)
 
 CryData: ; 39446 (e:5446)
 	;$BaseCry, $Pitch, $Length
@@ -68009,6 +68056,7 @@ PokedexOrder: ; 41024 (10:5024)
 	db DEX_TOGETIC
 	db DEX_TOGEKISS
 	db DEX_MIME_JR
+	db DEX_EGG
 
 Func_410e2: ; 410e2 (10:50e2)
 	ld a, [wWhichTrade] ; $cd3d
@@ -86913,7 +86961,7 @@ VermilionHouse2Text1: ; 56075 (15:6075)
 	ld a, [$cc26]
 	and a
 	jr nz, asm_eb1b7 ; 0x5608a
-	ld bc,(BULBASAUR << 8) | 5
+	ld bc,(EGG << 8) | 5
 	call GivePokemon
 	jr nc, .noRoom
 	ld hl, $d728
@@ -105444,6 +105492,7 @@ MonsterPalettes: ; 725c8 (1c:65c8)
 	db PAL_MEWMON    ; Togetic
 	db PAL_MEWMON    ; Togekiss
 	db PAL_PINKMON   ; Mime Jr.
+	db PAL_MEWMON    ; Egg
 
 ; palettes for overworlds, title screen, monsters
 SuperPalettes: ; 72660 (1c:6660)
@@ -120401,18 +120450,33 @@ HealingRing:
 ; update happiness of party mons from walking
 	ld a, [$d13b] ; step counter
 	and a
-	jr nz, .healingRingLogic
+	jr nz, .notHappiness
 	ld a, [W_NUMINPARTY]
 	ld e, 0 ; walking category id for UpdateHappiness
 .partyLoop
 	and a
-	jr z, .healingRingLogic
+	jr z, .notHappiness
 	dec a
 	ld d, a
 	push af
 	call UpdateHappiness
 	pop af
 	jr .partyLoop
+.notHappiness
+	ld a, [$d13b]
+	cp 35  ; arbitrary constant
+	jr nz, .healingRingLogic
+	; egg cycle is happening!
+	ld a, [W_NUMINPARTY]
+.partyLoopEgg
+	and a
+	jr z, .healingRingLogic
+	dec a
+	ld d, a
+	push af
+	call UpdateEggcycle
+	pop af
+	jr .partyLoopEgg
 .healingRingLogic
 ; try and heal pokemon in party
 ; using the HEALING_RING effect
@@ -120530,6 +120594,24 @@ Moved_Func_7beb4: ; 7beb4 (1e:7eb4)
 	ld c, d
 	ld b, $b
 	jp GoPAL_SET
+
+UpdateEggcycle:
+; d = mon index in party
+	ld hl, W_PARTYMON1DATA
+	ld bc, 44
+	ld a, d
+	call AddNTimes ; hl contains pointer to mon's id
+	ld a, [hl]
+	cp EGG
+	ret nz
+	; it's an egg, so decrement it's egg cycle
+	ld bc, 12
+	add hl, bc ; hl points to egg cycles
+	ld a, [hl]
+	and a
+	ret z
+	dec [hl]
+	ret
 
 UpdateHappiness:
 ; d = mon index in party
@@ -120689,6 +120771,7 @@ EvosMovesPointerTable2:
 	dw Mon190_EvosMoves ;Togetic
 	dw Mon191_EvosMoves ;Togekiss
 	dw Mon192_EvosMoves ;Mime Jr.
+	dw Egg_EvosMoves ;Egg
 
 Mon010_EvosMoves: ; 3b742 (e:7742)
 ;CATERPIE
@@ -121566,6 +121649,13 @@ Mon192_EvosMoves: ; 3b9e4 (e:79e4)
 	db 29,PSYBEAM
 	db 33,SUBSTITUTE
 	db 39,PSYCHIC_M
+	db 0
+
+Egg_EvosMoves:
+;EGG
+;Evolutions
+	db 0
+;Learnset
 	db 0
 
 Func_3ad1c_2:
@@ -126602,6 +126692,9 @@ MimeJrPicFront:
 MimeJrPicBack:
 	INCBIN "pic/monback/mime_jrb.pic"
 
+EggPic:
+	INCBIN "pic/bmon/egg.pic"
+
 MiniSprites3: ; mons 179-?
 	INCBIN "gfx/mini_sprites/mini_sprites_3.2bpp"
 
@@ -127282,3 +127375,139 @@ BlastoiseAltFront:
 	INCBIN "pic/bmon/blastoise-alt-front.pic"
 BlastoiseAltBack:
 	INCBIN "pic/monback/blastoise-alt-back.pic"
+
+
+SECTION "Misc", ROMX, BANK[$3c]
+
+DisplayEggStatusScreen:
+	ld a, [$ff00+$d7]
+	push af
+	xor a
+	ld [$ff00+$d7], a
+	set 6,[hl] ; turn off letter printing delay
+
+	ld de, EggName
+	FuncCoord 9,1
+	ld hl, Coord
+	call PlaceString
+	ld de, IDNoText2
+	FuncCoord 9,3
+	ld hl, Coord
+	call PlaceString
+	ld de, OTText2
+	FuncCoord 9,5
+	ld hl, Coord
+	call PlaceString
+	ld de, EggBarText
+	FuncCoord 0,7
+	ld hl, Coord
+	call PlaceString
+
+	; display the appropriate message about when it will hatch
+	ld a, [$cfa4]  ; remaining egg cycles
+	cp 41
+	jr c, .check3
+	ld de, EggText4
+	jr .drawMessage
+.check3
+	cp 11
+	jr c, .check2
+	ld de, EggText3
+	jr .drawMessage
+.check2
+	cp 6
+	jr c, .check1
+	ld de, EggText2
+	jr .drawMessage
+.check1
+	ld de, EggText1
+.drawMessage
+; de = pointer to first message
+	FuncCoord 1,9
+	ld hl, Coord
+	push de
+	call PlaceString
+	pop de
+	ld h, d
+	ld l, e
+	ld bc, 18
+	add hl, bc
+	ld d, h
+	ld e, l
+
+	FuncCoord 1,11
+	ld hl, Coord
+	push de
+	call PlaceString
+	pop de
+	ld h, d
+	ld l, e
+	ld bc, 18
+	add hl, bc
+	ld d, h
+	ld e, l
+
+	FuncCoord 1,13
+	ld hl, Coord
+	push de
+	call PlaceString
+	pop de
+	ld h, d
+	ld l, e
+	ld bc, 18
+	add hl, bc
+	ld d, h
+	ld e, l
+
+	FuncCoord 1,15
+	ld hl, Coord
+	call PlaceString
+
+	call Delay3
+	call GBPalNormal
+	FuncCoord 1, 0 ; $c3a1
+	ld hl, Coord
+	call LoadFlippedFrontSpriteByMonIndex ; draw Pokémon picture
+	xor a
+	ld [W_PRIZE1], a ; clear alt sprite flag
+
+	call WaitForTextScrollButtonPress ; wait for button
+	pop af
+	ld [$ff00+$d7], a
+	ret
+
+EggName:
+	db "EGG@"
+
+IDNoText2:
+	db $73, "№.?????@"
+
+OTText2:
+	db "OT/?????@"
+
+EggBarText:
+	db $76, $76, $76, $76, $76, $76, $76, $76, $76, $76, $76, $76, $76, $76, $76, $76, $76, $76, $76, $76, "@"
+
+EggText1:
+	db "It's making sounds@"
+	db "inside. It's going@"
+	db "to hatch soon!   @"
+	db "Yippee!@"
+
+EggText2:
+	db "It moves around  @"
+	db "inside sometimes.@"
+	db "It must be close @"
+	db "to hatching.@"
+
+EggText3:
+	db "Wonder what's     @"
+	db "inside? It needs @"
+	db "more time,       @"
+	db "though.@"
+
+EggText4:
+	db "This EGG needs a @"
+	db "lot more time to @"
+	db "hatch. Patience  @"
+	db "is key.@"

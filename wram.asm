@@ -831,6 +831,7 @@ W_PARTYMON1_MOVE3:: ; d175
 W_PARTYMON1_MOVE4:: ; d176
 	ds 1
 W_PARTYMON1_OTID:: ; d177
+; Also used for remaining egg cycles
 	ds 2
 W_PARTYMON1_EXP:: ; d179
 	ds 3
