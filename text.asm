@@ -1127,6 +1127,11 @@ _UnnamedText_3cab4:: ; 897c9 (22:57c9)
 	line "to fight!"
 	prompt
 
+_EggCantFightText::
+	text "Don't be cruel!"
+	line "EGGs can't fight!"
+	prompt
+
 _UnnamedText_3cb97:: ; 897e3 (22:57e3)
 	text "Can't escape!"
 	prompt

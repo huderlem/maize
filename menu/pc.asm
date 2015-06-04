@@ -252,6 +252,19 @@ BillsPCDeposit:
 	jp c, BillsPCMenu
 	call Func_2174b
 	jp nc, BillsPCMenu
+	; Check if at least one pokemon will be a non-egg after depositing
+	ld a, [$cf91]
+	cp EGG
+	jr z, .okay
+	call CheckForNonEggMons
+	and a
+	jr nz, .okay
+	; not enough non-egg mons
+	; don't allow the deposit
+	ld hl, CantDepositLastMonText
+	call PrintText
+	jp BillsPCMenu
+.okay
 	ld a, [$cf91]
 	call GetCryData
 	call PlaySoundWaitForCurrent
@@ -586,3 +599,31 @@ UnnamedText_21865:: ; 21865 (8:5865)
 Unknown_21878:: ; 21878 (8:5878)
 	db $FD
 
+CheckForNonEggMons::
+; check if two mons are non-eggs
+; Set a = 1 if >= 2 mons are non-eggs
+; Else, set a = 1
+	ld a, [W_NUMINPARTY] ; $d163
+	ld e, a
+	ld d, 0
+	ld hl, W_PARTYMON1_NUM ; $d16c
+	ld bc, W_PARTYMON2DATA - W_PARTYMON1DATA
+.partyMonsLoop
+	ld a, [hli]
+	inc hl
+	cp EGG
+	jr z, .egg
+	inc d
+	ld a, d
+	cp 2
+	jr nc, .done
+.egg
+	add hl, bc
+	dec e
+	jr nz, .partyMonsLoop
+	; not enough non-eggs
+	xor a
+	ret
+.done
+	ld a, 1
+	ret

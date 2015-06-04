@@ -10,7 +10,7 @@ INCLUDE "constants/trainer_constants.asm"
 ; PC
 INCLUDE "hram.asm"
 INCLUDE "constants/move_constants.asm"
-
+INCLUDE "constants/pokemon_constants.asm"
 
 
 SECTION "Sound Effect Headers 1", ROMX, BANK[AUDIO_1]

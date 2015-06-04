@@ -760,7 +760,7 @@ OverworldLoopLessDelay:: ; 0402 (0:0402)
 	jp nz,CheckWarpsNoCollision
 
 	; check for HEALING_RING
-	ld a,$63
+	ld a, $63
 	call Predef
 
 	; decrement poisoned pokemon HP
@@ -6863,7 +6863,7 @@ CloseTextDisplay:: ; 29e8 (0:29e8)
 	ld a,$90
 	ld [$ffb0],a ; move the window off the screen
 	call DelayFrame
-	call LoadGBPal
+	;call LoadGBPal ; TODO: this was uncommented to fix the EGG hatching issue
 	xor a
 	ld [H_AUTOBGTRANSFERENABLED],a ; disable continuous WRAM to VRAM transfer each V-blank
 ; loop to make sprites face the directions they originally faced before the dialogue
@@ -23109,6 +23109,13 @@ ItemUseMedicine: ; dabb (3:5abb)
 	ld [$cf06],a
 	ld d,a
 	ld a,[$cf91]
+	; check for EGG
+	cp EGG
+	jr nz, .notEgg
+	pop af
+	pop af
+	jp .healingItemNoEffect
+.notEgg
 	ld e,a
 	ld [$d0b5],a
 	pop af
@@ -23121,7 +23128,7 @@ ItemUseMedicine: ; dabb (3:5abb)
 ; if using softboiled
 	ld a,[wWhichPokemon]
 	cp d ; is the pokemon trying to use softboiled on itself?
-	jr z,ItemUseMedicine ; if so, force another choice
+	jp z,ItemUseMedicine ; if so, force another choice
 .checkItemType
 	ld a,[$cf91]
 	cp a,REVIVE
@@ -24370,6 +24377,15 @@ ItemUsePPRestore: ; e31e (3:631e)
 	jr nc,.chooseMove
 	jp .itemNotUsed
 .chooseMove
+	; check for egg
+	ld a, [wWhichPokemon]
+	ld hl,W_PARTYMON1_NUM
+	ld bc,44
+	call AddNTimes
+	ld a, [hl]
+	cp EGG
+	jp z, .noEffect
+.notEgg
 	ld a,[$cd3d]
 	cp a,ELIXER
 	jp nc,.useElixir ; if Elixir or Max Elixir
@@ -28579,6 +28595,9 @@ StatsText: ; 12b3a (4:6b3a)
 	next "SPECIAL@"
 
 StatusScreen2: ; 12b57 (4:6b57)
+	ld a, [$cf91]
+	cp EGG
+	ret z
 	ld a, [$ff00+$d7]
 	push af
 	xor a
@@ -28887,8 +28906,15 @@ RedrawPartyMenu_:
 	set 0,a
 	ld [$FFF6],a
 	add hl,bc
+
+	; don't draw HP bar for egg
+	ld a, [$cf91]
+	cp EGG
+	jr z, .skipHPBar
+
 	ld a,$60
 	call Predef ; draw HP bar and prints current / max HP
+.skipHPBar
 	ld a,[$FFF6]
 	res 0,a
 	ld [$FFF6],a
@@ -28914,7 +28940,14 @@ RedrawPartyMenu_:
 .printLevel
 	ld bc,10 ; move 10 columns to the right
 	add hl,bc
+
+	; don't print level if it's an egg
+	ld a, [$cf91]
+	cp EGG
+	jr z, .skipLevel
+
 	call PrintLevel
+.skipLevel	
 	pop hl
 	pop de
 	inc de
@@ -57705,70 +57738,9 @@ Func_3c7d8: ; 3c7d8 (f:47d8)
 ; called when player is out of usable mons.
 ; prints approriate lose message, sets carry flag if player blacked out (special case for initial rival fight)
 HandlePlayerBlackOut: ; 3c837 (f:4837)
-	ld a, [W_ISLINKBATTLE] ; $d12b
-	cp $4
-	jr z, .notSony1Battle
-	ld a, [W_CUROPPONENT] ; $d059
-	cp $c8 + SONY1
-	jr nz, .notSony1Battle
-	ld hl, wTileMap  ; sony 1 battle
-	ld bc, $815
-	call ClearScreenArea
-	call Func_3ed12
-	ld c, $28
-	call DelayFrames
-	ld hl, Sony1WinText
-	call PrintText
-	ld a, [W_CURMAP]
-	cp OAKS_LAB
-	ret z            ; starter battle in oak's lab: don't black out
-.notSony1Battle
-	ld b, $0
-	call GoPAL_SET
-	ld a, [W_INCHALLENGE]
-	ld hl, PlayerBlackedOutText2
-	and a
-	jr z, .gotText
-	ld hl, PlayerBlackedOutBattleFactory
-.gotText
-	ld a, [W_ISLINKBATTLE] ; $d12b
-	cp $4
-	jr nz, .noLinkBattle
-	ld hl, LinkBattleLostText
-.noLinkBattle
-	call PrintText
-	ld a, [$d732]
-	res 5, a
-	ld [$d732], a
-	call ClearScreen
-	ld a, [W_CURMAP]
-	cp BATTLE_FACTORY
-	jr nz, .notBattleFactory
-	; update win streak
-	xor a
-	ld [W_CURSTREAK], a
-	ld [W_STARTBATTLE], a
-	ld [W_INCHALLENGE], a
-	ld [W_CURCLASS], a
-.notBattleFactory
-	scf
-	ret
-
-Sony1WinText: ; 3c884 (f:4884)
-	TX_FAR _Sony1WinText
-	db "@"
-
-PlayerBlackedOutText2: ; 3c889 (f:4889)
-	TX_FAR _PlayerBlackedOutText2
-	db "@"
-
-PlayerBlackedOutBattleFactory:
-	TX_FAR _PlayerBlackedOutBattleFactory
-	db "@"
-
-LinkBattleLostText: ; 3c88e (f:488e)
-	TX_FAR _LinkBattleLostText
-	db "@"
+	ld hl, HandlePlayerBlackOut_
+	ld b, Bank(HandlePlayerBlackOut_)
+	jp Bankswitch
 
 Func_3c893: ; 3c893 (f:4893)
 	ld a, [$d730]
@@ -58045,17 +58017,29 @@ TrainerSentOutText: ; 3ca7e (f:4a7e)
 AnyPokemonAliveCheck: ; 3ca83 (f:4a83)
 	ld a, [W_NUMINPARTY] ; $d163
 	ld e, a
-	xor a
-	ld hl, W_PARTYMON1_HP ; $d16c
-	ld bc, W_PARTYMON2DATA - W_PARTYMON1DATA - 1
+	ld hl, W_PARTYMON1_NUM ; $d16c
+	ld bc, W_PARTYMON2DATA - W_PARTYMON1DATA - 2
 .partyMonsLoop
+	; skip, if it's an egg
+	ld a, [hli]
+	inc hl
+	cp EGG
+	jr z, .nextMon
+	dec hl
+	xor a
 	or [hl]
 	inc hl
 	or [hl]
+	jr nz, .alive
+.nextMon
 	add hl, bc
 	dec e
 	jr nz, .partyMonsLoop
-	ld d, a
+	; all dead
+	ld d, 0
+	ret
+.alive
+	ld d, 1
 	ret
 
 Func_3ca97: ; 3ca97 (f:4a97)
@@ -58063,20 +58047,37 @@ Func_3ca97: ; 3ca97 (f:4a97)
 	ld hl, W_PARTYMON1_HP ; $d16c
 	ld bc, $2c
 	call AddNTimes
+	; check if it's an EGG
+	dec hl
+	ld a, [hli]
+	cp EGG
+	jr z, .egg
 	ld a, [hli]
 	or [hl]
 	ret nz
 	ld a, [$d11d]
 	and a
-	jr nz, .asm_3cab2
+	jr nz, .done
 	ld hl, UnnamedText_3cab4 ; $4ab4
 	call PrintText
-.asm_3cab2
+.done
+	xor a
+	ret
+.egg
+	ld a, [$d11d]
+	and a
+	jr nz, .done
+	ld hl, EggCantFightText
+	call PrintText
 	xor a
 	ret
 
 UnnamedText_3cab4: ; 3cab4 (f:4ab4)
 	TX_FAR _UnnamedText_3cab4
+	db "@"
+
+EggCantFightText:
+	TX_FAR _EggCantFightText
 	db "@"
 
 Func_3cab9: ; 3cab9 (f:4ab9)
@@ -61284,16 +61285,6 @@ Func_3e016: ; 3e016 (f:6016)
 	ld a, [W_MOVEMISSED] ; $d05f
 	dec a
 	ret
-
-
-UnusedHighCriticalMoves: ; 3e01e (f:601e)
-	db KARATE_CHOP
-	db RAZOR_LEAF
-	db CRABHAMMER
-	db SLASH
-	db NIGHT_SLASH
-	db $FF
-; 3e023
 
 ; determines if attack is a critical hit
 ; azure heights claims "the fastest pokémon (who are,not coincidentally,
@@ -92850,7 +92841,7 @@ PewterPokecenterText4: ; 5c60c (17:460c)
 
 HappinessCheckerText:
 	db $08 ; asm
-	ld de, W_PARTYMON1NAME
+	call GetFirstMon
 	call CopyStringToCF4B
 	ld hl, HappinessCheckerText1
 	call PrintText
@@ -92883,6 +92874,28 @@ HappinessCheckerText:
 .tellHappiness
 	call PrintText
 	jp TextScriptEnd
+
+GetFirstMon:
+; Find first mon that isn't an EGG
+; output: de points to mon name
+	ld de, W_PARTYMON1NAME
+	ld hl, W_PARTYMON1_NUM
+.loop
+	ld a, [hl]
+	cp EGG
+	ret nz
+	; advance to next mon
+	ld bc, W_PARTYMON2DATA - W_PARTYMON1DATA
+	add hl, bc
+	push hl
+	ld bc, W_PARTYMON2NAME - W_PARTYMON1NAME
+	ld h, d
+	ld l, e
+	add hl, bc
+	ld d, h
+	ld e, l
+	pop hl
+	jr .loop
 
 HappinessCheckerText1:
 	TX_FAR _HappinessCheckerText1
@@ -120600,7 +120613,9 @@ UpdateEggcycle:
 	ld hl, W_PARTYMON1DATA
 	ld bc, 44
 	ld a, d
+	push de
 	call AddNTimes ; hl contains pointer to mon's id
+	pop de
 	ld a, [hl]
 	cp EGG
 	ret nz
@@ -120610,7 +120625,102 @@ UpdateEggcycle:
 	ld a, [hl]
 	and a
 	ret z
+	dec a
+	and a
+	jr nz, .notHatched
+	; Hatch that egg!
+	jp HatchEgg
+.notHatched
 	dec [hl]
+	ret
+
+HatchEgg:
+	call HatchEgg_
+	call HatchEggCleanup
+	ret
+
+HatchEgg_:
+; input: hl points to remaining egg cycles (W_PARTYMON_OTID first byte)
+;         d = mon index in party (0-based)
+	inc hl
+	ld a, [hl]  ; a = hatched mon id
+	ld b, a
+	push bc
+	; remove egg from party
+	ld a, d
+	ld [wWhichPokemon], a
+	xor a
+	ld [$cf95], a  ; remove mon from party
+	call RemovePokemon
+	pop bc ;  b = mon species id
+	push bc
+	; give newly hatched mon
+	ld a, EGG
+	ld [$cee9], a  ; for the evolution animation
+	ld a, b
+	ld [$ceea], a  ; for the evolution animation
+	ld [$cf91], a
+	ld a, 2 ; mon's level
+	ld [$d127], a
+	ld a, $01
+	ld [$ff8c], a
+	ld b,BANK(DisplayTextIDInit)
+	ld hl,DisplayTextIDInit ; initialization
+	call Bankswitch
+	ld hl, EggHatchingText
+	call PrintText
+	xor a
+	ld [H_AUTOBGTRANSFERENABLED], a ; $FF00+$ba
+	ld hl, wTileMap
+	ld bc, $c14
+	call ClearScreenArea
+	ld a, $1
+	ld [H_AUTOBGTRANSFERENABLED], a ; $FF00+$ba
+	ld a, $ff
+	ld [$cfcb], a
+	call CleanLCD_OAM
+	ld hl, Func_7bde9
+	ld b, BANK(Func_7bde9)
+	call Bankswitch ; indirect jump to Func_7bde9 (7bde9 (1e:7de9))
+	pop bc
+	ld a, b ; a = mon id
+	ld [$d0b5], a
+	ld [$cf98], a
+	ld [$ceea], a
+	ld a, MONSTER_NAME
+	ld [W_LISTTYPE], a
+	ld a, $e
+	ld [$d0b7], a
+	call GetName
+	ld a, $89
+	call PlaySoundWaitForCurrent
+	ld hl, EggHatchedText
+	call Func_3c59
+	call WaitForSoundToFinish
+	ld c, $28
+	call DelayFrames
+	call AddPokemonToParty
+	call GBFadeOut2
+	ld a, Bank(HatchEgg)
+	push af
+	jp CloseTextDisplay
+
+EggHatchingText:
+	text "Oh?"
+	prompt
+
+EggHatchedText:
+	text "Congratulations!"
+
+	para "Your EGG hatched"
+	line "into @"
+	TX_RAM $cd6d
+	text "!"
+	prompt
+
+HatchEggCleanup:
+	call Func_2307
+	call LoadMapData
 	ret
 
 UpdateHappiness:
@@ -127511,3 +127621,75 @@ EggText4:
 	db "lot more time to @"
 	db "hatch. Patience  @"
 	db "is key.@"
+
+
+HandlePlayerBlackOut_:
+	ld a, [W_ISLINKBATTLE] ; $d12b
+	cp $4
+	jr z, .notSony1Battle
+	ld a, [W_CUROPPONENT] ; $d059
+	cp $c8 + SONY1
+	jr nz, .notSony1Battle
+	ld hl, wTileMap  ; sony 1 battle
+	ld bc, $815
+	call ClearScreenArea
+	call Func_3ed12_2
+	ld c, $28
+	call DelayFrames
+	ld hl, Sony1WinText
+	call PrintText
+	ld a, [W_CURMAP]
+	cp OAKS_LAB
+	ret z            ; starter battle in oak's lab: don't black out
+.notSony1Battle
+	ld b, $0
+	call GoPAL_SET
+	ld a, [W_INCHALLENGE]
+	ld hl, PlayerBlackedOutText2
+	and a
+	jr z, .gotText
+	ld hl, PlayerBlackedOutBattleFactory
+.gotText
+	ld a, [W_ISLINKBATTLE] ; $d12b
+	cp $4
+	jr nz, .noLinkBattle
+	ld hl, LinkBattleLostText
+.noLinkBattle
+	call PrintText
+	ld a, [$d732]
+	res 5, a
+	ld [$d732], a
+	call ClearScreen
+	ld a, [W_CURMAP]
+	cp BATTLE_FACTORY
+	jr nz, .notBattleFactory
+	; update win streak
+	xor a
+	ld [W_CURSTREAK], a
+	ld [W_STARTBATTLE], a
+	ld [W_INCHALLENGE], a
+	ld [W_CURCLASS], a
+.notBattleFactory
+	scf
+	ret
+
+Sony1WinText: ; 3c884 (f:4884)
+	TX_FAR _Sony1WinText
+	db "@"
+
+PlayerBlackedOutText2: ; 3c889 (f:4889)
+	TX_FAR _PlayerBlackedOutText2
+	db "@"
+
+PlayerBlackedOutBattleFactory:
+	TX_FAR _PlayerBlackedOutBattleFactory
+	db "@"
+
+LinkBattleLostText: ; 3c88e (f:488e)
+	TX_FAR _LinkBattleLostText
+	db "@"
+
+Func_3ed12_2: ; 3ed12 (f:6d12)
+	ld hl, Func_396d3
+	ld b, BANK(Func_396d3)
+	jp Bankswitch ; indirect jump to Func_396d3 (396d3 (e:56d3))
