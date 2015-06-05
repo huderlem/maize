@@ -86952,7 +86952,7 @@ VermilionHouse2Text1: ; 56075 (15:6075)
 	ld a, [$cc26]
 	and a
 	jr nz, asm_eb1b7 ; 0x5608a
-	ld bc,(EGG << 8) | 5
+	ld bc,(BULBASAUR << 8) | 5
 	call GivePokemon
 	jr nc, .noRoom
 	ld hl, $d728
@@ -120679,9 +120679,13 @@ HatchEgg_:
 	ld a, $ff
 	ld [$cfcb], a
 	call CleanLCD_OAM
+	ld a, %00000010  ; B button
+	ld [wJoypadForbiddenButtonsMask], a
 	ld hl, Func_7bde9
 	ld b, BANK(Func_7bde9)
 	call Bankswitch ; indirect jump to Func_7bde9 (7bde9 (1e:7de9))
+	xor a
+	ld [wJoypadForbiddenButtonsMask], a
 	pop bc
 	ld a, b ; a = mon id
 	ld [$d0b5], a
@@ -127693,3 +127697,331 @@ Func_3ed12_2: ; 3ed12 (f:6d12)
 	ld hl, Func_396d3
 	ld b, BANK(Func_396d3)
 	jp Bankswitch ; indirect jump to Func_396d3 (396d3 (e:56d3))
+
+GiveEgg:
+; d = mon id
+; sets carry flag if successful
+	ld a, d
+	ld [$cf91], a
+	call EnableAutoTextBoxDrawing
+	xor a
+	ld [$ccd3], a
+	ld a, [W_NUMINPARTY] ; $d163
+	cp $6
+	jr c, .hasSpaceInParty
+	; not enough space in party to take EGG
+	and a
+	ret
+.hasSpaceInParty
+	; update W_NUMINPARTY
+	ld hl, W_NUMINPARTY
+	inc [hl]
+	inc hl
+.idLoop
+	ld a, [hl]
+	cp $ff
+	jr z, .foundId
+	inc hl
+	jr .idLoop
+.foundId
+	ld a, EGG
+	ld [hl], a
+	; Update mon data struct
+	ld a, [W_NUMINPARTY]
+	dec a
+	ld bc, 44
+	ld hl, W_PARTYMON1_NUM
+	call AddNTimes
+	; hl points to mon id in mon struct
+	ld a, EGG
+	ld [hli], a
+	; write HP
+	xor a
+	ld [hli], a
+	ld a, 1
+	ld [hli], a
+	; write BOXLEVEL
+	ld a, 5
+	ld [hli], a
+	; write status
+	xor a
+	ld [hli], a
+	; write types
+	ld a, NORMAL
+	ld [hli], a
+	ld [hli], a
+	; write catch rate
+	ld a, 30
+	ld [hli], a
+	; write moves
+	ld a, HARDEN
+	ld [hli], a
+	xor a
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	; write egg cycles and mon id
+	push hl
+	ld hl, EggCycleTable
+	ld b, 0
+	ld a, [$cf91]
+	dec a
+	ld c, a
+	add hl, bc
+	ld a, [hl]
+	pop hl
+	ld [hli], a
+	ld a, [$cf91]
+	ld [hli], a
+	; write experience
+	xor a
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	; write EVs
+	xor a
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	; write IVs
+	xor a
+	ld [hli], a
+	ld [hli], a
+	; write PP
+	xor a
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	ld [hli], a
+	; write level
+	ld a, 2
+	ld [hli], a
+	; write max hp
+	xor a
+	ld [hli], a
+	ld a, 1
+	ld [hli], a
+	; write stats
+	xor a
+	ld [hli], a
+	ld a, 10
+	ld [hli], a
+	xor a
+	ld [hli], a
+	ld a, 10
+	ld [hli], a
+	xor a
+	ld [hli], a
+	ld a, 10
+	ld [hli], a
+	xor a
+	ld [hli], a
+	ld a, 10
+	ld [hli], a
+	scf
+	ret
+
+EggCycleTable:
+	db 20 ; RHYDON
+	db 20 ; KANGASKHAN
+	db 20 ; NIDORAN_M
+	db 20 ; CLEFAIRY
+	db 15 ; SPEAROW
+	db 20 ; VOLTORB
+	db 20 ; NIDOKING
+	db 20 ; SLOWBRO
+	db 20 ; IVYSAUR
+	db 20 ; EXEGGUTOR
+	db 20 ; LICKITUNG
+	db 20 ; EXEGGCUTE
+	db 20 ; GRIMER
+	db 20 ; GENGAR
+	db 20 ; NIDORAN_F
+	db 20 ; NIDOQUEEN
+	db 20 ; CUBONE
+	db 20 ; RHYHORN
+	db 40 ; LAPRAS
+	db 20 ; ARCANINE
+	db 120 ; MEW
+	db 5 ; GYARADOS
+	db 20 ; SHELLDER
+	db 20 ; TENTACOOL
+	db 20 ; GASTLY
+	db 25 ; SCYTHER
+	db 20 ; STARYU
+	db 20 ; BLASTOISE
+	db 25 ; PINSIR
+	db 20 ; TANGELA
+	db 25 ; SKARMORY
+	db 20 ; MAREEP
+	db 20 ; GROWLITHE
+	db 25 ; ONIX
+	db 15 ; FEAROW
+	db 15 ; PIDGEY
+	db 20 ; SLOWPOKE
+	db 20 ; KADABRA
+	db 15 ; GRAVELER
+	db 40 ; CHANSEY
+	db 20 ; MACHOKE
+	db 25 ; MR_MIME
+	db 25 ; HITMONLEE
+	db 25 ; HITMONCHAN
+	db 20 ; ARBOK
+	db 20 ; PARASECT
+	db 20 ; PSYDUCK
+	db 20 ; DROWZEE
+	db 15 ; GOLEM
+	db 20 ; FLAAFFY
+	db 25 ; MAGMAR
+	db 20 ; AMPHAROS
+	db 25 ; ELECTABUZZ
+	db 20 ; MAGNETON
+	db 20 ; KOFFING
+	db 20 ; DRILBUR
+	db 20 ; MANKEY
+	db 20 ; SEEL
+	db 20 ; DIGLETT
+	db 20 ; TAUROS
+	db 20 ; EXCADRILL
+	db 25 ; STEELIX
+	db 20 ; HOUNDOUR
+	db 20 ; FARFETCH_D
+	db 20 ; VENONAT
+	db 40 ; DRAGONITE
+	db 20 ; HOUNDOOM
+	db 20 ; GLIGAR
+	db 20 ; GLISCOR
+	db 20 ; DODUO
+	db 20 ; POLIWAG
+	db 25 ; JYNX
+	db 80 ; MOLTRES
+	db 80 ; ARTICUNO
+	db 80 ; ZAPDOS
+	db 20 ; DITTO
+	db 20 ; MEOWTH
+	db 20 ; KRABBY
+	db 20 ; MURKROW
+	db 20 ; HONCHKROW
+	db 25 ; SCIZOR
+	db 20 ; VULPIX
+	db 20 ; NINETALES
+	db 20 ; PIKACHU
+	db 20 ; RAICHU
+	db 35 ; ESPEON
+	db 35 ; UMBREON
+	db 40 ; DRATINI
+	db 40 ; DRAGONAIR
+	db 30 ; KABUTO
+	db 30 ; KABUTOPS
+	db 20 ; HORSEA
+	db 20 ; SEADRA
+	db 35 ; LEAFEON
+	db 35 ; GLACEON
+	db 20 ; SANDSHREW
+	db 20 ; SANDSLASH
+	db 30 ; OMANYTE
+	db 30 ; OMASTAR
+	db 20 ; JIGGLYPUFF
+	db 20 ; WIGGLYTUFF
+	db 35 ; EEVEE
+	db 35 ; FLAREON
+	db 35 ; JOLTEON
+	db 35 ; VAPOREON
+	db 20 ; MACHOP
+	db 15 ; ZUBAT
+	db 20 ; EKANS
+	db 20 ; PARAS
+	db 20 ; POLIWHIRL
+	db 20 ; POLIWRATH
+	db 10 ; WEEDLE
+	db 10 ; KAKUNA
+	db 10 ; BEEDRILL
+	db 35 ; SYLVEON
+	db 20 ; DODRIO
+	db 20 ; PRIMEAPE
+	db 20 ; DUGTRIO
+	db 20 ; VENOMOTH
+	db 20 ; DEWGONG
+	db 20 ; BONSLY
+	db 20 ; SUDOWOODO
+	db 10 ; CATERPIE
+	db 10 ; METAPOD
+	db 10 ; BUTTERFREE
+	db 20 ; MACHAMP
+	db 25 ; TYROGUE
+	db 20 ; GOLDUCK
+	db 20 ; HYPNO
+	db 15 ; GOLBAT
+	db 120 ; MEWTWO
+	db 40 ; SNORLAX
+	db 5 ; MAGIKARP
+	db 25 ; HITMONTOP
+	db 20 ; SNEASEL
+	db 20 ; MUK
+	db 20 ; WEAVILE
+	db 20 ; KINGLER
+	db 20 ; CLOYSTER
+	db 20 ; SLOWKING
+	db 20 ; ELECTRODE
+	db 20 ; CLEFABLE
+	db 20 ; WEEZING
+	db 20 ; PERSIAN
+	db 20 ; MAROWAK
+	db 20 ; POLITOED
+	db 20 ; HAUNTER
+	db 20 ; ABRA
+	db 20 ; ALAKAZAM
+	db 15 ; PIDGEOTTO
+	db 15 ; PIDGEOT
+	db 20 ; STARMIE
+	db 20 ; BULBASAUR
+	db 20 ; VENUSAUR
+	db 20 ; TENTACRUEL
+	db 15 ; CROBAT
+	db 20 ; GOLDEEN
+	db 20 ; SEAKING
+	db 15 ; HOOTHOOT
+	db 15 ; NOCTOWL
+	db 20 ; PICHU
+	db 25 ; ELEKID
+	db 20 ; PONYTA
+	db 20 ; RAPIDASH
+	db 15 ; RATTATA
+	db 15 ; RATICATE
+	db 20 ; NIDORINO
+	db 20 ; NIDORINA
+	db 15 ; GEODUDE
+	db 20 ; PORYGON
+	db 30 ; AERODACTYL
+	db 25 ; MAGBY
+	db 20 ; MAGNEMITE
+	db 25 ; SMOOCHUM
+	db 20 ; CLEFFA
+	db 20 ; CHARMANDER
+	db 20 ; SQUIRTLE
+	db 20 ; CHARMELEON
+	db 20 ; WARTORTLE
+	db 20 ; CHARIZARD
+	db 20 ; IGGLYBUFF
+	db 20 ; FOSSIL_KABUTOPS
+	db 20 ; FOSSIL_AERODACTYL
+	db 20 ; MON_GHOST
+	db 20 ; ODDISH
+	db 20 ; GLOOM
+	db 20 ; VILEPLUME
+	db 20 ; BELLSPROUT
+	db 20 ; WEEPINBELL
+	db 20 ; VICTREEBEL
+	db 40 ; MUNCHLAX
+	db 10 ; TOGEPI
+	db 10 ; TOGETIC
+	db 10 ; TOGEKISS
+	db 25 ; MIME_JR
+	db 200 ; EGG

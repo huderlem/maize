@@ -4681,3 +4681,9 @@ _PyriteSewersCaptainText::
 
 	para "See you soon."
 	prompt
+
+_NoRoomForEggText::
+	text "You don't have any"
+	line "room in your"
+	cont "party!"
+	prompt
