@@ -10925,6 +10925,7 @@ Func_42dd: ; 42dd (1:42dd)
 	call Func_4533
 	ld b, $6
 	call GoPAL_SET
+	call GBFadeIn2
 	call GBPalNormal
 	ld a, $e4
 	ld [rOBP0], a ; $FF00+$48
@@ -68772,151 +68773,12 @@ PlayIntro: ; 41682 (10:5682)
 	inc a
 	ld [H_AUTOBGTRANSFERENABLED], a
 	call Func_4188a
-	call PlayIntroScene
-	call GBFadeOut2
 	xor a
 	ld [$FF00+$ae], a
 	ld [H_AUTOBGTRANSFERENABLED], a
 	call CleanLCD_OAM
 	call DelayFrame
 	ret
-
-PlayIntroScene: ; 4169d (10:569d)
-	ld b, $7
-	call GoPAL_SET
-	ld a, %11100100
-	ld [rBGP], a
-	ld [rOBP0], a
-	ld [rOBP1], a
-	xor a
-	ld [$FF00+$ae], a
-	ld b, $3
-	call Func_4183f
-	ld a, 0
-	ld [W_BASECOORDX], a
-	ld a, 80
-	ld [W_BASECOORDY], a
-	ld bc, $606
-	call Func_417c7
-	ld de, $28ff
-	call Func_4180e
-	ret c
-
-; hip
-	ld a, $b9
-	call PlaySound
-	xor a
-	ld [$d09f], a
-	ld de, IntroNidorinoAnimation1
-	call AnimateIntroNidorino
-; hop
-	ld a, $ba
-	call PlaySound
-	ld de, IntroNidorinoAnimation2
-	call AnimateIntroNidorino
-	ld c, $a
-	call CheckForUserInterruption
-	ret c
-
-; hip
-	ld a, $b9
-	call PlaySound
-	ld de, IntroNidorinoAnimation1
-	call AnimateIntroNidorino
-; hop
-	ld a, $ba
-	call PlaySound
-	ld de, IntroNidorinoAnimation2
-	call AnimateIntroNidorino
-	ld c, $1e
-	call CheckForUserInterruption
-	ret c
-
-; raise
-	ld b, $4
-	call Func_4183f
-	ld a, $bb
-	call PlaySound
-	ld de, $401
-	call Func_4180e
-	ld c, $1e
-	call CheckForUserInterruption
-	ret c
-
-; slash
-	ld b, $5
-	call Func_4183f
-	ld a, $bc
-	call PlaySound
-	ld de, $800
-	call Func_4180e
-; hip
-	ld a, $b9
-	call PlaySound
-	ld a, $24
-	ld [$d09f], a
-	ld de, IntroNidorinoAnimation3
-	call AnimateIntroNidorino
-	ld c, $1e
-	call CheckForUserInterruption
-	ret c
-
-	ld de, $401
-	call Func_4180e
-	ld b, $3
-	call Func_4183f
-	ld c, $3c
-	call CheckForUserInterruption
-	ret c
-
-; hip
-	ld a, $b9
-	call PlaySound
-	xor a
-	ld [$d09f], a
-	ld de, IntroNidorinoAnimation4 ; $5931
-	call AnimateIntroNidorino
-; hop
-	ld a, $ba
-	call PlaySound
-	ld de, IntroNidorinoAnimation5 ; $593c
-	call AnimateIntroNidorino
-	ld c, $14
-	call CheckForUserInterruption
-	ret c
-
-	ld a, $24
-	ld [$d09f], a
-	ld de, IntroNidorinoAnimation6 ; $5947
-	call AnimateIntroNidorino
-	ld c, $1e
-	call CheckForUserInterruption
-	ret c
-
-; lunge
-	ld a, $b8
-	call PlaySound
-	ld a, $48
-	ld [$d09f], a
-	ld de, IntroNidorinoAnimation7 ; $5950
-	jp AnimateIntroNidorino
-
-AnimateIntroNidorino: ; 41793 (10:5793)
-	ld a, [de]
-	cp $50
-	ret z
-	ld [W_BASECOORDY], a ; $d082
-	inc de
-	ld a, [de]
-	ld [W_BASECOORDX], a ; $d081
-	push de
-	ld c, $24
-	call Func_417ae
-	ld c, 5
-	call DelayFrames
-	pop de
-	inc de
-	jr AnimateIntroNidorino
 
 Func_417ae: ; 417ae (10:57ae)
 	ld hl, wOAMBuffer
@@ -68937,35 +68799,6 @@ Func_417ae: ; 417ae (10:57ae)
 	jr nz, .asm_417b5
 	ret
 
-Func_417c7: ; 417c7 (10:57c7)
-	ld hl, wOAMBuffer
-	ld d, $0
-.asm_417cc
-	push bc
-	ld a, [W_BASECOORDY] ; $d082
-	ld e, a
-.asm_417d1
-	ld a, e
-	add $8
-	ld e, a
-	ld [hli], a
-	ld a, [W_BASECOORDX] ; $d081
-	ld [hli], a
-	ld a, d
-	ld [hli], a
-	ld a, $80
-	ld [hli], a
-	inc d
-	dec c
-	jr nz, .asm_417d1
-	ld a, [W_BASECOORDX] ; $d081
-	add $8
-	ld [W_BASECOORDX], a ; $d081
-	pop bc
-	dec b
-	jr nz, .asm_417cc
-	ret
-
 Func_417f0: ; 417f0 (10:57f0)
 	ld hl, $9c00
 	ld bc, $240
@@ -68976,7 +68809,7 @@ Func_417f8: ; 417f8 (10:57f8)
 	ld hl, Coord
 	ld bc, $c8
 asm_417fe: ; 417fe (10:57fe)
-	ld [hl], $0
+	ld [hl], $c1
 	inc hl
 	dec bc
 	ld a, b
@@ -68985,7 +68818,7 @@ asm_417fe: ; 417fe (10:57fe)
 	ret
 
 Func_41807: ; 41807 (10:5807)
-	ld a, $1
+	ld a, $c0
 .asm_41809
 	ld [hli], a
 	dec c
@@ -69041,26 +68874,11 @@ Func_41849: ; 41849 (10:5849)
 	ld a, b
 	jp PlaySound ; indirect jump to Func_79869
 
-Func_41852: ; 41852 (10:5852)
-	ld hl, FightIntroBackMon ; $5a99
-	ld de, $9000
-	ld bc, $600
-	ld a, BANK(FightIntroBackMon)
-	call FarCopyData2
-	ld hl, GameFreakIntro ; $5959
-	ld de, $9600
-	ld bc, $140
-	ld a, BANK(GameFreakIntro)
-	call FarCopyData2
-	ld hl, GameFreakIntro ; $5959
+LoadShantyTownIntroGfx: ; 41852 (10:5852)
+	ld hl, ShantyTownIntro
 	ld de, $8800
-	ld bc, $140
-	ld a, BANK(GameFreakIntro)
-	call FarCopyData2
-	ld hl, FightIntroFrontMon ; $6099
-	ld de, $8000
-	ld bc, $6c0
-	ld a, BANK(FightIntroFrontMon)
+	ld bc, $450
+	ld a, BANK(ShantyTownIntro)
 	jp FarCopyData2
 
 Func_4188a: ; 4188a (10:588a)
@@ -69078,21 +68896,18 @@ Func_4188a: ; 4188a (10:588a)
 	xor a
 	ld [W_CUROPPONENT], a ; $d059
 	call Func_418e9
-	call Func_41852
+	call LoadShantyTownIntroGfx
 	call EnableLCD
 	ld hl, rLCDC ; $ff40
 	res 5, [hl]
 	set 3, [hl]
 	ld c, $40
 	call DelayFrames
-	ld b, BANK(Func_70044)
-	ld hl, Func_70044
-	call Bankswitch ; indirect jump to Func_70044 (70044 (1c:4044))
+	ld b, BANK(PlayShantyTownAnimation)
+	ld hl, PlayShantyTownAnimation
+	call Bankswitch ; indirect jump to PlayShantyTownAnimation (70044 (1c:4044))
 	push af
 	pop af
-	jr c, .asm_418d0
-	ld c, $28
-	call DelayFrames
 .asm_418d0
 	ld a, Bank(Func_7d8ea)
 	ld [$c0ef], a
@@ -69100,6 +68915,7 @@ Func_4188a: ; 4188a (10:588a)
 	ld a, $dc
 	ld [$c0ee], a
 	call PlaySound
+	call GBFadeOut2
 	call Func_417f8
 	call CleanLCD_OAM
 	jp Delay3
@@ -69123,93 +68939,8 @@ Func_418e9: ; 418e9 (10:58e9)
 Func_4190c: ; 4190c (10:590c)
 	ret
 
-IntroNidorinoAnimation0: ; 4190d (10:590d)
-	db 0, 0
-	db $50
-
-IntroNidorinoAnimation1: ; 41910 (10:5910)
-; This is a sequence of pixel movements for part of the Nidorino animation. This 
-; list describes how Nidorino should hop.
-; First byte is y movement, second byte is x movement
-	db  0, 0
-	db -2, 2
-	db -1, 2
-	db  1, 2
-	db  2, 2
-	db $50 ; list terminator 
-
-IntroNidorinoAnimation2: ; 4191b (10:591b)
-; This is a sequence of pixel movements for part of the Nidorino animation.
-; First byte is y movement, second byte is x movement
-	db  0,  0
-	db -2, -2
-	db -1, -2
-	db  1, -2
-	db  2, -2
-	db $50 ; list terminator
-
-IntroNidorinoAnimation3: ; 41926 (10:5926)
-; This is a sequence of pixel movements for part of the Nidorino animation.
-; First byte is y movement, second byte is x movement
-	db   0, 0
-	db -12, 6
-	db  -8, 6
-	db   8, 6
-	db  12, 6
-	db $50 ; list terminator 
-
-IntroNidorinoAnimation4: ; 41931 (10:5931)
-; This is a sequence of pixel movements for part of the Nidorino animation.
-; First byte is y movement, second byte is x movement
-	db  0,  0
-	db -8, -4
-	db -4, -4
-	db  4, -4
-	db  8, -4
-	db $50 ; list terminator
-
-IntroNidorinoAnimation5: ; 4193c (10:593c)
-; This is a sequence of pixel movements for part of the Nidorino animation.
-; First byte is y movement, second byte is x movement
-	db  0, 0
-	db -8, 4
-	db -4, 4
-	db  4, 4
-	db  8, 4
-	db $50 ; list terminator
-
-IntroNidorinoAnimation6: ; 41947 (10:5947)
-; This is a sequence of pixel movements for part of the Nidorino animation.
-; First byte is y movement, second byte is x movement
-	db 0, 0
-	db 2, 0
-	db 2, 0
-	db 0, 0
-	db $50 ; list terminator
-
-IntroNidorinoAnimation7: ; 41950 (10:5950)
-; This is a sequence of pixel movements for part of the Nidorino animation.
-; First byte is y movement, second byte is x movement
-	db -8, -16
-	db -7, -14
-	db -6, -12
-	db -4, -10
-	db $50 ; list terminator 
-
-GameFreakIntro: ; 41959 (10:5959)
-	INCBIN "gfx/gamefreak_intro.2bpp"
-
-FightIntroBackMon: ; 41a99 (10:5a99)
-	INCBIN "gfx/intro_fight.2bpp"
-
-FightIntroFrontMon: ; 42099 (10:6099)
-
-IF _RED
-	INCBIN "gfx/red/introfight.2bpp"
-ENDC
-IF _BLUE
-	INCBIN "gfx/blue/introfight.2bpp"
-ENDC
+ShantyTownIntro:
+	INCBIN "gfx/shantytown-intro.2bpp"
 
 ; XXX what do these do
 Func_42769: ; 42769 (10:6769)
@@ -100542,226 +100273,274 @@ Tset0B_Block: ; 6fef0 (1b:7ef0)
 
 SECTION "bank1C",ROMX,BANK[$1C]
 
-Func_70000: ; 70000 (1c:4000)
-	ld a, $f9
+InitShantyTownIntroAnimation: ; 70000 (1c:4000)
+	ld b, 6
+	call GoPAL_SET
+	ld a, %11100100
 	ld [rOBP0], a ; $FF00+$48
-	ld a, $a4
 	ld [rOBP1], a ; $FF00+$49
-	ld de, AnimationTileset2 + $30 ; $471e ; star tile (top left quadrant)
-	ld hl, $8a00
-	ld bc, (BANK(AnimationTileset2) << 8) + $01
-	call CopyVideoData
-	ld de, AnimationTileset2 + $130 ; $481e ; star tile (bottom left quadrant)
-	ld hl, $8a10
-	ld bc, (BANK(AnimationTileset2) << 8) + $01
-	call CopyVideoData
-	ld de, FallingStar ; $4190
-	ld hl, $8a20
-	ld bc, (BANK(FallingStar) << 8) + $01
-	call CopyVideoData
-	ld hl, GameFreakLogoOAMData ; $4140
-	ld de, wOAMBuffer + $60
-	ld bc, $40
-	call CopyData
-	ld hl, GameFreakShootingStarOAMData ; $4180
-	ld de, wOAMBuffer
-	ld bc, $10
-	jp CopyData
+	ld hl, wOAMBuffer ; y position
+	ld bc, 4
+	ld a, $50
+	ld [hl], a
+	add hl, bc
+	ld [hl], a
+	add hl, bc
+	add 8
+	ld [hl], a
+	add hl, bc
+	ld [hl], a
+	ret
 
-Func_70044: ; 70044 (1c:4044)
-	call Func_70000
-	ld a, $c2
-	call PlaySound
-	ld hl, wOAMBuffer
-	ld bc, $a004
-.asm_70052
-	push hl
-	push bc
-.asm_70054
-	ld a, [hl]
-	add $4
-	ld [hli], a
-	ld a, [hl]
-	add $fc
-	ld [hli], a
-	inc hl
-	inc hl
-	dec c
-	jr nz, .asm_70054
-	ld c, $1
-	call CheckForUserInterruption
-	pop bc
-	pop hl
-	ret c
-	ld a, [hl]
-	cp $50
-	jr nz, .asm_70070
-	jr .asm_70052
-.asm_70070
-	cp b
-	jr nz, .asm_70052
-	ld hl, wOAMBuffer
-	ld c, $4
-	ld de, $4
-.asm_7007b
-	ld [hl], $a0
-	add hl, de
-	dec c
-	jr nz, .asm_7007b
-	ld b, $3
-.asm_70083
-	ld hl, rOBP0 ; $ff48
-	rrc [hl]
-	rrc [hl]
-	ld c, $a
-	call CheckForUserInterruption
-	ret c
-	dec b
-	jr nz, .asm_70083
-	ld de, wOAMBuffer
-	ld a, $18
-.asm_70098
-	push af
-	ld hl, OAMData_700ee ; $40ee
-	ld bc, $4
-	call CopyData
-	pop af
-	dec a
-	jr nz, .asm_70098
+PlayShantyTownAnimation: ; 70044 (1c:4044)
+	call InitShantyTownIntroAnimation
+	; Roll pokeball to the right
 	xor a
-	ld [wWhichTrade], a ; $cd3d
-	ld hl, PointerTable_700f2 ; $40f2
-	ld c, $6
-.asm_700af
-	ld a, [hli]
-	ld e, a
-	ld a, [hli]
-	ld d, a
-	push bc
-	push hl
-	ld hl, wOAMBuffer + $50
-	ld c, $4
-.asm_700ba
-	ld a, [de]
+	ld [wWhichPokemon], a ; ball animation frame id
+	ld [W_NUM_RENTED_MONS], a ; frame counter
+	ld a, 8
+	ld [W_FIRST_NEW_BYTE], a ; ball x pixel position
+.rollRightLoop
+	call LoadSpinningBallOAMTiles
+	call MoveSpinningBall
+	call RevealLetter
+	call DelayFrame
+	ld a, [W_NUM_RENTED_MONS]
+	inc a
+	ld [W_NUM_RENTED_MONS], a
+	bit 0, a
+	jr z, .moveBall
+	; advance frame
+	ld a, [wWhichPokemon]
+	inc a
+	cp 8
+	jr c, .noOverflow
+	xor a
+.noOverflow
+	ld [wWhichPokemon], a
+.moveBall
+	ld a, $be
+	call PlaySound
+	ld a, [W_FIRST_NEW_BYTE]
+	add 2
+	ld [W_FIRST_NEW_BYTE], a
+	cp 180
+	jr c, .rollRightLoop
+.doneRollingRight
+	ld c, $20
+	call DelayFrames
+	; roll pokeball to the left
+	ld hl, wOAMBuffer ; y position
+	ld bc, 4
+	ld a, $60
+	ld [hl], a
+	add hl, bc
+	ld [hl], a
+	add hl, bc
+	add 8
+	ld [hl], a
+	add hl, bc
+	ld [hl], a
+	xor a
+	ld [wWhichPokemon], a ; ball animation frame id
+	ld [W_NUM_RENTED_MONS], a ; frame counter
+	ld a, 180
+	ld [W_FIRST_NEW_BYTE], a ; ball x pixel position
+	ld a, $bd
+	call PlaySound
+.rollLeftLoop
+	call LoadSpinningBallOAMTiles
+	call MoveSpinningBall
+	call RevealPresentsLetter
+	call DelayFrame
+	ld a, [W_NUM_RENTED_MONS]
+	inc a
+	ld [W_NUM_RENTED_MONS], a
+	; advance frame
+	ld a, [wWhichPokemon]
+	dec a
 	cp $ff
-	jr z, .asm_700d5
-	ld [hli], a
-	inc de
-	ld a, [de]
-	ld [hli], a
-	inc de
-	inc hl
-	inc hl
-	dec c
-	jr nz, .asm_700ba
-	ld a, [wWhichTrade] ; $cd3d
-	cp $18
-	jr z, .asm_700d5
-	add $6
-	ld [wWhichTrade], a ; $cd3d
-.asm_700d5
-	call Func_7011f
-	push af
-	ld hl, $c310
-	ld de, wOAMBuffer
-	ld bc, $50
-	call CopyData
-	pop af
-	pop hl
-	pop bc
-	ret c
-	dec c
-	jr nz, .asm_700af
-	and a
+	jr nz, .noOverflow2
+	ld a, 7
+.noOverflow2
+	ld [wWhichPokemon], a
+	ld a, [W_FIRST_NEW_BYTE]
+	sub 4
+	ld [W_FIRST_NEW_BYTE], a
+	cp $f0
+	jr c, .rollLeftLoop
+	; done
+	ld c, $30
+	call DelayFrames
 	ret
 
-OAMData_700ee: ; 700ee (1c:40ee)
-	db $00,$00,$A2,$90
+LoadSpinningBallOAMTiles:
+	ld a, [wWhichPokemon]
+	add a ; multiply by 2
+	ld b, a
+	ld a, $80
+	add b
+	ld bc, 4
+	ld hl, wOAMBuffer + 2 ; tile id
+	ld [hl], a
+	add hl, bc
+	inc a
+	ld [hl], a
+	add hl, bc
+	add $f
+	ld [hl], a
+	add hl, bc
+	inc a
+	ld [hl], a
+	ret
 
-PointerTable_700f2: ; 700f2 (1c:40f2)
-	dw OAMData_700fe
-	dw OAMData_70106
-	dw OAMData_7010e
-	dw OAMData_70116
-	dw OAMData_7011e
-	dw OAMData_7011e
+MoveSpinningBall:
+	ld a, [W_FIRST_NEW_BYTE]
+	ld hl, wOAMBuffer + 1 ; x position
+	sub 8
+	ld bc, 4
+	ld [hl], a
+	add hl, bc
+	add 8
+	ld [hl], a
+	add hl, bc
+	sub 8
+	ld [hl], a
+	add hl, bc
+	add 8
+	ld [hl], a
+	ret
 
-; each entry is only half of an OAM tile
-OAMData_700fe: ; 700fe (1c:40fe)
-	db $68,$30
-	db $68,$40
-	db $68,$58
-	db $68,$78
-
-OAMData_70106: ; 70106 (1c:4106)
-	db $68,$38
-	db $68,$48
-	db $68,$60
-	db $68,$70
-
-OAMData_7010e: ; 7010e (1c:410e)
-	db $68,$34
-	db $68,$4C
-	db $68,$54
-	db $68,$64
-
-OAMData_70116: ; 70116 (1c:4116)
-	db $68,$3C
-	db $68,$5C
-	db $68,$6C
-	db $68,$74
-
-OAMData_7011e: ; 7011e (1c:411e)
-	db $FF
-
-Func_7011f: ; 7011f (1c:411f)
-	ld b, $8
-.asm_70121
-	ld hl, $c35c
-	ld a, [wWhichTrade] ; $cd3d
-	ld de, $fffc
+RevealLetter:
+	ld a, [W_FIRST_NEW_BYTE] ; x position
+	cp $20
+	ret c
+	sub $20
+	cp $68
+	ret nc
+	srl a
+	srl a
+	srl a
 	ld c, a
-.asm_7012b
-	inc [hl]
-	add hl, de
-	dec c
-	jr nz, .asm_7012b
-	ld a, [rOBP1] ; $FF00+$49
-	xor $a0
-	ld [rOBP1], a ; $FF00+$49
-	ld c, $3
-	call CheckForUserInterruption
+	jp DrawLetterInShantyTown
+
+DrawLetterInShantyTown:
+; c = letter id
+	ld a, c
+	add a
+	add c ; multiply by three
+	ld c, a
+	ld b, 0
+	ld hl, ShantyTownLetters
+	add hl, bc ; hl points to entry in ShantyTownLetters
+.waitForHBlank
+    ld a, [$ff41]
+    and $3
+    jr nz, .waitForHBlank
+    ld a, [hli]
+    ld e, a
+    ld a, [hli]
+    ld d, a
+    ld a, [hl]
+    ld [de], a
+    ld hl, $0014
+    add hl, de
+    add $10
+    ld [hl], a
+    ret
+
+ShantyTownLetters:
+	dw $c443
+	db $a0
+
+	dw $c444
+	db $a1
+
+	dw $c445
+	db $a2
+
+	dw $c446
+	db $a3
+
+	dw $c447
+	db $a4
+
+	dw $c448
+	db $a5
+
+	dw $c449
+	db $a6
+
+	dw $c44a
+	db $a7
+
+	dw $c44b
+	db $a8
+
+	dw $c44c
+	db $a9
+
+	dw $c44d
+	db $aa
+
+	dw $c44e
+	db $ab
+
+	dw $c44f
+	db $ac
+
+RevealPresentsLetter:
+	ld a, [W_FIRST_NEW_BYTE] ; x position
+	cp $56
 	ret c
-	dec b
-	jr nz, .asm_70121
-	ret
+	sub $56
+	cp $30
+	ret nc
+	srl a
+	srl a
+	srl a
+	ld c, a
+	jp DrawLetterInPresents
 
-GameFreakLogoOAMData: ; 70140 (1c:4140)
-	db $48,$50,$8D,$00
-	db $48,$58,$8E,$00
-	db $50,$50,$8F,$00
-	db $50,$58,$90,$00
-	db $58,$50,$91,$00
-	db $58,$58,$92,$00
-	db $60,$30,$80,$00
-	db $60,$38,$81,$00
-	db $60,$40,$82,$00
-	db $60,$48,$83,$00
-	db $60,$50,$93,$00
-	db $60,$58,$84,$00
-	db $60,$60,$85,$00
-	db $60,$68,$83,$00
-	db $60,$70,$81,$00
-	db $60,$78,$86,$00
+DrawLetterInPresents:
+	; c = letter id
+	ld a, c
+	add a
+	add c ; multiply by three
+	ld c, a
+	ld b, 0
+	ld hl, PresentsLetters
+	add hl, bc ; hl points to entry in PresentsLetters
+.waitForHBlank
+    ld a, [$ff41]
+    and $3
+    jr nz, .waitForHBlank
+    ld a, [hli]
+    ld e, a
+    ld a, [hli]
+    ld d, a
+    ld a, [hl]
+    ld [de], a
+    ret
 
-GameFreakShootingStarOAMData: ; 70180 (1c:4180)
-	db $00,$A0,$A0,$10
-	db $00,$A8,$A0,$30
-	db $08,$A0,$A1,$10
-	db $08,$A8,$A1,$30
+PresentsLetters:
+	dw $c472
+	db $ad
 
-FallingStar: ; 70190 (1c:4190)
-	INCBIN "gfx/falling_star.2bpp"
+	dw $c473
+	db $ae
+
+	dw $c474
+	db $af
+
+	dw $c475
+	db $bd
+
+	dw $c476
+	db $be
+
+	dw $c477
+	db $bf
 
 Func_701a0: ; 701a0 (1c:41a0)
 	call Func_70423
