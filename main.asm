@@ -11122,76 +11122,20 @@ Func_4538: ; 4538 (1:4538)
 
 Func_4541: ; 4541 (1:4541)
 	ld de, NintendoCopyrightLogoGraphics ; $60c8
-	ld hl, $9600
-	ld bc, (BANK(NintendoCopyrightLogoGraphics) << 8) + $1c
+	ld hl, $8800
+	ld bc, (BANK(NintendoCopyrightLogoGraphics) << 8) + $29
 	call CopyVideoData
-	FuncCoord 2, 7 ; $c42e
+	FuncCoord 2, 5 ; $c42e
 	ld hl, Coord
 	ld de, CopyrightTextString ; $4556
 	jp PlaceString
 
 CopyrightTextString: ; 4556 (1:4556)
-	db   $60,$61,$62,$61,$63,$61,$64,$7F,$65,$66,$67,$68,$69,$6A             ; ©'95.'96.'98 Nintendo
-	next $60,$61,$62,$61,$63,$61,$64,$7F,$6B,$6C,$6D,$6E,$6F,$70,$71,$72     ; ©'95.'96.'98 Creatures inc.
-	next $60,$61,$62,$61,$63,$61,$64,$7F,$73,$74,$75,$76,$77,$78,$79,$7A,$7B ; ©'95.'96.'98 GAME FREAK inc.
+	db   $80,$81,$82,$81,$83,$81,$84,$7F,$85,$86,$87,$88,$89,$8A             ; ©'95.'96.'98 Nintendo
+	next $80,$81,$82,$81,$83,$81,$84,$7F,$8B,$8C,$8D,$8E,$8F,$90,$91,$92     ; ©'95.'96.'98 Creatures inc.
+	next $80,$81,$82,$81,$83,$81,$84,$7F,$a0,$a1,$a2,$a3,$a4,$a5,$a6,$a7,$a8 ; ©'95.'96.'98 GAME FREAK inc.
+	next $80,$93,$94,$95,$7f,$7f,$7f,$7f,$96,$97,$98,$99,$9a,$9b,$9c ; ©2015 ShantyTown
 	db   "@"
-
-TitleMons: ; 4588 (1:4588)
-; mons on the title screen are randomly chosen from here
-IF _RED
-	db HOUNDOOM
-	db STARYU
-	db EXEGGCUTE
-	db STEELIX
-	db CUBONE
-	db DRILBUR
-	db MAREEP
-	db SKARMORY
-	db GLIGAR
-	db HAUNTER
-	db GOLEM
-	db SEADRA
-	db PONYTA
-	db SANDSHREW
-	db EEVEE
-	db POLIWHIRL
-ENDC
-IF _GREEN
-	db BULBASAUR
-	db CHARMANDER
-	db SQUIRTLE
-	db CATERPIE
-	db NIDORAN_F
-	db PINSIR
-	db PIKACHU
-	db CLEFAIRY
-	db RHYDON
-	db ABRA
-	db GASTLY
-	db DITTO
-	db PIDGEOTTO
-	db ONIX
-	db PONYTA
-	db MAGIKARP
-ENDC
-IF _BLUE
-	db SQUIRTLE
-	db CHARMANDER
-	db BULBASAUR
-	db MANKEY
-	db HITMONLEE
-	db VULPIX
-	db CHANSEY
-	db AERODACTYL
-	db JOLTEON
-	db SNORLAX
-	db GLOOM
-	db POLIWAG
-	db DODUO
-	db PORYGON
-	db GENGAR
-	db RAICHU
-ENDC
 
 ; prints version text (red, blue)
 PrintGameVersionOnTitleScreen: ; 4598 (1:4598)
