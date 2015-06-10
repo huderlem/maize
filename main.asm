@@ -41821,6 +41821,10 @@ TPPMonsterNamePointers:
 	dbw OMASTAR, TPPOmastarName
 	dbw VENOMOTH, TPPVenomothName
 	dbw ZAPDOS, TPPZapdosName
+	dbw OMANYTE, TPPOmanyteName
+	dbw CHARMELEON, TPPCharmeleonName
+	dbw RATICATE, TPPRaticateName
+	dbw FARFETCH_D, TPPFarfetchdName
 	db $ff ;  terminator
 
 TPPPidgeotName:
@@ -41837,7 +41841,14 @@ TPPVenomothName:
 	db "ATV@@@@@@@@"
 TPPZapdosName:
 	db "AA-J@@@@@@@"
-
+TPPOmanyteName:
+	db "HELIX@@@@@@"
+TPPCharmeleonName:
+	db "ABBY@@@@@@@"
+TPPRaticateName:
+	db "DIGRAT@@@@@"
+TPPFarfetchdName:
+	db "DUX@@@@@@@@"
 
 SECTION "bank9",ROMX,BANK[$9]
 
@@ -123731,7 +123742,7 @@ PsychicData: ; 3a115 (e:6115)
 	db 33,SLOWPOKE,SLOWPOKE,SLOWBRO,0
 	db 38,SLOWBRO,0
 RockerData: ; 3a127 (e:6127)
-	db 40,VENOMOTH,PIDGEOT,OMASTAR,$0
+	db 2,RATICATE,FARFETCH_D,CHARMELEON,LAPRAS,FLAREON,$0
 	db 29,VOLTORB,ELECTRODE,0
 JugglerData: ; 3a130 (e:6130)
 	db 29,KADABRA,MR_MIME,0
@@ -127202,6 +127213,10 @@ TPPAltPics:
 	dbw OMASTAR, TPPOmastarPic
 	dbw VENOMOTH, TPPVenomothPic
 	dbw ZAPDOS, TPPZapdosPic
+	dbw OMANYTE, TPPOmanytePic
+	dbw CHARMELEON, TPPCharmeleonPic
+	dbw RATICATE, TPPRaticatePic
+	dbw FARFETCH_D, TPPFarfetchdPic
 	db $ff ;  terminator
 
 NormalUncompressFront:
@@ -127318,7 +127333,14 @@ TPPVenomothPic:
 	INCBIN "pic/bmon/tpp-venomoth.pic"
 TPPZapdosPic:
 	INCBIN "pic/bmon/tpp-zapdos.pic"
-
+TPPCharmeleonPic:
+	INCBIN "pic/bmon/tpp-charmeleon.pic"
+TPPRaticatePic:
+	INCBIN "pic/bmon/tpp-raticate.pic"
+TPPFarfetchdPic:
+	INCBIN "pic/bmon/tpp-farfetchd.pic"
+TPPOmanytePic:
+	INCBIN "pic/bmon/tpp-omanyte.pic"
 
 
 SECTION "Misc", ROMX, BANK[$3c]
