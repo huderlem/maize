@@ -3,19 +3,26 @@ _TwitchIsleInsideText8:: ; 81aaa (20:5aaa)
 	line "Goggoh!@@"
 
 _TwitchIsleInsideBattleText1:: ; 81ac3 (20:5ac3)
-	text "You know what they"
-	line "say about sailors"
-	cont "and fighting!"
+	text "Were you there"
+	line "on Bloody Sunday?"
+
+	para "I represent the"
+	line "the RELEASED!"
 	done
 
 _TwitchIsleInsideEndBattleText1:: ; 81af7 (20:5af7)
-	text "Right!"
-	line "Good fight, mate!"
+	text "Never"
+	line "forget."
 	prompt
 
 _TwitchIsleInsideAfterBattleText1:: ; 81b11 (20:5b11)
-	text "Haha! Want to be"
-	line "a sailor, mate?"
+	text "When all of those"
+	line "#MON were"
+	cont "released, it was"
+	cont "as if a million"
+	cont "voices suddenly"
+	cont "cried out in"
+	cont "terror."
 	done
 
 _TwitchIsleInsideBattleText2:: ; 81b33 (20:5b33)

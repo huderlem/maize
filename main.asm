@@ -7737,27 +7737,9 @@ ListMenuCancelText:: ; 2f97 (0:2f97)
 
 GetMonName:: ; 2f9e (0:2f9e)
 	push hl
-	ld a,[H_LOADEDROMBANK]
-	push af
-	ld a,BANK(MonsterNames) ; 07
-	ld [H_LOADEDROMBANK],a
-	ld [$2000],a
-	ld a,[$d11e]
-	dec a
-	ld hl,MonsterNames ; 421E
-	ld c,10
-	ld b,0
-	call AddNTimes
-	ld de,$cd6d
-	push de
-	ld bc,10
-	call CopyData
-	ld hl,$cd77
-	ld [hl], "@"
-	pop de
-	pop af
-	ld [H_LOADEDROMBANK],a
-	ld [$2000],a
+	ld b, Bank(GetMonName_)
+	ld hl, GetMonName_
+	call Bankswitch
 	pop hl
 	ret
 
@@ -41786,6 +41768,75 @@ OakLabEmailText: ; 1ecbd (7:6cbd)
 	TX_FAR _OakLabEmailText
 	db "@"
 
+GetMonName_:
+	ld a, [W_CURMAP]
+	cp TWITCH_ISLE_INSIDE
+	jr nz, .normal
+	ld a, [W_ISINBATTLE]
+	cp 2
+	jr nz, .normal
+	; get alternate tpp names
+	ld a, [$d11e]
+	ld b, a
+	ld hl, TPPMonsterNamePointers
+.tppNameLookup
+	ld a, [hli]
+	cp b
+	jr z, .foundTPPMon
+	cp $ff
+	jr z, .normal
+	inc hl
+	inc hl
+	jr .tppNameLookup
+.foundTPPMon
+	; hl points to name pointer
+	ld a, [hli]
+	ld e, a
+	ld a, [hl]
+	ld h, a
+	ld l, e
+	jr .copy
+.normal
+	ld a,[$d11e]
+	dec a
+	ld hl,MonsterNames ; 421E
+	ld c,10
+	ld b,0
+	call AddNTimes
+.copy
+	ld de,$cd6d
+	push de
+	ld bc,10
+	call CopyData
+	ld hl,$cd77
+	ld [hl], "@"
+	pop de
+	ret
+
+TPPMonsterNamePointers:
+	dbw PIDGEOT, TPPPidgeotName
+	dbw FLAREON, TPPFlareonName
+	dbw LAPRAS, TPPLaprasName
+	dbw NIDOKING, TPPNidokingName
+	dbw OMASTAR, TPPOmastarName
+	dbw VENOMOTH, TPPVenomothName
+	dbw ZAPDOS, TPPZapdosName
+	db $ff ;  terminator
+
+TPPPidgeotName:
+	db "BIRD JESUS@"
+TPPFlareonName:
+	db "FALSEPROPH@"
+TPPLaprasName:
+	db "AIR JORDAN@"
+TPPNidokingName:
+	db "THE FONZ@@@"
+TPPOmastarName:
+	db "LORD HELIX@"
+TPPVenomothName:
+	db "ATV@@@@@@@@"
+TPPZapdosName:
+	db "AA-J@@@@@@@"
 
 
 SECTION "bank9",ROMX,BANK[$9]
@@ -99429,7 +99480,7 @@ TwitchIsleInsideObject: ; 0x61e75 (size=165)
 	db $1b, $17, $c
 
 	db $b ; people
-	db SPRITE_SAILOR, $23 + 4, $7 + 4, $ff, $ff, $41, SAILOR + $C8, $3 ; trainer
+	db SPRITE_SAILOR, $23 + 4, $7 + 4, $ff, $ff, $41, ROCKER + $C8, $1 ; trainer
 	db SPRITE_SAILOR, $b + 4, $2 + 4, $ff, $d0, $42, SAILOR + $C8, $4 ; trainer
 	db SPRITE_SAILOR, $3 + 4, $c + 4, $ff, $d2, $43, SAILOR + $C8, $5 ; trainer
 	db SPRITE_SAILOR, $2 + 4, $16 + 4, $ff, $d0, $44, SAILOR + $C8, $6 ; trainer
@@ -123680,11 +123731,7 @@ PsychicData: ; 3a115 (e:6115)
 	db 33,SLOWPOKE,SLOWPOKE,SLOWBRO,0
 	db 38,SLOWBRO,0
 RockerData: ; 3a127 (e:6127)
-if _YELLOW
-	db 20,VOLTORB,VOLTORB,VOLTORB,0
-else
-	db 20,VOLTORB,MAGNEMITE,VOLTORB,0
-endc
+	db 40,VENOMOTH,PIDGEOT,OMASTAR,$0
 	db 29,VOLTORB,ELECTRODE,0
 JugglerData: ; 3a130 (e:6130)
 	db 29,KADABRA,MR_MIME,0
