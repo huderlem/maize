@@ -3529,15 +3529,12 @@ UncompressMonSprite:: ; 1627 (0:1627)
 ; de: destination location
 LoadMonFrontSprite:: ; 1665 (0:1665)
 	push de
-	ld a, [W_PRIZE1] ; should mon have alt sprite?
-	and a
-	jr z, .normal
 	ld b, Bank(PreUncompressAltSprite)
 	ld hl, PreUncompressAltSprite
 	call Bankswitch
 	jr .after
 .normal
-	ld hl, W_MONHFRONTSPRITE - W_MONHEADER
+	ld hl, W_MONHFRONTSPRITE - W_MONHEADER ; todo this doesn't get used
 	call UncompressMonSprite
 .after
 	ld hl, W_MONHSPRITEDIM
@@ -79394,7 +79391,7 @@ TwitchIsleObject: ; 0x50361 (size=81)
 
 	db $11 ; warps
 	db $3, $3, $0, TWITCH_ISLE
-	db $7, $2a, $0, TWITCH_ISLE
+	db $7, $2a, $a, TWITCH_ISLE_INSIDE
 	db $11, $17, $0, TWITCH_ISLE
 	db $11, $19, $0, TWITCH_ISLE
 	db $11, $1b, $0, TWITCH_ISLE
@@ -79403,13 +79400,13 @@ TwitchIsleObject: ; 0x50361 (size=81)
 	db $11, $21, $0, TWITCH_ISLE
 	db $11, $23, $0, TWITCH_ISLE
 	db $11, $25, $0, TWITCH_ISLE
-	db $1b, $8, $0, TWITCH_ISLE
+	db $1b, $8, $7, TWITCH_ISLE_INSIDE
 	db $21, $2b, $0, TWITCH_ISLE
-	db $27, $c, $0, TWITCH_ISLE
-	db $2f, $c, $0, TWITCH_ISLE
-	db $2f, $2e, $0, TWITCH_ISLE
-	db $31, $2a, $0, TWITCH_ISLE
-	db $31, $34, $0, TWITCH_ISLE
+	db $27, $c, $0, TWITCH_ISLE_INSIDE
+	db $2f, $c, $8, TWITCH_ISLE_INSIDE
+	db $2f, $1e, $3, TWITCH_ISLE_INSIDE
+	db $31, $2a, $5, TWITCH_ISLE_INSIDE
+	db $31, $34, $1, TWITCH_ISLE_INSIDE
 
 	db $4 ; signs
 	db $11, $5, $7 ; TwitchIsleText8
@@ -79440,7 +79437,7 @@ TwitchIsleObject: ; 0x50361 (size=81)
 	EVENT_DISP TWITCH_ISLE_WIDTH, $21, $2b
 	EVENT_DISP TWITCH_ISLE_WIDTH, $27, $c
 	EVENT_DISP TWITCH_ISLE_WIDTH, $2f, $c
-	EVENT_DISP TWITCH_ISLE_WIDTH, $2f, $2e
+	EVENT_DISP TWITCH_ISLE_WIDTH, $2f, $1e
 	EVENT_DISP TWITCH_ISLE_WIDTH, $31, $2a
 	EVENT_DISP TWITCH_ISLE_WIDTH, $31, $34
 
@@ -96383,7 +96380,6 @@ UndergroundPathWEBlocks: ; 601f4 (18:41f4)
 
 	INCBIN "maps/unusedblocks60258.blk"
 
-TwitchIsleInsideBlocks: ; 603c0 (18:43c0)
 SSAnne9Blocks: ; 603c0 (18:43c0)
 	INCBIN "maps/ssanne9.blk"
 
@@ -99200,8 +99196,11 @@ SSAnne9Object: ; 0x61c8d (size=188)
 	EVENT_DISP $c, $f, $16 ; SS_ANNE_2
 	EVENT_DISP $c, $f, $17 ; SS_ANNE_2
 
+TwitchIsleInsideBlocks: ; 603c0 (18:43c0)
+	INCBIN "maps/ssanne10.blk"
+
 TwitchIsleInside_h: ; 0x61d49 to 0x61d55 (12 bytes) (id=104)
-	db $0d ; tileset
+	db $02 ; tileset
 	db TWITCH_ISLE_INSIDE_HEIGHT, TWITCH_ISLE_INSIDE_WIDTH ; dimensions (y, x)
 	dw TwitchIsleInsideBlocks, TwitchIsleInsideTextPointers, TwitchIsleInsideScript ; blocks, texts, scripts
 	db $00 ; connections
@@ -99411,46 +99410,49 @@ TwitchIsleInsideText7: ; 61e70 (18:5e70)
 	db "@"
 
 TwitchIsleInsideObject: ; 0x61e75 (size=165)
-	db $c ; border tile
+	db $0 ; border tile
 
-	db $a ; warps
-	db $5, $2, $4, SS_ANNE_4
-	db $5, $3, $4, SS_ANNE_4
-	db $5, $c, $3, SS_ANNE_4
-	db $5, $d, $3, SS_ANNE_4
-	db $5, $16, $2, SS_ANNE_4
-	db $5, $17, $2, SS_ANNE_4
-	db $f, $2, $1, SS_ANNE_4
-	db $f, $3, $1, SS_ANNE_4
-	db $f, $c, $0, SS_ANNE_4
-	db $f, $d, $0, SS_ANNE_4
-
-	db $0 ; signs
+	db $b ; warps
+	db $18, $2, $c, TWITCH_ISLE
+	db $25, $9, $10, TWITCH_ISLE
+	db $25, $a, $10, TWITCH_ISLE
+	db $25, $13, $e, TWITCH_ISLE
+	db $25, $14, $e, TWITCH_ISLE
+	db $25, $1b, $f, TWITCH_ISLE
+	db $25, $1c, $f, TWITCH_ISLE
+	db $12, $28, $a, TWITCH_ISLE
+	db $25, $37, $d, TWITCH_ISLE
+	db $25, $38, $d, TWITCH_ISLE
+	db $9,  $37, $1, TWITCH_ISLE
+	
+	db $1 ; signs
+	db $1b, $17, $c
 
 	db $b ; people
-	db SPRITE_SAILOR, $d + 4, $0 + 4, $ff, $d0, $41, SAILOR + $C8, $3 ; trainer
+	db SPRITE_SAILOR, $23 + 4, $7 + 4, $ff, $ff, $41, SAILOR + $C8, $3 ; trainer
 	db SPRITE_SAILOR, $b + 4, $2 + 4, $ff, $d0, $42, SAILOR + $C8, $4 ; trainer
 	db SPRITE_SAILOR, $3 + 4, $c + 4, $ff, $d2, $43, SAILOR + $C8, $5 ; trainer
 	db SPRITE_SAILOR, $2 + 4, $16 + 4, $ff, $d0, $44, SAILOR + $C8, $6 ; trainer
-	db SPRITE_SAILOR, $2 + 4, $0 + 4, $ff, $d3, $45, SAILOR + $C8, $7 ; trainer
-	db SPRITE_FISHER2, $4 + 4, $0 + 4, $ff, $d3, $46, FISHER + $C8, $2 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_2, $d + 4, $a + 4, $ff, $d3, $7 ; person
-	db SPRITE_SLOWBRO, $c + 4, $b + 4, $ff, $ff, $8 ; person
+	db SPRITE_SAILOR, $1c + 4, $30 + 4, $ff, $ff, $5 ; trainer ; TODO: this used to be a trainer
+	db SPRITE_FISHER2, $1b + 4, $18 + 4, $ff, $d1, $6 ; person TODO: this used to be a trainer
+	db SPRITE_SLOWBRO, $18 + 4, $18 + 4, $fe, $0, $7 ; person
+	db SPRITE_SLOWBRO, $17 + 4, $17 + 4, $fe, $0, $8 ; person
 	db SPRITE_BALL, $2 + 4, $14 + 4, $ff, $ff, $89, ETHER ; item
 	db SPRITE_BALL, $2 + 4, $a + 4, $ff, $ff, $8a, TM_44 ; item
 	db SPRITE_BALL, $b + 4, $c + 4, $ff, $ff, $8b, MAX_POTION ; item
 
 	; warp-to
-	EVENT_DISP $c, $5, $2 ; SS_ANNE_4
-	EVENT_DISP $c, $5, $3 ; SS_ANNE_4
-	EVENT_DISP $c, $5, $c ; SS_ANNE_4
-	EVENT_DISP $c, $5, $d ; SS_ANNE_4
-	EVENT_DISP $c, $5, $16 ; SS_ANNE_4
-	EVENT_DISP $c, $5, $17 ; SS_ANNE_4
-	EVENT_DISP $c, $f, $2 ; SS_ANNE_4
-	EVENT_DISP $c, $f, $3 ; SS_ANNE_4
-	EVENT_DISP $c, $f, $c ; SS_ANNE_4
-	EVENT_DISP $c, $f, $d ; SS_ANNE_4
+	EVENT_DISP TWITCH_ISLE_INSIDE_WIDTH, $18, $2 ; TWITCH_ISLE
+	EVENT_DISP TWITCH_ISLE_INSIDE_WIDTH, $25, $9 ; TWITCH_ISLE
+	EVENT_DISP TWITCH_ISLE_INSIDE_WIDTH, $25, $a ; TWITCH_ISLE
+	EVENT_DISP TWITCH_ISLE_INSIDE_WIDTH, $25, $13 ; TWITCH_ISLE
+	EVENT_DISP TWITCH_ISLE_INSIDE_WIDTH, $25, $14 ; TWITCH_ISLE
+	EVENT_DISP TWITCH_ISLE_INSIDE_WIDTH, $25, $1b ; TWITCH_ISLE
+	EVENT_DISP TWITCH_ISLE_INSIDE_WIDTH, $25, $1c ; TWITCH_ISLE
+	EVENT_DISP TWITCH_ISLE_INSIDE_WIDTH, $12, $28 ; TWITCH_ISLE
+	EVENT_DISP TWITCH_ISLE_INSIDE_WIDTH, $25, $37 ; TWITCH_ISLE
+	EVENT_DISP TWITCH_ISLE_INSIDE_WIDTH, $25, $38 ; TWITCH_ISLE
+	EVENT_DISP TWITCH_ISLE_INSIDE_WIDTH, $9,  $37 ; TWITCH_ISLE
 
 UndergroundPathNS_h: ; 0x61f1a to 0x61f26 (12 bytes) (id=119)
 	db $11 ; tileset
@@ -127085,9 +127087,12 @@ MewBaseStats: ; 425b (1:425b)
 SECTION "Alt Pics", ROMX, BANK[$3b]
 
 PreUncompressAltSprite:
-; uncompresses the front or back sprite of the specified mon
+; uncompresses the front sprite of the specified mon
 ; assumes the corresponding mon header is already loaded
 ; hl contains offset to sprite pointer ($b for front or $d for back)
+	ld a, [W_PRIZE1] ; should mon have alt sprite?
+	and a
+	jr z, .tppCheck
 	ld a, [$cf91]
 	ld d, a
 	ld hl, AltPicsPointers
@@ -127097,7 +127102,7 @@ PreUncompressAltSprite:
 	cp d
 	jr z, .foundMon
 	cp $ff
-	jp z, NormalUncompressFront
+	jr z, .tppCheck
 	add hl, bc
 	jr .searchLoop
 .foundMon
@@ -127108,11 +127113,49 @@ PreUncompressAltSprite:
 	ld a, [hl]
 	ld [W_SPRITEINPUTPTR + 1],a
 	ld a, Bank(AltPicsPointers)
-.GotBank
+.gotBank1
 	call UncompressSpriteData
 	ld a, $77
 	ld [W_MONHSPRITEDIM], a
 	ret
+.tppCheck
+	; check if in battle and in tpp map
+	ld a, [W_CURMAP]
+	cp TWITCH_ISLE_INSIDE
+	jr nz, NormalUncompressFront
+	ld a, [W_ISINBATTLE]
+	cp 2
+	jp nz, NormalUncompressFront
+	; tpp map
+	ld a, [$cf91]
+	ld b, a
+	ld hl, TPPAltPics
+.tppLoop
+	ld a, [hli]
+	cp b
+	jr z, .foundMonTPP
+	cp $ff
+	jp z, NormalUncompressFront
+	inc hl
+	inc hl
+	jr .tppLoop
+.foundMonTPP
+	ld a, [hli]
+	ld [W_SPRITEINPUTPTR],a    ; fetch sprite input pointer
+	ld a, [hl]
+	ld [W_SPRITEINPUTPTR + 1],a
+	ld a, Bank(TPPPicPointers)
+	jp .gotBank1
+
+TPPAltPics:
+	dbw PIDGEOT, TPPPidgeotPic
+	dbw FLAREON, TPPFlareonPic
+	dbw LAPRAS, TPPLaprasPic
+	dbw NIDOKING, TPPNidokingPic
+	dbw OMASTAR, TPPOmastarPic
+	dbw VENOMOTH, TPPVenomothPic
+	dbw ZAPDOS, TPPZapdosPic
+	db $ff ;  terminator
 
 NormalUncompressFront:
 	ld hl, W_MONHFRONTSPRITE - W_MONHEADER
@@ -127212,6 +127255,23 @@ BlastoiseAltFront:
 	INCBIN "pic/bmon/blastoise-alt-front.pic"
 BlastoiseAltBack:
 	INCBIN "pic/monback/blastoise-alt-back.pic"
+
+TPPPicPointers:
+TPPPidgeotPic:
+	INCBIN "pic/bmon/tpp-pidgeot.pic"
+TPPFlareonPic:
+	INCBIN "pic/bmon/tpp-flareon.pic"
+TPPLaprasPic:
+	INCBIN "pic/bmon/tpp-lapras.pic"
+TPPNidokingPic:
+	INCBIN "pic/bmon/tpp-nidoking.pic"
+TPPOmastarPic:
+	INCBIN "pic/bmon/tpp-omastar.pic"
+TPPVenomothPic:
+	INCBIN "pic/bmon/tpp-venomoth.pic"
+TPPZapdosPic:
+	INCBIN "pic/bmon/tpp-zapdos.pic"
+
 
 
 SECTION "Misc", ROMX, BANK[$3c]
