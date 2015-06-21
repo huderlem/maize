@@ -719,6 +719,10 @@ OverworldLoopLessDelay:: ; 0402 (0:0402)
 	ld a, [W_BILLSHOUSECURSCRIPT] ; 1 = have running shoes
 	cp 1
 	jr nz,.normalPlayerSpriteAdvancement
+	; not surfing?
+	ld a, [$d700]
+	cp 2
+	jr z, .normalPlayerSpriteAdvancement
 .bikeSpeedup
 	ld a,[$d736]
 	bit 6,a ; jumping a ledge?
@@ -20065,6 +20069,9 @@ Func_c754: ; c754 (3:4754)
 	pop hl
 	jr c, .asm_c797
 .notDungeon
+	ld a, [W_CURMAP]
+	cp TWITCH_ISLE
+	jr z, .handleDungeon
 	ld a, [W_CURMAPTILESET] ; $d367
 	ld b, a
 	ld a, [H_DOWNARROWBLINKCNT1] ; $FF00+$8b
@@ -80668,7 +80675,23 @@ TwitchIsleScript0: ; 51219 (14:5219)
 	set 7,[hl]
 	ret
 .notLedge
-
+	; check for teleport tile
+	ld a, [W_YCOORD]
+	cp $11
+	jr nz, .notTeleport
+	ld a, [W_XCOORD]
+	cp $1f
+	jr nz, .notTeleport
+	; teleport!
+	ld hl, $d72e
+	res 5, [hl]
+	ld a, 0
+	ld [$d42f],a ; save target warp ID
+	ld a, TWITCH_ISLE
+	ld [$ff8b],a ; save target map
+	ld hl,$d72d
+	set 3,[hl]
+.notTeleport
 	ret
 
 Func_5125d: ; 5125d (14:525d)
