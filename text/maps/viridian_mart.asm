@@ -1,10 +1,12 @@
 _ViridianPokeCenterText2:: ; 95ba1 (25:5ba1)
 _ViridianPokeCenterText1:: ; 95ba1 (25:5ba1)
-	text "You can use that"
-	line "PC in the corner."
+	text "The residents of"
+	line "JADE VILLAGE are"
+	cont "rather elderly."
 
-	para "The receptionist"
-	line "told me. So kind!"
+	para "They tend to fall"
+	line "over from time to"
+	cont "time."
 	done
 
 _ViridianPokeCenterText3:: ; 95be8 (25:5be8)

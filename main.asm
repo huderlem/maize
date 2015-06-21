@@ -79474,7 +79474,7 @@ TwitchIsleObject: ; 0x50361 (size=81)
 	db $11, $5, $7 ; TwitchIsleText8
 	db $15, $13, $8 ; TwitchIsleText8
 	db $21, $2f, $9 ; TwitchIsleText8
-	db $33, $35, $a ; TwitchIsleText8
+	db $33, $35, $a ; TwitchIsleText10
 
 	db $6 ; people
 	db SPRITE_SLOWBRO, $f + 4, $6 + 4, $ff, $ff, $1 ; person
@@ -79482,7 +79482,7 @@ TwitchIsleObject: ; 0x50361 (size=81)
 	db SPRITE_GUARD, $23 + 4, $1d + 4, $ff, $d0, $3 ; person
 	db SPRITE_GUARD, $23 + 4, $20 + 4, $ff, $d0, $4 ; person
 	db SPRITE_SLOWBRO, $34 + 4, $33 + 4, $ff, $ff, $5 ; person
-	db SPRITE_GUARD, $35 + 4, $35 + 4, $ff, $ff, $6 ; person
+	db SPRITE_SLOWBRO, $35 + 4, $35 + 4, $ff, $ff, $6 ; person
 
 	; warp-to
 	EVENT_DISP TWITCH_ISLE_WIDTH, $3, $3
@@ -80740,6 +80740,7 @@ TwitchIsleTextPointers: ; 512f7 (14:52f7)
 	dw TwitchIsleText7
 	dw TwitchIsleText8
 	dw TwitchIsleText9
+	dw TwitchIsleText10
 
 TwitchIsleText1: ; 51307 (14:5307)
 	db $08 ; asm
@@ -80774,10 +80775,8 @@ TwitchIsleText6: ; 51334 (14:5334)
 	jp TextScriptEnd
 
 TwitchIsleText7: ; 5133d (14:533d)
-	db $8
-	ld a, $0
-	call Func_51346
-	jp TextScriptEnd
+	TX_FAR _TwitchIsleText7
+	db "@"
 
 Func_51346: ; 51346 (14:5346)
 	ld [wWhichTrade], a ; $cd3d
@@ -80835,6 +80834,10 @@ TwitchIsleText8: ; 513a8 (14:53a8)
 
 TwitchIsleText9: ; 5133d (14:533d)
 	TX_FAR _TwitchIsleText9
+	db "@"
+
+TwitchIsleText10:
+	TX_FAR _TwitchIsleText10
 	db "@"
 
 Route24Script: ; 513ad (14:53ad)

@@ -65,9 +65,19 @@ _TwitchIsleText4::
 	cont "calculated plan."
 	done
 
+_TwitchIsleText7::
+	text "BANISHED #MON:"
+
+	para "CABBAGE,"
+	line "DUX"
+	done
+
 _TwitchIsleText8:: ; 92700 (24:6700)
-	text "VICTORY ROAD GATE"
-	line "- #MON LEAGUE"
+	text "Democracy, or"
+	line "anarchy?"
+
+	para "Is it really up"
+	line "to you?"
 	done
 
 _TwitchIsleText9::
@@ -76,3 +86,12 @@ _TwitchIsleText9::
 	cont "DOWNRIGHTRIGHTABB"
 	cont "LEFTSTARTASTARTUP"
 	done
+
+_TwitchIsleText10::
+	text "BANISHED #MON:"
+
+	para "ABBY,"
+	line "DIGRAT"
+	done
+
+

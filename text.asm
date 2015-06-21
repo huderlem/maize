@@ -393,10 +393,18 @@ _GymStatueText2:: ; 882a5 (22:42a5)
 	done
 
 _ViridianCityPokecenterGuyText:: ; 882d7 (22:42d7)
-	text "#MON CENTERs"
-	line "heal your tired,"
-	cont "hurt or fainted"
-	cont "#MON!"
+	text "My #MON EGG"
+	line "won't hatch"
+	cont "soon because I'm"
+	cont "not walking"
+	cont "around enough!"
+
+	para "#MON EGGs are"
+	line "egg-citing!"
+
+	para "You never know"
+	line "what will pop"
+	cont "out!"
 	done
 
 _PewterCityPokecenterGuyText:: ; 8830c (22:430c)
