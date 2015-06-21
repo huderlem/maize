@@ -44840,7 +44840,7 @@ CharizardBaseStats: ; 3846a (e:446a)
 	db %11001110
 	db %11100011
 	db %00001000
-	db %00100110
+	db %00101110
 
 	db Bank(CharizardPicFront)
 
@@ -92864,6 +92864,9 @@ CeruleanPokecenterText5:
 	ld a, [W_EVENTDATA + 7] ; mon level
 	ld c, a
 	call GivePokemon
+
+	xor a
+	ld [W_EVENTDATA + 13], a
 	jr .done
 .notValid
 	ld hl, EventTextNotValid
