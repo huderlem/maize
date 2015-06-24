@@ -21,12 +21,14 @@ Music_HallOfFame:: ; 7c25e (1f:425e)
 	dw Music_HallOfFame_Ch3
 
 Music_OaksLab:: ; 7c267 (1f:4267)
-	db ( $80 | CH0 )
+	db ( $C0 | CH0 )
 	dw Music_OaksLab_Ch1
 	db CH1
 	dw Music_OaksLab_Ch2
 	db CH2
 	dw Music_OaksLab_Ch3
+	db CH3
+	dw Music_OaksLab_Ch4
 
 Music_JigglypuffSong:: ; 7c270 (1f:4270)
 	db $40

@@ -18861,7 +18861,7 @@ MapSongBanks: ; c04d (3:404d)
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; School
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; ViridianHouse
 	db MUSIC_GYM, BANK(Music_Gym) ; ViridianGym
-	db MUSIC_DUNGEON2, BANK(Music_Dungeon2) ; DiglettsCaveRoute2
+	db MUSIC_DUNGEON1, BANK(Music_Dungeon1) ; DiglettsCaveRoute2
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; ViridianForestexit
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; Route2House
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; Route2Gate
@@ -18900,7 +18900,7 @@ MapSongBanks: ; c04d (3:404d)
 	db MUSIC_DUNGEON3, BANK(Music_Dungeon3) ; RockTunnel1
 	db MUSIC_DUNGEON1, BANK(Music_Dungeon1) ; PowerPlant
 	db MUSIC_VERMILION, BANK(Music_Vermilion) ; Route11Gate
-	db MUSIC_DUNGEON2, BANK(Music_Dungeon2) ; DiglettsCaveEntranceRoute11
+	db MUSIC_DUNGEON1, BANK(Music_Dungeon1) ; DiglettsCaveEntranceRoute11
 	db MUSIC_VERMILION, BANK(Music_Vermilion) ; Route11GateUpstairs
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; Route12Gate
 	db MUSIC_CITIES2, BANK(Music_Cities2) ; BillsHouse
@@ -19012,7 +19012,7 @@ MapSongBanks: ; c04d (3:404d)
 	db MUSIC_DUNGEON3, BANK(Music_Dungeon3) ; VictoryRoad2
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; Route12GateUpstairs
 	db MUSIC_VERMILION, BANK(Music_Vermilion) ; VermilionHouse3
-	db MUSIC_DUNGEON2, BANK(Music_Dungeon2) ; DiglettsCave
+	db MUSIC_DUNGEON1, BANK(Music_Dungeon1) ; DiglettsCave
 	db MUSIC_DUNGEON3, BANK(Music_Dungeon3) ; VictoryRoad3
 	db MUSIC_DUNGEON1, BANK(Music_Dungeon1) ; RocketHideout1
 	db MUSIC_DUNGEON1, BANK(Music_Dungeon1) ; RocketHideout2
