@@ -61353,17 +61353,10 @@ CriticalHitTest: ; 3e023 (f:6023)
 	jr .SkipHighCritical         ; continue as a normal move
 .HighCritical
 	sla b                        ; *2 for high critical hit moves
-	jr nc, .noCarry
-	ld b, $ff                    ; cap at 255/256
-.noCarry
-	sla b                        ; *4 for high critical move (effective (base speed/2)*8))
 	jr nc, .SkipHighCritical
-	ld b, $ff
+	ld b, $ff                    ; cap at 255/256
 .SkipHighCritical
 	call GenRandomInBattle       ; generates a random value, in "a"
-	rlc a
-	rlc a
-	rlc a
 	cp b                         ; check a against calculated crit rate
 	ret nc                       ; no critical hit if no borrow
 	ld a, $1
