@@ -19,7 +19,7 @@ _EventText1::
 	text "Hiya!"
 
 	para "You can claim"
-	line "event #MON"
+	line "a MYSTERY GIFT"
 	cont "from me if you"
 	cont "know a secret"
 	cont "code!"

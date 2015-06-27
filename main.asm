@@ -84019,7 +84019,7 @@ Route21Object: ; 0x55021 (size=76)
 	db $8 ; people
 	db SPRITE_SWIMMER, $36 + 4, $9 + 4, $ff, $d1, $1 ; person
 	db SPRITE_FISHER2, $e + 4, $4 + 4, $ff, $d1, $42, FISHER + $C8, $2 ; trainer
-	db SPRITE_FISHER2, $3 + 4, $4 + 4, $ff, $d3, $43, FISHER + $C8, $1 ; trainer
+	db SPRITE_FISHER2, $5 + 4, $4 + 4, $ff, $d3, $43, FISHER + $C8, $1 ; trainer
 	db SPRITE_FISHER2, $13 + 4, $9 + 4, $ff, $d0, $44, FISHER + $C8, $3 ; trainer
 	db SPRITE_SWIMMER, $1b + 4, $e + 4, $ff, $d2, $45, SWIMMER + $C8, $4 ; trainer
 	db SPRITE_SWIMMER, $28 + 4, $d + 4, $ff, $d0, $46, SWIMMER + $C8, $5 ; trainer 
