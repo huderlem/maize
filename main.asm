@@ -695,7 +695,7 @@ OverworldLoopLessDelay:: ; 0402 (0:0402)
 .noCollision
 	ld a,$08
 	ld [wWalkCounter],a
-	jr .noSpinning
+	jr .moveAhead2
 .moveAhead
 	ld a,[$d736]
 	bit 7,a
@@ -1674,9 +1674,13 @@ CollisionCheckOnLand:: ; 0bd1 (0:0bd1)
 	bit 6,a ; is the player jumping?
 	jr nz,.noCollision
 ; if not jumping a ledge
-	;ld a,[$cd38]
-	;and a
-	;jr nz,.noCollision
+	ld a, [W_CURMAP]
+	cp TWITCH_ISLE
+	jr z, .skip
+	ld a,[$cd38]
+	and a
+	jr nz,.noCollision
+.skip
 	ld a,[$d52a] ; the direction that the player is trying to go in
 	ld d,a
 	ld a,[$c10c] ; the player sprite's collision data (bit field) (set in the sprite movement code)
