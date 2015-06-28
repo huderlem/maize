@@ -37852,6 +37852,11 @@ OaksLabBulbasaurText: ; 1d1ae (7:51ae)
 	db "@"
 
 OaksLabMonChoiceMenu: ; 1d1b3 (7:51b3)
+	push hl
+	ld hl, DrawMugShot
+	ld b, Bank(DrawMugShot)
+	call Bankswitch
+	pop hl
 	call PrintText
 	ld a, $1
 	ld [$cc3c], a
@@ -127988,3 +127993,60 @@ EggCycleTable:
 	db 10 ; TOGEKISS
 	db 25 ; MIME_JR
 	db 200 ; EGG
+
+StarterMugShots:
+GrowlitheMugshot:
+	INCBIN "gfx/mugshots/growlithe_mugshot.2bpp"
+StaryuMugshot:
+	INCBIN "gfx/mugshots/staryu_mugshot.2bpp"
+ExeggcuteMugshot:
+	INCBIN "gfx/mugshots/exeggcute_mugshot.2bpp"
+
+DrawMugShot:
+; Draws a 6x4 mugshot
+	ld a, [$cf91]
+	cp GROWLITHE
+	ld de, GrowlitheMugshot
+	jr z, .draw
+	cp STARYU
+	ld de, StaryuMugshot
+	jr z, .draw
+	ld de, ExeggcuteMugshot
+.draw
+	; hl points to uncompressed mugshot graphics
+	ld hl,$8c00
+	ld bc,(BANK(StarterMugShots) << 8 | (StaryuMugshot - GrowlitheMugshot)/16 )
+	call CopyVideoData
+	FuncCoord 5, 1
+	ld hl,Coord
+	ld b,4  ; height
+	ld c,6 ; width
+	call TextBoxBorder
+	; draw the tiles in the middle of the screen
+	FuncCoord 6, 2
+	ld hl, Coord
+	ld d, 6 ; 6 columns
+    ld a, $c0 ; top-left tile id
+.columnLoop
+	ld bc, $14
+
+	ld [hl], a
+	inc a
+	add hl, bc
+
+	ld [hl], a
+	inc a
+	add hl, bc
+
+	ld [hl], a
+	inc a
+	add hl, bc
+
+	ld [hl], a
+	inc a
+	ld bc, -59
+	add hl, bc
+
+    dec d
+    jr nz, .columnLoop
+    ret
