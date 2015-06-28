@@ -2593,6 +2593,18 @@ _UnnamedText_6fe1:: ; a284d (28:684d)
 	line "can't be deleted!"
 	prompt
 
+_PokemonCenterCantHealText::
+	text "Welcome!"
+
+	para "You don't have"
+	line "any #MON for"
+	cont "us to heal!"
+
+	para "We hope to see"
+	line "you when you're"
+	cont "a trainer!"
+	done
+
 _PokemonCenterWelcomeText:: ; a286d (28:686d)
 	text "Welcome to our"
 	line "#MON CENTER!"

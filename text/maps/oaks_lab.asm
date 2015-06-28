@@ -2,8 +2,21 @@ _OaksLabGaryText1:: ; 94d5b (25:4d5b)
 	text $53, ": Oh, it's"
 	line "you, ", $52, "."
 
-	para "Go find PROF."
-	line "CEDAR, now!"
+	para "Hah!"
+
+	para "You haven't even"
+	line "finished"
+	cont "#SCHOOL, yet!"
+
+	para "I finished"
+	line "two weeks ago,"
+	cont "you creep!"
+
+	para "Now where is"
+	line "PROF. CEDAR..."
+
+	para "I want my"
+	line "#MON!"
 	done
 
 _OaksLabText40:: ; 94d79 (25:4d79)

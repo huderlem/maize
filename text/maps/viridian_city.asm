@@ -154,9 +154,8 @@ _ViridianCityText9:: ; a4860 (29:4860)
 	done
 
 _ViridianCityText10:: ; a48c3 (29:48c3)
-	text "Don't forget that"
-	line "bridges can also"
-	cont "be made of stone."
+	text "JADE VILLAGE"
+	line "#SCHOOL"
 	done
 
 _ViridianCityText13:: ; a4949 (29:4949)
@@ -256,4 +255,9 @@ _ViridianShrubText2::
 	para "From a SHRUB to a"
 	line "SHRUBBER,"
 	cont "farewell!"
+	done
+
+_ViridianCityText17::
+	text "This isn't the way"
+	line "to #SCHOOL..."
 	done

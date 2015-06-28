@@ -2,7 +2,7 @@
 
 ; PalletTown_h map_id=0
 PALLET_TOWN_HEIGHT EQU $09
-PALLET_TOWN_WIDTH  EQU $0a
+PALLET_TOWN_WIDTH  EQU $11
 
 ; ViridianCity_h map_id=1
 VIRIDIAN_CITY_HEIGHT EQU $12

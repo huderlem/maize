@@ -15466,7 +15466,7 @@ FlyWarpDataPtr: ; 6448 (1:6448)
 ; Macro Format:
 ;   FLYWARP_DATA [Map Width][Y-pos][X-pos]
 Map00FlyWarp: ; 647c (1:647c)
-	FLYWARP_DATA 10,14,3
+	FLYWARP_DATA PALLET_TOWN_WIDTH,14,17
 Map01FlyWarp: ; 6482 (1:6482)
 	FLYWARP_DATA 20,26,9
 Map02FlyWarp: ; 6488 (1:6488)
@@ -17026,6 +17026,9 @@ UnnamedText_6fe1: ; 6fe1 (1:6fe1)
 
 DisplayPokemonCenterDialogue_: ; 6fe6 (1:6fe6)
 	call SaveScreenTilesToBuffer1 ; save screen
+	ld a, [W_BEGINNINGFLAGS]
+	cp 3
+	jr c, .CantHeal
 	ld hl, PokemonCenterWelcomeText
 	call PrintText
 	ld hl, $d72e
@@ -17072,6 +17075,15 @@ DisplayPokemonCenterDialogue_: ; 6fe6 (1:6fe6)
 	ld hl, PokemonCenterFarewellText
 	call PrintText
 	jp UpdateSprites ; move sprites
+.CantHeal
+	call LoadScreenTilesFromBuffer1
+	ld hl, PokemonCenterCantHealText
+	call PrintText
+	jp UpdateSprites
+
+PokemonCenterCantHealText:
+	TX_FAR _PokemonCenterCantHealText
+	db "@"
 
 PokemonCenterWelcomeText: ; 705d (1:705d)
 	TX_FAR _PokemonCenterWelcomeText
@@ -32466,32 +32478,34 @@ PalletTown_h: ; 182a1 (6:42a1)
 	db PALLET_TOWN_HEIGHT, PALLET_TOWN_WIDTH ; dimensions
 	dw PalletTownBlocks, PalletTownTextPointers, PalletTownScript
 	db NORTH ; connections
-	NORTH_MAP_CONNECTION ROUTE_1, ROUTE_1_WIDTH, ROUTE_1_HEIGHT, -4, 0, ROUTE_1_WIDTH, Route1Blocks
+	NORTH_MAP_CONNECTION ROUTE_1, ROUTE_1_WIDTH, ROUTE_1_HEIGHT, 3, 0, ROUTE_1_WIDTH, Route1Blocks
 	dw PalletTownObject
 
 PalletTownObject: ; 0x182c3 (size=58)
 	db $f ; border tile
 
-	db $3 ; warps
-	db $d, $3, $0, REDS_HOUSE_1F
-	db $7, $3, $0, BLUES_HOUSE
-	db $b, $c, $1, OAKS_LAB
+	db $4 ; warps
+	db $d, $11, $0, REDS_HOUSE_1F
+	db $7, $11, $0, BLUES_HOUSE
+	db $b, $1a, $1, OAKS_LAB
+	db $7, $4, $0, PALLET_TOWN
 
 	db $4 ; signs
-	db $d, $d, $4 ; PalletTownText4
-	db $5, $d, $5 ; PalletTownText5
-	db $d, $1, $6 ; PalletTownText6
-	db $7, $1, $7 ; PalletTownText7
+	db $d, $1b, $4 ; PalletTownText4
+	db $5, $1b, $5 ; PalletTownText5
+	db $d, $f, $6 ; PalletTownText6
+	db $7, $f, $7 ; PalletTownText7
 
 	db $3 ; people
-	db SPRITE_OAK, $5 + 4, $8 + 4, $ff, $ff, $1 ; person
-	db SPRITE_GAMBLER, $8 + 4, $7 + 4, $fe, $0, $2 ; person
-	db SPRITE_GIRL, $7 + 4, $11 + 4, $fe, $0, $3 ; person
+	db SPRITE_OAK, $5 + 4, $16 + 4, $ff, $ff, $1 ; person
+	db SPRITE_GAMBLER, $8 + 4, $15 + 4, $fe, $0, $2 ; person
+	db SPRITE_GIRL, $7 + 4, $1f + 4, $fe, $0, $3 ; person
 
 	; warp-to
-	EVENT_DISP PALLET_TOWN_WIDTH, $d, $3 ; REDS_HOUSE_1F
-	EVENT_DISP PALLET_TOWN_WIDTH, $7, $3 ; BLUES_HOUSE
-	EVENT_DISP PALLET_TOWN_WIDTH, $b, $c ; OAKS_LAB
+	EVENT_DISP PALLET_TOWN_WIDTH, $d, $11 ; REDS_HOUSE_1F
+	EVENT_DISP PALLET_TOWN_WIDTH, $7, $11 ; BLUES_HOUSE
+	EVENT_DISP PALLET_TOWN_WIDTH, $b, $1a ; OAKS_LAB
+	EVENT_DISP PALLET_TOWN_WIDTH, $7, $4 ; woods
 
 PalletTownBlocks: ; 182fd (6:42fd)
 	INCBIN "maps/pallettown.blk"
@@ -32850,37 +32864,31 @@ PalletTownScriptPointers: ; 18e73 (6:4e73)
 	dw PalletTownScript4
 	dw PalletTownScript5
 	dw PalletTownScript6
+	dw PalletTownScript7
 
 PalletTownScript0: ; 18e81 (6:4e81)
-	ld a,[$D747]
-	bit 0,a
-	ret nz
+	ld a, [W_BEGINNINGFLAGS]
+	and a
+	ret nz ; only block player the first time
 	ld a,[W_YCOORD]
 	cp 1 ; is player near north exit?
 	ret nz
-	ld a,[W_XCOORD]
-	cp $c
-	ret nc
-	cp $a
-	ret c
+	ld a, $9
+	ld [$ff00+$8c], a
+	call DisplayTextID
+	; move player one space to the south
 	xor a
-	ld [H_CURRENTPRESSEDBUTTONS],a
-	ld a,4
-	ld [$D528],a
-	ld a,$FF
-	call PlaySound ; stop music
-	ld a, BANK(Music_MeetProfOak)
-	ld c,a ; song bank
-	ld a, MUSIC_MEET_PROF_OAK ; “oak appears” music
-	call PlayMusic ; plays music
-	ld a,$FC
-	ld [wJoypadForbiddenButtonsMask],a
-	ld hl,$D74B
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_DOWN
+	ld [$ccd3],a ; base address of simulated button presses
+	xor a
+	ld [$cd39],a
+	inc a
+	ld [$cd38],a ; index of current simulated button press
+	ld hl,$d730
 	set 7,[hl]
-
-	; trigger the next script
-	ld a,1
-	ld [W_PALLETTOWNCURSCRIPT],a
 	ret
 
 PalletTownScript1: ; 18eb2 (6:4eb2)
@@ -32998,6 +33006,14 @@ PalletTownScript5: ; 18f56 (6:4f56)
 PalletTownScript6: ; 18f87 (6:4f87)
 	ret
 
+PalletTownScript7:
+	ld a, 8
+	ld [$ff00+$8c], a
+	call DisplayTextID
+	xor a
+	ld [W_PALLETTOWNCURSCRIPT], a
+	ret
+
 PalletTownTextPointers: ; 18f88 (6:4f88)
 	dw PalletTownText1
 	dw PalletTownText2
@@ -33006,6 +33022,8 @@ PalletTownTextPointers: ; 18f88 (6:4f88)
 	dw PalletTownText5
 	dw PalletTownText6
 	dw PalletTownText7
+	dw PalletTownText8
+	dw PalletTownText9
 
 PalletTownText1: ; 18f96 (6:4f96)
 	db 8
@@ -33064,6 +33082,14 @@ PalletTownText7: ; 0x18fec sign by Blue’s house
 	TX_FAR _PalletTownText7
 	db "@"
 
+PalletTownText8:
+	TX_FAR _Route1Text4
+	db "@"
+
+PalletTownText9:
+	TX_FAR _PalletTownText9
+	db "@"
+
 ViridianCityScript: ; 18ff1 (6:4ff1)
 	call EnableAutoTextBoxDrawing
 	ld hl, ViridianCityScriptPointers
@@ -33074,57 +33100,51 @@ ViridianCityScriptPointers: ; 18ffd (6:4ffd)
 	dw ViridianCityScript0
 	dw ViridianCityScript1
 	dw ViridianCityScript2
-	dw ViridianCityScript3
 
 ViridianCityScript0: ; 19005 (6:5005)
-	call ViridianCityScript_1900b
-	jp ViridianCityScript_1903d
-
-ViridianCityScript_1900b: ; 1900b (6:500b)
-	ld a, [$d74c]
-	bit 0, a
-	ret nz
-	ld a, [W_OBTAINEDBADGES]
-	cp %01111111
-	jr nz, .asm_1901e ; 0x19016 $6
-	ld hl, $d74c
-	set 0, [hl]
-	ret
-.asm_1901e
+	ld a, [W_BEGINNINGFLAGS]
+	cp 3
+	ret nc
 	ld a, [W_YCOORD]
-	cp $8
-	ret nz
-	ld a, [W_XCOORD]
+	cp $c
+	jr nc, .checkBottom
+	; make player move down
+	ld a, $11
+	ld [$ff00+$8c], a
+	call DisplayTextID
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_DOWN
+	ld [$ccd3],a ; base address of simulated button presses
+	xor a
+	ld [$cd39],a
+	inc a
+	ld [$cd38],a ; index of current simulated button press
+	ld hl,$d730
+	set 7,[hl]
+	ret
+
+.checkBottom
 	cp $20
-	ret nz
-	ld a, $e
+	ret c
+	; make player move up
+	ld a, $11
 	ld [$ff00+$8c], a
 	call DisplayTextID
 	xor a
 	ld [H_CURRENTPRESSEDBUTTONS], a
-	call ViridianCityScript_190cf
-	ld a, $3
-	ld [W_VIRIDIANCITYCURSCRIPT], a
-	ret
-
-ViridianCityScript_1903d: ; 1903d (6:503d)
-	ld a, [$d74b]
-	bit 5, a
-	ret nz
-	ld a, [W_YCOORD]
-	cp $9
-	ret nz
-	ld a, [W_XCOORD]
-	cp $13
-	ret nz
-	ld a, $5
-	ld [$ff00+$8c], a
-	call DisplayTextID
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_UP
+	ld [$ccd3],a ; base address of simulated button presses
 	xor a
-	ld [H_CURRENTPRESSEDBUTTONS], a
-	call ViridianCityScript_190cf
-	ld a, $3
-	ld [W_VIRIDIANCITYCURSCRIPT], a
+	ld [$cd39],a
+	inc a
+	ld [$cd38],a ; index of current simulated button press
+	ld hl,$d730
+	set 7,[hl]
 	ret
 
 ViridianCityScript1: ; 19062 (6:5062)
@@ -33173,15 +33193,6 @@ ViridianCityScript2: ; 1908f (6:508f)
 	ld [W_VIRIDIANCITYCURSCRIPT], a
 	ret
 
-ViridianCityScript3: ; 190c1 (6:50c1)
-	ld a, [$cd38]
-	and a
-	ret nz
-	call Delay3
-	ld a, 0
-	ld [W_VIRIDIANCITYCURSCRIPT], a
-	ret
-
 ViridianCityScript_190cf: ; 190cf (6:50cf)
 	call Func_3486
 	ld a, $1
@@ -33210,6 +33221,11 @@ ViridianCityTextPointers: ; 190e4 (6:50e4)
 	dw ViridianCityText14
 	dw ViridianCityText15
 	dw ViridianCityText16
+	dw ViridianCityText17
+
+ViridianCityText17:
+	TX_FAR _ViridianCityText17
+	db "@"
 
 ViridianCityText16:
 	db $08 ; asm
@@ -36497,7 +36513,7 @@ Route1_h: ; 0x1c0c3 to 0x1c0e5 (34 bytes) (bank=7) (id=12)
 	db ROUTE_1_HEIGHT, ROUTE_1_WIDTH ; dimensions (y, x)
 	dw Route1Blocks, Route1TextPointers, Route1Script ; blocks, texts, scripts
 	db SOUTH | EAST ; connections
-	SOUTH_MAP_CONNECTION PALLET_TOWN, PALLET_TOWN_WIDTH, 4, 0, PALLET_TOWN_WIDTH, PalletTownBlocks, ROUTE_1_WIDTH, ROUTE_1_HEIGHT
+	SOUTH_MAP_CONNECTION PALLET_TOWN, PALLET_TOWN_WIDTH, -3, 0, PALLET_TOWN_WIDTH, PalletTownBlocks, ROUTE_1_WIDTH, ROUTE_1_HEIGHT
 	EAST_MAP_CONNECTION VIRIDIAN_CITY, VIRIDIAN_CITY_WIDTH, 0, 0, 15, ViridianCityBlocks, ROUTE_1_WIDTH
 	dw Route1Object ; objects
 
@@ -36513,7 +36529,6 @@ Route1Object: ; 0x1c0e5 (size=19)
 	db SPRITE_LYING_OLD_MAN, $0 + 4, $7 + 4, $ff, $d0, $1 ; person
 
 	; warp-to
-	EVENT_DISP ROUTE_1_WIDTH, $12, $1a
 
 Route1Blocks: ; 1c0fc (7:40fc)
 	INCBIN "maps/route1.blk"
@@ -36878,31 +36893,19 @@ CinnabarIslandText10:
 	db "@"
 
 Route1Script: ; 1caaf (7:4aaf)
-	call EnableAutoTextBoxDrawing
-	ld hl,Route1ScriptPointers
-	ld a,[W_ROUTE1CURSCRIPT]
-	jp CallFunctionInTable
-
-Route1ScriptPointers: ; 5c0bc (17:40bc)
-	dw Route1Script0
-	dw Route1Script1
-
-Route1Script0:
-	ld a, 4
-	ld [$ff00+$8c], a
-	call DisplayTextID
-	ld a, 1
-	ld [W_ROUTE1CURSCRIPT], a
-	ret
-
-Route1Script1:
-	ret
+	ld a, [W_BEGINNINGFLAGS]
+	cp 3
+	jr nc, .done
+	; set encounter rate to 0, for the beginning of game
+	xor a
+	ld [W_GRASSRATE], a
+.done
+	jp EnableAutoTextBoxDrawing
 
 Route1TextPointers: ; 1cab2 (7:4ab2)
 	dw Route1Text1
 	dw Route1Text2
 	dw Route1Text3
-	dw Route1Text4
 
 Route1Text1: ; 1cab8 (7:4ab8)
 	db $08 ; asm
@@ -36948,10 +36951,6 @@ Route1Text2: ; 1caf8 (7:4af8)
 
 Route1Text3: ; 1cafd (7:4afd)
 	TX_FAR _Route1Text3
-	db "@"
-
-Route1Text4:
-	TX_FAR _Route1Text4
 	db "@"
 
 OaksLab_h: ; 0x1cb02 to 0x1cb0e (12 bytes) (bank=7) (id=40)
@@ -37417,6 +37416,8 @@ OaksLabScript14: ; 1ce6d (7:4e6d)
 	ld a, [$d730]
 	bit 0, a
 	jr nz, .asm_1ce8c ; 0x1ce72 $18
+	ld a, 3
+	ld [W_BEGINNINGFLAGS], a
 	ld a, $2a
 	ld [$cc4d], a
 	ld a, $11
@@ -38270,91 +38271,52 @@ ViridianMart_h: ; 0x1d462 to 0x1d46e (12 bytes) (bank=7) (id=42)
 	dw ViridianMartObject ; objects
 
 ViridianMartScript: ; 1d46e (7:546e)
-	call ViridianMartScript_1d47d
 	call EnableAutoTextBoxDrawing
 	ld hl, ViridianMartScriptPointers
 	ld a, [W_VIRIDIANMARKETCURSCRIPT]
 	jp CallFunctionInTable
 
-ViridianMartScript_1d47d: ; 1d47d (7:547d)
-	ld a, [$d74e]
-	bit 0, a
-	jr nz, .asm_1d489 ; 0x1d482 $5
-	ld hl, ViridianMartTextPointers ; $54e0
-	jr .asm_1d48c ; 0x1d487 $3
-.asm_1d489
-	ld hl, ViridianMartTextPointers + $a ; $54ea ; starts at ViridianMartText6
-.asm_1d48c
-	ld a, l
-	ld [W_MAPTEXTPTR], a
-	ld a, h
-	ld [W_MAPTEXTPTR+1], a
-	ret
-
 ViridianMartScriptPointers: ; 1d495 (7:5495)
 	dw ViridianMartScript0
-	dw ViridianMartScript1
-	dw ViridianMartScript2
 
 ViridianMartScript0: ; 1d49b (7:549b)
 	call UpdateSprites
+	ld a, [W_BEGINNINGFLAGS]
+	cp 3
+	ret nc
 	ld a, $4
 	ld [$ff00+$8c], a
 	call DisplayTextID
-	ld hl, $ccd3
-	ld de, RLEMovement1d4bb
-	call DecodeRLEList
-	dec a
-	ld [$cd38], a
-	call Func_3486
-	ld a, $1
-	ld [W_VIRIDIANMARKETCURSCRIPT], a
-	ret
-
-RLEMovement1d4bb: ; 1d4bb (7:54bb)
-	db $20
-	TX_RAM $0240
-	db $ff
-
-ViridianMartScript1: ; 1d4c0 (7:54c0)
-	ld a, [$cd38]
-	and a
-	ret nz
-	call Delay3
-	ld a, $5
-	ld [$ff00+$8c], a
-	call DisplayTextID
-	ld bc, (OAKS_PARCEL << 8) + 1
-	call GiveItem
-	ld hl, $d74e
-	set 1, [hl]
-	ld a, $2
-	ld [W_VIRIDIANMARKETCURSCRIPT], a
-	; fallthrough
-ViridianMartScript2: ; 1d4df (7:54df)
+	xor a
+	ld [H_CURRENTPRESSEDBUTTONS], a
+	ld a, $ff ; disable all buttons
+	ld [wJoypadForbiddenButtonsMask], a
+	ld a, BTN_DOWN
+	ld [$ccd3],a ; base address of simulated button presses
+	xor a
+	ld [$cd39],a
+	inc a
+	ld [$cd38],a ; index of current simulated button press
+	ld hl,$d730
+	set 7,[hl]
 	ret
 
 ViridianMartTextPointers: ; 1d4e0 (7:54e0)
-	dw ViridianMartText1
+	dw ViridianMartText6
 	dw ViridianMartText2
 	dw ViridianMartText3
 	dw ViridianMartText4
-	dw ViridianMartText5
+	dw ViridianMartText4
 	dw ViridianMartText6
 	dw ViridianMartText2
 	dw ViridianMartText3
 
 ViridianMartText1: ; 1d4f0 (7:54f0)
-	TX_FAR _ViridianMartText1
+	TX_FAR _ViridianMartText2
 	db "@"
 
 ViridianMartText4: ; 1d4f5 (7:54f5)
 	TX_FAR _ViridianMartText4
-	db "@"
-
-ViridianMartText5: ; 1d4fa (7:54fa)
-	TX_FAR ViridianMartParcelQuestText
-	db $11
 	db "@"
 
 ViridianMartText2: ; 1d500 (7:5500)
@@ -38405,7 +38367,101 @@ SchoolText1: ; 1d553 (7:5553)
 	db "@"
 
 SchoolText2: ; 1d558 (7:5558)
+	db $8
+	ld a, [W_BEGINNINGFLAGS]
+	cp 1
+	jr nz, .afterText
+	; take test
+	ld hl, TeacherIntroText
+	call PrintText
+	call YesNoChoice
+	ld a, [wCurrentMenuItem] ; $cc26
+	and a
+	jr z, .question1
+	ld hl, SaidNoToTeacherText
+	call PrintText
+	jp TextScriptEnd
+	; ask questions
+.question1
+	ld hl, TestQuestion1Text
+	call PrintText
+	call YesNoChoice
+	ld a, [wCurrentMenuItem] ; $cc26
+	and a
+	jr z, .question2
+	; got it wrong
+	ld hl, WrongAnswerText
+	call PrintText
+	jr .question1
+.question2
+	ld hl, TestQuestion2Text
+	call PrintText
+	call YesNoChoice
+	ld a, [wCurrentMenuItem] ; $cc26
+	and a
+	jr nz, .question3
+	; got it wrong
+	ld hl, WrongAnswerText
+	call PrintText
+	jr .question2
+.question3
+	ld hl, TestQuestion3Text
+	call PrintText
+	call YesNoChoice
+	ld a, [wCurrentMenuItem] ; $cc26
+	and a
+	jr z, .passed
+	; got it wrong
+	ld hl, WrongAnswerText
+	call PrintText
+	jr .question3
+.passed
+	ld hl, PassedTestText
+	call PrintText
+	ld a, 2
+	ld [W_BEGINNINGFLAGS], a
+	ld a, 3
+	ld [W_OAKSLABCURSCRIPT], a
+	ld a, $2e
+	ld [$cc4d], a
+	ld a, $15
+	call Predef
+	jp TextScriptEnd
+.afterText
+	ld hl, TeacherText
+	call PrintText
+	jp TextScriptEnd
+
+SaidNoToTeacherText:
+	TX_FAR _SaidNoToTeacherText
+	db "@"
+
+TeacherText:
+	TX_FAR _TeacherText
+	db "@"
+
+PassedTestText:
+	TX_FAR _PassedTestText
+	db "@"
+
+WrongAnswerText:
+	TX_FAR _WrongAnswerText
+	db "@"
+
+TeacherIntroText:
 	TX_FAR _SchoolText2
+	db "@"
+
+TestQuestion1Text:
+	TX_FAR _TestQuestion1Text
+	db "@"
+
+TestQuestion2Text:
+	TX_FAR _TestQuestion2Text
+	db "@"
+
+TestQuestion3Text:
+	TX_FAR _TestQuestion3Text
 	db "@"
 
 SchoolObject: ; 0x1d55d (size=32)
@@ -74523,20 +74579,47 @@ RedsHouse1FTextPointers: ; 4816b (12:416b)
 	dw RedsHouse1FText2
 
 RedsHouse1FText1: ; 4816f (12:416f) ; 416F Mom
-	db 8
-	ld a, [$D72E]
-	bit 3, a
-	jr nz, .heal ; if player has received a Pokémon from Oak, heal team
-	ld hl, MomWakeUpText
+	db $8 ; asm
+	ld a, [W_BEGINNINGFLAGS]
+	and a
+	jr nz, .secondCheck
+	; Player hasn't put on repel, yet
+	ld hl, MomText1
+	call PrintText
+	ld a, 1
+	ld [W_BEGINNINGFLAGS], a
+	jr .done
+
+.secondCheck
+	cp 1
+	jr nz, .thirdCheck
+	; Player has repel, but hasn't passed the test at school
+	ld hl, MomText2
 	call PrintText
 	jr .done
+
+.thirdCheck
+	cp 2
+	jr nz, .heal
+	ld hl, MomText3
+	call PrintText
+	jr .done
+
 .heal
 	call MomHealPokemon
 .done
 	jp TextScriptEnd
 
-MomWakeUpText: ; 48185 (12:4185)
-	TX_FAR _MomWakeUpText
+MomText1:
+	TX_FAR _MomText1
+	db "@"
+
+MomText2:
+	TX_FAR _MomText2
+	db "@"
+
+MomText3:
+	TX_FAR _MomText3
 	db "@"
 
 MomHealPokemon: ; 4818a (12:418a)
@@ -91819,7 +91902,7 @@ RedsHouse2FScriptPointers: ; 5c0bc (17:40bc)
 	dw RedsHouse2FScript0 ; walk around
 	dw RedsHouse2FScript1 ; start battle
 	dw RedsHouse2FScript2 ; finished battle
-	dw RedsHouse2FScript3 ; warped to Route 1
+	dw RedsHouse2FScript3 ; warped to Lapis Town
 	dw RedsHouse2FScript4 ; walk around
 	dw RedsHouse2FScript5 ; start battle
 	dw RedsHouse2FScript6 ; finished battle
@@ -91942,9 +92025,11 @@ RedsHouse2FScript2:
 	ret	
 
 RedsHouse2FScript3:
-	ld a, 0
+	ld a, 7
+	ld [W_PALLETTOWNCURSCRIPT], a
+	ld a, 3
 	ld [$d42f],a ; save target warp ID
-	ld a, ROUTE_1
+	ld a, PALLET_TOWN
 	ld [$ff8b],a ; save target map
 	jp WarpFound2
 

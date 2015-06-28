@@ -1099,7 +1099,8 @@ W_OAKSLABCURSCRIPT:: ; d5f0
 	ds 1
 W_PALLETTOWNCURSCRIPT:: ; d5f1
 	ds 1
-W_ROUTE1CURSCRIPT:: ; d5f2 hopefully this is unused
+W_BEGINNINGFLAGS:: ; d5f2
+; 0: player put on repel
 	ds 1
 W_BLUESHOUSECURSCRIPT:: ; d5f3
 	ds 1

@@ -1,4 +1,4 @@
-_MomWakeUpText::
+_MomText1::
 	text "MOM: Were you"
 	line "sleep walking"
 	cont "again?"
@@ -7,14 +7,61 @@ _MomWakeUpText::
 	line "wander off into"
 	cont "the woods."
 
-	para "By the way,"
-	line "PROF. CEDAR"
-	cont "called for you"
-	cont "while you were"
-	cont "gone."
+	para "Oh! Look at the"
+	line "time!"
 
-	para "You should stop"
-	line "by his lab."
+	para "You don't want"
+	line "to be late to"
+	cont "your last day of"
+	cont "#SCHOOL!"
+
+	para "Hold still while"
+	line "I spray on your"
+	cont "REPEL."
+
+	para "I wouldn't want"
+	line "a wild #MON"
+	cont "to hurt you on"
+	cont "your way to JADE"
+	cont "VILLAGE SCHOOL."
+
+	para "..."
+
+	para "(MOM sprayed the"
+	line "REPEL.)"
+
+	para "..."
+
+	para "Ok, sweetie!"
+
+	para "Good luck on your"
+	line "final exam!"
+	done
+
+_MomText2::
+	text "MOM: Sweetie,"
+	line "you're going to"
+	cont "be late for your"
+	cont "last day of"
+	cont "#SCHOOL!"
+
+	para "Follow the route"
+	line "north to get to"
+	cont "JADE VILLAGE like"
+	cont "you do every day!"
+	done
+
+_MomText3::
+	text "MOM: You passed"
+	line "#SCHOOL!"
+
+	para "That's so great,"
+	line "sweetie!"
+
+	para "I bet PROF. CEDAR"
+	line "will help you"
+	cont "pick out your"
+	cont "first #MON!"
 	done
 
 _MomHealText1::
@@ -51,4 +98,3 @@ _TVWrongSideText::
 	para "Why does it"
 	line "interest you?"
 	done
-

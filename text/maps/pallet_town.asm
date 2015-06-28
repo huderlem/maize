@@ -58,3 +58,9 @@ _PalletTownText7::
 	text $53,"'s house "
 	done
 
+_PalletTownText9::
+	text "It's dangerous to"
+	line "go without any"
+	cont "#MON or using"
+	cont "a REPEL!"
+	done
