@@ -181,16 +181,29 @@ _GaveMedicineToManText::
 	cont "long."
 	done
 
-_AlreadyGaveMedicineText::
-	text "Give me some air,"
-	line "sonny!"
+_GoGetPokedexText::
+	text "Aha!"
 
-	para "Let the medicine"
-	line "do its work."
+	para "You must be a new"
+	line "#MON Trainer!"
 
-	para "Go talk to"
-	line "PROF. CEDAR while"
-	cont "I recover."
+	para "Wait!"
+
+	para "You don't have a"
+	line "#DEX!"
+
+	para "PROF. CEDAR must"
+	line "have forgotten to"
+	cont "give you one."
+
+	para "That forgetful"
+	line "old fool..."
+
+	para "Go back to his"
+	line "lab in LAPIS"
+	cont "TOWN, and get"
+	cont "yourself a fancy"
+	cont "#DEX!"
 	done
 
 _ViridianShrubText1::
@@ -258,6 +271,6 @@ _ViridianShrubText2::
 	done
 
 _ViridianCityText17::
-	text "This isn't the way"
-	line "to #SCHOOL..."
+	text "This isn't the"
+	line "right way..."
 	done

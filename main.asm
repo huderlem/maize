@@ -32544,7 +32544,7 @@ ViridianCityObject: ; 0x18384 (size=104)
 	db SPRITE_GAMBLER, $8 + 4, $1e + 4, $ff, $ff, $2 ; person
 	db SPRITE_GIRL, $1b + 4, $b + 4, $fe, $0, $3 ; person
 	db SPRITE_GIRL, $9 + 4, $11 + 4, $ff, $d3, $4 ; person
-	db SPRITE_LYING_OLD_MAN, $9 + 4, $12 + 4, $ff, $ff, $5 ; person
+	db SPRITE_GAMBLER, $9 + 4, $12 + 4, $ff, $ff, $5 ; person
 	db SPRITE_BUG_CATCHER, $18 + 4, $20 + 4, $ff, $d2, $6 ; person
 	db SPRITE_GAMBLER, $5 + 4, $11 + 4, $fe, $2, $7 ; person
 
@@ -33104,7 +33104,22 @@ ViridianCityScriptPointers: ; 18ffd (6:4ffd)
 ViridianCityScript0: ; 19005 (6:5005)
 	ld a, [W_BEGINNINGFLAGS]
 	cp 3
+	jr c, .start
+	; guys stops you
+	ld a, [W_YCOORD]
+	cp 10
 	ret nc
+	ld a,[$d74b]
+	bit 5,a ; does the player have the pokedex?
+	ret nz
+	ld a, $5
+	ld [$ff00+$8c], a
+	call DisplayTextID
+	; player doesn't have pokedex
+	ld hl, W_PEWTERGYMCURSCRIPT
+	set 7, [hl]
+	jr .walkDown
+.start
 	ld a, [W_YCOORD]
 	cp $c
 	jr nc, .checkBottom
@@ -33112,6 +33127,7 @@ ViridianCityScript0: ; 19005 (6:5005)
 	ld a, $11
 	ld [$ff00+$8c], a
 	call DisplayTextID
+.walkDown
 	xor a
 	ld [H_CURRENTPRESSEDBUTTONS], a
 	ld a, $ff ; disable all buttons
@@ -33125,7 +33141,6 @@ ViridianCityScript0: ; 19005 (6:5005)
 	ld hl,$d730
 	set 7,[hl]
 	ret
-
 .checkBottom
 	cp $20
 	ret c
@@ -33328,34 +33343,33 @@ UnnamedText_1917a: ; 1917a (6:517a)
 
 ViridianCityText5: ; 1917f (6:517f)
 	db $08 ; asm
-	; check if player has medicine
-	ld b, OAKS_PARCEL
-	call IsItemInBag
-	jr z, .noMedicine
-	ld hl, GaveMedicineToManText
-	call PrintText
-	ld a, OAKS_PARCEL
-	ldh [$db], a
-	ld hl, RemoveItemByID
-	ld b, BANK(RemoveItemByID)
-	call Bankswitch
-	; hijack a temporary flag
+	ld a,[$d74b]
+	bit 5,a ; does the player have the pokedex?
+	jr nz, .teachHowToCatch
+	; player doesn't have pokedex
 	ld hl, W_PEWTERGYMCURSCRIPT
 	set 7, [hl]
-	jp TextScriptEnd
-.noMedicine:
-	ld hl, W_PEWTERGYMCURSCRIPT
-	bit 7, [hl]
-	jr z, .nothing
-	ld hl, AlreadyGaveMedicineText
+	ld hl, GoGetPokedexText
 	call PrintText
 	jp TextScriptEnd
-.nothing:
-	ld hl, UnnamedText_19191
+.teachHowToCatch
+	ld hl, UnnamedText_1920a
 	call PrintText
-	call ViridianCityScript_190cf
-	ld a, $3
+	ld c, $2
+	call DelayFrames
+	call YesNoChoice
+	ld a, [$cc26]
+	and a
+	jr z, .asm_42f68 ; 0x191f2
+	ld hl, UnnamedText_1920f
+	call PrintText
+	ld a, $1
 	ld [W_VIRIDIANCITYCURSCRIPT], a
+	jr .done
+.asm_42f68 ; 0x19201
+	ld hl, UnnamedText_19214
+	call PrintText
+.done
 	jp TextScriptEnd
 
 UnnamedText_19191: ; 19191 (6:5191)
@@ -33391,8 +33405,8 @@ GaveMedicineToManText:
 	TX_FAR _GaveMedicineToManText
 	db "@"
 
-AlreadyGaveMedicineText:
-	TX_FAR _AlreadyGaveMedicineText
+GoGetPokedexText:
+	TX_FAR _GoGetPokedexText
 	db "@"
 
 UnnamedText_191ca: ; 191ca (6:51ca)
