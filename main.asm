@@ -32530,9 +32530,8 @@ ViridianCityObject: ; 0x18384 (size=104)
 	db $11, $b, $0, VIRIDIAN_HOUSE
 	db $7, $20, $0, VIRIDIAN_GYM
 
-	db $7 ; signs
+	db $6 ; signs
 	db $13, $9, $8 ; ViridianCityText8
-	db $19, $d, $9 ; ViridianCityText9
 	db $13, $15, $a ; ViridianCityText10
 	db $19, $10, $b ; MartSignText
 	db $19, $a, $c ; PokeCenterSignText
@@ -33291,28 +33290,7 @@ UnnamedText_19127: ; 19127 (6:5127)
 	db "@"
 
 ViridianCityText3: ; 1912c (6:512c)
-	db $08 ; asm
-	ld hl, UnnamedText_1914d
-	call PrintText
-	call YesNoChoice
-	ld a, [$cc26]
-	and a
-	jr nz, .asm_6dfea ; 0x1913a
-	ld hl, UnnamedText_19157
-	call PrintText
-	jr .asm_d611f ; 0x19142
-.asm_6dfea ; 0x19144
-	ld hl, UnnamedText_19152
-	call PrintText
-.asm_d611f ; 0x1914a
-	jp TextScriptEnd
-
-UnnamedText_1914d: ; 1914d (6:514d)
 	TX_FAR _UnnamedText_1914d
-	db "@"
-
-UnnamedText_19152: ; 19152 (6:5152)
-	TX_FAR _UnnamedText_19152
 	db "@"
 
 UnnamedText_19157: ; 19157 (6:5157)

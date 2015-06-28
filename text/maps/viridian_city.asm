@@ -24,15 +24,10 @@ _UnnamedText_19127:: ; a4474 (29:4474)
 	done
 
 _UnnamedText_1914d:: ; a4494 (29:4494)
-	text "Do you believe in"
-	line "ghosts?"
-	done
-
-_UnnamedText_19152:: ; a44cd (29:44cd)
-	text "I have one word"
-	line "for you:"
-
-	para "GASTLY"
+	text "I like to catch"
+	line "#MON at night"
+	cont "because sometimes"
+	cont "they're sleeping!"
 	done
 
 _UnnamedText_19157:: ; a44db (29:44db)
