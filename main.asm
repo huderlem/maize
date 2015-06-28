@@ -40967,7 +40967,59 @@ DiglettsCaveEntranceRoute11TextPointers: ; 1e5c3 (7:65c3)
 	dw DiglettsCaveEntranceRoute11Text1
 
 DiglettsCaveEntranceRoute11Text1: ; 1e5c5 (7:65c5)
-	TX_FAR _DiglettsCaveEntRoute11Text1
+	db $08 ; asm
+	ld hl, W_NEWFLAGS3
+	bit 2, [hl]
+	jr nz, .alreadyGaveEgg
+	ld hl, BasaltCaveGuyText1
+	call PrintText
+	call YesNoChoice
+	ld a, [wCurrentMenuItem] ; $cc26
+	and a
+	jr nz, .saidNo
+	; try to give EGG
+	ld hl, GiveEgg
+	ld b, Bank(GiveEgg)
+	ld d, TOGEPI
+	call Bankswitch
+	jr nc, .noSpace
+	ld hl, W_NEWFLAGS3
+	set 2, [hl]
+	ld hl, BasaltCaveGuyText5
+	call PrintText
+	jr .done
+.noSpace
+	ld hl, BasaltCaveGuyText3
+	call PrintText
+	jr .done
+.saidNo
+	ld hl, BasaltCaveGuyText2
+	call PrintText
+	jr .done
+.alreadyGaveEgg
+	ld hl, BasaltCaveGuyText4
+	call PrintText
+.done
+	jp TextScriptEnd
+
+BasaltCaveGuyText1:
+	TX_FAR _BasaltCaveGuyText1
+	db "@"
+
+BasaltCaveGuyText2:
+	TX_FAR _BasaltCaveGuyText2
+	db "@"
+
+BasaltCaveGuyText3:
+	TX_FAR _BasaltCaveGuyText3
+	db "@"
+
+BasaltCaveGuyText4:
+	TX_FAR _BasaltCaveGuyText4
+	db "@"
+
+BasaltCaveGuyText5:
+	TX_FAR _BasaltCaveGuyText5
 	db "@"
 
 DiglettsCaveEntranceRoute11Object: ; 0x1e5ca (size=34)
@@ -121620,10 +121672,12 @@ Mon189_EvosMoves: ; 3b9e4 (e:79e4)
 	db EV_HAPPINESS,1,TOGETIC ; todo
 	db 0
 ;Learnset
-	db 7,METRONOME
-	db 18,SWEET_KISS
-	db 24,DEFENSE_CURL
-	db 38,DOUBLE_EDGE
+	db 6,METRONOME
+	db 12,SWEET_KISS
+	db 16,SWIFT
+	db 18,DEFENSE_CURL
+	db 32,DOUBLE_EDGE
+	db 38,DAZZLE_GLEAM
 	db 0
 
 Mon190_EvosMoves: ; 3b9e4 (e:79e4)
@@ -121632,10 +121686,13 @@ Mon190_EvosMoves: ; 3b9e4 (e:79e4)
 	db EV_ITEM,ITEM_STONE,1,TOGEKISS
 	db 0
 ;Learnset
-	db 7,METRONOME
-	db 18,SWEET_KISS
-	db 24,DEFENSE_CURL
-	db 38,DOUBLE_EDGE
+	db 6,METRONOME
+	db 12,SWEET_KISS
+	db 16,SWIFT
+	db 18,DEFENSE_CURL
+	db 24,AERIAL_ACE
+	db 32,DOUBLE_EDGE
+	db 38,DAZZLE_GLEAM
 	db 0
 
 Mon191_EvosMoves: ; 3b9e4 (e:79e4)
