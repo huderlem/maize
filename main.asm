@@ -32485,7 +32485,7 @@ PalletTownObject: ; 0x182c3 (size=58)
 	db $f ; border tile
 
 	db $4 ; warps
-	db $d, $11, $0, REDS_HOUSE_1F
+	db $d, $11, $a, TWITCH_ISLE_INSIDE
 	db $7, $11, $0, BLUES_HOUSE
 	db $b, $1a, $1, OAKS_LAB
 	db $7, $4, $0, PALLET_TOWN
@@ -73112,8 +73112,9 @@ PyriteSewersBattleText3:
 PyriteSewersObject:
 	db $3 ; border tile
 
-	db $1 ; warps
+	db $2 ; warps
 	db $3, $3, $8, CELADON_CITY
+	db $e, $1a, $0, TWITCH_ISLE_INSIDE
 
 	db $0 ; signs
 
@@ -73124,7 +73125,8 @@ PyriteSewersObject:
 	db SPRITE_OLD_PERSON, $f + 4, $17 + 4, $ff, $ff, $4 ; person
 
 	; warp-to
-	EVENT_DISP PYRITE_SEWERS_WIDTH, $3, $3 ; SEAFOAM_ISLANDS_3
+	EVENT_DISP PYRITE_SEWERS_WIDTH, $3, $3 ; CELADON_CITY
+	EVENT_DISP PYRITE_SEWERS_WIDTH, $e, $1a ; TWITCH_ISLE_INSIDE
 
 PyriteSewersBlocks: ; 463be (11:63be)
 	INCBIN "maps/pyritesewers.blk"
@@ -99438,9 +99440,42 @@ TwitchIsleInsideScript: ; 61d55 (18:5d55)
 	ret
 
 TwitchIsleInsideScriptPointers: ; 61d68 (18:5d68)
-	dw CheckFightingMapTrainers
+	dw TwitchIsleInsideScript0
 	dw Func_324c
-	dw EndTrainerBattle
+	dw TwitchIsleInsideScript2
+
+TwitchIsleInsideScript0:
+	ld a, [W_XCOORD]
+	cp $a
+	ret c
+	cp $e
+	ret nc
+	ld a, [W_YCOORD]
+	cp 6
+	ret c
+	cp 8
+	ret nc
+	ld hl, $d809
+	bit 2, [hl]
+	ret nz
+	; initiate shadow TPP battle
+	ld a, $3
+	ld [H_DOWNARROWBLINKCNT2], a ; $FF00+$8c
+	call DisplayTextID
+	ret
+
+TwitchIsleInsideScript2:
+	ld a, $3
+	ld [W_TWITCHISLEINSIDECURSCRIPT], a
+	; warp to sewers
+	ld a, 1
+	ld [$d42f],a ; save target warp ID
+	ld a, PYRITE_SEWERS
+	ld [$ff8b],a ; save target map
+	jp WarpFound2
+
+TwitchIsleInsideScript3:
+	ret
 
 TwitchIsleInsideTextPointers: ; 61d6e (18:5d6e)
 	dw TwitchIsleInsideText1
@@ -99651,17 +99686,17 @@ TwitchIsleInsideObject: ; 0x61e75 (size=165)
 	db $1b, $17, $c
 
 	db $b ; people
-	db SPRITE_SAILOR, $23 + 4, $7 + 4, $ff, $ff, $41, ROCKER + $C8, $1 ; trainer
-	db SPRITE_SAILOR, $b + 4, $2 + 4, $ff, $d0, $42, SAILOR + $C8, $4 ; trainer
-	db SPRITE_SAILOR, $3 + 4, $c + 4, $ff, $d2, $43, SAILOR + $C8, $5 ; trainer
-	db SPRITE_SAILOR, $2 + 4, $16 + 4, $ff, $d0, $44, SAILOR + $C8, $6 ; trainer
+	db SPRITE_SAILOR, $0 + 4, $0 + 4, $ff, $ff, $41, YOUNGSTER + $C8, $1 ; trainer
+	db SPRITE_SAILOR, $0 + 4, $0 + 4, $ff, $d0, $42, YOUNGSTER + $C8, $1 ; trainer
+	db SPRITE_SAILOR, $0 + 4, $0 + 4, $ff, $d2, $43, SHADOW + $C8, $3 ; trainer
+	db SPRITE_SAILOR, $0 + 4, $0 + 4, $ff, $d0, $44, YOUNGSTER + $C8, $1 ; trainer
 	db SPRITE_SAILOR, $1c + 4, $30 + 4, $ff, $ff, $5 ; trainer ; TODO: this used to be a trainer
 	db SPRITE_FISHER2, $1b + 4, $18 + 4, $ff, $d1, $6 ; person TODO: this used to be a trainer
 	db SPRITE_SLOWBRO, $18 + 4, $18 + 4, $fe, $0, $7 ; person
 	db SPRITE_SLOWBRO, $17 + 4, $17 + 4, $fe, $0, $8 ; person
-	db SPRITE_BALL, $2 + 4, $14 + 4, $ff, $ff, $89, ETHER ; item
-	db SPRITE_BALL, $2 + 4, $a + 4, $ff, $ff, $8a, TM_44 ; item
-	db SPRITE_BALL, $b + 4, $c + 4, $ff, $ff, $8b, MAX_POTION ; item
+	db SPRITE_BALL, $0 + 4, $0 + 4, $ff, $ff, $89, ETHER ; item
+	db SPRITE_BALL, $0 + 4, $0 + 4, $ff, $ff, $8a, TM_44 ; item
+	db SPRITE_BALL, $0 + 4, $0 + 4, $ff, $ff, $8b, MAX_POTION ; item
 
 	; warp-to
 	EVENT_DISP TWITCH_ISLE_INSIDE_WIDTH, $18, $2 ; TWITCH_ISLE
@@ -124145,9 +124180,9 @@ LanceData: ; 3a522 (e:6522)
 ShadowData:
 	db $FF,100,SKARMORY,100,DRAGONITE,100,ALAKAZAM,0
 	db $FF,25,FLAAFFY,26,HAUNTER,27,FEAROW,0
+	db $FF,40,PIDGEOT,40,LAPRAS,40,VENOMOTH,40,ZAPDOS,40,NIDOKING,40,OMASTAR,0
 TimmyData:
     db $5,EEVEE,0
-
 
 RandomTeamClassesPointers:
 	dw RandomTeamClass1
