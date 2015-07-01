@@ -1,6 +1,5 @@
 _TwitchIsleInsideText8:: ; 81aaa (20:5aaa)
-	text "MACHOKE: Gwoh!"
-	line "Goggoh!@@"
+	text "MACHO MAN: Rhyyy!"
 
 _TwitchIsleInsideBattleText1:: ; 81ac3 (20:5ac3)
 	text "Were you there"
@@ -42,19 +41,27 @@ _TwitchIsleInsideAfterBattleText2:: ; 81b68 (20:5b68)
 	done
 
 _TwitchIsleInsideBattleText3:: ; 81b99 (20:5b99)
-	text "Us sailors have"
-	line "#MON too!"
+	text "UP DOWN LEFT UP A"
+	line "B B A UP START B"
+	cont "DOWN B UP A A UP"
+
+	para "YOU DARE ENTER"
+	line "THIS SACRED ISLE?"
 	done
 
 _TwitchIsleInsideEndBattleText3:: ; 81bb4 (20:5bb4)
-	text "OK, "
-	line "you're not bad."
+	text "..."
 	prompt
 
 _TwitchIsleInsideAfterBattleText3:: ; 81bc9 (20:5bc9)
-	text "We caught all our"
-	line "#MON while"
-	cont "out at sea!"
+	text "The voices......."
+	line "........finally.."
+	cont "..stopped........"
+	cont "....thank..you..."
+
+	para "(A sudden force"
+	line "pushed ", $52
+	cont "down.)"
 	done
 
 _TwitchIsleInsideBattleText4:: ; 81bf3 (20:5bf3)
@@ -73,20 +80,17 @@ _TwitchIsleInsideAfterBattleText4:: ; 81c22 (20:5c22)
 	done
 
 _TwitchIsleInsideBattleText5:: ; 81c52 (20:5c52)
-	text "Matey, you're"
-	line "walking the plank"
-	cont "if you lose!"
+	text "Praise HELIX!"
 	done
 
 _TwitchIsleInsideEndBattleText5:: ; 81c7f (20:5c7f)
-	text "Argh!"
-	line "Beaten by a kid!"
+	text "Thou"
+	line "art cruel!"
 	prompt
 
 _TwitchIsleInsideAfterBattleText5:: ; 81c97 (20:5c97)
-	text "Jellyfish some-"
-	line "times drift into"
-	cont "the ship."
+	text "Sometimes I pray"
+	line "to S.S. TICKET!"
 	done
 
 _TwitchIsleInsideBattleText6:: ; 81cc3 (20:5cc3)
@@ -110,11 +114,19 @@ _TwitchIsleInsideAfterBattleText6:: ; 81d21 (20:5d21)
 	done
 
 _TwitchIsleInsideText7:: ; 81d4c (20:5d4c)
-	text "My buddy, MACHOKE,"
-	line "is super strong!"
+	text "FALSE PROPHET:"
+	line "Flaaaare!@@"
 
-	para "He has enough"
-	line "STRENGTH to move"
-	cont "big rocks!"
+_TwitchIsleInsidePCGuyText::
+	text "Look at them."
+
+	para "It's a shame they"
+	line "were released."
+
+	para "Some blame the"
+	line "False Prophet,"
+	cont "FLAREON."
+
+	para "I blame the PC."
 	done
 

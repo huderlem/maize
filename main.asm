@@ -32485,7 +32485,7 @@ PalletTownObject: ; 0x182c3 (size=58)
 	db $f ; border tile
 
 	db $4 ; warps
-	db $d, $11, $a, TWITCH_ISLE_INSIDE
+	db $d, $11, $6, TWITCH_ISLE_INSIDE
 	db $7, $11, $0, BLUES_HOUSE
 	db $b, $1a, $1, OAKS_LAB
 	db $7, $4, $0, PALLET_TOWN
@@ -99442,7 +99442,8 @@ TwitchIsleInsideScript: ; 61d55 (18:5d55)
 TwitchIsleInsideScriptPointers: ; 61d68 (18:5d68)
 	dw TwitchIsleInsideScript0
 	dw Func_324c
-	dw TwitchIsleInsideScript2
+	dw EndTrainerBattle
+	dw TwitchIsleInsideScript3
 
 TwitchIsleInsideScript0:
 	ld a, [W_XCOORD]
@@ -99464,8 +99465,8 @@ TwitchIsleInsideScript0:
 	call DisplayTextID
 	ret
 
-TwitchIsleInsideScript2:
-	ld a, $3
+TwitchIsleInsideScript3:
+	xor a
 	ld [W_TWITCHISLEINSIDECURSCRIPT], a
 	; warp to sewers
 	ld a, 1
@@ -99474,16 +99475,13 @@ TwitchIsleInsideScript2:
 	ld [$ff8b],a ; save target map
 	jp WarpFound2
 
-TwitchIsleInsideScript3:
-	ret
-
 TwitchIsleInsideTextPointers: ; 61d6e (18:5d6e)
 	dw TwitchIsleInsideText1
 	dw TwitchIsleInsideText2
 	dw TwitchIsleInsideText3
 	dw TwitchIsleInsideText4
 	dw TwitchIsleInsideText5
-	dw TwitchIsleInsideText6
+	dw TwitchIsleInsidePCGuyText
 	dw TwitchIsleInsideText7
 	dw TwitchIsleInsideText8
 	dw Predef5CText
@@ -99547,6 +99545,10 @@ TwitchIsleInsideTrainerHeader5: ; 61dc0 (18:5dc0)
 
 	db $ff
 
+TwitchIsleInsidePCGuyText:
+	TX_FAR _TwitchIsleInsidePCGuyText
+	db "@"
+
 TwitchIsleInsideText1: ; 61dcd (18:5dcd)
 	db $08 ; asm
 	ld hl, TwitchIsleInsideTrainerHeader0
@@ -99586,7 +99588,7 @@ TwitchIsleInsideText6: ; 61dff (18:5dff)
 TwitchIsleInsideText8: ; 61e09 (18:5e09)
 	TX_FAR _TwitchIsleInsideText8
 	db $8 ; 0x61e0d
-	ld a, MACHOKE
+	ld a, RHYHORN
 	call PlayCry
 	jp TextScriptEnd
 
@@ -99623,6 +99625,14 @@ TwitchIsleInsideEndBattleText3: ; 61e39 (18:5e39)
 	db "@"
 
 TwitchIsleInsideAfterBattleText3: ; 61e3e (18:5e3e)
+	db $08
+	ld hl, TwitchIsleShadowAfterBattleText
+	call PrintText
+	ld a, $3
+	ld [W_CURMAPSCRIPT], a
+	jp TextScriptEnd
+
+TwitchIsleShadowAfterBattleText:
 	TX_FAR _TwitchIsleInsideAfterBattleText3
 	db "@"
 
@@ -99664,7 +99674,10 @@ TwitchIsleInsideAfterBattleText6: ; 61e6b (18:5e6b)
 
 TwitchIsleInsideText7: ; 61e70 (18:5e70)
 	TX_FAR _TwitchIsleInsideText7
-	db "@"
+	db $8 ; 0x61e0d
+	ld a, FLAREON
+	call PlayCry
+	jp TextScriptEnd
 
 TwitchIsleInsideObject: ; 0x61e75 (size=165)
 	db $0 ; border tile
@@ -99686,11 +99699,11 @@ TwitchIsleInsideObject: ; 0x61e75 (size=165)
 	db $1b, $17, $c
 
 	db $b ; people
-	db SPRITE_SAILOR, $0 + 4, $0 + 4, $ff, $ff, $41, YOUNGSTER + $C8, $1 ; trainer
+	db SPRITE_ROCKER, $23 + 4, $4 + 4, $ff, $d0, $41, ROCKER + $C8, $1 ; trainer
 	db SPRITE_SAILOR, $0 + 4, $0 + 4, $ff, $d0, $42, YOUNGSTER + $C8, $1 ; trainer
 	db SPRITE_SAILOR, $0 + 4, $0 + 4, $ff, $d2, $43, SHADOW + $C8, $3 ; trainer
 	db SPRITE_SAILOR, $0 + 4, $0 + 4, $ff, $d0, $44, YOUNGSTER + $C8, $1 ; trainer
-	db SPRITE_SAILOR, $1c + 4, $30 + 4, $ff, $ff, $5 ; trainer ; TODO: this used to be a trainer
+	db SPRITE_MEDIUM, $1c + 4, $30 + 4, $ff, $ff, $45, CHANNELER + $C8, $2 ; trainer
 	db SPRITE_FISHER2, $1b + 4, $18 + 4, $ff, $d1, $6 ; person TODO: this used to be a trainer
 	db SPRITE_SLOWBRO, $18 + 4, $18 + 4, $fe, $0, $7 ; person
 	db SPRITE_SLOWBRO, $17 + 4, $17 + 4, $fe, $0, $8 ; person
@@ -123942,7 +123955,7 @@ PsychicData: ; 3a115 (e:6115)
 	db 33,SLOWPOKE,SLOWPOKE,SLOWBRO,0
 	db 38,SLOWBRO,0
 RockerData: ; 3a127 (e:6127)
-	db 2,RATICATE,FARFETCH_D,CHARMELEON,LAPRAS,FLAREON,$0
+	db 38,RATICATE,FARFETCH_D,CHARMELEON,FLAREON,$0  ; Twitch Isle Inside
 	db 29,VOLTORB,ELECTRODE,0
 JugglerData: ; 3a130 (e:6130)
 	db 29,KADABRA,MR_MIME,0
@@ -124150,7 +124163,7 @@ LoreleiData: ; 3a4bb (e:64bb)
 	db $FF,54,DEWGONG,53,CLOYSTER,54,SLOWBRO,56,JYNX,56,LAPRAS,0
 ChannelerData: ; 3a4c7 (e:64c7)
 	db 36,EEVEE,GLACEON,0 ; Hardwater Hole B1F (ice rock)
-	db 24,GASTLY,0
+	db 37,OMANYTE,OMANYTE,OMANYTE,OMANYTE,OMANYTE,OMANYTE,0 ; Twitch Isle Inside
 	db 23,GASTLY,GASTLY,0
 	db 24,GASTLY,0
 	db 23,GASTLY,0
