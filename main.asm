@@ -258,7 +258,7 @@ MapHeaderPointers:: ; 01ae (0:01ae)
 	dw DayCareM_h
 	dw Route6Gate_h
 	dw UndergroundTunnelEntranceRoute6_h
-	dw UndergroundTunnelEntranceRoute6_h ; unused
+	dw TwitchIsleHouse_h
 	dw Route7Gate_h
 	dw UndergroundPathEntranceRoute7_h
 	dw UndergroundPathEntranceRoute7Copy_h
@@ -19157,7 +19157,7 @@ MapHeaderBanks: ; c23d (3:423d)
 	db BANK(DayCareM_h)
 	db BANK(Route6Gate_h)
 	db BANK(UndergroundTunnelEntranceRoute6_h)
-	db BANK(UndergroundTunnelEntranceRoute6_h) ;FREEZE
+	db BANK(TwitchIsleHouse_h)
 	db BANK(Route7Gate_h)
 	db BANK(UndergroundPathEntranceRoute7_h)
 	db BANK(UndergroundPathEntranceRoute7Copy_h) ;FREEZE
@@ -79601,7 +79601,7 @@ TwitchIsleObject: ; 0x50361 (size=81)
 	db $11, $23, $0, TWITCH_ISLE
 	db $11, $25, $0, TWITCH_ISLE
 	db $1b, $8, $7, TWITCH_ISLE_INSIDE
-	db $21, $2b, $0, TWITCH_ISLE
+	db $21, $2b, $0, TWITCH_ISLE_HOUSE
 	db $27, $c, $0, TWITCH_ISLE_INSIDE
 	db $2f, $c, $8, TWITCH_ISLE_INSIDE
 	db $2f, $1e, $3, TWITCH_ISLE_INSIDE
@@ -86990,6 +86990,42 @@ FuchsiaHouse3Object: ; 0x56221 (size=34)
 	; warp-to
 	EVENT_DISP FUCHSIA_HOUSE_3_WIDTH, $7, $2
 	EVENT_DISP FUCHSIA_HOUSE_3_WIDTH, $7, $3
+
+TwitchIsleHouse_h:
+	db $08
+	db TWITCH_ISLE_HOUSE_HEIGHT, TWITCH_ISLE_HOUSE_WIDTH ; dimensions (y, x)
+	dw TwitchIsleHouseBlocks, TwitchIsleHouseTextPointers, TwitchIsleHouseScript ; blocks, texts, scripts
+	db $00 ; connections
+	dw TwitchIsleHouseObject
+
+TwitchIsleHouseBlocks:
+	INCBIN "maps/twitchislehouse.blk"
+
+TwitchIsleHouseTextPointers:
+	dw TwitchIsleHouseText1
+
+TwitchIsleHouseText1:
+	TX_FAR _TwitchIsleHouseText1
+	db "@"
+
+TwitchIsleHouseScript:
+	jp EnableAutoTextBoxDrawing
+
+TwitchIsleHouseObject:
+	db $a ; border tile
+
+	db $2 ; warps
+	db $5, $2, $b, $ff
+	db $5, $3, $b, $ff
+
+	db $0 ; signs
+
+	db $1 ; people
+	db SPRITE_MEDIUM, $3 + 4, $2 + 4, $ff, $d0, $1 ; person
+
+	; warp-to
+	EVENT_DISP TWITCH_ISLE_HOUSE_WIDTH, $5, $2
+	EVENT_DISP TWITCH_ISLE_HOUSE_WIDTH, $5, $3
 
 DayCareM_h: ; 0x56243 to 0x5624f (12 bytes) (id=72)
 	db $08 ; tileset

@@ -4707,3 +4707,40 @@ _NoRoomForEggText::
 	line "room in your"
 	cont "party!"
 	prompt
+
+_TwitchIsleHouseText1::
+	text "Fufufufu!"
+
+	para "Every now and"
+	line "then, a lost"
+	cont "wanderer steps on"
+	cont "this Isle."
+
+	para "The voices get to"
+	line "them all."
+
+	para "They can't stand"
+	line "being told what"
+	cont "to do--with less"
+	cont "control."
+
+	para "If you knew the"
+	line "lore, you'd turn"
+	cont "around before you"
+	cont "descend into"
+	cont "madness."
+
+	para "(Seriously, if"
+	line "you aren't"
+	cont "familiar with"
+	cont "Twitch Plays"
+	cont "#MON, you won't"
+	cont "understand a"
+	cont "single thing on"
+	cont "this island.)"
+
+	para "(Look it up on"
+	line "the internet if
+	cont "don't know much"
+	cont "about it!)"
+	done
