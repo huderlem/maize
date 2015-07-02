@@ -1,3 +1,4 @@
+INCLUDE "constants/map_constants.asm"
 
 Func_213c8:: ; 213c8 (8:53c8)
 	xor a
@@ -150,6 +151,11 @@ BillsPCMenu:
 	FuncCoord 2, 2 ; $c3ca
 	ld hl, Coord
 	ld de, BillsPCMenuText ; $56e1
+	ld a, [W_CURMAP]
+	cp TWITCH_ISLE_INSIDE
+	jr nz, .printMenu
+	ld de, BillsPCMenuReleaseText
+.printMenu
 	call PlaceString
 	ld hl, wTopMenuItemY ; $cc24
 	ld a, $2
@@ -202,6 +208,9 @@ BillsPCMenu:
 	bit 1, a
 	jp nz, Func_21588 ; b button
 	call PlaceUnfilledArrowMenuCursor
+	ld a, [W_CURMAP]
+	cp TWITCH_ISLE_INSIDE
+	jr z, .releaseAllTheThings
 	ld a, [wCurrentMenuItem] ; $cc26
 	ld [$ccd3], a
 	and a
@@ -212,6 +221,21 @@ BillsPCMenu:
 	jp z, Func_21673 ; release
 	cp $3
 	jp z, Func_216b3 ; change box
+	jr Func_21588
+
+.releaseAllTheThings
+	ld a, [wCurrentMenuItem] ; $cc26
+	ld [$ccd3], a
+	and a
+	jp z, Func_21673 ; release
+	cp $1
+	jp z, Func_21673 ; release
+	cp $2
+	jp z, Func_21673 ; release
+	cp $3
+	jp z, Func_21673 ; release
+	; exit the PC
+
 
 Func_21588: ; 21588 (8:5588)
 	ld a, [wFlags_0xcd60]
@@ -383,6 +407,9 @@ Func_216be: ; 216be (8:56be)
 
 BillsPCMenuText: ; 216e1 (8:56e1)
 	db "WITHDRAW ",$4a,$4e,"DEPOSIT ",$4a,$4e,"RELEASE ",$4a,$4e,"CHANGE BOX",$4e,"SEE YA!@"
+
+BillsPCMenuReleaseText:
+	db "RELEASE ",$4a,$4e,"RELEASE ",$4a,$4e,"RELEASE ",$4a,$4e,"RELEASE ",$4a,$4e,"SEE YA!@"
 
 BoxNoPCText: ; 21713 (8:5713)
 	db "BOX No.@"

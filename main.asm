@@ -99487,6 +99487,10 @@ TwitchIsleInsideTextPointers: ; 61d6e (18:5d6e)
 	dw Predef5CText
 	dw Predef5CText
 	dw Predef5CText
+	dw ReleasePCText
+
+ReleasePCText:
+	db $F9
 
 TwitchIsleInsideTrainerHeaders: ; 61d84 (18:5d84)
 TwitchIsleInsideTrainerHeader0: ; 61d84 (18:5d84)
