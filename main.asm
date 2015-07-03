@@ -261,7 +261,7 @@ MapHeaderPointers:: ; 01ae (0:01ae)
 	dw TwitchIsleHouse_h
 	dw Route7Gate_h
 	dw UndergroundPathEntranceRoute7_h
-	dw UndergroundPathEntranceRoute7Copy_h
+	dw MacerEnd_h
 	dw Route8Gate_h
 	dw UndergroundPathEntranceRoute8_h ;id=80
 	dw RockTunnelPokecenter_h
@@ -18909,7 +18909,7 @@ MapSongBanks: ; c04d (3:404d)
 	db MUSIC_VERMILION, BANK(Music_Vermilion) ; FREEZE
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; Route7Gate
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; UndergroundPathEntranceRoute7
-	db MUSIC_VERMILION, BANK(Music_Vermilion) ;FREEZE
+	db MUSIC_DUNGEON1, BANK(Music_Dungeon1) ;FREEZE
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; Route8Gate
 	db MUSIC_CITIES1, BANK(Music_Cities1) ; UndergroundPathEntranceRoute8
 	db MUSIC_POKECENTER, BANK(Music_Pokecenter) ; RockTunnelPokecenter
@@ -18943,12 +18943,12 @@ MapSongBanks: ; c04d (3:404d)
 	db MUSIC_POKEMON_TOWER, BANK(Music_PokemonTower) ;unused
 	db MUSIC_DUNGEON1, BANK(Music_Dungeon1) ;unused
 	db MUSIC_SILPH_CO, BANK(Music_SilphCo) ;unused
-	db MUSIC_SILPH_CO, BANK(Music_SilphCo) ;unused
+	db MUSIC_DUNGEON1, BANK(Music_Dungeon1) ; Macer 1
 	db MUSIC_INDIGO_PLATEAU, BANK(Music_IndigoPlateau) ; Lance
-	db MUSIC_SS_ANNE, BANK(Music_SSAnne) ;unused
-	db MUSIC_SS_ANNE, BANK(Music_SSAnne) ;unused
-	db MUSIC_SS_ANNE, BANK(Music_SSAnne) ;unused
-	db MUSIC_SS_ANNE, BANK(Music_SSAnne) ;unused
+	db MUSIC_DUNGEON1, BANK(Music_Dungeon1) ; Macer 2
+	db MUSIC_DUNGEON1, BANK(Music_Dungeon1) ; Macer 3
+	db MUSIC_DUNGEON1, BANK(Music_Dungeon1) ; Macer 4
+	db MUSIC_DUNGEON1, BANK(Music_Dungeon1) ; Macer 5
 	db MUSIC_PALLET_TOWN, BANK(Music_PalletTown) ; HallofFameRoom
 	db MUSIC_ROUTES1, BANK(Music_Routes1) ; UndergroundPathNS
 	db MUSIC_INDIGO_PLATEAU, BANK(Music_IndigoPlateau) ; Gary
@@ -18979,7 +18979,7 @@ MapSongBanks: ; c04d (3:404d)
 	db MUSIC_POKEMON_TOWER, BANK(Music_PokemonTower) ; PokemonTower4
 	db MUSIC_POKEMON_TOWER, BANK(Music_PokemonTower) ; PokemonTower5
 	db MUSIC_POKEMON_TOWER, BANK(Music_PokemonTower) ; PokemonTower6
-	db MUSIC_POKEMON_TOWER, BANK(Music_PokemonTower) ; PokemonTower7
+	db MUSIC_DUNGEON1, BANK(Music_Dungeon1) ; PokemonTower7
 	db MUSIC_LAVENDER, BANK(Music_Lavender) ; LavenderHouse1
 	db MUSIC_POKECENTER, BANK(Music_Pokecenter) ; LavenderMart
 	db MUSIC_LAVENDER, BANK(Music_Lavender) ; LavenderHouse2
@@ -19160,7 +19160,7 @@ MapHeaderBanks: ; c23d (3:423d)
 	db BANK(TwitchIsleHouse_h)
 	db BANK(Route7Gate_h)
 	db BANK(UndergroundPathEntranceRoute7_h)
-	db BANK(UndergroundPathEntranceRoute7Copy_h) ;FREEZE
+	db BANK(MacerEnd_h)
 	db BANK(Route8Gate_h)
 	db BANK(UndergroundPathEntranceRoute8_h)
 	db BANK(RockTunnelPokecenter_h)
@@ -20123,7 +20123,7 @@ DungeonTilesetIDs: ; c7b2 (3:47b2)
 	db $03,$0A,$0D,$11,$12,$13,$0C,$14,$16,$0F,$07,$06,$FF
 
 DungeonsWithConnections:
-	db POKEMONTOWER_7, MACER_1, MACER_2, MACER_3, MACER_4, MACER_5, $FF
+	db POKEMONTOWER_7, MACER_1, MACER_2, MACER_3, MACER_4, MACER_5, MACER_END, $FF
 
 TilesetsHeadPtr: ; c7be (3:47be)
 	TSETHEAD Tset00_Block,Tset00_GFX,Tset00_Coll,$FF,$FF,$FF,$52,2
@@ -20255,7 +20255,7 @@ MapHSPointers: ; c8f5 (3:48f5)
 	dw MapHSXX
 	dw MapHSXX
 	dw MapHSXX
-	dw MapHSXX
+	dw MapHS4E
 	dw MapHSXX
 	dw MapHSXX
 	dw MapHSXX
@@ -20312,7 +20312,7 @@ MapHSPointers: ; c8f5 (3:48f5)
 	dw MapHS84
 	dw MapHSXX
 	dw MapHSXX
-	dw MapHS87
+	dw MapHSXX
 	dw MapHSXX
 	dw MapHSXX
 	dw MapHSXX
@@ -20332,7 +20332,7 @@ MapHSPointers: ; c8f5 (3:48f5)
 	dw MapHSXX
 	dw MapHS99
 	dw MapHSXX
-	dw MapHS9B
+	dw MapHSXX
 	dw MapHSXX
 	dw MapHS9D
 	dw MapHSXX
@@ -20540,10 +20540,9 @@ MapHS95: ; cbb6 (3:4bb6)
 	db LAVENDER_HOUSE_1,$05,Hide
 MapHS84: ; cbb9 (3:4bb9)
 	db CELADON_MANSION_5,$02,Show
-MapHS87: ; cbbc (3:4bbc)
-	db GAME_CORNER,$0B,Show
-MapHS9B: ; cbbf (3:4bbf)
-	db FUCHSIA_HOUSE_2,$02,Show ; TODO: unused (removed an item)
+MapHS4E: ; cbbc (3:4bbc)
+	db MACER_END,$01,Show
+	db MACER_END,$02,Show
 MapHSA5: ; cbc2 (3:4bc2)
 	db MANSION_1,$02,Show
 	db MANSION_1,$03,Show
@@ -32485,7 +32484,7 @@ PalletTownObject: ; 0x182c3 (size=58)
 	db $f ; border tile
 
 	db $4 ; warps
-	db $d, $11, $6, TWITCH_ISLE_INSIDE
+	db $d, $11, $0, CINNABAR_POKECENTER
 	db $7, $11, $0, BLUES_HOUSE
 	db $b, $1a, $1, OAKS_LAB
 	db $7, $4, $0, PALLET_TOWN
@@ -40593,6 +40592,220 @@ Route7GateObject: ; 0x1e185 (size=42)
 
 Route7GateBlocks: ; 1e1af (7:61af)
 	INCBIN "maps/route7gate.blk"
+
+MacerEnd_h:
+	db $11 ; tileset
+	db MACER_END_HEIGHT, MACER_END_WIDTH ; dimensions (y, x)
+	dw MacerEndBlocks, MacerEndTextPointers, MacerEndScript ; blocks, texts, scripts
+	db EAST ; connections
+	EAST_MAP_CONNECTION MACER_5, MACER_WIDTH, 4, 0, 11, Macer5Blocks, MACER_END_WIDTH
+	dw MacerEndObject ; objects
+
+MacerEndBlocks:
+	INCBIN "maps/macerend.blk"
+
+MacerEndTextPointers:
+	dw MacerEndText1
+	dw MacerEndText2
+	dw MacerEndText3
+	dw MacerEndText4
+	dw MacerEndText5
+
+MacerEndText3:
+	TX_FAR _MacerEndText3
+	db "@"
+
+MacerEndText4:
+	TX_FAR _MacerEndText4
+	db "@"
+
+MacerEndText5:
+	TX_FAR _MacerEndText5
+	db "@"
+
+MacerEndTrainerHeaders: ; 1a20a (6:620a)
+MacerEndTrainerHeader1: ; 1a20a (6:620a)
+	db $1 ; flag's bit
+	db ($0 << 4) ; trainer's view range
+	dw $d769 ; flag's byte
+	dw MacerEndBattleText1 ; 0x62ba TextBeforeBattle
+	dw MacerEndAfterBattleText1 ; 0x62c4 TextAfterBattle
+	dw MacerEndEndBattleText1 ; 0x62bf TextEndBattle
+	dw MacerEndEndBattleText1 ; 0x62bf TextEndBattle
+
+MacerEndTrainerHeader2: ; 1a216 (6:6216)
+	db $2 ; flag's bit
+	db ($0 << 4) ; trainer's view range
+	dw $d769 ; flag's byte
+	dw MacerEndBattleText2 ; 0x62d3 TextBeforeBattle
+	dw MacerEndAfterBattleText2 ; 0x62dd TextAfterBattle
+	dw MacerEndEndBattleText2 ; 0x62d8 TextEndBattle
+	dw MacerEndEndBattleText2 ; 0x62d8 TextEndBattle
+
+	db $ff ; terminator
+
+MacerEndBattleText1:
+	TX_FAR _MacerEndBattleText1
+	db "@"
+
+MacerEndAfterBattleText1:
+	db $08
+	ld hl, __MacerEndAfterBattleText1
+	call PrintText
+	ld a, $3
+	ld [W_CURMAPSCRIPT], a
+	jp TextScriptEnd
+
+__MacerEndAfterBattleText1:
+	TX_FAR _MacerEndAfterBattleText1
+	db "@"
+
+MacerEndEndBattleText1:
+	TX_FAR _MacerEndEndBattleText1
+	db "@"
+
+MacerEndBattleText2:
+	TX_FAR _MacerEndBattleText2
+	db "@"
+
+MacerEndAfterBattleText2:
+	TX_FAR _MacerEndEndBattleText2
+	db "@"
+
+MacerEndEndBattleText2:
+	TX_FAR _MacerEndEndBattleText2
+	db "@"
+
+MacerEndText1:
+	db $08 ; asm
+	ld hl, MacerEndTrainerHeader1
+	call TalkToTrainer
+	jp TextScriptEnd
+
+MacerEndText2:
+	db $08 ; asm
+	ld hl, MacerEndTrainerHeader2
+	call TalkToTrainer
+	jp TextScriptEnd
+
+MacerEndScript:
+	call EnableAutoTextBoxDrawing
+	ld hl, MacerEndTrainerHeaders
+	ld de, MacerEndScriptPointers
+	ld a, [W_POKEMONTOWER7CURSCRIPT]
+	call ExecuteCurMapScriptInTable
+	ld [W_POKEMONTOWER7CURSCRIPT], a
+	ret
+
+MacerEndScriptPointers:
+	dw MacerEndScript0
+	dw Func_324c
+	dw EndTrainerBattle
+	dw MacerEndScript3
+	dw MacerEndScript4
+
+MacerEndScript0:
+	; check if rival was beaten
+	ld hl, $d769
+	bit 1, [hl]
+	jr z, .notBeaten
+	bit 2, [hl]
+	jr nz, .beatRoot
+	; start Dr. Root battle
+	ld c, BANK(Music_MeetRival)
+	ld a, MUSIC_MEET_RIVAL
+	call PlayMusic
+	ld a, $2
+	ld [$ff00+$8c], a
+	call DisplayTextID
+	ret
+.beatRoot
+	ld a, $3
+	ld [W_CURMAPSCRIPT], a
+	ret
+.notBeaten
+	ld a, [W_YCOORD]
+	cp $8
+	ret nz
+	; initiate epic scene
+	; reset trainer flags, in case player blacked out previously
+	ld hl, $d769
+	res 1, [hl]
+	res 2, [hl]
+	ld a, $3
+	ld [$ff00+$8c], a
+	call DisplayTextID
+	; face player
+	ld a, $1
+	ld [$ff00+$8c], a
+	xor a
+	ld [$ff00+$8d], a
+	call Func_34ae
+	ld a, $2
+	ld [$ff00+$8c], a
+	xor a
+	ld [$ff00+$8d], a
+	call Func_34ae
+	ld c, BANK(Music_MeetRival)
+	ld a, MUSIC_MEET_RIVAL
+	call PlayMusic
+	call Delay3
+	call Delay3
+	ld a, $1
+	ld [$ff00+$8c], a
+	call DisplayTextID
+	ret
+
+MacerEndScript3:
+	ld c, BANK(Music_MeetRival)
+	ld a, MUSIC_MEET_RIVAL
+	call PlayMusic
+	ld a, $4
+	ld [$ff00+$8c], a
+	call DisplayTextID
+	call GBFadeOut2
+	; call ReloadMapData
+	ld a, $47
+	ld [$cc4d], a
+	ld a, $11
+	call Predef ; indirect jump to RemoveMissableObject (f1d7 (3:71d7))
+	ld c, $20
+	call DelayFrames
+	call GBFadeIn2
+	ld a, $5
+	ld [$ff00+$8c], a
+	call DisplayTextID
+	call GBFadeOut2
+	; call ReloadMapData
+	ld a, $46
+	ld [$cc4d], a
+	ld a, $11
+	call Predef ; indirect jump to RemoveMissableObject (f1d7 (3:71d7))
+	ld c, $20
+	call DelayFrames
+	call GBFadeIn2
+	ld a, $4
+	ld [W_CURMAPSCRIPT], a
+	call Func_2307 ; reset to map music
+	ret
+
+MacerEndScript4:
+	ret
+
+MacerEndObject:
+	db $19 ; border tile
+
+	db $1 ; warps
+	db $4, $8, $0, PYRITE_VALVE
+
+	db $0 ; signs
+
+	db $2 ; people
+	db SPRITE_BLUE, $6 + 4, $6 + 4, $ff, $d3, $41, SONY1 + $C8, $1; trainer
+	db SPRITE_GIOVANNI, $6 + 4, $7 + 4, $ff, $d2, $42, MISTY + $C8, $1 ; trainer
+
+	; warp-to
+	EVENT_DISP MACER_END_WIDTH, $4, $8
 
 Route8Gate_h: ; 0x1e1bb to 0x1e1c7 (12 bytes) (bank=7) (id=79)
 	db $09 ; tileset
@@ -83945,7 +84158,7 @@ Route5Object: ; 0x545a3 (size=47)
 	db $1d, $c, $3, ROUTE_6_GATE
 	db $1d, $b, $2, ROUTE_6_GATE
 	db $21, $b, $0, ROUTE_6_GATE
-	db $5, $c, $0, PATH_ENTRANCE_ROUTE_5
+	db $5, $c, $0, PYRITE_VALVE
 	db $9, $3, $0, DAYCAREM
 
 	db $1 ; signs
@@ -83954,11 +84167,11 @@ Route5Object: ; 0x545a3 (size=47)
 	db $0 ; people
 
 	; warp-to
-	EVENT_DISP $a, $1d, $c
-	EVENT_DISP $a, $1d, $b
-	EVENT_DISP $a, $21, $b
-	EVENT_DISP $a, $5, $c
-	EVENT_DISP $a, $9, $3
+	EVENT_DISP ROUTE_5_WIDTH, $1d, $c
+	EVENT_DISP ROUTE_5_WIDTH, $1d, $b
+	EVENT_DISP ROUTE_5_WIDTH, $21, $b
+	EVENT_DISP ROUTE_5_WIDTH, $5, $c
+	EVENT_DISP ROUTE_5_WIDTH, $9, $3
 
 Route5Blocks: ; 545d2 (15:45d2)
 	INCBIN "maps/route5.blk"
@@ -97597,167 +97810,6 @@ PokemonTower7_h: ; 0x60cf9 to 0x60d05 (12 bytes) (id=148)
 
 PokemonTower7Script: ; 60d05 (18:4d05)
 	jp EnableAutoTextBoxDrawing
-	;ld hl, PokemonTower7TrainerHeaders
-	;ld de, PokemonTower7ScriptPointers
-	;ld a, [W_POKEMONTOWER7CURSCRIPT]
-	;call ExecuteCurMapScriptInTable
-	;ld [W_POKEMONTOWER7CURSCRIPT], a
-	;ret
-
-Func_60d18: ; 60d18 (18:4d18)
-	xor a
-	ld [wJoypadForbiddenButtonsMask], a
-	ld [W_POKEMONTOWER7CURSCRIPT], a
-	ld [W_CURMAPSCRIPT], a
-	ret
-
-PokemonTower7ScriptPointers: ; 60d23 (18:4d23)
-	dw CheckFightingMapTrainers
-	dw Func_324c
-	dw PokemonTower7Script2
-	dw PokemonTower7Script3
-	dw PokemonTower7Script4
-
-PokemonTower7Script2: ; 60d23 (18:4d23)
-	ld hl, wFlags_0xcd60
-	res 0, [hl]
-	ld a, [W_ISINBATTLE] ; $d057
-	cp $ff
-	jp z, Func_60d18
-	call EndTrainerBattle
-	ld a, $f0
-	ld [wJoypadForbiddenButtonsMask], a
-	ld a, [$cf13]
-	ld [H_DOWNARROWBLINKCNT2], a ; $FF00+$8c
-	call DisplayTextID
-	call Func_60db6
-	ld a, $3
-	ld [W_POKEMONTOWER7CURSCRIPT], a
-	ld [W_CURMAPSCRIPT], a
-	ret
-
-PokemonTower7Script3: ; 60d56 (18:4d56)
-	ld a, [$d730]
-	bit 0, a
-	ret nz
-	ld hl, W_MISSABLEOBJECTLIST
-	ld a, [$cf13]
-	ld b, a
-.missableObjectsListLoop
-	ld a, [hli]
-	cp b            ; search for sprite ID in missing objects list
-	ld a, [hli]
-	jr nz, .missableObjectsListLoop
-	ld [$cc4d], a   ; remove missable object
-	ld a, $11
-	call Predef ; indirect jump to RemoveMissableObject (f1d7 (3:71d7))
-	xor a
-	ld [wJoypadForbiddenButtonsMask], a
-	ld [$cf13], a
-	ld [wTrainerHeaderFlagBit], a
-	ld [$da38], a
-	ld a, $0
-	ld [W_POKEMONTOWER7CURSCRIPT], a
-	ld [W_CURMAPSCRIPT], a
-	ret
-
-PokemonTower7Script4: ; 60d86 (18:4d86)
-	ld a, $ff
-	ld [wJoypadForbiddenButtonsMask], a
-	ld a, $43
-	ld [$cc4d], a
-	ld a, $11
-	call Predef ; indirect jump to RemoveMissableObject (f1d7 (3:71d7))
-	ld a, $4
-	ld [$c109], a
-	ld a, $95
-	ld [H_DOWNARROWBLINKCNT1], a ; $FF00+$8b
-	ld a, $1
-	ld [$d42f], a
-	ld a, $4
-	ld [$d365], a
-	ld hl, $d72d
-	set 3, [hl]
-	ld a, $0
-	ld [W_POKEMONTOWER7CURSCRIPT], a
-	ld [W_CURMAPSCRIPT], a
-	ret
-
-Func_60db6: ; 60db6 (18:4db6)
-	ld hl, CoordsData_60de3 ; $4de3
-	ld a, [$cf13]
-	dec a
-	swap a
-	ld d, $0
-	ld e, a
-	add hl, de
-	ld a, [W_YCOORD] ; $d361
-	ld b, a
-	ld a, [W_XCOORD] ; $d362
-	ld c, a
-.asm_60dcb
-	ld a, [hli]
-	cp b
-	jr nz, .asm_60dde
-	ld a, [hli]
-	cp c
-	jr nz, .asm_60ddf
-	ld a, [hli]
-	ld d, [hl]
-	ld e, a
-	ld a, [$cf13]
-	ld [H_DOWNARROWBLINKCNT2], a ; $FF00+$8c
-	jp MoveSprite
-.asm_60dde
-	inc hl
-.asm_60ddf
-	inc hl
-	inc hl
-	jr .asm_60dcb
-
-CoordsData_60de3: ; 60de3 (18:4de3)
-	db $0C,$09
-	dw MovementData_60e13
-	db $0B,$0A
-	dw MovementData_60e1b
-	db $0B,$0B
-	dw MovementData_60e22
-	db $0B,$0C
-	dw MovementData_60e22
-	db $0A,$0C
-	dw MovementData_60e28
-	db $09,$0B
-	dw MovementData_60e30
-	db $09,$0A
-	dw MovementData_60e22
-	db $09,$09
-	dw MovementData_60e22
-	db $08,$09
-	dw MovementData_60e37
-	db $07,$0A
-	dw MovementData_60e22
-	db $07,$0B
-	dw MovementData_60e22
-	db $07,$0C
-	dw MovementData_60e22
-
-MovementData_60e13: ; 60e13
-	db $C0,$00,$00,$00,$00,$00,$80,$FF
-
-MovementData_60e1b: ; 60e1b
-	db $00,$C0,$00,$00,$00,$00,$FF
-
-MovementData_60e22: ; 60e22
-	db $00,$00,$00,$00,$00,$FF
-
-MovementData_60e28: ; 60e28
-	db $80,$00,$00,$00,$00,$00,$00,$FF
-
-MovementData_60e30: ; 60e30
-	db $00,$00,$00,$80,$00,$00,$FF
-
-MovementData_60e37: ; 60e37
-	db $C0,$00,$00,$00,$00,$00,$00,$FF
 
 PokemonTower7TextPointers: ; 60e3f (18:4e3f)
 	dw BoulderText
@@ -97770,47 +97822,16 @@ PokemonTower7Text5:
 	TX_FAR _PokemonTower7Text5
 	db "@"
 
-PokemonTower7TrainerHeaders: ; 60e47 (18:4e47)
-PokemonTower7TrainerHeader0: ; 60e47 (18:4e47)
-	db $1 ; flag's bit
-	db ($3 << 4) ; trainer's view range
-	dw $d769 ; flag's byte
-	dw PokemonTower7BattleText1 ; 0x4ec9 TextBeforeBattle
-	dw PokemonTower7AfterBattleText1 ; 0x4ed3 TextAfterBattle
-	dw PokemonTower7EndBattleText1 ; 0x4ece TextEndBattle
-	dw PokemonTower7EndBattleText1 ; 0x4ece TextEndBattle
-
-PokemonTower7TrainerHeader1: ; 60e53 (18:4e53)
-	db $2 ; flag's bit
-	db ($3 << 4) ; trainer's view range
-	dw $d769 ; flag's byte
-	dw PokemonTower7BattleText2 ; 0x4ed8 TextBeforeBattle
-	dw PokemonTower7AfterBattleText2 ; 0x4ee2 TextAfterBattle
-	dw PokemonTower7EndBattleText2 ; 0x4edd TextEndBattle
-	dw PokemonTower7EndBattleText2 ; 0x4edd TextEndBattle
-
 PokemonTower7TrainerHeader2: ; 60e5f (18:4e5f)
 	db $3 ; flag's bit
 	db ($3 << 4) ; trainer's view range
-	dw $d769 ; flag's byte
+	dw $d769 ; flag's byte ; unused!
 	dw PokemonTower7BattleText3 ; 0x4ee7 TextBeforeBattle
 	dw PokemonTower7AfterBattleText3 ; 0x4ef1 TextAfterBattle
 	dw PokemonTower7EndBattleText3 ; 0x4eec TextEndBattle
 	dw PokemonTower7EndBattleText3 ; 0x4eec TextEndBattle
 
 	db $ff
-
-PokemonTower7Text1: ; 60e6c (18:4e6c)
-	db $08 ; asm
-	ld hl, PokemonTower7TrainerHeader0
-	call TalkToTrainer
-	jp TextScriptEnd
-
-PokemonTower7Text2: ; 60e76 (18:4e76)
-	db $08 ; asm
-	ld hl, PokemonTower7TrainerHeader1
-	call TalkToTrainer
-	jp TextScriptEnd
 
 PokemonTower7Text3: ; 60e80 (18:4e80)
 	db $08 ; asm
@@ -97893,11 +97914,9 @@ PokemonTower7Object: ; 0x60ef6 (size=42)
 	db $1 ; signs
 	db $b, $5, $5
 
-	db $4 ; people
+	db $2 ; people
 	db SPRITE_BOULDER, $e + 4, $4 + 4, $ff, $10, $1 ; person
 	db SPRITE_BOULDER, $e + 4, $5 + 4, $ff, $10, $2 ; person
-	db SPRITE_ROCKET, $0 + 4, $9 + 4, $ff, $d3, $43, ROCKET + $C8, $15 ; trainer
-	db SPRITE_MR_FUJI, $0 + 4, $a + 4, $ff, $d0, $4 ; person
 
 	; warp-to
 	EVENT_DISP POKEMONTOWER_7_WIDTH, $11, $4 ; ROUTE_8
@@ -111931,27 +111950,10 @@ Macer4Blocks:
 
 Macer4TextPointers:
 	dw Macer4Text1
-	dw Macer4Text2
 
 Macer4Text1:
 	TX_FAR _Macer4Text1
 	db "@"
-
-Macer4Text2:
-	db $08 ; asm
-	ld hl, Macer4ButtonText
-	call PrintText
-	; reveal the ladder
-	ld a, $27
-	ld [$d09f], a
-	ld bc, $0604
-	ld a, $17
-	call Predef
-	ld a, $ad
-	call PlaySound
-	ld hl, Macer4EntranceAppearedText
-	call PrintText
-	jp TextScriptEnd
 
 Macer4EntranceAppearedText:
 	TX_FAR _Macer4EntranceAppearedText
@@ -111970,9 +111972,8 @@ Macer4Object:
     db $1 ; warps
     db $c, $8, $0, PYRITE_VALVE
 	
-    db $2 ; signs
+    db $1 ; signs
     db $5, $7, $1
-    db $a, $9, $2
 
     db $0 ; people
 
@@ -111983,10 +111984,10 @@ Macer5_h:
 	db $11 ; tileset
     db MACER_HEIGHT, MACER_WIDTH ; dimensions (y, x)
     dw Macer5Blocks, Macer5TextPointers, Macer5Script ; blocks, texts, scripts
-    db NORTH | SOUTH | EAST ; connections
+    db NORTH | SOUTH | WEST | EAST ; connections
     NORTH_MAP_CONNECTION MACER_5, MACER_WIDTH, MACER_HEIGHT, 0, 0, MACER_WIDTH, Macer1Blocks
     SOUTH_MAP_CONNECTION MACER_4, MACER_WIDTH, 0, 0, MACER_WIDTH, Macer4Blocks, MACER_WIDTH, MACER_HEIGHT
-    ;WEST_MAP_CONNECTION MACER_5, MACER_WIDTH, 0, 0, MACER_HEIGHT, Macer2Blocks, MACER_WIDTH
+    WEST_MAP_CONNECTION MACER_END, MACER_END_WIDTH, -4, 0, 11, MacerEndBlocks, MACER_WIDTH
     EAST_MAP_CONNECTION MACER_5, MACER_WIDTH, 0, 0, MACER_HEIGHT, Macer5Blocks, MACER_WIDTH
     dw Macer5Object ; objects
 
@@ -112182,7 +112183,7 @@ PyriteValve5Object:
 	db $19 ; border tile
 
 	db $1 ; warps
-	db $3, $5, $4, ROUTE_8
+	db $3, $5, $3, ROUTE_5
 
 	db $1 ; signs
 	db $5, $3, $1
@@ -127733,6 +127734,8 @@ EggText4:
 
 
 HandlePlayerBlackOut_:
+	ld hl, $d769
+	res 1, [hl] ; rival battle at end of Macer tunnels
 	ld a, [W_ISLINKBATTLE] ; $d12b
 	cp $4
 	jr z, .notSony1Battle

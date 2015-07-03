@@ -4744,3 +4744,135 @@ _TwitchIsleHouseText1::
 	cont "don't know much"
 	cont "about it!)"
 	done
+
+_MacerEndText3::
+	text "DR.ROOT: I do"
+	line "believe we're done"
+	cont "here, ", $53, "."
+
+	para "The materials"
+	line "should arrive at"
+	cont "CASTLE ROCK in"
+	cont "no time."
+
+	para $53, ": Hahaha"
+	line "You're a genius!"
+
+	para "The world will"
+	line "know--"
+
+	para "...!!!"
+	done
+
+_MacerEndBattleText1::
+	text "DR.ROOT: Look who"
+	line "decided to join"
+	cont "the party."
+
+	para "How much did you"
+	line "overhear?"
+
+	para "..."
+
+	para "That's too much."
+
+	para $53, ", why don't"
+	line "you prove your"
+	cont "worth to me."
+
+	para "I'll forgive you"
+	line "for letting the"
+	cont "legendary birds"
+	cont "escape if you end"
+	cont "this trespasser."
+
+	para $53, ": Ok ok!"
+
+	para "Anything for you,"
+	line "boss!"
+
+	para "Hey, creep!"
+
+	para "Time to meet your"
+	line "maker!"
+
+	para "You can use your"
+	line "stupid broom to"
+	cont "sweep up the"
+	cont "remains of your"
+	cont "#MON after"
+	cont "this fight!"
+	done
+
+_MacerEndEndBattleText1::
+	text "Boss!"
+	line "Please, Boss..."
+	prompt
+
+_MacerEndAfterBattleText1::
+	text $53, ": But..."
+
+	para "Boss, I know I--"
+	done
+
+_MacerEndBattleText2::
+	text $53, ": But..."
+
+	para "Boss, I know I--"
+
+	para "DR.ROOT: Silence!"
+
+	para "You're nothing but"
+	line "a weak, pathetic"
+	cont "henchman."
+
+	para "I should have"
+	line "never even"
+	cont "considered you"
+	cont "worthy to join"
+	cont "my ranks."
+
+	para "Step aside, and"
+	line "I'll end this"
+	cont "at once."
+	done
+
+_MacerEndEndBattleText2::
+	text "I must"
+	line "flee at once."
+	prompt
+
+_MacerEndText4::
+	text "DR.ROOT: So be"
+	line "it."
+
+	para "This is only a"
+	line "minor setback."
+
+	para "A small boy could"
+	line "never hope to"
+	cont "penetrate CASTLE"
+	cont "ROCK, anyway."
+
+	para "And you, ", $53, "."
+
+	para "Never show your"
+	line "face in the midst"
+	cont "of TEAM QUARRY"
+	cont "again."
+
+	para "You are, as you"
+	line "say, a worthless"
+	cont "creep."
+	done
+
+_MacerEndText5::
+	text $53, ": ..."
+
+	para "I..."
+
+	para "I'll get him."
+
+	para "One day, I'll get"
+	line "him."
+	done
