@@ -32484,7 +32484,7 @@ PalletTownObject: ; 0x182c3 (size=58)
 	db $f ; border tile
 
 	db $4 ; warps
-	db $d, $11, $0, CINNABAR_POKECENTER
+	db $d, $11, $0, TWITCH_ISLE_INSIDE
 	db $7, $11, $0, BLUES_HOUSE
 	db $b, $1a, $1, OAKS_LAB
 	db $7, $4, $0, PALLET_TOWN

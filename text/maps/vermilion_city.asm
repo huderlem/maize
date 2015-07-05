@@ -132,10 +132,8 @@ _CopperShadowGuyText5::
 
 _VermilionCityText5:: ; a5852 (29:5852)
 	text "I'm practicing my"
-	line "silly walk"
-	cont "because I failed"
-	cont "to jump over the"
-	cont "matchboxes."
+	line "silly walk, can't"
+	cont "you see?"
 	done
 
 _VermilionCityText6:: ; a5891 (29:5891)
