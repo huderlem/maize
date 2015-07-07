@@ -1,6 +1,68 @@
+_Route12TextMacerSign::
+	text "MA..R TU..ELS"
+	line "EN...NCE"
+
+	para "(The sign is"
+	line "damaged from the"
+	cont "earthquake.)"
+	done
+
 _Route12Text1:: ; 9009e (24:409e)
-	text "A sleeping #MON"
-	line "blocks the way!"
+	text "Can you believe"
+	line "it?"
+
+	para "The number of"
+	line "earthquakes in"
+	cont "the north have"
+	cont "skyrocketed!"
+
+	para "Unfortunately, it"
+	line "shifts the ground"
+	cont "and causes the"
+	cont "entrances of the"
+	cont "MACER TUNNELS to"
+	cont "disappear and"
+	cont "open elsewhere."
+	done
+
+_Route12Text1b::
+	text "Ugh."
+
+	para "Just what we"
+	line "needed."
+
+	para "The entrance to"
+	line "the MACER TUNNELS"
+	cont "is buried under"
+	cont "the rubble."
+
+	para "We'll have to see"
+	line "if the entrance"
+	cont "east of ENTROPIA"
+	cont "CITY is still"
+	cont "open."
+
+	para "We rely on the"
+	line "MACER TUNNELS to"
+	cont "gather precious"
+	cont "metals."
+	done
+
+_Route12Text1c::
+	text "We're professional"
+	line "miners, and we"
+	cont "can't do our job"
+	cont "if the entrance"
+	cont "to the MACER"
+	cont "TUNNELS is gone!"
+
+	para "Now we'll have to"
+	line "walk all the way"
+	cont "east of ENTROPIA"
+	cont "CITY to get in."
+
+	para "Stupid"
+	line "earthquakes..."
 	done
 
 _UnnamedText_596eb:: ; 900bf (24:40bf)

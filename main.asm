@@ -20483,8 +20483,8 @@ MapHS14: ; cb3e (3:4b3e)
 	db ROUTE_9,$0A,Show
 MapHS17: ; cb41 (3:4b41)
 	db ROUTE_12,$01,Show
-	db ROUTE_12,$09,Show
-	db ROUTE_12,$0A,Show
+	db ROUTE_12,$02,Show
+	db ROUTE_12,$03,Show
 MapHS1A: ; cb4a (3:4b4a)
 	db ROUTE_15,$0B,Show
 MapHS1B: ; cb4d (3:4b4d)
@@ -23986,7 +23986,7 @@ ItemUsePokeflute: ; e140 (3:6140)
 ; if not in battle
 	call ItemUseReloadOverworldData
 	ld a,[W_CURMAP]
-	cp a,ROUTE_12
+	;cp a,ROUTE_12
 	jr nz,.notRoute12
 	ld a,[$d7d8]
 	bit 7,a ; has the player beaten Route 12 Snorlax yet?
@@ -36458,7 +36458,8 @@ CinnabarIsland_h: ; 0x1c000 to 0x1c022 (34 bytes) (bank=7) (id=8)
 	db $00 ; tileset
 	db CINNABAR_ISLAND_HEIGHT, CINNABAR_ISLAND_WIDTH ; dimensions (y, x)
 	dw CinnabarIslandBlocks, CinnabarIslandTextPointers, CinnabarIslandScript ; blocks, texts, scripts
-	db SOUTH | EAST ; connections
+	db NORTH | SOUTH | EAST ; connections
+	NORTH_MAP_CONNECTION ROUTE_12, ROUTE_12_WIDTH, ROUTE_12_HEIGHT, 2, 0, ROUTE_12_WIDTH, Route12Blocks
 	SOUTH_MAP_CONNECTION ROUTE_10, ROUTE_10_WIDTH, 0, 0, ROUTE_10_WIDTH, Route10Blocks, CINNABAR_ISLAND_WIDTH, CINNABAR_ISLAND_HEIGHT
 	EAST_MAP_CONNECTION ROUTE_8, ROUTE_8_WIDTH, 2, 0, 9, Route8Blocks, CINNABAR_ISLAND_WIDTH
 	dw CinnabarIslandObject ; objects
@@ -88579,11 +88580,12 @@ Route12_h: ; 0x5866d to 0x5869a (45 bytes) (id=23)
 	db $00 ; tileset
 	db ROUTE_12_HEIGHT, ROUTE_12_WIDTH ; dimensions (y, x)
 	dw Route12Blocks, Route12TextPointers, Route12Script ; blocks, texts, scripts
-	db $00 ; connections
+	db SOUTH ; connections
+	SOUTH_MAP_CONNECTION CINNABAR_ISLAND, CINNABAR_ISLAND_WIDTH, -2, 0, CINNABAR_ISLAND_WIDTH, CinnabarIslandBlocks, ROUTE_12_WIDTH, ROUTE_12_HEIGHT
 	dw Route12Object ; objects
 
 Route12Object: ; 0x5869a (size=118)
-	db $43 ; border tile
+	db $a ; border tile
 
 	db $4 ; warps
 	db $f, $a, $0, ROUTE_12_GATE
@@ -88591,21 +88593,15 @@ Route12Object: ; 0x5869a (size=118)
 	db $15, $a, $2, ROUTE_12_GATE
 	db $4d, $b, $0, ROUTE_12_HOUSE
 
-	db $2 ; signs
-	db $d, $d, $b ; Route12Text11
-	db $3f, $b, $c ; Route12Text12
+	db $1 ; signs
+	db $3d, $d, $6
 
-	db $a ; people
-	db SPRITE_SNORLAX, $3e + 4, $a + 4, $ff, $d0, $1 ; person
-	db SPRITE_FISHER2, $1f + 4, $e + 4, $ff, $d2, $42, FISHER + $C8, $3 ; trainer
-	db SPRITE_FISHER2, $27 + 4, $5 + 4, $ff, $d1, $43, FISHER + $C8, $4 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_1, $5c + 4, $b + 4, $ff, $d2, $44, JR__TRAINER_M + $C8, $9 ; trainer
-	db SPRITE_BLACK_HAIR_BOY_2, $4c + 4, $e + 4, $ff, $d1, $45, ROCKER + $C8, $2 ; trainer
-	db SPRITE_FISHER2, $28 + 4, $c + 4, $ff, $d2, $46, FISHER + $C8, $5 ; trainer
-	db SPRITE_FISHER2, $34 + 4, $9 + 4, $ff, $d3, $47, FISHER + $C8, $6 ; trainer
-	db SPRITE_FISHER2, $57 + 4, $6 + 4, $ff, $d0, $48, FISHER + $C8, $b ; trainer
-	db SPRITE_BALL, $23 + 4, $e + 4, $ff, $ff, $89, TM_16 ; item
-	db SPRITE_BALL, $59 + 4, $5 + 4, $ff, $ff, $8a, IRON ; item
+	db $5 ; people
+	db SPRITE_BLACK_HAIR_BOY_1, $38 + 4, $a + 4, $ff, $d3, $1 ; person
+	db SPRITE_BLACK_HAIR_BOY_1, $39 + 4, $9 + 4, $ff, $d3, $2 ; person
+	db SPRITE_BLACK_HAIR_BOY_1, $3a + 4, $a + 4, $ff, $d3, $3 ; person
+	db SPRITE_BALL, $0 + 4, $0 + 4, $ff, $ff, $84, TM_16 ; item
+	db SPRITE_BALL, $0 + 4, $0 + 4, $ff, $ff, $85, IRON ; item
 
 	; warp-to
 	EVENT_DISP $a, $f, $a ; ROUTE_12_GATE
@@ -89917,79 +89913,33 @@ Route12Script: ; 595f3 (16:55f3)
 	ld [W_ROUTE12CURSCRIPT], a
 	ret
 
-Route12Script_59606: ; 59606 (16:5606)
-	xor a
-	ld [wJoypadForbiddenButtonsMask], a
-	ld [W_ROUTE12CURSCRIPT], a
-	ld [W_CURMAPSCRIPT], a
-	ret
-
 Route12ScriptPointers: ; 59611 (16:5611)
-	dw Route12Script0
+	dw CheckFightingMapTrainers
 	dw Func_324c
 	dw EndTrainerBattle
-	dw Route12Script3
-
-Route12Script0: ; 59619 (16:5619)
-	ld hl, $d7d8
-	bit 7, [hl]
-	jp nz, CheckFightingMapTrainers
-	bit 6, [hl]
-	res 6, [hl]
-	jp z, CheckFightingMapTrainers
-	ld a, $d
-	ld [H_DOWNARROWBLINKCNT2], a ; $FF00+$8c
-	call DisplayTextID
-	ld a, $84
-	ld [W_CUROPPONENT], a ; $d059
-	ld a, $1e
-	ld [W_CURENEMYLVL], a ; $d127
-	ld a, $1d
-	ld [$cc4d], a
-	ld a, $11
-	call Predef ; indirect jump to RemoveMissableObject (f1d7 (3:71d7))
-	ld a, $3
-	ld [W_ROUTE12CURSCRIPT], a
-	ld [W_CURMAPSCRIPT], a
-	ret
-
-Route12Script3: ; 5964c (16:564c)
-	ld a, [W_ISINBATTLE] ; $d057
-	cp $ff
-	jr z, Route12Script_59606
-	call UpdateSprites
-	ld a, [$cf0b]
-	cp $2
-	jr z, .asm_59664
-	ld a, $e
-	ld [H_DOWNARROWBLINKCNT2], a ; $FF00+$8c
-	call DisplayTextID
-.asm_59664
-	ld hl, $d7d8
-	set 7, [hl]
-	call Delay3
-	ld a, $0
-	ld [W_ROUTE12CURSCRIPT], a
-	ld [W_CURMAPSCRIPT], a
-	ret
 
 Route12TextPointers: ; 59675 (16:5675)
+	;dw Route12Text2
+	;dw Route12Text3
+	;dw Route12Text4
+	;dw Route12Text5
+	;dw Route12Text6
+	;dw Route12Text7
+	;dw Route12Text8
 	dw Route12Text1
-	dw Route12Text2
-	dw Route12Text3
-	dw Route12Text4
-	dw Route12Text5
-	dw Route12Text6
-	dw Route12Text7
-	dw Route12Text8
+	dw Route12Text1b
+	dw Route12Text1c
 	dw Predef5CText
 	dw Predef5CText
-	dw Route12Text11
-	dw Route12Text12
-	dw Route12Text13
-	dw Route12Text14
+	dw Route12TextMacerSign
+
+Route12TextMacerSign:
+	TX_FAR _Route12TextMacerSign
+	db "@"
 
 Route12TrainerHeaders: ; 59691 (16:5691)
+	db $ff
+
 Route12TrainerHeader0: ; 59691 (16:5691)
 	db $2 ; flag's bit
 	db ($4 << 4) ; trainer's view range
@@ -90057,6 +90007,14 @@ Route12TrainerHeader6: ; 596d9 (16:56d9)
 
 Route12Text1: ; 596e6 (16:56e6)
 	TX_FAR _Route12Text1
+	db "@"
+
+Route12Text1b:
+	TX_FAR _Route12Text1b
+	db "@"
+
+Route12Text1c:
+	TX_FAR _Route12Text1c
 	db "@"
 
 Route12Text13: ; 596eb (16:56eb)
