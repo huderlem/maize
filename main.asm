@@ -704,8 +704,8 @@ OverworldLoopLessDelay:: ; 0402 (0:0402)
 	ld hl, Func_44fd7
 	call Bankswitch ; spin while moving
 .noSpinning
-	call UpdateSprites ; move sprites
 .moveAhead2
+	call UpdateSprites ; move sprites
 	ld hl,wFlags_0xcd60
 	res 2,[hl]
 	ld a,[$d700]
@@ -1717,6 +1717,7 @@ CheckTilePassable:: ; 0c10 (0:0c10)
 	ld a,$35
 	call Predef ; get tile in front of player
 	ld a,[$cfc6] ; tile in front of player
+CheckTilePassable_::
 	ld c,a
 	ld hl,$d530 ; pointer to list of passable tiles
 	ld a,[hli]
@@ -32484,7 +32485,7 @@ PalletTownObject: ; 0x182c3 (size=58)
 	db $f ; border tile
 
 	db $4 ; warps
-	db $d, $11, $0, TWITCH_ISLE_INSIDE
+	db $d, $11, $0, REDS_HOUSE_1F
 	db $7, $11, $0, BLUES_HOUSE
 	db $b, $1a, $1, OAKS_LAB
 	db $7, $4, $0, PALLET_TOWN
@@ -128148,3 +128149,102 @@ DrawMugShot:
     dec d
     jr nz, .columnLoop
     ret
+
+PlaceFollowingNPCByPlayer:
+; Places a following NPC with movment byte $20 next to the player.
+; Assumes the NPC is the first sprite object in the current map.
+	; Check if following NPC is next to player
+	ld a, [W_YCOORD]
+	ld b, a
+	ld a, [W_XCOORD]
+	ld c, a
+	; bc = player y,x coords
+	ld a, [$c214]
+	sub 4
+	ld d, a
+	ld a, [$c215]
+	sub 4
+	ld e, a
+	; de = following NPC's y,x coords
+	; get manhattan distance between player and NPC
+	ld a, b ; a = player y coord
+	cp d
+	jr c, .playerAboveNPC
+	sub d
+	jr .gotYDiff
+.playerAboveNPC
+	ld a, d
+	sub b
+.gotYDiff
+	; a = y difference
+	ld h, a
+	ld a, c ; c = player x coord
+	cp e
+	jr c, .playerLeftOfNPC
+	sub e
+	jr .gotXDiff
+.playerLeftOfNPC
+	ld a, e
+	sub c
+.gotXDiff
+	; a = x difference
+	add h
+	cp 2
+	ret c
+	; Find a place for the npc next to the player
+	; Check spot below
+	FuncCoord 8, 11 ; $c484
+	ld a, [Coord]
+	call CheckTilePassable_
+	jr c, .checkAbove
+	ld a, [W_YCOORD]
+	add 5
+	ld b, a
+	ld a, [W_XCOORD]
+	add 4
+	ld c, a
+	jr .gotCoords
+.checkAbove
+	FuncCoord 8, 7 ; $c434
+	ld a, [Coord]
+	call CheckTilePassable_
+	jr c, .checkLeft
+	ld a, [W_YCOORD]
+	add 3
+	ld b, a
+	ld a, [W_XCOORD]
+	add 4
+	ld c, a
+	jr .gotCoords
+.checkLeft
+	FuncCoord 6, 9
+	ld a, [Coord]
+	call CheckTilePassable_
+	jr c, .checkRight
+	ld a, [W_YCOORD]
+	add 4
+	ld b, a
+	ld a, [W_XCOORD]
+	add 3
+	ld c, a
+	jr .gotCoords
+.checkRight
+	FuncCoord 10, 9
+	ld a, [Coord]
+	call CheckTilePassable_
+	ret c
+	ld a, [W_YCOORD]
+	add 4
+	ld b, a
+	ld a, [W_XCOORD]
+	add 5
+	ld c, a
+.gotCoords
+	; bc = NPC new y,x coords
+	ld a, b
+	ld [$c214], a
+	ld a, c
+	ld [$c215], a
+	ld a, 1
+	ld [$c218], a
+	ret
