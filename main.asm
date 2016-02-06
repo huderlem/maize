@@ -79926,11 +79926,11 @@ Route25Blocks: ; 50810 (14:4810)
 	INCBIN "maps/route25.blk"
 
 IndigoPlateau_h: ; 0x5091e to 0x50935 (23 bytes) (id=9)
-	db $17 ; tileset
+	db $0 ; tileset
 	db INDIGO_PLATEAU_HEIGHT, INDIGO_PLATEAU_WIDTH ; dimensions (y, x)
 	dw IndigoPlateauBlocks, IndigoPlateauTextPointers, IndigoPlateauScript ; blocks, texts, scripts
 	db SOUTH ; connections
-	SOUTH_MAP_CONNECTION TWITCH_ISLE, TWITCH_ISLE_WIDTH, 0, 0, TWITCH_ISLE_WIDTH, TwitchIsleBlocks, INDIGO_PLATEAU_WIDTH, INDIGO_PLATEAU_HEIGHT
+	SOUTH_MAP_CONNECTION ROUTE_12, ROUTE_12_WIDTH, 8, 0, ROUTE_12_WIDTH, Route12Blocks, INDIGO_PLATEAU_WIDTH, INDIGO_PLATEAU_HEIGHT
 	dw IndigoPlateauObject ; objects
 
 IndigoPlateauScript: ; 50935 (14:4935)
@@ -79938,22 +79938,19 @@ IndigoPlateauScript: ; 50935 (14:4935)
 
 IndigoPlateauTextPointers: ; 50936 (14:4936)
 IndigoPlateauObject: ; 0x50936 (size=20)
-	db $e ; border tile
+	db $2c ; border tile
 
-	db $2 ; warps
-	db $5, $9, $0, INDIGO_PLATEAU_LOBBY
-	db $5, $a, $0, INDIGO_PLATEAU_LOBBY
+	db $0 ; warps
 
 	db $0 ; signs
 
 	db $0 ; people
 
 	; warp-to
-	EVENT_DISP $a, $5, $9 ; INDIGO_PLATEAU_LOBBY
-	EVENT_DISP $a, $5, $a ; INDIGO_PLATEAU_LOBBY
+	;;EVENT_DISP $a, $5, $9 ; INDIGO_PLATEAU_LOBBY
 
 IndigoPlateauBlocks: ; 5094a (14:494a)
-	INCBIN "maps/indigoplateau.blk"
+	INCBIN "maps/gypsumcity.blk"
 
 SaffronCity_h: ; 0x509a4 to 0x509dc (56 bytes) (id=10)
 	db $00 ; tileset
@@ -88581,7 +88578,8 @@ Route12_h: ; 0x5866d to 0x5869a (45 bytes) (id=23)
 	db $00 ; tileset
 	db ROUTE_12_HEIGHT, ROUTE_12_WIDTH ; dimensions (y, x)
 	dw Route12Blocks, Route12TextPointers, Route12Script ; blocks, texts, scripts
-	db SOUTH ; connections
+	db NORTH | SOUTH ; connections
+	NORTH_MAP_CONNECTION INDIGO_PLATEAU, INDIGO_PLATEAU_WIDTH, INDIGO_PLATEAU_HEIGHT, -8, 0, INDIGO_PLATEAU_WIDTH, IndigoPlateauBlocks
 	SOUTH_MAP_CONNECTION CINNABAR_ISLAND, CINNABAR_ISLAND_WIDTH, -2, 0, CINNABAR_ISLAND_WIDTH, CinnabarIslandBlocks, ROUTE_12_WIDTH, ROUTE_12_HEIGHT
 	dw Route12Object ; objects
 
