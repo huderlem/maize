@@ -1,3 +1,5 @@
+This project builds with RGBDS 0.2.4.
+
 # Linux
 
 Linux dependencies. OSX users already have these after installing Xcode.
